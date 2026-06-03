@@ -1,0 +1,13 @@
+# Block non-content pages
+User-agent: Duckduckbot
+User-agent: Bingbot
+User-agent: Googlebot
+Disallow: /404
+Disallow: /search
+
+# General
+User-agent: *
+Allow: /
+Cache-control: 10
+
+Sitemap: https://www.example.com/sitemap.xml

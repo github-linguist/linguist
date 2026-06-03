@@ -1,2 +1,0 @@
-
-require ./stdio.cr

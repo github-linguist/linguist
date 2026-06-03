@@ -1,0 +1,738 @@
+##########################################################################
+
+# INIT.TCL, configuration and state handing procedures
+# Copyright (C) 2002-2004 Mark Lakata
+# Copyright (C) 2004-2017 Kent Mein
+# Copyright (C) 2016-2021 Xavier Delaruelle
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+##########################################################################
+
+# Runtime state properties (default value, proc to call to initialize state
+# value?)
+array set g_state_defs [list\
+   autoinit {0}\
+   clock_seconds {<undef> initStateClockSeconds}\
+   domainname {<undef> {runCommand domainname}}\
+   error_count {0}\
+   extra_siteconfig_loaded {0}\
+   false_rendered {0}\
+   force {0}\
+   hiding_threshold {0}\
+   inhibit_errreport {0}\
+   inhibit_interp {0}\
+   init_error_report {0}\
+   is_stderr_tty {<undef> initStateIsStderrTty}\
+   is_win {<undef> initStateIsWin}\
+   kernelversion {<undef> {runCommand uname -v}}\
+   lm_info_cached {0}\
+   machine [list $::tcl_platform(machine)]\
+   nodename {<undef> {runCommand uname -n}}\
+   os [list $::tcl_platform(os)]\
+   osversion [list $::tcl_platform(osVersion)]\
+   paginate {<undef> initStatePaginate}\
+   path_separator {<undef> initStatePathSeparator}\
+   report_format {regular}\
+   reportfd {stderr initStateReportfd}\
+   return_false {0}\
+   siteconfig_loaded {0}\
+   sub1_separator {&}\
+   sub2_separator {|}\
+   tcl_ext_lib_loaded {0}\
+   tcl_version [list [info patchlevel]]\
+   tcl_version_lt85 {<undef> initStateTclVersionLt85}\
+   term_columns {<undef> initStateTermColumns}\
+   usergroups {<undef> initStateUsergroups}\
+   username {<undef> initStateUsername}\
+]
+
+# Configuration option properties (superseding environment variable, default
+# value, is configuration lockable to default value, valid value list?,
+# internal value representation?, proc to call to initialize option value,
+# valid value list kind
+array set g_config_defs [list\
+   contact {MODULECONTACT root@localhost 0}\
+   auto_handling {MODULES_AUTO_HANDLING @autohandling@ 0 {0 1}}\
+   avail_indepth {MODULES_AVAIL_INDEPTH @availindepth@ 0 {0 1}}\
+   avail_output {MODULES_AVAIL_OUTPUT {@availoutput@} 0 {modulepath alias\
+      dirwsym sym tag key} {} {} eltlist}\
+   avail_terse_output {MODULES_AVAIL_TERSE_OUTPUT {@availterseoutput@} 0\
+      {modulepath alias dirwsym sym tag key} {} {} eltlist}\
+   collection_pin_version {MODULES_COLLECTION_PIN_VERSION 0 0 {0 1}}\
+   collection_target {MODULES_COLLECTION_TARGET <undef> 0}\
+   color {MODULES_COLOR @color@ 0 {never auto always} {0 1 2} initConfColor}\
+   colors {MODULES_COLORS {} 0 {} {} initConfColors}\
+   csh_limit {{} 4000 0}\
+   extra_siteconfig {MODULES_SITECONFIG <undef> 1 {}}\
+   editor {MODULES_EDITOR {@editor@} 0 {} {} initConfEditor}\
+   home {MODULESHOME @moduleshome@ 0}\
+   icase {MODULES_ICASE @icase@ 0 {never search always}}\
+   ignored_dirs {{} {CVS RCS SCCS .svn .git .SYNC .sos} 0}\
+   implicit_requirement {MODULES_IMPLICIT_REQUIREMENT @implicitrequirement@ 0\
+      {0 1}}\
+   list_output {MODULES_LIST_OUTPUT {@listoutput@} 0 {header idx variant sym\
+      tag key} {} {} eltlist}\
+   list_terse_output {MODULES_LIST_TERSE_OUTPUT {@listterseoutput@} 0 {header\
+      idx variant sym tag key} {} {} eltlist}\
+   locked_configs {{} {@lockedconfigs@} 0}\
+   mcookie_version_check {MODULES_MCOOKIE_VERSION_CHECK\
+      @mcookieversioncheck@ 0 {0 1}}\
+   ml {MODULES_ML @ml@ 0 {0 1}}\
+   nearly_forbidden_days {MODULES_NEARLY_FORBIDDEN_DAYS @nearlyforbiddendays@\
+      0 {0 365} {} {} intbe}\
+   pager {MODULES_PAGER {@pagercmd@} 0}\
+   rcfile {MODULERCFILE <undef> 0}\
+   run_quarantine {MODULES_RUN_QUARANTINE <undef> 0}\
+   shells_with_ksh_fpath {MODULES_SHELLS_WITH_KSH_FPATH {} 0 {sh bash csh\
+      tcsh fish} {} {} eltlist}\
+   silent_shell_debug {MODULES_SILENT_SHELL_DEBUG <undef> 0 {0 1}}\
+   siteconfig {{} @etcdir@/siteconfig.tcl 0}\
+   tag_abbrev {MODULES_TAG_ABBREV {@tagabbrev@} 0 {} {} initConfTagAbbrev}\
+   tag_color_name {MODULES_TAG_COLOR_NAME {@tagcolorname@} 0 {} {}\
+      initConfTagColorName}\
+   tcl_ext_lib {{} {} 0 {} {} initConfTclExtLib}\
+   term_background {MODULES_TERM_BACKGROUND @termbg@ 0 {dark light}}\
+   term_width {MODULES_TERM_WIDTH 0 0 {0 1000} {} {} intbe}\
+   unload_match_order {MODULES_UNLOAD_MATCH_ORDER @unloadmatchorder@ 0\
+      {returnlast returnfirst}}\
+   implicit_default {MODULES_IMPLICIT_DEFAULT @implicitdefault@ 1 {0 1}}\
+   extended_default {MODULES_EXTENDED_DEFAULT @extendeddefault@ 0 {0 1}}\
+   advanced_version_spec {MODULES_ADVANCED_VERSION_SPEC @advversspec@ 0 {0\
+      1}}\
+   search_match {MODULES_SEARCH_MATCH @searchmatch@ 0 {starts_with contains}}\
+   set_shell_startup {MODULES_SET_SHELL_STARTUP @setshellstartup@ 0 {0 1}}\
+   variant_shortcut {MODULES_VARIANT_SHORTCUT {@variantshortcut@} 0 {} {}\
+      initConfVariantShortcut}\
+   verbosity {MODULES_VERBOSITY @verbosity@ 0 {silent concise normal verbose\
+      verbose2 trace debug debug2}}\
+   wa_277 {MODULES_WA_277 @wa277@ 0 {0 1}}\
+]
+
+# Get state value
+proc getState {state {valifundef {}} {catchinitproc 0}} {
+   if {![info exists ::g_states($state)]} {
+      # fetch state properties (including its default value) if defined
+      if {[info exists ::g_state_defs($state)]} {
+         lassign $::g_state_defs($state) value initproclist
+      } else {
+         set value <undef>
+         set initproclist {}
+      }
+
+      # call specific proc to initialize state if any
+      if {$initproclist ne {}} {
+         # catch init procedure error and report it as warning, so default
+         # value will get set for state
+         if {$catchinitproc} {
+            if {[catch {set value [{*}$initproclist]} errMsg]} {
+               reportWarning $errMsg
+            }
+         } else {
+            set value [{*}$initproclist]
+         }
+      # overridden value coming the command-line
+      } elseif {[info exists ::asked_$state]} {
+         set value [set ::asked_$state]
+      }
+
+      # return passed value if undefined and no value record
+      if {$value eq {<undef>}} {
+         set value $valifundef
+      } else {
+         setState $state $value
+      }
+      return $value
+   } else {
+      return $::g_states($state)
+   }
+}
+
+# Clear state
+proc unsetState {state} {
+   unset ::g_states($state)
+   reportDebug "$state unset"
+}
+
+# Set state value
+proc setState {state value} {
+   set ::g_states($state) $value
+   reportDebug "$state set to '$value'"
+}
+
+# Append each passed value to the existing state value list
+proc lappendState {state args} {
+   if {$state eq {-nodup}} {
+      set state [lindex $args 0]
+      # retrieve current val through getState to initialize it if still undef
+      set value [getState $state]
+      appendNoDupToList value {*}[lrange $args 1 end]
+      setState $state $value
+   } else {
+      lappend ::g_states($state) {*}$args
+      reportDebug "$state appended with '$args'"
+   }
+}
+
+# Remove last element from state value list
+proc lpopState {state} {
+   setState $state [lrange [getState $state] 0 end-1]
+}
+
+# Return first element from state value list
+proc topState {state} {
+   return [lindex [getState $state] 0]
+}
+
+# Return last element from state value list
+proc currentState {state} {
+   return [lindex [getState $state] end]
+}
+
+# Get number of element from state value list
+proc depthState {state} {
+   return [llength [getState $state]]
+}
+
+# Check if state has been defined
+proc isStateDefined {state} {
+   return [info exists ::g_states($state)]
+}
+
+# Check if state equals passed value
+proc isStateEqual {state value} {
+   return [expr {[getState $state] eq $value}]
+}
+
+proc isConfigLocked {option} {
+   return [expr {[lsearch -exact [getConf locked_configs] $option] != -1}]
+}
+
+# Get configuration option value
+proc getConf {option {valifundef {}}} {
+   if {![info exists ::g_configs($option)]} {
+      # fetch option properties (including its default value)
+      lassign $::g_config_defs($option) envvar value islockable validvallist\
+         intvallist initproc validvallistkind
+
+      # ensure option is not locked before superseding its default value
+      if {!$islockable || ![isConfigLocked $option]} {
+         # call specific proc to initialize config option if any
+         if {$initproc ne {}} {
+            set value [$initproc $envvar $value $validvallist $intvallist]
+         } else {
+            # overridden value coming from environment
+            if {$envvar ne {} && [info exists ::env($envvar)]} {
+               switch -- $validvallistkind {
+                  eltlist {
+                     # ignore non-valid values
+                     if {![isDiffBetweenList [split $::env($envvar) :]\
+                        $validvallist]} {
+                        set value $::env($envvar)
+                     }
+                  }
+                  intbe {
+                     # ignore non-valid values
+                     if {[string is integer -strict $::env($envvar)] &&\
+                        $::env($envvar) >= [lindex $validvallist 0] &&\
+                        $::env($envvar) <= [lindex $validvallist 1]} {
+                        set value $::env($envvar)
+                     }
+                  }
+                  {} {
+                     # ignore non-valid values
+                     if {[switch -- [llength $validvallist] {
+                        0 {expr {1 == 1}}
+                        1 {string is $validvallist -strict $::env($envvar)}
+                        default {expr {$::env($envvar) in $validvallist}}
+                     }]} {
+                        set value $::env($envvar)
+                     }
+                  }
+               }
+            }
+
+            # overridden value coming the command-line (already validated)
+            if {[info exists ::asked_$option]} {
+               set value [set ::asked_$option]
+            }
+
+            # convert value to its internal representation
+            if {[llength $intvallist] > 0} {
+               set value [lindex $intvallist [lsearch -exact $validvallist\
+                  $value]]
+            }
+         }
+      }
+
+      # return passed value if undefined and no value record
+      if {$value eq {<undef>}} {
+         set value $valifundef
+      } else {
+         setConf $option $value
+      }
+      return $value
+   } else {
+      return $::g_configs($option)
+   }
+}
+
+# Set configuration option value
+proc setConf {option value} {
+   set ::g_configs($option) $value
+   reportDebug "$option set to '$value'"
+}
+
+# Unset configuration option value if it is set
+proc unsetConf {option} {
+   if {[info exists ::g_configs($option)]} {
+      unset ::g_configs($option)
+      reportDebug "$option unset"
+   }
+}
+
+# Append each passed value to the existing config option value list
+proc lappendConf {option args} {
+   # retrieve current value through getConf to initialize it if still undef
+   set value [getConf $option]
+   appendNoDupToList value {*}$args
+   setConf $option $value
+}
+
+# Source site config which can be used to define global procedures or
+# settings. We first look for the global siteconfig, then if an extra
+# siteconfig is defined and allowed, source that file if it exists
+proc sourceSiteConfig {} {
+   lappend siteconfiglist [getConf siteconfig]
+   for {set i 0} {$i < [llength $siteconfiglist]} {incr i} {
+      set siteconfig [lindex $siteconfiglist $i]
+      if {[file readable $siteconfig]} {
+         reportDebug "Source site configuration ($siteconfig)"
+         if {[catch {uplevel 1 source $siteconfig} errMsg]} {
+            set errMsg "Site configuration source failed\n"
+            # issue line number is lost due to uplevel use
+            append errMsg [formatErrStackTrace $::errorInfo $siteconfig {}]
+            reportErrorAndExit $errMsg
+         }
+         if {$siteconfig eq [getConf siteconfig]} {
+            setState siteconfig_loaded 1
+         } else {
+            setState extra_siteconfig_loaded 1
+         }
+      }
+      # check on extra_siteconfig after initial siteconfig loaded in case
+      # it inhibits this extra load
+      if {$siteconfig eq [getConf siteconfig] && [getConf\
+         extra_siteconfig] ne {}} {
+         lappend siteconfiglist [getConf extra_siteconfig]
+      }
+   }
+}
+
+# Used to tell if a machine is running Windows or not
+proc initStateIsWin {} {
+   return [expr {$::tcl_platform(platform) eq {windows}}]
+}
+
+# Get default path separator
+proc initStatePathSeparator {} {
+   return [expr {[getState is_win] ? {;} : {:}}]
+}
+
+# Detect if terminal is attached to stderr message channel
+proc initStateIsStderrTty {} {
+   return [expr {![catch {fconfigure stderr -mode}]}]
+}
+
+# Determine if pagination need to be started
+proc initStatePaginate {} {
+   set pager [getConf pager]
+   # empty or 'cat' pager command means no-pager
+   set no_cmds [list {} cat]
+   # default pager enablement depends on pager command value
+   set paginate [expr {[file tail [lindex $pager 0]] ni $no_cmds}]
+
+   # asked enablement could only nullify a previous asked disablement as it
+   # requires a valid pager command configuration, which by default enables
+   # pagination; some module command may also turn off pager; also if error
+   # stream is not attached to a terminal
+   set no_subcmds [list clear edit]
+   if {$paginate && (([info exists ::asked_paginate] && !$::asked_paginate)\
+      || [getState subcmd] in $no_subcmds || ([getState subcmd] eq {ml} &&\
+      [lindex [getState subcmd_args] 0] in $no_subcmds) || ![getState\
+      is_stderr_tty])} {
+      set paginate 0
+   }
+
+   return $paginate
+}
+
+# start pager pipe process with defined configuration
+proc initStateReportfd {} {
+   # get default value
+   lassign $::g_state_defs(reportfd) reportfd
+
+   # start pager at first call and only if enabled
+   if {[getState paginate]} {
+      if {[catch {
+         set reportfd [open "|[getConf pager] >@stderr 2>@stderr" w]
+         fconfigure $reportfd -buffering line -blocking 1 -buffersize 65536
+      } errMsg]} {
+         # silently set reportfd to its fallback value to process warn msg
+         set ::g_states(reportfd) $reportfd
+         reportWarning $errMsg
+      }
+   }
+
+   # startup content in case of structured output format (puts here rather
+   # calling report proc to avoid infinite reportfd init loop
+   if {[isStateEqual report_format json]} {
+      puts -nonewline $reportfd \{
+   }
+
+   return $reportfd
+}
+
+# Provide columns number for output formatting
+proc initStateTermColumns {} {
+   set cols [getConf term_width]
+   if {$cols == 0} {
+      # determine col number from tty capabilites
+      # tty info query depends on running OS
+      switch -- $::tcl_platform(os) {
+         SunOS {
+            catch {regexp {columns = (\d+);} [exec stty] match cols} errMsg
+         }
+         {Windows NT} {
+            catch {regexp {Columns:\s+(\d+)} [exec mode] match cols} errMsg
+         }
+         default {
+            catch {set cols [lindex [exec stty size] 1]} errMsg
+         }
+      }
+      # default size if tty cols cannot be found
+      set cols [expr {![info exists cols] || $cols eq {0} ? 80 : $cols}]
+   }
+   return $cols
+}
+
+# Get all groups of user running modulecmd.tcl process
+proc __initStateUsergroups {} {
+   # ensure groups including space in their name (found on Cygwin/MSYS
+   # platforms) are correctly set as list element
+   if {[catch {
+      return [split [string range [runCommand id -G -n -z] 0 end-1] \0]
+   } errMsg]} {
+      # fallback if '-z' option is not supported
+      return [runCommand id -G -n]
+   }
+}
+
+# Get name of user running modulecmd.tcl process
+proc __initStateUsername {} {
+   return [runCommand id -u -n]
+}
+
+# Get Epoch time (number of seconds elapsed since Unix epoch)
+proc __initStateClockSeconds {} {
+   return [clock seconds]
+}
+
+# Know if Tcl version is below 8.5.0
+proc initStateTclVersionLt85 {} {
+   return [expr {[versioncmp [getState tcl_version] 8.5.0] == -1}]
+}
+
+# Initialize Select Graphic Rendition table
+proc initConfColors {envvar value validvallist intvallist} {
+   # overridden value coming from environment
+   if {[info exists ::env($envvar)]} {
+      set colors_list $::env($envvar)
+      if {[catch {
+         # test overridden value could be set to a dummy array variable
+         array set test_colors [split $colors_list {:=}]
+      } errMsg ]} {
+         # report issue as a debug message rather warning to avoid
+         # disturbing user with a warning message in the middle of a
+         # useful output as this table will be initialized at first use
+         reportDebug "Ignore invalid value set in $envvar ($colors_list)"
+         unset colors_list
+      }
+   }
+
+   # if no valid override set use default color theme for terminal
+   # background color kind (light or dark)
+   if {![info exists colors_list]} {
+      if {[getConf term_background] eq {light}} {
+         set colors_list {@lightbgcolors@}
+      } else {
+         set colors_list {@darkbgcolors@}
+      }
+      if {[catch {
+         array set test_colors [split $colors_list {:=}]
+      } errMsg ]} {
+         reportDebug "Ignore invalid default [getConf term_background]\
+            background colors ($colors_list)"
+         # define an empty list if no valid value set
+         set colors_list {}
+      }
+   }
+
+   # check each color defined and unset invalid codes
+   set value {}
+   foreach {elt col} [split $colors_list {:=}] {
+      if {![regexp {^[\d;]+$} $col]} {
+         reportDebug "Ignore invalid color code for '$elt' ($col)"
+      } else {
+         lappend value $elt=$col
+      }
+   }
+   set value [join $value :]
+
+   # set SGR table as an array to easily access rendition for each key
+   array unset ::g_colors
+   array set ::g_colors [split $value {:=}]
+
+   return $value
+}
+
+# Initialize color configuration value
+proc initConfColor {envvar value validvallist intvallist} {
+   # overridden value coming from environment via standard variable
+   # https://no-color.org/ and https://bixense.com/clicolors/
+   if {[info exists ::env(NO_COLOR)]} {
+      set value never
+   } elseif {[info exists ::env(CLICOLOR)]} {
+      if {$::env(CLICOLOR) eq {0}} {
+         set value never
+      } else {
+         set value auto
+      }
+   } elseif {[info exists ::env(CLICOLOR_FORCE)] && $::env(CLICOLOR_FORCE)\
+      ne {0}} {
+      set value always
+   }
+
+   # overridden value coming from environment via Modules-specific variable
+   if {$envvar ne {} && [info exists ::env($envvar)]} {
+      # ignore non-valid values
+      if {[llength $validvallist] == 0 || $::env($envvar) in $validvallist} {
+         set value $::env($envvar)
+      }
+   }
+
+   # overridden value coming the command-line
+   if {[info exists ::asked_color]} {
+      set value [set ::asked_color]
+   }
+
+   # convert value to its internal representation
+   if {[llength $intvallist] > 0} {
+      set value [lindex $intvallist [lsearch -exact $validvallist $value]]
+   }
+
+   # disable color mode if no terminal attached except if 'always' asked
+   if {$value != 0 && (![getState is_stderr_tty] || $value == 2)} {
+      incr value -1
+   }
+
+   # initialize color theme if color mode enabled
+   getConf colors
+
+   return $value
+}
+
+# Initialize tcl_ext_lib configuration value
+proc initConfTclExtLib {envvar value validvallist intvallist} {
+   set libfile libtclenvmodules@SHLIB_SUFFIX@
+
+   # determine lib directory
+   @notmultilibsupport@set libdir @libdir@
+   @multilibsupport@switch -- [getState machine] {
+   @multilibsupport@   x86_64 - aarch64 - ppc64le - s390x {
+   @multilibsupport@      set libdirmain @libdir64@
+   @multilibsupport@      set libdiralt @libdir32@
+   @multilibsupport@   }
+   @multilibsupport@   default {
+   @multilibsupport@      set libdirmain @libdir32@
+   @multilibsupport@      set libdiralt @libdir64@
+   @multilibsupport@   }
+   @multilibsupport@}
+   @multilibsupport@# use alternative arch lib if available and not main one
+   @multilibsupport@if {![file exists [file join $libdirmain $libfile]] && [file exists [file\
+   @multilibsupport@   join $libdiralt $libfile]]} {
+   @multilibsupport@   set libdir $libdiralt
+   @multilibsupport@} else {
+   @multilibsupport@   set libdir $libdirmain
+   @multilibsupport@}
+
+   return [file join $libdir $libfile]
+}
+
+# Initialize module tag abbreviation table
+proc initConfTagAbbrev {envvar value validvallist intvallist} {
+   # overridden value coming from environment
+   if {[info exists ::env($envvar)]} {
+      if {[catch {
+         # try to set the tag-abbreviation mapping table
+         array set ::g_tagAbbrev [split $::env($envvar) {:=}]
+         set value $::env($envvar)
+      } errMsg ]} {
+         reportWarning "Ignore invalid value set in $envvar ($::env($envvar))"
+         array unset ::g_tagAbbrev
+      }
+   }
+
+   # test default value
+   if {![array exists ::g_tagAbbrev]} {
+      if {[catch {
+         array set ::g_tagAbbrev [split $value {:=}]
+      } errMsg ]} {
+         reportWarning "Ignore invalid default value for 'tag_abbrev' config\
+            ($value)"
+         array unset ::g_tagAbbrev
+         # define an empty list if no valid value set
+         set value {}
+      }
+   }
+
+   # build abbrev:tagname array
+   foreach {tag abbrev} [array get ::g_tagAbbrev] {
+      # skip tags not relevant for current command, that share their
+      # abbreviation with another tag
+      switch -- $tag {
+         hidden-loaded {
+            set setabbrevtag [expr {[currentState commandname] eq {list}}]
+         }
+         hidden {
+            set setabbrevtag [expr {[currentState commandname] eq {avail}}]
+         }
+         default {
+            set setabbrevtag 1
+         }
+      }
+      if {$setabbrevtag} {
+         set ::g_abbrevTag($abbrev) $tag
+      }
+   }
+
+   return $value
+}
+
+# Initialize module tag color name table
+proc initConfTagColorName {envvar value validvallist intvallist} {
+   # overridden value coming from environment
+   if {[info exists ::env($envvar)]} {
+      set value $::env($envvar)
+   }
+
+   # set table for efficient search
+   foreach tag [split $value :] {
+      set ::g_tagColorName($tag) 1
+   }
+
+   return $value
+}
+
+# Initialize interactive editor command
+proc initConfEditor {envvar value validvallist intvallist} {
+   # overridden value coming from environment via Modules-specific variable
+   if {$envvar ne {} && [info exists ::env($envvar)]} {
+      set value $::env($envvar)
+   # overridden value coming from environment via standard variable
+   } elseif {[info exists ::env(VISUAL)]} {
+      set value $::env(VISUAL)
+   } elseif {[info exists ::env(EDITOR)]} {
+      set value $::env(EDITOR)
+   }
+   return $value
+}
+
+# Initialize variant shortcut table
+proc initConfVariantShortcut {envvar value validvallist intvallist} {
+   # overridden value coming from environment
+   if {[info exists ::env($envvar)]} {
+      if {[catch {
+         # try to set the variant-shortcut mapping table
+         array set testarr [split $::env($envvar) {:=}]
+         set value $::env($envvar)
+         set setfromenv 1
+      } errMsg ]} {
+         reportWarning "Ignore invalid value set in $envvar ($::env($envvar))"
+      }
+   }
+
+   # test default value
+   if {![info exists setfromenv]} {
+      if {[catch {
+         array set testarr [split $value {:=}]
+      } errMsg ]} {
+         reportWarning "Ignore invalid default value for 'variant_shortcut'\
+            config ($value)"
+         # define an empty list if no valid value set
+         set value {}
+      }
+   }
+
+   # ignore shortcut if not equal to one character or if set on alphanum char
+   # or on char with special meaning
+   foreach {vr sc} [split $value {:=}] {
+      if {[string length $sc] == 1 && ![string match {[a-zA-Z0-9+~/@=-]}\
+         $sc]} {
+         # remove duplicate shortcut or variant definition
+         if {[info exists ::g_variantShortcut($vr)]} {
+            unset ::g_shortcutVariant($::g_variantShortcut($vr))
+         }
+         if {[info exists ::g_shortcutVariant($sc)]} {
+            unset ::g_variantShortcut($::g_shortcutVariant($sc))
+         }
+         set ::g_variantShortcut($vr) $sc
+         set ::g_shortcutVariant($sc) $vr
+      }
+   }
+
+   # update value after above filtering step
+   set value {}
+   foreach vr [array names ::g_variantShortcut] {
+      if {[string length $value] > 0} {
+         append value :
+      }
+      append value $vr=$::g_variantShortcut($vr)
+   }
+
+   return $value
+}
+
+# Is currently set verbosity level is equal or higher than level passed as arg
+proc isVerbosityLevel {name} {
+   return [expr {[lsearch -exact [lindex $::g_config_defs(verbosity) 3]\
+      [getConf verbosity]] >= [lsearch -exact [lindex\
+      $::g_config_defs(verbosity) 3] $name]}]
+}
+
+# Is match performed in a case sensitive or insensitive manner
+proc isIcase {} {
+   # depending on current sub-command, list values that equal to a case
+   # insensitive match enablement
+   lappend enabledValList always
+   if {[currentState commandname] in [list avail whatis search paths]} {
+      lappend enabledValList search
+   }
+   return [expr {[getConf icase] in $enabledValList}]
+}
+
+# ;;; Local Variables: ***
+# ;;; mode:tcl ***
+# ;;; End: ***
+# vim:set tabstop=3 shiftwidth=3 expandtab autoindent:

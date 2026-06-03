@@ -1,0 +1,131 @@
+##fileformat=VCFv4.1
+##source=Sniffles
+##fileDate=20190902
+##contig=<ID=1,length=249250621>
+##contig=<ID=2,length=243199373>
+##contig=<ID=3,length=198022430>
+##contig=<ID=4,length=191154276>
+##contig=<ID=5,length=180915260>
+##contig=<ID=6,length=171115067>
+##contig=<ID=7,length=159138663>
+##contig=<ID=8,length=146364022>
+##contig=<ID=9,length=141213431>
+##contig=<ID=10,length=135534747>
+##contig=<ID=11,length=135006516>
+##contig=<ID=12,length=133851895>
+##contig=<ID=13,length=115169878>
+##contig=<ID=14,length=107349540>
+##contig=<ID=15,length=102531392>
+##contig=<ID=16,length=90354753>
+##contig=<ID=17,length=81195210>
+##contig=<ID=18,length=78077248>
+##contig=<ID=19,length=59128983>
+##contig=<ID=20,length=63025520>
+##contig=<ID=21,length=48129895>
+##contig=<ID=22,length=51304566>
+##contig=<ID=X,length=155270560>
+##contig=<ID=Y,length=59373566>
+##contig=<ID=MT,length=16569>
+##contig=<ID=GL000207.1,length=4262>
+##contig=<ID=GL000226.1,length=15008>
+##contig=<ID=GL000229.1,length=19913>
+##contig=<ID=GL000231.1,length=27386>
+##contig=<ID=GL000210.1,length=27682>
+##contig=<ID=GL000239.1,length=33824>
+##contig=<ID=GL000235.1,length=34474>
+##contig=<ID=GL000201.1,length=36148>
+##contig=<ID=GL000247.1,length=36422>
+##contig=<ID=GL000245.1,length=36651>
+##contig=<ID=GL000197.1,length=37175>
+##contig=<ID=GL000203.1,length=37498>
+##contig=<ID=GL000246.1,length=38154>
+##contig=<ID=GL000249.1,length=38502>
+##contig=<ID=GL000196.1,length=38914>
+##contig=<ID=GL000248.1,length=39786>
+##contig=<ID=GL000244.1,length=39929>
+##contig=<ID=GL000238.1,length=39939>
+##contig=<ID=GL000202.1,length=40103>
+##contig=<ID=GL000234.1,length=40531>
+##contig=<ID=GL000232.1,length=40652>
+##contig=<ID=GL000206.1,length=41001>
+##contig=<ID=GL000240.1,length=41933>
+##contig=<ID=GL000236.1,length=41934>
+##contig=<ID=GL000241.1,length=42152>
+##contig=<ID=GL000243.1,length=43341>
+##contig=<ID=GL000242.1,length=43523>
+##contig=<ID=GL000230.1,length=43691>
+##contig=<ID=GL000237.1,length=45867>
+##contig=<ID=GL000233.1,length=45941>
+##contig=<ID=GL000204.1,length=81310>
+##contig=<ID=GL000198.1,length=90085>
+##contig=<ID=GL000208.1,length=92689>
+##contig=<ID=GL000191.1,length=106433>
+##contig=<ID=GL000227.1,length=128374>
+##contig=<ID=GL000228.1,length=129120>
+##contig=<ID=GL000214.1,length=137718>
+##contig=<ID=GL000221.1,length=155397>
+##contig=<ID=GL000209.1,length=159169>
+##contig=<ID=GL000218.1,length=161147>
+##contig=<ID=GL000220.1,length=161802>
+##contig=<ID=GL000213.1,length=164239>
+##contig=<ID=GL000211.1,length=166566>
+##contig=<ID=GL000199.1,length=169874>
+##contig=<ID=GL000217.1,length=172149>
+##contig=<ID=GL000216.1,length=172294>
+##contig=<ID=GL000215.1,length=172545>
+##contig=<ID=GL000205.1,length=174588>
+##contig=<ID=GL000219.1,length=179198>
+##contig=<ID=GL000224.1,length=179693>
+##contig=<ID=GL000223.1,length=180455>
+##contig=<ID=GL000195.1,length=182896>
+##contig=<ID=GL000212.1,length=186858>
+##contig=<ID=GL000222.1,length=186861>
+##contig=<ID=GL000200.1,length=187035>
+##contig=<ID=GL000193.1,length=189789>
+##contig=<ID=GL000194.1,length=191469>
+##contig=<ID=GL000225.1,length=211173>
+##contig=<ID=GL000192.1,length=547496>
+##contig=<ID=NC_007605,length=171823>
+##contig=<ID=hs37d5,length=35477943>
+##ALT=<ID=DEL,Description="Deletion">
+##ALT=<ID=DUP,Description="Duplication">
+##ALT=<ID=INV,Description="Inversion">
+##ALT=<ID=INVDUP,Description="InvertedDUP with unknown boundaries">
+##ALT=<ID=TRA,Description="Translocation">
+##ALT=<ID=INS,Description="Insertion">
+##INFO=<ID=CHR2,Number=1,Type=String,Description="Chromosome for END coordinate in case of a translocation">
+##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the structural variant">
+##INFO=<ID=MAPQ,Number=1,Type=Integer,Description="Median mapping quality of paired-ends">
+##INFO=<ID=RE,Number=1,Type=Integer,Description="read support">
+##INFO=<ID=IMPRECISE,Number=0,Type=Flag,Description="Imprecise structural variation">
+##INFO=<ID=PRECISE,Number=0,Type=Flag,Description="Precise structural variation">
+##INFO=<ID=UNRESOLVED,Number=0,Type=Flag,Description="An insertion that is longer than the read and thus we cannot predict the full size.">
+##INFO=<ID=SVLEN,Number=1,Type=Integer,Description="Length of the SV">
+##INFO=<ID=REF_strand,Number=2,Type=Integer,Description="Length of the SV">
+##INFO=<ID=SVMETHOD,Number=1,Type=String,Description="Type of approach used to detect SV">
+##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
+##INFO=<ID=SEQ,Number=1,Type=String,Description="Extracted sequence from the best representative read.">
+##INFO=<ID=STD_quant_start,Number=A,Type=Float,Description="STD of the start breakpoints across the reads.">
+##INFO=<ID=STD_quant_stop,Number=A,Type=Float,Description="STD of the stop breakpoints across the reads.">
+##INFO=<ID=Kurtosis_quant_start,Number=A,Type=Float,Description="Kurtosis value of the start breakpoints across the reads.">
+##INFO=<ID=Kurtosis_quant_stop,Number=A,Type=Float,Description="Kurtosis value of the stop breakpoints across the reads.">
+##INFO=<ID=SUPTYPE,Number=A,Type=String,Description="Type by which the variant is supported.(SR,ALN,NR)">
+##INFO=<ID=STRANDS,Number=A,Type=String,Description="Strand orientation of the adjacency in BEDPE format (DEL:+-, DUP:-+, INV:++/--)">
+##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency.">
+##INFO=<ID=ZMW,Number=A,Type=Integer,Description="Number of ZMWs (Pacbio) supporting SV.">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DR,Number=1,Type=Integer,Description="# high-quality reference reads">
+##FORMAT=<ID=DV,Number=1,Type=Integer,Description="# high-quality variant reads">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	alns_merged/hs37d5.all.md.bam
+1	10001	27885	N	<INS>	.	PASS	IMPRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=10407;ZMW=4;STD_quant_start=0.500000;STD_quant_stop=78.452215;Kurtosis_quant_start=1.000000;Kurtosis_quant_stop=-1.530914;SVTYPE=INS;SUPTYPE=SR;SVLEN=406;STRANDS=-+;RE=4	GT:DR:DV	./.:.:4
+1	10329	1	CCCCTAACCCTAACCCTAACCCTACCCTAACCCTAACCCTAACCCTAACCCTAACCCTAAC	N	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=10390;ZMW=21;STD_quant_start=0.316228;STD_quant_stop=3.794733;Kurtosis_quant_start=-0.866914;Kurtosis_quant_stop=-1.344369;SVTYPE=DEL;SUPTYPE=AL;SVLEN=-61;STRANDS=+-;RE=21	GT:DR:DV	./.:.:21
+1	10407	2	N	CACCCTCACCCTCACCCTCACCCCCACCCCCACCCCCACCCCCACCCCCACCCC	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=10461;ZMW=20;STD_quant_start=0.000000;STD_quant_stop=0.316228;Kurtosis_quant_start=-1.254650;Kurtosis_quant_stop=0.212091;SVTYPE=INS;SUPTYPE=AL;SVLEN=54;STRANDS=+-;RE=20	GT:DR:DV	./.:.:20
+1	10862	3	N	CAGGCGCAGAGAGGCGCGCCGCGCCGGCGCAGGCGCAGAGAGGCGCGCCGCGCCGGCGCAGGCGCAGAGAGGCGCGCCGGGCCGGCGCAGGCGCAGAGACACATGCTAGCGCGTCCAGGGGAGGAGGCGTGGCA	.	PASS	IMPRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=10996;ZMW=77;STD_quant_start=0.000000;STD_quant_stop=19.477382;Kurtosis_quant_start=-1.283652;Kurtosis_quant_stop=-2.008307;SVTYPE=INS;SUPTYPE=AL;SVLEN=47;STRANDS=+-;RE=77	GT:DR:DV	./.:.:77
+1	136934	4	N	CAAGGGGCTCGGGCTGACCTCTGTCCGCGTGGGAGGGGCCGGTGTGAGGCAAGGGGCTCGGGCTGACCTCTCTCAGTGTGGGAGGGGCCGGTGTGAGGCAAGGGGCTCACGCTGACCTCTGTCTGCGTGGGAGGGGCCGGTGTGAGACAAGGGGCTCGGGCTGACCTCTCTCAGCGTGGGAGGGGCCGGTGTGAGGCAAGGGGCTCGGGCTGACCTCTCTCAGCGTGGGAGGGGCCAGTGTGAGGCAAGGGCTCACACTGACCTCTCTCAGCATGGGAGGGGCCGGTGTGAGA	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=137227;ZMW=14;STD_quant_start=0.000000;STD_quant_stop=2.549510;Kurtosis_quant_start=2.193074;Kurtosis_quant_stop=2.855605;SVTYPE=INS;SUPTYPE=AL;SVLEN=293;STRANDS=+-;RE=14	GT:DR:DV	./.:.:14
+1	533244	5	N	CGGGTGCCATCTCAGCAGCTCACGGTGTGGAAACTGCGACACTCACGCGGGTGCCATCTCAGCAGCTCACGGTGTGGAAACTGCGACACTCACA	.	PASS	IMPRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=533338;ZMW=3;STD_quant_start=27.135463;STD_quant_stop=25.980762;Kurtosis_quant_start=-0.000000;Kurtosis_quant_stop=0.000000;SVTYPE=INS;SUPTYPE=AL;SVLEN=94;STRANDS=+-;RE=3	GT:DR:DV	./.:.:3
+1	545927	6	N	TGCAGGAGAGGAGATGCCCAGGCCTGGCGGCCGGCGCACGCGGGTTCTCTGTGGCCAGCAGGCGGCGCTGCAGGAGAGGAGATGCCCAGGCCAGGCGGCCGGCGCACGCGGGTTCTCTGTGGCCAGCAGGCGGCGCTGCAGGAGAGGAGATGCCCAGGCCTGGCGGCCGGCGCACGCGGGTTCTCTGTGGCCAGCAGGCGGCGA	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=546131;ZMW=23;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=4.593400;Kurtosis_quant_stop=4.281659;SVTYPE=INS;SUPTYPE=AL;SVLEN=204;STRANDS=+-;RE=23	GT:DR:DV	./.:.:23
+1	605031	7	N	TACATGGAGGGGAACAACACACACCAGGGCCTCTCAGGGGGACAGGGGGTAGGAGACCATCAGGACAAACACGTGGATACATGGAGGGGAACAACACACACCAGGGCCTCTCAGGGGGACAGGGGGTAGGAGACCATCAGGACAAACACGTGGATACATGGAGGGGAACAACACACACCAGGGCCTCTCAGGGGGACAGGGGGTAGGAGACCATCAGGACAAACACGTGGG	.	PASS	IMPRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=605262;ZMW=9;STD_quant_start=45.186035;STD_quant_stop=44.628093;Kurtosis_quant_start=2.035202;Kurtosis_quant_stop=1.944981;SVTYPE=INS;SUPTYPE=AL;SVLEN=231;STRANDS=+-;RE=9	GT:DR:DV	./.:.:9
+1	662612	8	N	GTGAGACAAGGGGCTCACGCTGACCTCTGTCCACGTGGGAGGGGCCGGG	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=662661;ZMW=4;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=-nan;Kurtosis_quant_stop=-nan;SVTYPE=INS;SUPTYPE=AL;SVLEN=49;STRANDS=+-;RE=4	GT:DR:DV	./.:.:4
+1	664891	9	GCAGGAGCTGGGCCTGGAGAGGCTGCAAAGAA	N	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=664923;ZMW=4;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=-nan;Kurtosis_quant_stop=-nan;SVTYPE=DEL;SUPTYPE=AL;SVLEN=-32;STRANDS=+-;RE=4	GT:DR:DV	./.:.:4
+1	725451	10	GGATGGGATGCGATGGGATGGGATGGGATGGGATGGGATGGGATGGGATGGATTT	N	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=725506;ZMW=3;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=-nan;Kurtosis_quant_stop=-nan;SVTYPE=DEL;SUPTYPE=AL;SVLEN=-55;STRANDS=+-;RE=3	GT:DR:DV	./.:.:3
+1	756259	11	N	TCTACACTACCTGCCTGGCCAGCAGATCCACCCTGTCTACACTACCTGCCTGGGCAGTAGTTCCACGCAATCTCCCCTACCTGCCTCTCCAGCAGACCCGCCCTATCTATACTACTTGCCTGTCCAGCAGATCCACTCTATCTACACGACCTGCCTGTCCAGCAGATCCACCCTGTCTACACTACCTGCTTGTCCAGCAGGTCCACCCTGTCTATACTACCTGCCTGGCCAGTAGATCCACACTA	.	PASS	PRECISE;SVMETHOD=Snifflesv1.0.11;CHR2=1;END=756504;ZMW=19;STD_quant_start=0.000000;STD_quant_stop=0.000000;Kurtosis_quant_start=1.759442;Kurtosis_quant_stop=1.789241;SVTYPE=INS;SUPTYPE=AL;SVLEN=245;STRANDS=+-;RE=19	GT:DR:DV	./.:.:19

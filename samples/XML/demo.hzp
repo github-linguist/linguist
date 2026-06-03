@@ -1,0 +1,110 @@
+<!DOCTYPE CrossStudio_Project_File>
+<solution version="1" Name="demo" >
+	<project Name="demo" >
+		<configuration Target="STR711F" property_groups_file_path="$(StudioDir)/targets/ST_STR71x/propertyGroups.xml" linker_memory_map_file="$(StudioDir)/targets/ST_STR71x/ST_STR711FR2_MemoryMap.xml" gcc_entry_point="_reset_handler" project_directory="" link_include_startup_code="No" project_type="Executable" Name="Common" />
+		<configuration target_reset_script="RAMReset()" Name="RAM" />
+		<configuration arm_target_flash_loader_file_path="$(StudioDir)/targets/ST_STR71x/Release/Loader.exe" target_reset_script="FLASHReset()" Name="Flash" />
+		<folder Name="System Files" >
+			<file file_name="$(StudioDir)/targets/sram_placement.xml" Name="sram_placement.xml" >
+				<configuration build_exclude_from_build="Yes" Name="Flash" />
+			</file>
+			<file file_name="$(StudioDir)/targets/flash_placement.xml" Name="flash_placement.xml" >
+				<configuration build_exclude_from_build="Yes" Name="RAM" />
+			</file>
+			<file file_name="$(StudioDir)/targets/ST_STR71x/STR71x_Target.js" Name="STR71x_Target.js" >
+				<configuration Name="Common" file_type="Reset Script" />
+			</file>
+			<file file_name="startup.s" Name="startup.s" />
+			<file file_name="crt0.s" Name="crt0.s" >
+				<configuration c_preprocessor_definitions="SUPERVISOR_START" Name="Common" />
+			</file>
+		</folder>
+		<folder Name="FreeRTOS" >
+			<file file_name="freertos/tasks.c" Name="tasks.c" />
+			<file file_name="freertos/list.c" Name="list.c" />
+			<file file_name="freertos/queue.c" Name="queue.c" />
+			<file file_name="freertos/queue.c.bak" Name="queue.c.bak" />
+			<file file_name="freertos/readme.txt" Name="readme.txt" />
+			<file file_name="freertos/include/task.h" Name="task.h" />
+			<file file_name="freertos/include/FreeRTOS.h" Name="FreeRTOS.h" />
+			<file file_name="freertos/include/list.h" Name="list.h" />
+			<file file_name="freertos/include/portable.h" Name="portable.h" />
+			<file file_name="freertos/include/portable.h.bak" Name="portable.h.bak" />
+			<file file_name="freertos/include/projdefs.h" Name="projdefs.h" />
+			<file file_name="freertos/include/queue.h" Name="queue.h" />
+			<file file_name="freertos/include/semphr.h" Name="semphr.h" />
+			<file file_name="freertos/portable/GCC/ARM7_STR71X/portmacro.h" Name="portmacro.h" />
+			<file file_name="freertos/portable/GCC/ARM7_STR71X/port.c" Name="port.c" />
+			<file file_name="freertos/portable/GCC/ARM7_STR71X/portISR.c" Name="portISR.c" />
+			<file file_name="freertos/portable/MemMang/heap_3.c" Name="heap_3.c" />
+		</folder>
+		<folder Name="Demo" >
+			<file file_name="simple.c" Name="simple.c" />
+		</folder>
+		<folder Name="STR71X Library" >
+			<file file_name="library/71x_lib.c" Name="71x_lib.c" />
+			<file file_name="library/gpio.c" Name="gpio.c" />
+			<file file_name="library/rccu.c" Name="rccu.c" />
+			<file file_name="library/tim.c" Name="tim.c" />
+			<file file_name="library/uart.c" Name="uart.c" />
+			<file file_name="library/wdg.c" Name="wdg.c" />
+			<file file_name="library/eic.c" Name="eic.c" />
+			<file file_name="library/include/71x_conf.h" Name="71x_conf.h" />
+			<file file_name="library/include/wdg.h" Name="wdg.h" />
+			<file file_name="library/include/71x_it.h" Name="71x_it.h" />
+			<file file_name="library/include/71x_lib.h" Name="71x_lib.h" />
+			<file file_name="library/include/71x_map.h" Name="71x_map.h" />
+			<file file_name="library/include/71x_type.h" Name="71x_type.h" />
+			<file file_name="library/include/eic.h" Name="eic.h" />
+			<file file_name="library/include/gpio.h" Name="gpio.h" />
+			<file file_name="library/include/rccu.h" Name="rccu.h" />
+			<file file_name="library/include/tim.h" Name="tim.h" />
+			<file file_name="library/include/uart.h" Name="uart.h" />
+		</folder>
+		<folder Name="Modbus" >
+			<folder Name="Functions" >
+				<file file_name="../../modbus/functions/mbfuncdiag.c" Name="mbfuncdiag.c" />
+				<file file_name="../../modbus/functions/mbfuncholding.c" Name="mbfuncholding.c" />
+				<file file_name="../../modbus/functions/mbfuncinput.c" Name="mbfuncinput.c" />
+				<file file_name="../../modbus/functions/mbfuncother.c" Name="mbfuncother.c" />
+				<file file_name="../../modbus/functions/mbfunccoils.c" Name="mbfunccoils.c" />
+				<file file_name="../../modbus/include/mbutils.h" Name="mbutils.h" />
+				<file file_name="../../modbus/functions/mbutils.c" Name="mbutils.c" />
+				<file file_name="../../modbus/functions/mbfuncdisc.c" Name="mbfuncdisc.c" />
+			</folder>
+			<folder Name="ASCII" >
+				<file file_name="../../modbus/ascii/mbascii.h" Name="mbascii.h" />
+				<file file_name="../../modbus/ascii/mbascii.c" Name="mbascii.c" />
+			</folder>
+			<folder Name="RTU" >
+				<file file_name="../../modbus/rtu/mbrtu.h" Name="mbrtu.h" />
+				<file file_name="../../modbus/rtu/mbcrc.c" Name="mbcrc.c" />
+				<file file_name="../../modbus/rtu/mbcrc.h" Name="mbcrc.h" />
+				<file file_name="../../modbus/rtu/mbrtu.c" Name="mbrtu.c" />
+			</folder>
+			<file file_name="../../modbus/mb.c" Name="mb.c" />
+			<file file_name="../../modbus/include/mbproto.h" Name="mbproto.h" />
+			<file file_name="../../modbus/include/mb.h" Name="mb.h" />
+			<file file_name="../../modbus/include/mbconfig.h" Name="mbconfig.h" />
+			<file file_name="../../modbus/include/mbframe.h" Name="mbframe.h" />
+			<file file_name="../../modbus/include/mbfunc.h" Name="mbfunc.h" />
+			<file file_name="../../modbus/include/mbport.h" Name="mbport.h" />
+		</folder>
+		<folder Name="Modbus Port" >
+			<file file_name="port/porttimer.c" Name="porttimer.c" />
+			<file file_name="port/portevent.c" Name="portevent.c" />
+			<file file_name="port/portserial.c" Name="portserial.c" />
+			<file file_name="port/port.h" Name="port.h" />
+		</folder>
+	</project>
+	<configuration inherited_configurations="ARM;RAM;Debug" Name="ARM RAM Debug" />
+	<configuration arm_library_instruction_set="ARM" c_preprocessor_definitions="__ARM" arm_instruction_set="ARM" hidden="Yes" Name="ARM" />
+	<configuration c_preprocessor_definitions="__RAM_BUILD" hidden="Yes" Name="RAM" />
+	<configuration c_preprocessor_definitions="DEBUG" link_include_startup_code="No" gcc_optimization_level="None" build_debug_information="Yes" Name="Debug" />
+	<configuration inherited_configurations="ARM;RAM;Release" Name="ARM RAM Release" />
+	<configuration c_preprocessor_definitions="NDEBUG" link_include_startup_code="No" gcc_optimization_level="Level 1" build_debug_information="No" Name="Release" />
+	<configuration inherited_configurations="ARM;Flash;Debug" Name="ARM Flash Debug" />
+	<configuration c_preprocessor_definitions="__FLASH_BUILD" hidden="Yes" Name="Flash" />
+	<configuration inherited_configurations="ARM;Flash;Release" Name="ARM Flash Release" />
+	<configuration c_preprocessor_definitions="STR71X_GCC" arm_linker_fiq_stack_size="0" c_user_include_directories=".;./port;./freertos/include;./freertos/portable/GCC/ARM7_STR71X;./library/include;../../modbus/include;../../modbus/ascii;../../modbus/rtu;../../modbus/func" arm_linker_stack_size="256" Name="Common" arm_linker_svc_stack_size="256" arm_linker_heap_size="2048" />
+</solution>

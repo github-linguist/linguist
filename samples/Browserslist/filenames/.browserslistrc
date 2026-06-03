@@ -1,0 +1,30 @@
+# Comment
+defaults
+
+# Not keyword
+not dead
+
+# Market share with %
+> 10%
+< 1.5% in US
+>= .5%
+
+# Rare queries
+maintained node versions
+supports es6-module
+
+# Extend keyword
+extend @company/browserslist-config
+
+# Direct versions
+Chrome 50
+Firefox ESR
+Safari TP
+OperaMini all
+
+# Block header
+[production]
+# and keyword
+Edge > 40 and Edge < 43
+# or/, keywords
+IE 11 or IE 10, ie 9

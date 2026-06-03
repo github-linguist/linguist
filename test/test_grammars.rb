@@ -37,7 +37,7 @@ class TestGrammars < Minitest::Test
   end
 
   def test_readme_file_is_in_sync
-    current_data = File.read("#{ROOT}/vendor/README.md").to_s.sub(/\A.+?<!--.+?-->\n/ms, "")
+    current_data = File.read("#{ROOT}/vendor/README.md").to_s.sub(/\A.+?<!--.+?-->\n/mu, "")
     updated_data = `script/list-grammars --print`
     assert_equal current_data, updated_data, "Grammar list is out-of-date. Run `script/list-grammars`"
   end

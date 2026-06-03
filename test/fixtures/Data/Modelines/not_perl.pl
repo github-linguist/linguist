@@ -1,3 +1,3 @@
-/* vim: set filEtype=pRoloG: */
+/* vim: set filetype=pRoloG: */
 
 # I am Prolog

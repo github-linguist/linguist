@@ -41,9 +41,12 @@
 # Node dependencies
 - (^|/)node_modules/
 
-# Yarn releases & plugins
+# Yarn 2
 - (^|/)\.yarn/releases/
 - (^|/)\.yarn/plugins/
+- (^|/)\.yarn/sdks/
+- (^|/)\.yarn/versions/
+- (^|/)\.yarn/unplugged/
 
 # esy.sh dependencies
 - (^|/)_esy$
@@ -71,7 +74,7 @@
 - ([^\s]*)import\.(css|less|scss|styl)$
 
 # Bootstrap css and js
-- (^|/)bootstrap([^.]*)\.(js|css|less|scss|styl)$
+- (^|/)bootstrap([^/.]*)(\..*)?\.(js|css|less|scss|styl)$
 - (^|/)custom\.bootstrap([^\s]*)(js|css|less|scss|styl)$
 
 # Font Awesome
@@ -105,7 +108,7 @@
 # Vendored dependencies
 - (3rd|[Tt]hird)[-_]?[Pp]arty/
 - (^|/)vendors?/
-- (^|/)extern(al)?/
+- (^|/)[Ee]xtern(als?)?/
 - (^|/)[Vv]+endor/
 
 # Debian packaging
@@ -354,7 +357,6 @@
 - (^|/)\.[Dd][Ss]_[Ss]tore$
 
 # R packages
-- (^|/)vignettes/
 - (^|/)inst/extdata/
 
 # Octicons
@@ -377,3 +379,18 @@
 
 # Jenkins Pipeline
 - (^|/)Jenkinsfile$
+
+# Gitpod
+- (^|/)\.gitpod\.Dockerfile$
+
+# GitHub.com
+- (^|/)\.github/
+
+# obsidian.md settings
+- (^|/)\.obsidian/
+
+# teamcity CI configuration
+- (^|/)\.teamcity/
+
+# XVBA dependencies
+- (^|/)xvba_modules/

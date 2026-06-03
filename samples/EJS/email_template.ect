@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include 'layout/header_assets.ect' %>
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/parts.css">
+</head>
+<body>
+  <% include 'layout/header.ect' %>
+  <section class="body">
+    <% include 'layout/sidebar.ect' %>
+    <section class="main-content">
+      <div class="content-wrap">
+
+        <div class="content-header">
+          <div class="row content-header--title-bar-one">
+            <div class="col-xs-6">
+              <h1><a href="#">レイアウトタイプ</a>: Confirm</h1>
+            </div>
+            <div class="col-xs-4">
+              <div style="line-height:30px;">最終更新日: 15-04-28 14:29</div>
+            </div>
+            <div class="col-xs-2" style="text-align: right;">
+              <button class="btn btn-warning btn-sm">保存</button>
+            </div>
+          </div>
+        </div>
+        <div class="content-main full-height">
+          <form class="form-horizontal js-template-editor full-height">
+            <div class="row form-group">
+              <div class="col-sm-6">
+                <input class="form-control" required="required" type="text" value="" name="email_template[subject]" placeholder="件名: confirm: {{#order}}{{number}}{{/order}}">
+              </div>
+              <div class="col-sm-6">
+                <button type="button" class="btn btn-default">プレビュー</button>
+                <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal">サンプルデータ編集</button>
+              </div>
+            </div>
+            <div class="row form-group">
+              <div class="col-sm-6">
+                <input class="form-control" required="required" type="text" placeholder="From: xxx@example.com" name="email_template[subject]">
+              </div>
+              <div class="col-sm-6 full-height">
+                <div class="btn-group" role="group" aria-label="...">
+                  <button type="button" class="btn btn-default">HTML</button>
+                  <button type="button" class="btn btn-default">TEXT</button>
+                </div>
+              </div>
+            </div>
+            <div class="row full-height">
+              <div class="col-sm-12 full-height">
+                <div class="full-height">
+                  <textarea class="form-control" required="required" rows="22" data-template="html" name="email_template[html]" id="email_template_html">
+{{#order}}
+  Hi {{email}}<br/>
+  Order: {{number}}<br/>
+  Thank you for your order.<br/>
+  <br/>
+  {{#line_items}}{{name}}: {{display_price}} x {{quantity}} = {{display_amount}}{{/line_items}}<br/>
+  -----------------------<br/>
+  Total: {{display_total}}
+{{/order}}
+  </textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal fade" id="myModal">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                  </div>
+                  <div class="modal-body js-template-sample-data" data-layout-type="confirm" data-class-name="EmailTemplate">
+                    <textarea style="height: 200px; width: 100%;"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-default js-reset-btn" href="#">リセット</button>
+                    <button class="btn btn-default js-update-btn" href="#"><span class="translation_missing" title="translation missing: ja.update">Update</span></button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </section>
+</body>
+</html>
+

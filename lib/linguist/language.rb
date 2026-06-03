@@ -1,8 +1,9 @@
-require 'escape_utils'
+require 'cgi'
 require 'yaml'
 begin
   require 'yajl'
 rescue LoadError
+  require 'json'
 end
 
 require 'linguist/classifier'
@@ -32,8 +33,6 @@ module Linguist
     @filename_index     = Hash.new { |h,k| h[k] = [] }
     @prefix_index       = Hash.new { |h,k| h[k] = [] }
 
-    # Valid Languages types
-    TYPES = [:data, :markup, :programming, :prose]
 
     # Detect languages by a specific type
     #
@@ -283,7 +282,7 @@ module Linguist
 
       # Set type
       @type = attributes[:type] ? attributes[:type].to_sym : nil
-      if @type && !TYPES.include?(@type)
+      if @type && !get_types.include?(@type)
         raise ArgumentError, "invalid type: #{@type}"
       end
 
@@ -307,19 +306,22 @@ module Linguist
       @filenames    = attributes[:filenames]    || []
       @prefixes     = attributes[:prefixes]     || []
 
-      # Set popular, and searchable flags
+      # Set popular flag
       @popular    = attributes.key?(:popular)    ? attributes[:popular]    : false
-      @searchable = attributes.key?(:searchable) ? attributes[:searchable] : true
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
-        @group = nil
         @group_name = attributes[:group_name]
 
       # Otherwise we can set it to self now
       else
-        @group = self
+        @group_name = self.name
       end
+    end
+
+    def get_types
+      # Valid Languages types
+      @types = [:data, :markup, :programming, :prose]
     end
 
     # Public: Get proper name
@@ -333,8 +335,8 @@ module Linguist
     # Returns the name String
     attr_reader :name
 
-    # Public: 
-    # 
+    # Public:
+    #
     attr_reader :fs_name
 
     # Public: Get type.
@@ -460,7 +462,7 @@ module Linguist
     #
     # Returns the escaped String.
     def escaped_name
-      EscapeUtils.escape_url(name).gsub('+', '%20')
+      CGI.escape(name).gsub('+', '%20')
     end
 
     # Public: Get default alias name
@@ -490,16 +492,6 @@ module Linguist
     # Returns true or false
     def unpopular?
       !popular?
-    end
-
-    # Public: Is it searchable?
-    #
-    # Unsearchable languages won't by indexed by solr and won't show
-    # up in the code search dropdown.
-    #
-    # Returns true or false
-    def searchable?
-      @searchable
     end
 
     # Public: Return name as String representation
@@ -532,8 +524,9 @@ module Linguist
   languages_yml  = File.expand_path("../languages.yml",  __FILE__)
   languages_json = File.expand_path("../languages.json", __FILE__)
 
-  if File.exist?(languages_json) && defined?(Yajl)
-    languages = Yajl.load(File.read(languages_json))
+  if File.exist?(languages_json)
+    serializer = defined?(Yajl) ? Yajl : JSON
+    languages = serializer.load(File.read(languages_json))
   else
     languages = YAML.load_file(languages_yml)
   end
@@ -575,7 +568,6 @@ module Linguist
       :codemirror_mime_type => options['codemirror_mime_type'],
       :wrap              => options['wrap'],
       :group_name        => options['group'],
-      :searchable        => options.fetch('searchable', true),
       :language_id       => options['language_id'],
       :extensions        => Array(options['extensions']),
       :interpreters      => options['interpreters'].sort,

@@ -1,0 +1,28 @@
+10 REM Mandelbrot Set with ANSI Colors in BASIC
+20 REM https://github.com/telnet23
+30 REM 20 November 2020
+40 CLS
+50 MAXK = 32
+60 MINRE = -2.5
+70 MAXRE = 1.5
+80 MINIM = -1.5
+90 MAXIM = 1.5
+100 FOR X = 1 TO WIDTH
+110 FOR Y = 1 TO HEIGHT
+120 LOCATE Y, X
+130 REC = MINRE + (MAXRE - MINRE) / (WIDTH - 1) * (X - 1)
+140 IMC = MINIM + (MAXIM - MINIM) / (HEIGHT - 1) * (Y - 1)
+150 K = 0
+160 REF = 0
+170 IMF = 0
+180 K = K + 1
+190 REF = REC + REF * REF - IMF * IMF
+200 IMF = IMC + REF * IMF + REF * IMF
+210 IF REF * REF + IMF * IMF > 4 THEN GOTO 230
+220 IF K < MAXK THEN GOTO 180
+230 M = 40 + INT(8 / MAXK * (K - 1))
+240 PRINT CHR$(27) + "[" + STR$(M) + "m";
+250 PRINT " ";
+260 PRINT CHR$(27) + "[49m";
+270 NEXT Y
+280 NEXT X

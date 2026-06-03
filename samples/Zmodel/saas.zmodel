@@ -1,0 +1,96 @@
+datasource db {
+    provider="sqlite"
+    url="file:./dev.db"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+/**
+ * Model for a user
+ */
+model User {
+    id       String         @id @default(uuid())
+    email    String         @unique
+    password String?        @password @omit
+    name     String?
+    orgs     Organization[]
+    posts    Post[]
+    groups   Group[]
+
+    // can be created by anyone, even not logged in
+    @@allow('create', true)
+    // can be read by users in the same organization
+    @@allow('read', orgs?[members?[auth() == this]])
+    // full access by oneself
+    @@allow('all', auth() == this)
+}
+
+/**
+ * Model for a organization 
+ */
+model Organization {
+    id      String  @id @default(uuid())
+    name    String
+    members User[]
+    post    Post[]
+    groups  Group[]
+
+    // everyone can create a organization
+    @@allow('create', true)
+    // any user in the organization can read the organization
+    @@allow('read', members?[auth().id == id])
+}
+
+/**
+* Base model for all entites in a organization
+*/
+abstract model organizationBaseEntity {
+    id        String       @id @default(uuid())
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+    isDeleted Boolean      @default(false) @omit
+    isPublic  Boolean      @default(false)
+    owner     User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId   String
+    org       Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+    orgId     String
+    groups    Group[]
+
+    // when create, owner must be set to current user, and user must be in the organization
+    @@allow('create', owner == auth() && org.members?[id == auth().id])
+    // only the owner can update it and is not allowed to change the owner
+    @@allow('update', owner == auth() && org.members?[id == auth().id] && future().owner == owner)
+    // allow owner to read
+    @@allow('read', owner == auth())
+    // allow shared group members to read it
+    @@allow('read', groups?[users?[id == auth().id]])
+    // allow organization to access if public
+    @@allow('read', isPublic && org.members?[id == auth().id])
+    // can not be read if deleted
+    @@deny('all', isDeleted == true)
+}
+
+/**
+* Model for a post
+*/
+model Post extends organizationBaseEntity {
+    title   String
+    content String
+}
+
+/**
+ * Model for a group
+ */
+model Group {
+    id    String       @id @default(uuid())
+    name  String
+    users User[]
+    posts Post[]
+    org   Organization @relation(fields: [orgId], references: [id])
+    orgId String
+
+    // group is shared by organization
+    @@allow('all', org.members?[auth().id == id])
+}

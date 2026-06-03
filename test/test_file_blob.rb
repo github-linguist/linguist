@@ -28,7 +28,7 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_mime_type
-    assert_equal "application/postscript", fixture_blob("Binary/octocat.ai").mime_type
+    assert_equal "application/pdf", fixture_blob("Binary/octocat.ai").mime_type
     assert_equal "application/x-ruby", sample_blob("Ruby/grit.rb").mime_type
     assert_equal "application/x-sh", sample_blob("Shell/script.sh").mime_type
     assert_equal "application/xml", sample_blob("XML/bar.xml").mime_type
@@ -140,7 +140,7 @@ class TestFileBlob < Minitest::Test
 
   def test_solid
     assert fixture_blob("Binary/cube.stl").solid?
-    assert fixture_blob("Data/cube.stl").solid?
+    assert fixture_blob("Generic/stl/STL/cube2.stl").solid?
   end
 
   def test_csv
@@ -300,6 +300,8 @@ class TestFileBlob < Minitest::Test
     # 'extern(al)' directory
     assert sample_blob("extern/util/__init__.py").vendored?
     assert sample_blob("external/jquery.min.js").vendored?
+    assert sample_blob("externals/fmt/CMakeLists.txt").vendored?
+    assert sample_blob("External/imgui/imgui.h").vendored?
 
     # C deps
     assert sample_blob("deps/http_parser/http_parser.c").vendored?
@@ -567,6 +569,34 @@ class TestFileBlob < Minitest::Test
 
     # Jenkins
     assert sample_blob("Jenkinsfile").vendored?
+
+    # Bootstrap
+    assert !sample_blob("src/bootstraps/settings.js").vendored?
+    assert !sample_blob("bootstrap/misc/other/reset.css").vendored?
+    assert sample_blob("bootstrap-1.4/misc/other/reset.css").vendored?
+    assert sample_blob("bootstrap.10.4/misc/other/reset.css").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bundle.js").vendored?
+    assert sample_blob("src/bootstrap-custom.js").vendored?
+    assert sample_blob("src/bootstrap-1.4.js").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bootstrap.bundle.js").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/js/bootstrap.esm.js").vendored?
+    assert sample_blob("src/bootstrap-5.4.1-beta-dist/css/bootstrap.rtl.css").vendored?
+
+    # GitHub.com
+    assert sample_blob(".github/CODEOWNERS").vendored?
+    assert sample_blob(".github/workflows/test.yml").vendored?
+
+    # obsidian.md settings
+    assert sample_blob(".obsidian/app.json").vendored?
+    assert sample_blob(".obsidian/plugins/templater-obsidian/main.js").vendored?
+
+    # teamcity ci configuration
+    assert sample_blob(".teamcity/Project_Name_CI/Project.kt").vendored?
+    assert sample_blob(".teamcity/Project_Name_CI/settings.kts").vendored?
+    assert sample_blob(".teamcity/Project_Name_CI/patches/projects/3b71d400-c5d6-4628-8164-c50b1254cf1d.kts").vendored?
+
+    # XVBA dependencies
+    assert sample_blob("xvba_modules/excel-types/err.d.vb").vendored?
   end
 
   def test_documentation
@@ -641,11 +671,20 @@ class TestFileBlob < Minitest::Test
   end
 
   def test_language
+    # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
+    allowed_failures = {
+      "#{samples_path}/C/rpc.h" => ["C", "C++"],
+    }
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
       assert blob.language, "No language for #{sample[:path]}"
       fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-      assert_equal sample[:language], fs_name, blob.name
+
+      if allowed_failures.has_key? sample[:path]
+        assert allowed_failures[sample[:path]].include?(sample[:language]), blob.name
+      else
+        assert_equal sample[:language], fs_name, blob.name
+      end
     end
 
     # Test language detection for files which shouldn't be used as samples
@@ -667,10 +706,16 @@ class TestFileBlob < Minitest::Test
           assert blob.language.nil?, "A language was found for #{filepath}"
         elsif language == 'Generated'
           assert blob.generated?, "#{filepath} is not a generated file"
+        elsif language == 'Generic'
+          assert !blob.language, "#{filepath} should not match a language"
         else
-          assert blob.language, "No language for #{filepath}"
           fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
-          assert_equal language, fs_name, blob.name
+          if allowed_failures.has_key? filepath
+            assert allowed_failures[filepath].include?(fs_name), filepath
+          else
+            assert blob.language, "No language for #{filepath}"
+            assert_equal language, fs_name, filepath
+          end
         end
       end
     end

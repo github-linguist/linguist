@@ -1,0 +1,159 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://assets/themes/dark/theme.tres" type="Theme" id=1]
+[ext_resource path="res://src/Main.gd" type="Script" id=2]
+[ext_resource path="res://src/UI/TopMenuContainer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/UI/UI.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/UI/PatternsPopup.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/UI/BrushesPopup.tscn" type="PackedScene" id=6]
+[ext_resource path="res://src/UI/Dialogs/ImageEffects/ImageEffects.tscn" type="PackedScene" id=7]
+[ext_resource path="res://src/UI/Dialogs/SaveSpriteHTML5.tscn" type="PackedScene" id=8]
+[ext_resource path="res://src/UI/Timeline/FrameProperties.tscn" type="PackedScene" id=9]
+[ext_resource path="res://src/UI/Dialogs/WindowOpacityDialog.tscn" type="PackedScene" id=10]
+[ext_resource path="res://src/UI/Dialogs/SaveSprite.tscn" type="PackedScene" id=11]
+[ext_resource path="res://src/UI/Dialogs/OpenSprite.tscn" type="PackedScene" id=12]
+[ext_resource path="res://src/UI/Dialogs/ManageLayouts.tscn" type="PackedScene" id=13]
+[ext_resource path="res://src/UI/Dialogs/TileModeOffsetsDialog.tscn" type="PackedScene" id=14]
+[ext_resource path="res://src/UI/Dialogs/SplashDialog.tscn" type="PackedScene" id=27]
+[ext_resource path="res://src/UI/Dialogs/CreateNewImage.tscn" type="PackedScene" id=28]
+[ext_resource path="res://src/Preferences/PreferencesDialog.tscn" type="PackedScene" id=32]
+[ext_resource path="res://src/UI/Dialogs/AboutDialog.tscn" type="PackedScene" id=34]
+[ext_resource path="res://src/UI/Dialogs/ExportDialog.tscn" type="PackedScene" id=39]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_horizontal_guides_": [  ],
+"_edit_vertical_guides_": [  ]
+}
+
+[node name="MenuAndUI" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TopMenuContainer" parent="MenuAndUI" instance=ExtResource( 3 )]
+
+[node name="UI" parent="MenuAndUI" instance=ExtResource( 4 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 28.0
+margin_right = 1280.0
+margin_bottom = 720.0
+
+[node name="Dialogs" type="Control" parent="."]
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ImageEffects" parent="Dialogs" instance=ExtResource( 7 )]
+
+[node name="BrushesPopup" parent="Dialogs" instance=ExtResource( 6 )]
+
+[node name="PatternsPopup" parent="Dialogs" instance=ExtResource( 5 )]
+
+[node name="SplashDialog" parent="Dialogs" instance=ExtResource( 27 )]
+
+[node name="CreateNewImage" parent="Dialogs" instance=ExtResource( 28 )]
+
+[node name="OpenSprite" parent="Dialogs" instance=ExtResource( 12 )]
+window_title = "Open File(s)"
+mode = 1
+
+[node name="SaveSprite" parent="Dialogs" instance=ExtResource( 11 )]
+margin_left = 108.0
+margin_top = 40.0
+margin_right = 623.0
+margin_bottom = 388.0
+
+[node name="SaveSpriteHTML5" parent="Dialogs" instance=ExtResource( 8 )]
+
+[node name="ExportDialog" parent="Dialogs" instance=ExtResource( 39 )]
+
+[node name="PreferencesDialog" parent="Dialogs" instance=ExtResource( 32 )]
+
+[node name="ManageLayouts" parent="Dialogs" instance=ExtResource( 13 )]
+
+[node name="AboutDialog" parent="Dialogs" instance=ExtResource( 34 )]
+
+[node name="UnsavedCanvasDialog" type="ConfirmationDialog" parent="Dialogs"]
+margin_right = 467.0
+margin_bottom = 70.0
+window_title = "Unsaved Image"
+dialog_text = "You have unsaved changes. If you proceed, the progress you have made will be lost."
+
+[node name="QuitDialog" type="ConfirmationDialog" parent="Dialogs"]
+margin_right = 243.0
+margin_bottom = 70.0
+resizable = true
+dialog_text = "Are you sure you want to exit Pixelorama?"
+
+[node name="QuitAndSaveDialog" type="ConfirmationDialog" parent="Dialogs"]
+margin_right = 330.0
+margin_bottom = 70.0
+window_title = "Save before exiting?"
+resizable = true
+dialog_text = "You have unsaved progress. How do you wish to proceed?"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ErrorDialog" type="AcceptDialog" parent="Dialogs"]
+margin_right = 151.0
+margin_bottom = 60.0
+window_title = "Error"
+dialog_text = "This is an error message!"
+
+[node name="BackupConfirmation" type="ConfirmationDialog" parent="Dialogs"]
+margin_right = 200.0
+margin_bottom = 88.0
+popup_exclusive = true
+resizable = true
+dialog_text = "Autosaved project(s) from a crashed session were found.
+Do you want to recover the data?"
+dialog_autowrap = true
+
+[node name="FrameProperties" parent="Dialogs" instance=ExtResource( 9 )]
+
+[node name="WindowOpacityDialog" parent="Dialogs" instance=ExtResource( 10 )]
+
+[node name="TileModeOffsetsDialog" parent="Dialogs" instance=ExtResource( 14 )]
+
+[node name="Extensions" type="Control" parent="."]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftCursor" type="Sprite" parent="."]
+visible = false
+
+[node name="RightCursor" type="Sprite" parent="."]
+visible = false
+
+[connection signal="popup_hide" from="Dialogs/SplashDialog" to="." method="_can_draw_true"]
+[connection signal="popup_hide" from="Dialogs/CreateNewImage" to="." method="_can_draw_true"]
+[connection signal="files_selected" from="Dialogs/OpenSprite" to="." method="_on_OpenSprite_files_selected"]
+[connection signal="popup_hide" from="Dialogs/OpenSprite" to="." method="_on_OpenSprite_popup_hide"]
+[connection signal="file_selected" from="Dialogs/SaveSprite" to="." method="_on_SaveSprite_file_selected"]
+[connection signal="popup_hide" from="Dialogs/SaveSprite" to="." method="_can_draw_true"]
+[connection signal="confirmed" from="Dialogs/SaveSpriteHTML5" to="." method="_on_SaveSpriteHTML5_confirmed"]
+[connection signal="popup_hide" from="Dialogs/SaveSpriteHTML5" to="." method="_can_draw_true"]
+[connection signal="popup_hide" from="Dialogs/ExportDialog" to="." method="_can_draw_true"]
+[connection signal="popup_hide" from="Dialogs/PreferencesDialog" to="." method="_can_draw_true"]
+[connection signal="popup_hide" from="Dialogs/AboutDialog" to="." method="_can_draw_true"]
+[connection signal="popup_hide" from="Dialogs/UnsavedCanvasDialog" to="." method="_can_draw_true"]
+[connection signal="confirmed" from="Dialogs/QuitDialog" to="." method="_on_QuitDialog_confirmed"]
+[connection signal="popup_hide" from="Dialogs/QuitDialog" to="." method="_can_draw_true"]
+[connection signal="confirmed" from="Dialogs/QuitAndSaveDialog" to="." method="_on_QuitAndSaveDialog_confirmed"]
+[connection signal="custom_action" from="Dialogs/QuitAndSaveDialog" to="." method="_on_QuitAndSaveDialog_custom_action"]
+[connection signal="popup_hide" from="Dialogs/QuitAndSaveDialog" to="." method="_can_draw_true"]
+[connection signal="popup_hide" from="Dialogs/ErrorDialog" to="." method="_can_draw_true"]
+[connection signal="popup_hide" from="Dialogs/BackupConfirmation" to="." method="_can_draw_true"]
+[connection signal="popup_hide" from="Dialogs/BackupConfirmation" to="." method="_on_BackupConfirmation_popup_hide"]

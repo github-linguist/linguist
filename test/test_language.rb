@@ -4,9 +4,8 @@ class TestLanguage < Minitest::Test
   include Linguist
 
   def test_find_by_alias
-    assert_equal Language['ASP'], Language.find_by_alias('asp')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx')
-    assert_equal Language['ASP'], Language.find_by_alias('aspx-vb')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx')
+    assert_equal Language['ASP.NET'], Language.find_by_alias('aspx-vb')
     assert_equal Language['ActionScript'], Language.find_by_alias('as3')
     assert_equal Language['ApacheConf'], Language.find_by_alias('apache')
     assert_equal Language['Assembly'], Language.find_by_alias('nasm')
@@ -17,6 +16,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['C++'], Language.find_by_alias('c++')
     assert_equal Language['C++'], Language.find_by_alias('cpp')
     assert_equal Language['Chapel'], Language.find_by_alias('chpl')
+    assert_equal Language['Classic ASP'], Language.find_by_alias('asp')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee')
     assert_equal Language['CoffeeScript'], Language.find_by_alias('coffee-script')
     assert_equal Language['ColdFusion'], Language.find_by_alias('cfm')
@@ -24,6 +24,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Common Lisp'], Language.find_by_alias('lisp')
     assert_equal Language['Darcs Patch'], Language.find_by_alias('dpatch')
     assert_equal Language['Dart'], Language.find_by_alias('dart')
+    assert_equal Language['EdgeQL'], Language.find_by_alias('esdl')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('elisp')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs')
     assert_equal Language['Emacs Lisp'], Language.find_by_alias('emacs-lisp')
@@ -57,11 +58,15 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Shell'], Language.find_by_alias('sh')
     assert_equal Language['Shell'], Language.find_by_alias('shell')
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
+    assert_equal Language['SurrealQL'], Language.find_by_alias('surql')
+    assert_equal Language['SurrealQL'], Language.find_by_alias('surrealql')
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
+    assert_equal Language['Tree-sitter Query'], Language.find_by_alias('tsq')
+    assert_equal Language['TSX'], Language.find_by_alias('typescriptreact')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
-    assert_equal Language['Vim script'], Language.find_by_alias('vim')
-    assert_equal Language['Vim script'], Language.find_by_alias('viml')
+    assert_equal Language['Vim Script'], Language.find_by_alias('vim')
+    assert_equal Language['Vim Script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
     assert_equal Language['X BitMap'], Language.find_by_alias('xbm')
     assert_equal Language['X PixMap'], Language.find_by_alias('xpm')
@@ -96,7 +101,6 @@ class TestLanguage < Minitest::Test
     assert_equal Language['C'], Language['OpenCL'].group
     assert_equal Language['Haskell'], Language['Literate Haskell'].group
     assert_equal Language['Java'], Language['Java Server Pages'].group
-    assert_equal Language['Python'], Language['Cython'].group
     assert_equal Language['Python'], Language['NumPy'].group
     assert_equal Language['Shell'], Language['Gentoo Ebuild'].group
     assert_equal Language['Shell'], Language['Gentoo Eclass'].group
@@ -142,12 +146,6 @@ class TestLanguage < Minitest::Test
     assert_equal :prose, Language['Org'].type
   end
 
-  def test_searchable
-    assert Language['Ruby'].searchable?
-    assert !Language['Gettext Catalog'].searchable?
-    assert Language['SQL'].searchable?
-  end
-
   def test_find_by_name
     assert_nil Language.find_by_name(nil)
     ruby = Language['Ruby']
@@ -172,14 +170,14 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [Language['Limbo'], Language['M'], Language['MATLAB'], Language['MUF'], Language['Mathematica'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MATLAB'], Language['MUF'], Language['Mercury'], Language['Objective-C'], Language['Wolfram Language']], Language.find_by_extension('foo.m')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('PKGBUILD.rb')
     assert_equal ['C', 'C++', 'Objective-C'], Language.find_by_extension('foo.h').map(&:name).sort
     assert_equal [], Language.find_by_extension('rb')
     assert_equal [], Language.find_by_extension('.null')
-    assert_equal [Language['HTML+Django']], Language.find_by_extension('index.jinja')
+    assert_equal [Language['Jinja']], Language.find_by_extension('index.jinja')
     assert_equal [Language['Chapel']], Language.find_by_extension('examples/hello.chpl')
     assert_equal [], Language.find_by_filename('F.I.L.E.')
   end
@@ -301,7 +299,7 @@ class TestLanguage < Minitest::Test
     assert_equal '#701516', Language['Ruby'].color
     assert_equal '#3572A5', Language['Python'].color
     assert_equal '#f1e05a', Language['JavaScript'].color
-    assert_equal '#2b7489', Language['TypeScript'].color
+    assert_equal '#3178c6', Language['TypeScript'].color
     assert_equal '#3d9970', Language['LSL'].color
   end
 
@@ -317,7 +315,7 @@ class TestLanguage < Minitest::Test
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
-    assert_equal 'text', Language['FORTRAN'].ace_mode
+    assert_equal 'fortran', Language['FORTRAN'].ace_mode
   end
 
   def test_codemirror_mode
@@ -360,10 +358,10 @@ class TestLanguage < Minitest::Test
     scopes = YAML.load(File.read(File.expand_path("../../grammars.yml", __FILE__))).values.flatten
     missing = Language.all.reject { |language| language.tm_scope == "none" || scopes.include?(language.tm_scope) }
     message = "The following languages' scopes are not listed in grammars.yml. Please add grammars for all new languages.\n"
-    message << "If no grammar exists for a language, mark the language with `tm_scope: none` in lib/linguist/languages.yml.\n"
+    message += "If no grammar exists for a language, mark the language with `tm_scope: none` in lib/linguist/languages.yml.\n"
 
     width = missing.map { |language| language.name.length }.max
-    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
+    message += missing.map { |language| sprintf("%-#{width}s %s", language.name, language.tm_scope) }.sort.join("\n")
     assert missing.empty?, message
   end
 
@@ -371,7 +369,7 @@ class TestLanguage < Minitest::Test
     languages = YAML.load(File.read(File.expand_path("../../lib/linguist/languages.yml", __FILE__)))
     missing = languages.reject { |name,language| language.has_key?('tm_scope') }
     message = "The following languages do not have a `tm_scope` field defined. Use `tm_scope: none` if the language has no grammar.\n"
-    message << missing.keys.sort.join("\n")
+    message += missing.keys.sort.join("\n")
     assert missing.empty?, message
   end
 
@@ -380,7 +378,7 @@ class TestLanguage < Minitest::Test
     message = "The following languages do not have a type listed in grammars.yml. Please add types for all new languages.\n"
 
     width = missing.map { |language| language.name.length }.max
-    message << missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
+    message += missing.map { |language| sprintf("%-#{width}s", language.name) }.sort.join("\n")
     assert missing.empty?, message
   end
 
@@ -413,17 +411,18 @@ class TestLanguage < Minitest::Test
     ace_fixture_path = File.join('test', 'fixtures', 'ace_modes.json')
     skip("No ace_modes.json file") unless File.exist?(ace_fixture_path)
 
-    ace_github_modes = Yajl.load(File.read(ace_fixture_path))
+    ace_modes = Yajl.load(File.read(ace_fixture_path))
+    ace_github_modes = ace_modes[0].concat(ace_modes[1])
     existing_ace_modes = ace_github_modes.map do |ace_github_mode|
       File.basename(ace_github_mode["name"], ".js") if ace_github_mode["name"]  !~ /_highlight_rules|_test|_worker/
     end.compact.uniq.sort.map(&:downcase)
 
     missing = Language.all.reject { |language| language.ace_mode == "text" || existing_ace_modes.include?(language.ace_mode) }
     message = "The following languages do not have an Ace mode listed in languages.yml. Please add an Ace mode for all new languages.\n"
-    message << "If no Ace mode exists for a language, mark the language with `ace_mode: text` in lib/linguist/languages.yml.\n"
+    message += "If no Ace mode exists for a language, mark the language with `ace_mode: text` in lib/linguist/languages.yml.\n"
 
     width = missing.map { |language| language.name.length }.max
-    message << missing.map { |language| sprintf("%-#{width}s %s", language.name, language.ace_mode) }.sort.join("\n")
+    message += missing.map { |language| sprintf("%-#{width}s %s", language.name, language.ace_mode) }.sort.join("\n")
     assert missing.empty?, message
   end
 
@@ -457,7 +456,7 @@ class TestLanguage < Minitest::Test
       next unless language.codemirror_mode && language.codemirror_mime_type
       filename = File.expand_path("../../vendor/CodeMirror/mode/#{language.codemirror_mode}/#{language.codemirror_mode}.js", __FILE__)
       assert File.exist?(filename), "#{filename} does not exist"
-      assert File.read(filename).match(language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
+      assert File.read(filename).match(Regexp.escape language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
     end
   end
 
@@ -466,16 +465,8 @@ class TestLanguage < Minitest::Test
 
     missing = popular - Language.all.map(&:name)
     message = "The following languages are listed in lib/linguist/popular.yml but not in lib/linguist/languages.yml.\n"
-    message << missing.sort.join("\n")
+    message += missing.sort.join("\n")
     assert missing.empty?, message
-  end
-
-  def test_no_unused_colours
-    Language.all.each do |language|
-      next unless language.type == :data || language.type == :prose ||
-        language.group.to_s != language.name
-      assert !language.color, "Unused colour assigned to #{language.name}"
-    end
   end
 
   def test_non_crash_on_comma

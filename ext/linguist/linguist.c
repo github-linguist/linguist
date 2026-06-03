@@ -1,9 +1,5 @@
 #include "ruby.h"
-#include "linguist.h"
 #include "lex.linguist_yy.h"
-
-// Anything longer is unlikely to be useful.
-#define MAX_TOKEN_LEN 32
 
 int linguist_yywrap(yyscan_t yyscanner) {
 	return 1;
@@ -12,8 +8,8 @@ int linguist_yywrap(yyscan_t yyscanner) {
 static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 	YY_BUFFER_STATE buf;
 	yyscan_t scanner;
-	struct tokenizer_extra extra;
-	VALUE ary, s;
+	VALUE extra;
+	VALUE ary;
 	long len;
 	int r;
 
@@ -28,36 +24,10 @@ static VALUE rb_tokenizer_extract_tokens(VALUE self, VALUE rb_data) {
 
 	ary = rb_ary_new();
 	do {
-		extra.type = NO_ACTION;
-		extra.token = NULL;
+		extra = 0;
 		r = linguist_yylex(scanner);
-		switch (extra.type) {
-		case NO_ACTION:
-			break;
-		case REGULAR_TOKEN:
-			len = strlen(extra.token);
-			if (len <= MAX_TOKEN_LEN)
-				rb_ary_push(ary, rb_str_new(extra.token, len));
-			free(extra.token);
-			break;
-		case SHEBANG_TOKEN:
-			len = strlen(extra.token);
-			if (len <= MAX_TOKEN_LEN) {
-				s = rb_str_new2("SHEBANG#!");
-				rb_str_cat(s, extra.token, len);
-				rb_ary_push(ary, s);
-			}
-			free(extra.token);
-			break;
-		case SGML_TOKEN:
-			len = strlen(extra.token);
-			if (len <= MAX_TOKEN_LEN) {
-				s = rb_str_new(extra.token, len);
-				rb_str_cat2(s, ">");
-				rb_ary_push(ary, s);
-			}
-			free(extra.token);
-			break;
+		if (extra) {
+			rb_ary_push(ary, extra);
 		}
 	} while (r);
 

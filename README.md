@@ -1,46 +1,19 @@
 # Linguist
 
-[![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions)
+[![Actions Status](https://github.com/github/linguist/workflows/Run%20Tests/badge.svg)](https://github.com/github/linguist/actions) 
 
-[issues]: https://github.com/github/linguist/issues
-[new-issue]: https://github.com/github/linguist/issues/new
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/github-linguist/linguist)
 
 This library is used on GitHub.com to detect blob languages, ignore binary or vendored files, suppress generated files in diffs, and generate language breakdown graphs.
 
-See [Troubleshooting](#troubleshooting) and [`CONTRIBUTING.md`](CONTRIBUTING.md) before filing an issue or creating a pull request.
+## Documentation
 
-## How Linguist works
+- [How Linguist works](/docs/how-linguist-works.md)
+- [Change Linguist's behaviour with overrides](/docs/overrides.md)
+- [Troubleshooting](/docs/troubleshooting.md)
+- [Contributing guidelines](CONTRIBUTING.md)
 
-Linguist takes the list of languages it knows from [`languages.yml`](/lib/linguist/languages.yml) and uses a number of methods to try and determine the language used by each file, and the overall repository breakdown.
-
-Linguist starts by going through all the files in a repository and excludes all files that it determines to be binary data, [vendored code](#vendored-code), [generated code](#generated-code), [documentation](#documentation), or are defined as `data` (e.g. SQL) or `prose` (e.g. Markdown) languages, whilst taking into account any [overrides](#overrides).
-
-If an [explicit language override](#using-gitattributes) has been used, that language is used for the matching files.
-The language of each remaining file is then determined using the following strategies, in order, with each step either identifying the precise language or reducing the number of likely languages passed down to the next strategy:
-
-- Vim or Emacs modeline,
-- commonly used filename,
-- shell shebang,
-- file extension,
-- XML header,
-- heuristics,
-- naïve Bayesian classification
-
-The result of this analysis is used to produce the language stats bar which displays the languages percentages for the files in the repository.
-The percentages are calculated based on the bytes of code for each language as reported by the [List Languages](https://developer.github.com/v3/repos/#list-languages) API.
-
-![language stats bar](https://user-images.githubusercontent.com/2346707/50930521-52f57e80-14b4-11e9-92de-0ee9c768ae46.png)
-
-### How Linguist works on GitHub.com
-
-When you push changes to a repository on GitHub.com, a low priority background job is enqueued to analyze your repository as explained above.
-The results of this analysis are cached for the lifetime of your repository and are only updated when the repository is updated.
-As this analysis is performed by a low priority background job, it can take a while, particularly during busy periods, for your language statistics bar to reflect your changes.
-
-
-## Usage
-
-### Installation
+## Installation
 
 Install the gem:
 
@@ -48,10 +21,15 @@ Install the gem:
 gem install github-linguist
 ```
 
-#### Dependencies
+### Dependencies
+
+Linguist is a Ruby library so you will need a recent version of Ruby installed.
+There are known problems with the macOS/Xcode supplied version of Ruby that causes problems installing some of the dependencies.
+Accordingly, we highly recommend you install a version of Ruby using Homebrew, `rbenv`, `rvm`, `ruby-build`, `asdf` or other packaging system, before attempting to install Linguist and the dependencies.
 
 Linguist uses [`charlock_holmes`](https://github.com/brianmario/charlock_holmes) for character encoding and [`rugged`](https://github.com/libgit2/rugged) for libgit2 bindings for Ruby.
 These components have their own dependencies.
+
 1. charlock_holmes
     * cmake
     * pkg-config
@@ -71,8 +49,10 @@ brew install cmake pkg-config icu4c
 On Ubuntu:
 
 ```bash
-sudo apt-get install cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
+sudo apt-get install build-essential cmake pkg-config libicu-dev zlib1g-dev libcurl4-openssl-dev libssl-dev ruby-dev
 ```
+
+## Usage
 
 ### Application usage
 
@@ -90,26 +70,80 @@ project.languages      #=> { "Ruby" => 119387 }
 
 ### Command line usage
 
+The `github-linguist` executable operates in two distinct modes:
+
+1. **[Git Repository mode](#git-repository)** - Analyzes an entire Git repository (when given a directory path or no path)
+2. **[Single file mode](#single-file)** - Analyzes a specific file (when given a file path)
+
 #### Git Repository
 
-A repository's languages stats can also be assessed from the command line using the `github-linguist` executable.
-Without any options, `github-linguist` will output the breakdown that correlates to what is shown in the language stats bar.
-The `--breakdown` flag will additionally show the breakdown of files by language.
+A repository's languages stats can be assessed from the command line using the `github-linguist` executable.
+Without any options, `github-linguist` will output the language breakdown by percentage and file size.
 
 ```bash
-cd /path-to-repository/
+cd /path-to-repository
 github-linguist
 ```
 
 You can try running `github-linguist` on the root directory in this repository itself:
 
 ```console
+$ github-linguist
+66.84%  264519     Ruby
+24.68%  97685      C
+6.57%   25999      Go
+1.29%   5098       Lex
+0.32%   1257       Shell
+0.31%   1212       Dockerfile
+```
+
+#### Additional options
+
+##### `--rev REV`
+
+The `--rev REV` flag will change the git revision being analyzed to any [gitrevisions(1)](https://git-scm.com/docs/gitrevisions#_specifying_revisions) compatible revision you specify.
+
+This is useful to analyze the makeup of a repo as of a certain tag, or in a certain branch.
+
+For example, here is the popular [Jekyll open source project](https://github.com/jekyll/jekyll).
+
+```console
+$ github-linguist jekyll
+
+70.64%  709959     Ruby
+23.04%  231555     Gherkin
+3.80%   38178      JavaScript
+1.19%   11943      HTML
+0.79%   7900       Shell
+0.23%   2279       Dockerfile
+0.13%   1344       Earthly
+0.10%   1019       CSS
+0.06%   606        SCSS
+0.02%   234        CoffeeScript
+0.01%   90         Hack
+```
+
+And here is Jekyll's published website, from the gh-pages branch inside their repository.
+
+```console
+$ github-linguist jekyll --rev origin/gh-pages
+100.00% 2568354    HTML
+```
+
+##### `--breakdown`
+
+The `--breakdown` or `-b` flag will additionally show the breakdown of files by language.
+
+You can try running `github-linguist` on the root directory in this repository itself:
+
+```console
 $ github-linguist --breakdown
-68.57%  Ruby
-22.90%  C
-6.93%   Go
-1.21%   Lex
-0.39%   Shell
+66.84%  264519     Ruby
+24.68%  97685      C
+6.57%   25999      Go
+1.29%   5098       Lex
+0.32%   1257       Shell
+0.31%   1212       Dockerfile
 
 Ruby:
 Gemfile
@@ -121,6 +155,70 @@ github-linguist.gemspec
 lib/linguist.rb
 …
 ```
+
+##### `--strategies`
+
+The `--strategies` or `-s` flag will show the language detection strategy used for each file. This is useful for understanding how Linguist determined the language of specific files. Note that unless the `--json` flag is specified, this flag will set the `--breakdown` flag implicitly.
+
+You can try running `github-linguist` on the root directory in this repository itself with the strategies flag:
+
+```console
+$ github-linguist --breakdown --strategies
+66.84%  264519     Ruby
+24.68%  97685      C
+6.57%   25999      Go
+1.29%   5098       Lex
+0.32%   1257       Shell
+0.31%   1212       Dockerfile
+
+Ruby:
+  Gemfile [Filename]
+  Rakefile [Filename]
+  bin/git-linguist [Extension]
+  bin/github-linguist [Extension]
+  lib/linguist.rb [Extension]
+  …
+```
+
+If a file's language is affected by `.gitattributes`, the strategy will show the original detection method along with a note indicating whether the gitattributes setting changed the result or confirmed it.
+
+For instance, if you had the following .gitattributes overrides in your repo:
+
+```gitattributes
+
+*.ts linguist-language=JavaScript
+*.js linguist-language=JavaScript
+
+```
+
+the output of Linguist would be something like this:
+
+```console
+100.00% 217        JavaScript
+
+JavaScript:
+  demo.ts [Heuristics (overridden by .gitattributes)]
+  demo.js [Extension (confirmed by .gitattributes)]
+```
+
+##### `--json`
+
+The `--json` or `-j` flag output the data into JSON format.
+
+```console
+$ github-linguist --json
+{"Dockerfile":{"size":1212,"percentage":"0.31"},"Ruby":{"size":264519,"percentage":"66.84"},"C":{"size":97685,"percentage":"24.68"},"Lex":{"size":5098,"percentage":"1.29"},"Shell":{"size":1257,"percentage":"0.32"},"Go":{"size":25999,"percentage":"6.57"}}
+```
+
+This option can be used in conjunction with `--breakdown` to get a full list of files along with the size and percentage data.
+
+```console
+$ github-linguist --breakdown --json
+{"Dockerfile":{"size":1212,"percentage":"0.31","files":["Dockerfile","tools/grammars/Dockerfile"]},"Ruby":{"size":264519,"percentage":"66.84","files":["Gemfile","Rakefile","bin/git-linguist","bin/github-linguist","ext/linguist/extconf.rb","github-linguist.gemspec","lib/linguist.rb",...]}}
+
+```
+
+NB. The `--strategies` flag has no effect, when the `--json` flag is present.
 
 #### Single file
 
@@ -136,153 +234,107 @@ grammars.yml: 884 lines (884 sloc)
   language:  YAML
 ```
 
-## Troubleshooting
+#### Additional options
 
-### My repository is detected as the wrong language
+##### `--breakdown`
 
-If the language stats bar is reporting a language that you don't expect:
+This flag has no effect in *Single file* mode.
 
-1. Click on the name of the language in the stats bar to see a list of the files that are identified as that language.
-   Keep in mind this performs a search so the [code search restrictions][search-limits] may result in files identified in the language statistics not appearing in the search results.
-   [Installing Linguist locally](#usage) and running it from the [command line](#command-line-usage) will give you accurate results.
-1. If you see files that you didn't write in the search results, consider moving the files into one of the [paths for vendored code](/lib/linguist/vendor.yml), or use the [manual overrides](#overrides) feature to ignore them.
-1. If the files are misclassified, search for [open issues][issues] to see if anyone else has already reported the issue.
-   Any information you can add, especially links to public repositories, is helpful.
-   You can also use the [manual overrides](#overrides) feature to correctly classify them in your repository.
-1. If there are no reported issues of this misclassification, [open an issue][new-issue] and include a link to the repository or a sample of the code that is being misclassified.
+##### `--strategies`
 
-[search-limits]: https://help.github.com/articles/searching-code/#considerations-for-code-search
+When using the `--strategies` or `-s` flag with a single file, you can see which detection method was used:
 
-Keep in mind that the repository language stats are only [updated when you push changes](#how-linguist-works-on-githubcom), and the results are cached for the lifetime of your repository.
-If you have not made any changes to your repository in a while, you may find pushing another change will correct the stats.
-
-### My repository isn't showing my language
-
-Linguist does not consider [vendored code](#vendored-code), [generated code](#generated-code), [documentation](#documentation), or `data` (e.g. SQL) or `prose` (e.g. Markdown) languages (as defined by the `type` attribute in [`languages.yml`](/lib/linguist/languages.yml)) when calculating the repository language statistics.
-
-If the language statistics bar is not showing your language at all, it could be for a few reasons:
-
-1. Linguist doesn't know about your language.
-1. The extension you have chosen is not associated with your language in [`languages.yml`](/lib/linguist/languages.yml).
-1. All the files in your repository fall into one of the categories listed above that Linguist excludes by default.
-
-If Linguist doesn't know about the language or the extension you're using, consider [contributing](CONTRIBUTING.md) to Linguist by opening a pull request to add support for your language or extension.
-For everything else, you can use the [manual overrides](#overrides) feature to tell Linguist to include your files in the language statistics.
-
-### There's a problem with the syntax highlighting of a file
-
-Linguist detects the language of a file but the actual syntax-highlighting is powered by a set of language grammars which are included in this project as a set of submodules [as listed here](/vendor/README.md).
-
-If you experience an issue with the syntax-highlighting on GitHub, **please report the issue to the upstream grammar repository, not here.**
-Grammars are updated every time we build the Linguist gem so upstream bug fixes are automatically incorporated as they are fixed.
-
-### I get an error when using Linguist on a directory that is not a Git repository
-
-Linguist only works on Git repositories and individual files. Its primary use is on GitHub.com which uses bare
-repositories and thus changes need to be committed as individual files don't show on the filesystem.
-
-As a work around you could initialise a temporary Git repository in your directory as demonstrated in this
-[script](https://gist.github.com/PuZZleDucK/a45fd1fac3758235ffed9fe0e8aab643).
-
-Alternatively you can run Linguist on individual files, see [above](#single-file).
-
-## Overrides
-
-Linguist supports a number of different custom override strategies for language definitions and file paths.
-
-### Using gitattributes
-
-Add [a `.gitattributes` file](https://git-scm.com/docs/gitattributes) to your project and use standard git-style path matchers for the files you want to override using the `linguist-documentation`, `linguist-language`, `linguist-vendored`, `linguist-generated`  and `linguist-detectable` attributes.
-`.gitattributes` will be used to determine language statistics and will be used to syntax highlight files.
-You can also manually set syntax highlighting using [Vim or Emacs modelines](#using-emacs-or-vim-modelines).
-
-When testing with a local installation of Linguist, take note that the added attributes will not take effect until the `.gitattributes` file is committed to your repository.
-
-File and folder paths inside `.gitattributes` are calculated relative to the position of the `.gitattributes` file.
-
-```gitattributes
-# Example of a `.gitattributes` file which reclassifies `.rb` files as Java:
-*.rb linguist-language=Java
-
-# Replace any whitespace in the language name with hyphens:
-*.glyphs linguist-language=OpenStep-Property-List
+```console
+$ github-linguist --strategies lib/linguist.rb 
+lib/linguist.rb: 105 lines (96 sloc)
+  type:      Text
+  mime type: application/x-ruby
+  language:  Ruby
+  strategy:  Extension
 ```
 
-#### Vendored code
+If a file's language is affected by `.gitattributes`, the strategy will show whether the gitattributes setting changed the result or confirmed it:
 
-Checking code you didn't write, such as JavaScript libraries, into your git repo is a common practice, but this often inflates your project's language stats and may even cause your project to be labeled as another language.
-By default, Linguist treats all of the paths defined in [`vendor.yml`](/lib/linguist/vendor.yml) as vendored and therefore doesn't include them in the language statistics for a repository.
-
-Use the `linguist-vendored` attribute to vendor or un-vendor paths:
-
-```gitattributes
-special-vendored-path/* linguist-vendored
-jquery.js -linguist-vendored
+In this fictitious example, it says "confirmed by .gitattributes" since the detection process (using the Filename strategy) would have given the same output as the override:
+```console
+.devcontainer/devcontainer.json: 27 lines (27 sloc)
+  type:      Text
+  mime type: application/json
+  language:  JSON with Comments
+  strategy:  Filename (confirmed by .gitattributes)
 ```
 
-#### Documentation
+In this other fictitious example, it says "overridden by .gitattributes" since the gitattributes setting changes the detected language to something different:
 
-Just like vendored files, Linguist excludes documentation files from your project's language stats.
-[`documentation.yml`](/lib/linguist/documentation.yml) lists common documentation paths and excludes them from the language statistics for your repository.
-
-Use the `linguist-documentation` attribute to mark or unmark paths as documentation:
-
-```gitattributes
-project-docs/* linguist-documentation
-docs/formatter.rb -linguist-documentation
+```console
+test.rb: 13 lines (11 sloc)
+  type:      Text
+  mime type: application/x-ruby
+  language:  Java
+  strategy:  Extension (overridden by .gitattributes)
 ```
 
-#### Generated code
+Here, the `.rb` file would normally be detected as Ruby by the Extension strategy, but `.gitattributes` overrides it to be detected as Java instead.
 
-Not all plain text files are true source files.
-Generated files like minified JavaScript and compiled CoffeeScript can be detected and excluded from language stats.
-As an added bonus, unlike vendored and documentation files, these files are suppressed in diffs.
-[`generated.rb`](/lib/linguist/generated.rb) lists common generated paths and excludes them from the language statistics of your repository.
+##### `--json`
 
-Use the `linguist-generated` attribute to mark or unmark paths as generated.
+Using the `--json` flag will give you the output for a single file in JSON format:
 
-```gitattributes
-Api.elm linguist-generated
+```console
+$ github-linguist --strategies --json  lib/linguist.rb
+{"lib/linguist.rb":{"lines":105,"sloc":96,"type":"Text","mime_type":"application/x-ruby","language":"Ruby","large":false,"generated":false,"vendored":false}}
 ```
 
-#### Detectable
+NB. The `--strategies` has no effect, when the `--json` flag is present.
 
-Only programming languages are included in the language statistics.
-Languages of a different type (as defined in [`languages.yml`](/lib/linguist/languages.yml)) are not "detectable" causing them not to be included in the language statistics.
+#### Docker
 
-Use the `linguist-detectable` attribute to mark or unmark paths as detectable:
+If you have Docker installed you can either build or use
+our pre-built images and run Linguist within a container:
 
-```gitattributes
-*.kicad_pcb linguist-detectable
-*.sch linguist-detectable
-tools/export_bom.py -linguist-detectable
+```console
+$ docker run --rm -v $(pwd):$(pwd):Z -w $(pwd) -t ghcr.io/github-linguist/linguist:latest
+66.84%  264519     Ruby
+24.68%  97685      C
+6.57%   25999      Go
+1.29%   5098       Lex
+0.32%   1257       Shell
+0.31%   1212       Dockerfile
 ```
 
-### Using Emacs or Vim modelines
+##### Building the image
 
-If you do not want to use `.gitattributes` to override the syntax highlighting used on GitHub.com, you can use Vim or Emacs style modelines to set the language for a single file.
-Modelines can be placed anywhere within a file and are respected when determining how to syntax-highlight a file on GitHub.com
+```console
+$ docker build -t linguist .
+$ docker run --rm -v $(pwd):$(pwd):Z -w $(pwd) -t linguist
+66.84%  264519     Ruby
+24.68%  97685      C
+6.57%   25999      Go
+1.29%   5098       Lex
+0.32%   1257       Shell
+0.31%   1212       Dockerfile
+$ docker run --rm -v $(pwd):$(pwd) -w $(pwd) -t linguist github-linguist --breakdown
+66.84%  264519     Ruby
+24.68%  97685      C
+6.57%   25999      Go
+1.29%   5098       Lex
+0.32%   1257       Shell
+0.31%   1212       Dockerfile
 
-##### Vim
+Ruby:
+Gemfile
+Rakefile
+bin/git-linguist
+bin/github-linguist
+ext/linguist/extconf.rb
+github-linguist.gemspec
+lib/linguist.rb
+…
 ```
-# Some examples of various styles:
-vim: syntax=java
-vim: set syntax=ruby:
-vim: set filetype=prolog:
-vim: set ft=cpp:
-```
-
-##### Emacs
-```
--*- mode: php; -*-
--*- c++ -*-
-```
-
 
 ## Contributing
 
 Please check out our [contributing guidelines](CONTRIBUTING.md).
-
 
 ## License
 

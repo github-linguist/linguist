@@ -1,0 +1,77 @@
+Metadata:
+	Title: Example mod
+	Version: {DEV_VERSION}
+
+Packages:
+	^EngineDir
+	$example: example
+	^EngineDir|mods/common: common
+	example|bits
+
+MapFolders:
+	example|maps: System
+
+Rules:
+	example|rules.yaml
+
+TileSets:
+	example|tileset.yaml
+
+Cursors:
+	example|cursor.yaml
+
+Chrome:
+	example|chrome.yaml
+
+Assemblies:
+	^BinDir|OpenRA.Mods.Common.dll
+	^BinDir|OpenRA.Mods.Example.dll
+
+ChromeLayout:
+	example|mainmenu.yaml
+
+Music:
+	example|audio/music.yaml
+
+Notifications:
+	example|audio/notifications.yaml
+
+Translations:
+	example|english.yaml
+
+Hotkeys:
+	common|hotkeys/game.yaml
+
+LoadScreen: BlankLoadScreen
+
+ServerTraits:
+	LobbyCommands
+	PlayerPinger
+	MasterServerPinger
+	LobbySettingsNotification
+
+ChromeMetrics:
+	common|metrics.yaml
+	example|metrics.yaml
+
+Fonts:
+	Bold:
+		Font: common|FreeSansBold.ttf
+		Size: 14
+		Ascender: 11
+
+MapGrid:
+	TileSize: 32, 32
+	Type: Rectangular
+
+SpriteFormats: ShpTS
+
+SpriteSequenceFormat: DefaultSpriteSequence
+
+ModelSequenceFormat: PlaceholderModelSequence
+
+GameSpeeds:
+	default:
+		Name: Normal
+		Timestep: 40
+		OrderLatency: 3
