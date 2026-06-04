@@ -1,0 +1,14 @@
+# original: https://github.com/containers/podman/blob/main/test/e2e/quadlet/ipv6.network
+## assert-podman-final-args systemd-ipv6
+## assert-podman-args "--ipv6"
+## assert-key-is Service Type exec
+## assert-key-is Service RemainAfterExit no
+## assert-key-contains Service SyslogIdentifier "Modify %N"
+
+[Network]
+IPv6=yes
+
+[Service]
+Type=exec
+RemainAfterExit=no
+SyslogIdentifier="Modify %N"

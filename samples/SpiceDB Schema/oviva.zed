@@ -1,0 +1,404 @@
+/** user represents a user within our system, this is usually the subject when checking permissions */
+definition user {}
+
+/** platform represents an entire system deployment.
+ * There is exactly one platform per system deployment
+ */
+definition platform {
+	relation administrator: user
+
+	relation data_subject_request_administrator: user
+	relation content_administrator: user
+	relation document_category_administrator: user
+	relation tech_ops_administrator: user
+	relation clinical_case_report_administrator: user
+
+	permission data_subject_request_admin = data_subject_request_administrator
+	permission document_category_admin = document_category_administrator
+	permission clinical_case_report_admin = clinical_case_report_administrator + administrator
+}
+
+/** tenant represents a tenant within the permission graph.
+ * Our common roles have direct relationships to tenants and a lot of permissions
+ * are defined on the tenant level.
+ */
+definition tenant {
+	relation platform: platform
+
+	// DEPRECATED: the parent of the current tenant, allowing for inheritance of permissions
+	relation parent: tenant
+
+	// our common roles
+	relation administrator: user
+	relation coach: user
+	relation patient: user
+	relation agent: user
+
+	// write or read data from a patient's electronic health record (ehr)
+	relation ehr_writer: user
+
+	// hcs-gb roles
+	relation hcs_gb_administrator: user
+	relation hcs_gb_ppc: user
+	relation hcs_gb_case_creator: user
+
+	// pathway roles
+	relation pathway_administrator: user
+
+	// document admin
+	relation document_administrator: user
+
+	// hcs-de roles
+	relation hcs_de_administrator: user
+	relation hcs_de_supervisor: user
+
+	// hcs-ch roles
+	relation hcs_ch_administrator: user
+
+	// profit center roles
+	relation profit_center_administrator: user
+
+	// task admin
+	relation task_administrator: user
+
+	//--- permissions
+	permission write_ehr_local = ehr_writer
+	permission write_ehr = write_ehr_local + parent->write_ehr
+	permission read_ehr = write_ehr
+
+	permission administer_local = administrator
+	permission administer = administer_local + parent->administer
+
+	permission read_note_templates = coach + administer
+
+	permission platform_data_subject_request_admin = platform->data_subject_request_administrator
+
+	permission platform_tech_ops_admin = platform->tech_ops_administrator
+
+	// clinical pathways permissions
+	permission pathway_admin_local = pathway_administrator
+	permission pathway_admin = pathway_admin_local + parent->pathway_admin
+	permission create_pathway = pathway_admin
+	permission write_pathway = pathway_admin
+	permission read_pathway = pathway_admin
+	permission create_pathway_state = pathway_admin
+	permission write_pathway_state = pathway_admin
+	permission read_pathway_state = pathway_admin
+
+	permission administer_content = platform->content_administrator
+	permission read_articles = administer_content
+	permission create_article = administer_content
+
+	// profit center permissions
+	permission write_profit_center_local = profit_center_administrator
+	permission write_profit_center = write_profit_center_local + parent->write_profit_center
+
+	permission hcs_gb_case_administrator = hcs_gb_administrator
+	permission hcs_gb_case_editor = hcs_gb_ppc + hcs_gb_administrator
+	permission hcs_gb_create_case = hcs_gb_case_creator
+	permission hcs_gb_case_admin = hcs_gb_case_administrator
+	permission hcs_gb_case_admin_ppc = hcs_gb_case_editor
+	permission hcs_gb_tech_ops_admin = platform_tech_ops_admin
+	permission read_hcs_gb_contracts = hcs_gb_case_admin_ppc + coach
+	permission write_hcs_gb_contracts = hcs_gb_case_admin & write_profit_center
+	permission read_hcs_gb_programs = hcs_gb_case_admin_ppc + coach
+
+	// document permissions
+	permission platform_document_category_admin = platform->document_category_admin
+
+	permission document_administrator_local = document_administrator
+	permission document_admin = document_administrator_local + parent->document_admin
+
+	permission document_category_read_local = coach + administrator + document_administrator + platform_document_category_admin
+	permission document_category_read = document_category_read_local + parent->document_category_read
+
+	permission document_create_upload_url = coach + administer
+
+	// hcs-de permissions
+	permission hcs_de_case_administrator = hcs_de_administrator + hcs_de_supervisor
+	permission hcs_de_case_editor = hcs_de_case_administrator + coach
+	permission hcs_de_coach_employment_rate_admin = hcs_de_supervisor
+	permission hcs_de_programme_admin = hcs_de_supervisor
+	permission hcs_de_tech_ops_admin = platform_tech_ops_admin
+	permission hcs_de_coach_teams_admin = hcs_de_administrator + hcs_de_supervisor
+
+	// hcs-ch permissions
+	permission hcs_ch_case_administrator = hcs_ch_administrator
+	permission hcs_ch_case_editor = hcs_ch_case_administrator + coach
+	permission hcs_ch_insurance_reader = hcs_ch_case_administrator + coach
+	permission hcs_ch_health_care_professional_reader = hcs_ch_case_administrator + coach
+	permission hcs_ch_tech_ops_admin = platform_tech_ops_admin
+	permission hcs_ch_coach_teams_admin = hcs_ch_administrator
+
+	permission write_clinical_case_report_template = platform->clinical_case_report_admin
+	permission read_clinical_case_report_template = coach + write_clinical_case_report_template
+
+	//task permissions
+	permission create_task = task_administrator
+}
+
+/** coach represents the attributes of a user which is a coach */
+definition coach {
+	relation self: user
+	relation tenant: tenant
+
+	permission admin_write_document = (tenant->administer & tenant->document_admin & tenant->write_ehr)
+	permission admin_read_document = admin_write_document
+
+	permission write_document = self + admin_write_document
+	permission read_document = write_document
+
+	permission admin_create_document = admin_write_document
+	permission admin_list_documents = admin_read_document
+
+	permission create_document = write_document
+	permission list_documents = read_document
+
+	permission hcs_de_administer_employment_rate = tenant->hcs_de_coach_employment_rate_admin
+}
+
+/** agent represents the attributes of a user which is a agent */
+definition agent {
+	relation self: user
+	relation tenant: tenant
+}
+
+/** admin represents the attributes of a user which is a administrator */
+definition administrator {
+	relation self: user
+	relation tenant: tenant
+}
+
+/** patient represents the attributes of a user which is a patient */
+definition patient {
+	relation self: user
+	relation coacher: user
+	relation tenant: tenant
+	permission coach = coacher
+
+	// synthetic relations so we can refer to the tenants permissions further down
+	permission tenant_write_ehr = tenant->write_ehr
+	permission tenant_read_ehr = tenant->read_ehr
+	permission tenant_administer = tenant->administer
+	permission tenant_document_admin = tenant->document_admin
+	permission tenant_hcs_gb_case_administrator = tenant->hcs_gb_case_administrator
+	permission tenant_hcs_gb_case_editor = tenant->hcs_gb_case_editor
+	permission tenant_hcs_gb_create_case = tenant->hcs_gb_create_case
+	permission tenant_create_pathway_state = tenant->create_pathway_state
+	permission tenant_write_pathway_state = tenant->write_pathway_state
+	permission tenant_read_pathway_state = tenant->read_pathway_state
+	permission tenant_hcs_de_case_administrator = tenant->hcs_de_case_administrator
+	permission tenant_hcs_de_case_editor = tenant->hcs_de_case_editor
+	permission tenant_hcs_ch_case_administrator = tenant->hcs_ch_case_administrator
+	permission tenant_hcs_ch_case_editor = tenant->hcs_ch_case_editor
+	permission tenant_task_administrator = tenant->task_administrator
+
+	// document permissions
+	permission admin_write_document = (tenant_administer & tenant_document_admin & tenant_write_ehr)
+	permission admin_read_document = admin_write_document
+
+	permission write_document = (tenant_write_ehr & coacher) + admin_write_document
+	permission read_document = write_document
+
+	permission admin_list_documents = admin_read_document
+	permission admin_create_document = admin_write_document
+
+	permission create_document = write_document + admin_create_document
+	permission list_documents = read_document + admin_list_documents
+
+	// clinical pathways
+	permission read_pathway_states = coacher + tenant_read_pathway_state
+	permission write_pathway_states = coacher + tenant_write_pathway_state
+	permission create_pathway_states = tenant_create_pathway_state
+
+	// data subject request permissions
+	permission data_subject_request_create = self + tenant->platform_data_subject_request_admin
+	permission tenant_data_subject_request_admin = tenant->platform_data_subject_request_admin
+
+	permission read_hcs_gb_cases = tenant_hcs_gb_case_editor + coacher
+	permission create_hcs_gb_case = tenant_hcs_gb_case_editor + coacher + tenant_hcs_gb_create_case
+
+	// hcs-de permissions
+	permission read_hcs_de_cases = tenant_hcs_de_case_administrator + tenant_hcs_de_case_editor + coacher
+	permission create_hcs_de_case = tenant_hcs_de_case_administrator + tenant_hcs_de_case_editor + coacher
+
+	// hcs-ch permissions
+	permission read_hcs_ch_cases = tenant_hcs_ch_case_administrator + tenant_hcs_ch_case_editor + coacher
+	permission create_hcs_ch_case = tenant_hcs_ch_case_administrator + tenant_hcs_ch_case_editor + coacher
+
+	// task permissions
+	permission create_task = tenant_task_administrator + coacher
+
+	// marketing cloud data
+	permission read_marketing_cloud_data = tenant_hcs_ch_case_administrator + tenant_hcs_de_case_administrator + tenant_hcs_gb_case_editor
+
+	// devices permissions
+	permission write_device = (tenant_administer & tenant_write_ehr) + coacher
+	permission list_devices = (tenant_administer & tenant_read_ehr) + coacher
+}
+
+/** electronic_health_record (ehr for short) represents the record of medical data of a patient.
+* It contains attributes such as `diagnosis`, `date_of_birth`. Furthermore there are a lot
+* of related entities which are considered part of an electronic_health_record.
+*/
+definition electronic_health_record {
+	relation owner: patient
+
+	permission write = (owner->tenant_write_ehr & owner->coach) + (owner->tenant_write_ehr & owner->tenant_administer)
+	permission read = (owner->tenant_read_ehr & owner->coach) + (owner->tenant_read_ehr & owner->tenant_administer) + write
+
+	permission create_patient_note = write
+	permission read_patient_notes = read
+
+	permission create_clinical_case_report = write
+	permission list_clinical_case_report = read
+}
+
+/** patient_note represents a structured note which is part of a patients electronic health record */
+definition patient_note {
+	relation author: user
+	relation ehr: electronic_health_record
+
+	permission write = ehr->write + author
+	permission read = write + ehr->read
+}
+
+/**
+ * data_subject_request represents the request raised by the patient/admin to act on patient data.
+ * For example, It may be a request to ERASE the patient data.
+ */
+definition data_subject_request {
+	relation owner: patient
+
+	permission write = owner->tenant_data_subject_request_admin + owner->self
+	permission read = write
+}
+
+/**
+ * article represents a piece of content known to the content-engine
+ */
+definition article {
+	relation tenant: tenant
+
+	permission write = tenant->administer_content
+	permission read = write
+}
+
+
+/**
+ * hcs_gb_case represents a hcs gb case relating to a patient
+ */
+definition hcs_gb_case {
+	relation owner: patient
+
+	permission owner_coacher = owner->coacher
+	permission owner_tenant_hcs_gb_case_administrator = owner->tenant_hcs_gb_case_administrator
+
+	permission write = owner->tenant_hcs_gb_case_editor + owner_coacher
+	permission read = write
+	permission administer = owner_tenant_hcs_gb_case_administrator
+}
+
+/**
+ * pathway represents a clinical pathway
+ */
+definition pathway {
+	relation tenant: tenant
+
+	permission write = tenant->write_pathway + tenant->create_pathway
+	permission read = write + tenant->read_pathway
+}
+
+/**
+ * pathway_state represents the state of a clinical pathway
+ */
+definition pathway_state {
+	relation owner: patient
+
+	permission write = owner->write_pathway_states
+	permission read = write + owner->read_pathway_states
+}
+
+/** document represents a document known to the document-service */
+definition document {
+	relation owner: coach | patient
+
+	permission admin_only_write = owner->admin_write_document
+	permission admin_only_read = admin_only_write
+
+	permission write = owner->write_document
+	permission read = write
+}
+
+/**
+ * hcs_de_case represents a hcs de case relating to a patient
+ */
+definition hcs_de_p43_case {
+	relation owner: patient
+
+	permission owner_coacher = owner->coacher
+	permission owner_tenant_hcs_de_case_administrator = owner->tenant_hcs_de_case_administrator
+	permission owner_tenant_hcs_de_case_editor = owner->tenant_hcs_de_case_editor
+
+	permission write = owner_tenant_hcs_de_case_editor + owner_coacher
+	permission read = write
+	permission administer = owner_tenant_hcs_de_case_administrator
+}
+
+definition hcs_de_p20_case {
+	relation owner: patient
+
+	permission owner_coacher = owner->coacher
+	permission owner_tenant_hcs_de_case_administrator = owner->tenant_hcs_de_case_administrator
+	permission owner_tenant_hcs_de_case_editor = owner->tenant_hcs_de_case_editor
+
+	permission write = owner_tenant_hcs_de_case_editor + owner_coacher
+	permission read = write
+	permission administer = owner_tenant_hcs_de_case_administrator
+}
+
+/**
+ * hcs_ch_case represents a hcs ch case relating to a patient
+ */
+definition hcs_ch_case {
+	relation owner: patient
+
+	permission owner_coacher = owner->coacher
+	permission owner_tenant_hcs_ch_case_administrator = owner->tenant_hcs_ch_case_administrator
+	permission owner_tenant_hcs_ch_case_editor = owner->tenant_hcs_ch_case_editor
+
+	permission write = owner_tenant_hcs_ch_case_editor + owner_coacher
+	permission read = write
+	permission administer = owner_tenant_hcs_ch_case_administrator
+}
+
+definition clinical_case_report {
+	relation ehr: electronic_health_record
+
+	permission write = ehr->write
+	permission read = write + ehr->read
+}
+
+definition clinical_case_report_template {
+	relation tenant: tenant
+
+	permission write = tenant->write_clinical_case_report_template
+	permission read = tenant->read_clinical_case_report_template
+}
+
+definition task {
+	relation owner: patient
+
+	permission write = owner->tenant_task_administrator + owner->coacher
+	permission read = write
+
+	permission write_comments = owner->tenant_task_administrator + owner->coacher
+	permission read_comments = write_comments
+}
+
+definition analysis {
+	relation owner: electronic_health_record
+
+	permission read = owner->read
+
+}
