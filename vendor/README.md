@@ -543,6 +543,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Record Jar:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Red:** [Oldes/Sublime-Red](https://github.com/Oldes/Sublime-Red)
 - **Redirect Rules:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
+- **Redscript:** [jackhumbert/redscript-syntax-highlighting](https://github.com/jackhumbert/redscript-syntax-highlighting)
 - **Regular Expression:** [tree-sitter/tree-sitter-regex](https://github.com/tree-sitter/tree-sitter-regex) 🐌
 - **Ren'Py:** [williamd1k0/language-renpy](https://github.com/williamd1k0/language-renpy)
 - **Rez:** [textmate/rez.tmbundle](https://github.com/textmate/rez.tmbundle)
