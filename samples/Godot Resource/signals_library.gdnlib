@@ -1,0 +1,18 @@
+[entry]
+
+X11.64="../../target/debug/libsignals.so"
+OSX.64="../../target/debug/libsignals.dylib"
+Windows.64="res://../../target/debug/signals.dll"
+
+[dependencies]
+
+Windows.64=[  ]
+X11.64=[  ]
+OSX.64=[  ]
+
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=true

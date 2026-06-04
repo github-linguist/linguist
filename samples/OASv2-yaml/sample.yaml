@@ -1,0 +1,78 @@
+swagger: "2.0"
+info:
+    title: API Title
+    version: "1.0"
+host: api.domain.test
+basePath: /api
+paths:
+    /path1:
+        put:
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    description: OK
+        get:
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    description: OK
+    /name:
+        get:
+            description: ''
+            parameters: []
+            responses:
+                '200':
+                    description: OK
+parameters:
+    paramKey:
+        name: name
+        in: path
+        required: true
+        type: string
+        description: ''
+    bodyKey:
+        name: name
+        in: body
+        description: ''
+        schema: {}
+    otherKey:
+        name: name
+        in: query
+        type: string
+        description: ''
+responses:
+    '200':
+        description: ''
+    code:
+        description: ''
+security:
+    - securityKey: []
+    - name: []
+securityDefinitions:
+    defBasicBasicKey:
+        type: basic
+    defOauth2Access:
+        type: oauth2
+        flow: accessCode
+        authorizationUrl: https://domain.test/api/oauth/dialog
+        tokenUrl: https://domain.test/api/oauth/token
+        scopes:
+            read: example read scope
+            write: example write scope
+    defApiKey:
+        type: apiKey
+        name: api_key
+        in: query
+definitions:
+    defKey:
+        type: object
+        properties:
+            property:
+                type: integer
+    name:
+        type: object
+        properties:
+            property:
+                type: integer

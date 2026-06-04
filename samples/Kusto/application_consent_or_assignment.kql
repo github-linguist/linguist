@@ -1,0 +1,188 @@
+// MIT License
+//
+// Copyright (c) 2022 Jose Sebastián Canós
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+//let query_frequency = 1h;
+let query_period = 90d;
+let _ConsentRiskDictionary = toscalar(
+    _GetWatchlist('Permission-AzurePermissions')
+    | summarize take_anyif(ConsentRisk, isnotempty(ConsentRisk)) by PermissionName
+    | summarize make_bag(pack(PermissionName, ConsentRisk))
+);
+let _ConsentToApplication =
+    AuditLogs
+    | where TimeGenerated > ago(query_period)
+    | where OperationName has "Consent to application"
+    | extend
+        Actor = tostring(InitiatedBy.user.userPrincipalName),
+        ActorId = tostring(InitiatedBy.user.id),
+        ActorIPAddress = tostring(InitiatedBy.user.ipAddress)
+    | mv-expand TargetResource = TargetResources
+    | extend
+        AppDisplayName = tostring(TargetResource.displayName),
+        AppServicePrincipalId = tostring(TargetResource.id)
+    | mv-apply Properties = TargetResource.modifiedProperties on (
+        summarize BagToUnpack = make_bag(pack(tostring(Properties.displayName), pack("oldValue", Properties.oldValue, "newValue", Properties.newValue)))
+    )
+    | evaluate bag_unpack(BagToUnpack, columnsConflict='replace_source')
+    | extend
+        AdminConsent = trim(@'[\"\s]+', tostring(column_ifexists("ConsentContext.IsAdminConsent", dynamic(null)).newValue)),
+        OnBehalfOfAllUsers = trim(@'[\"\s]+', tostring(column_ifexists("ConsentContext.OnBehalfOfAll", dynamic(null)).newValue)),
+        AppId = extract(@"([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})", 1, trim(@'[\"\s]+', tostring(column_ifexists("TargetId.ServicePrincipalNames", dynamic(null)).newValue))),
+        Permissions = extract_all(@"PrincipalId: ([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?, ResourceId: ([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}), ConsentType:\s+(\w+), Scope:\s+([^,]+)", extract(@"\=\>\s+(.*)", 1, tostring(column_ifexists("ConsentAction.Permissions", ""))))
+    | mv-apply Permissions on (
+        extend
+            TargetId = tostring(Permissions[0]),
+            PermissionsResourceId = tostring(Permissions[1]),
+            ConsentType = tostring(Permissions[2]),
+            Scope = split(Permissions[3], ' ')
+        | mv-expand Scope
+        | summarize Permissions = array_sort_asc(make_set(Scope)) by ConsentType, TargetId, PermissionsResourceId
+    )
+    | extend Target = iff(TargetId == ActorId, Actor, "")
+;
+let _DelegatedPermissionGrant =
+    AuditLogs
+    | where TimeGenerated > ago(query_period)
+    | where OperationName has ("Add delegated permission grant")
+    | extend
+        Actor = tostring(InitiatedBy.user.userPrincipalName),
+        ActorId = tostring(InitiatedBy.user.id),
+        ActorIPAddress = tostring(InitiatedBy.user.ipAddress)
+    | mv-expand TargetResource = TargetResources
+    | where array_length(TargetResource.modifiedProperties) > 0
+    | extend
+        PermissionsResourceDisplayName = tostring(TargetResource.displayName),
+        PermissionsResourceId = tostring(TargetResource.id)
+    | mv-apply Properties = TargetResource.modifiedProperties on (
+        summarize BagToUnpack = make_bag(pack(tostring(Properties.displayName), pack("oldValue", Properties.oldValue, "newValue", Properties.newValue)))
+    )
+    | evaluate bag_unpack(BagToUnpack, columnsConflict='replace_source')
+    | extend
+        ConsentType = trim(@'[\"\s]+', tostring(column_ifexists("DelegatedPermissionGrant.ConsentType", dynamic(null)).newValue)),
+        Permissions = array_sort_asc(split(trim(@'[\"\s]+', tostring(column_ifexists("DelegatedPermissionGrant.Scope", dynamic(null)).newValue)), " ")),
+        AppServicePrincipalId = trim(@'[\"\s]+', tostring(column_ifexists("ServicePrincipal.ObjectID", dynamic(null)).newValue))
+    | extend
+        Target = iff(ConsentType == "Principal", Actor, ""),
+        TargetId = iff(ConsentType == "Principal", ActorId, "")
+;
+let _AppRoleAssignmentUser =
+    AuditLogs
+    | where TimeGenerated > ago(query_period)
+    | where OperationName has ("Add app role assignment grant to user")
+    | where not(Result == "failure" and ResultDescription == "Microsoft.Online.DirectoryServices.UniqueKeyPropertyException")
+    | extend
+        Actor = tostring(InitiatedBy.user.userPrincipalName),
+        //ActorId = tostring(InitiatedBy.user.id),
+        ActorIPAddress = tostring(InitiatedBy.user.ipAddress)
+    | mv-expand TargetResource = TargetResources
+    | where array_length(TargetResource.modifiedProperties) > 0
+    | extend
+        AppDisplayName = tostring(TargetResource.displayName),
+        AppServicePrincipalId = tostring(TargetResource.id)
+    | mv-apply Properties = TargetResource.modifiedProperties on (
+        summarize BagToUnpack = make_bag(pack(tostring(Properties.displayName), pack("oldValue", Properties.oldValue, "newValue", Properties.newValue)))
+    )
+    | evaluate bag_unpack(BagToUnpack, columnsConflict='replace_source')
+    | extend
+        Target = trim(@'[\"\s]+', tostring(column_ifexists("User.UPN", dynamic(null)).newValue)),
+        TargetId = trim(@'[\"\s]+', tostring(column_ifexists("User.ObjectID", dynamic(null)).newValue))
+;
+let _AppRoleAssignmentServicePrincipal =
+    AuditLogs
+    | where TimeGenerated > ago(90d)
+    | where OperationName has ("Add app role assignment to service principal")
+    | where not(Result == "failure" and ResultDescription == "Microsoft.Online.DirectoryServices.UniqueKeyPropertyException")
+    | extend
+        Actor = tostring(InitiatedBy.user.userPrincipalName),
+        //ActorId = tostring(InitiatedBy.user.id),
+        ActorIPAddress = tostring(InitiatedBy.user.ipAddress)
+    | mv-expand TargetResource = TargetResources
+    | where array_length(TargetResource.modifiedProperties) > 0
+    | extend
+        PermissionsResourceDisplayName = tostring(TargetResource.displayName),
+        PermissionsResourceId = tostring(TargetResource.id)
+    | mv-apply Properties = TargetResource.modifiedProperties on (
+        summarize BagToUnpack = make_bag(pack(tostring(Properties.displayName), pack("oldValue", Properties.oldValue, "newValue", Properties.newValue)))
+    )
+    | evaluate bag_unpack(BagToUnpack, columnsConflict='replace_source')
+    | extend
+        AppDisplayName = trim(@'[\"\s]+', tostring(column_ifexists("ServicePrincipal.DisplayName", dynamic(null)).newValue)),
+        AppServicePrincipalId = trim(@'[\"\s]+', tostring(column_ifexists("ServicePrincipal.ObjectID", dynamic(null)).newValue)),
+        AppRole = trim(@'[\"\s]+', tostring(column_ifexists("AppRole.Value", dynamic(null)).newValue))
+    | summarize Permissions = array_sort_asc(make_set(AppRole)), arg_min(TimeGenerated, *) by AppServicePrincipalId, CorrelationId, Result, PermissionsResourceId
+    | extend
+        ConsentType = "Application",
+        Target = AppDisplayName,
+        AdminConsent = "True"
+;
+union isfuzzy=true _AppRoleAssignmentServicePrincipal, _AppRoleAssignmentUser, _DelegatedPermissionGrant, _ConsentToApplication
+| project TimeGenerated, Actor, ActorIPAddress, OperationName, Result, AppDisplayName, Target, AdminConsent, OnBehalfOfAllUsers, ConsentType, Permissions, PermissionsResourceDisplayName, AppServicePrincipalId, CorrelationId, InitiatedBy, AdditionalDetails, TargetResources, PermissionsResourceId, TargetId
+| as Results
+| project-away PermissionsResourceDisplayName
+| lookup kind=leftouter (
+    Results
+    | distinct PermissionsResourceDisplayName, PermissionsResourceId
+    | where isnotempty(PermissionsResourceDisplayName) and isnotempty(PermissionsResourceId)
+) on PermissionsResourceId
+| lookup kind=leftouter (
+    Results
+    | distinct AppDisplayName, AppServicePrincipalId
+    | where isnotempty(AppDisplayName) and isnotempty(AppServicePrincipalId)
+    | project-rename Secondary_AppDisplayName = AppDisplayName
+) on $left.PermissionsResourceId == $right.AppServicePrincipalId
+| extend
+    AppDisplayName = iff(isempty(AppDisplayName) and isnotempty(Secondary_AppDisplayName), Secondary_AppDisplayName, AppDisplayName),
+    AppServicePrincipalId = iff(isempty(AppDisplayName) and isnotempty(Secondary_AppDisplayName), PermissionsResourceId, AppServicePrincipalId)
+| project-away Secondary_AppDisplayName
+| mv-apply Permission = Permissions to typeof(string) on (
+    where isnotempty(Permission)
+    | extend ConsentRisk = iff(bag_has_key(_ConsentRiskDictionary, Permission), _ConsentRiskDictionary[Permission] , "UnknownPermission")
+    | extend ConsentRisk = iff(isempty(ConsentRisk), "UnknownRisk", ConsentRisk)
+    | summarize ConsentRisks = make_set(ConsentRisk), PermissionsExtended = make_bag(pack(Permission, ConsentRisk))
+)
+| extend
+    ConsentRisks = iff(isempty(Permissions), dynamic(null), ConsentRisks),
+    Permissions = iff(isempty(Permissions), dynamic(null), PermissionsExtended)
+| project-away PermissionsExtended
+//| where TimeGenerated > ago(query_frequency)
+| summarize
+    TimeGenerated = min(TimeGenerated),
+    take_any(Actor, ActorIPAddress, Target, InitiatedBy),
+    Operations = make_bag(pack(OperationName, Result)),
+    take_anyif(AppDisplayName, isnotempty(AppDisplayName)),
+    take_anyif(AdminConsent, not(AdminConsent in ("", "False"))),
+    take_anyif(OnBehalfOfAllUsers, not(OnBehalfOfAllUsers in ("", "False"))),
+    take_anyif(ConsentType, isnotempty(ConsentType)),
+    Permissions = make_bag(pack(PermissionsResourceDisplayName, Permissions)),
+    ConsentRisks = make_set_if(ConsentRisks, isnotempty(ConsentRisks)),
+    AdditionalDetails = make_bag(pack(OperationName, AdditionalDetails)),
+    TargetResources = make_bag(pack(OperationName, TargetResources)),
+    PermissionsResourceIds = make_set_if(PermissionsResourceId, isnotempty(PermissionsResourceId))
+    by AppServicePrincipalId, CorrelationId, TargetId
+| extend AlertSeverity = case(
+    isempty(ConsentRisks), "Medium",
+    ConsentRisks has_any ("UnknownPermission", "UnknownRisk", "High"), "High",
+    ConsentRisks has "Medium", "Medium",
+    ConsentRisks has "Low", "Low",
+    "High"
+)
+| project TimeGenerated, Actor, ActorIPAddress, Operations, AppDisplayName, Target, AdminConsent, OnBehalfOfAllUsers, ConsentType, Permissions, ConsentRisks, AppServicePrincipalId, CorrelationId, InitiatedBy, AdditionalDetails, TargetResources, PermissionsResourceIds, TargetId, AlertSeverity

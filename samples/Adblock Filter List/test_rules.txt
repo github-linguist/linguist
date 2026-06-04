@@ -1,0 +1,314 @@
+[AdGuard]
+! Title: Test rules for the syntax highlighter
+! License: MIT (see https://github.com/ameshkov/VscodeAdblockSyntax/blob/master/LICENSE.md)
+! Homepage: https://github.com/ameshkov/VscodeAdblockSyntax/blob/master/test_rules.txt
+! Author: Andrey Meshkov (Adguard Software Ltd.)
+!
+
+# Some comments (should be all green)
+!
+#
+
+!
+! Pre-processor directives and hints
+!
+!#if (adguard && !adguard_ext_safari)
+!#include https://example.org/
+!#endif
+!+ NOT_OPTIMIZED PLATFORM(android)
+||example.org^
+!#invalidpreprocessor
+!#if (invalid_platform)
+!#safari_cb_affinity(general,privacy)
+!#safari_cb_affinity
+!#safari_cb_affinity(invalid)
+
+!
+! Basic rules (valid)
+!
+example.org
+@@||example.org^
+||example.org^
+|https://www.example.org/|
+/banner
+||example.org^$third-party
+||example.org^$~object-subrequest
+
+! Domain
+||example.org$domain=~example.org|~test.org
+*.domain.com$domain=example.org|test.org,third-party,subdocument
+||example.org$domain=j.gs
+||example.org$domain=google.*
+*$3p,script,denyallow=hello.com|service.me,domain=example.*|test.org
+
+! Domain invalid: https://github.com/ameshkov/VscodeAdblockSyntax/issues/26
+||parajumpersnettbutikk.com^$document,domain=~ Advarselen vises grunnet: En grovt falsk nettbutikksvindel som er svartelistet av Forbrukertilsynet.
+
+! No URL
+$websocket,domain=example.org
+
+! App
+||testwinapp.org^$app=Skype.exe
+||testapp.org^$app=com.adguard.android|~com.example
+||testws.org^$websocket,xmlhttprequest
+||testws.org^$~websocket,~xmlhttprequest
+
+! -------------------------
+! Modifiers
+! -------------------------
+
+! Csp
+||example.org^$csp=frame-src 'none'
+@@||example.org^$csp
+
+! Badfilter
+@@||example.org^$badfilter
+
+! Redirect
+||example.org^$redirect=google-analytics.com/ga.js
+||example.org/$script,redirect-rule=noop.txt
+
+! Rewrite
+||example.org^$rewrite=abp-resource:blank-html
+
+! Helper modifiers: #23
+||example.org^$first-party
+||example.org^$xhr
+||example.org^$inline-script
+||example.org^$inline-font
+||example.org^$popunder
+
+! extension modifier: #31
+@@||taxes.hrblock.com^$extension
+
+! more modifiers aliases: #34
+||example.org^$all
+||example.org^$3p
+||example.org^$1p
+||example.org^$css
+||example.org^$frame
+||example.org^$ghide
+||example.org^$ehide
+||example.org^$shide
+||example.org^$specifichide
+
+!
+! Basic rules (invalid)
+!
+||example.org$domain=~example.org,~test.org
+||example.org$domain=~example.org.~test.org
+||testwinapp.org^$app=Skype.exe,~test.com
+||testwinapp.org^$app=Skype.exe.~com.adguard
+
+!
+! Basic rules (regex)
+!
+/banner/
+@@/banner\d+/$third-party
+
+!
+! Basic rules ($replace)
+!
+||example.org^$replace=/(<VAST[\s\S]*?>)[\s\S]*<\/VAST>\/\$1<\/VAST>/gi,third-party
+||example.org^$important,replace=/(<VAST[\s\S]*?>)[\s\S]*<\/VAST>\/\$1<\/VAST>/gi,third-party
+||example.net^$replace=/[\s\S]+//,important,domain=example.org|example.com
+@@||example.org^$replace
+
+!
+! Elemhide rules (valid)
+!
+##.valid_selector
+j.gs,46.166.167.16,example.org##banner
+example.org##valid_selector
+~example.org##valid_selector
+example.org,~hello.com##valid_selector
+example.org#@#valid_selector
+example.org#@#valid_selector
+example.org,example.com##valid_selector
+example.org,example.com,test.com##valid_selector
+business-service.me#@##banner_ad
+q.gs#@##bottom
+j.gs#@##bottom
+berlin.de##.teaser[-ext-has='>.inner>h3>a.trakkking,>.inner>h3:not(:has(>))']
+xn--fgelsng-exae.se##banner
+xn--80aneaaefcxzcih6g1e.xn--p1ai##banner
+4pda.ru##body > * > * > div > * > :not(div) > :not(div) > :not(div) > div:has(> h2:contains(/[APprmoАрРо]{8}/))
+! TLD
+google.*###center_col > #main > .dfrd > .mnr-c > .c._oc._zs
+google.*###center_col > #res > #topstuff + #search > div > #ires > #rso > #flun
+
+!
+! Elemhide rules (invalid)
+!
+! TODO: Make it invalid
+##invalid_selector { invalid part of it }
+example.org,example.com|test.com##valid_selector
+example.org,123,test.com##valid_selector
+пример.рф##banner
+|example.org##banner
+
+!
+! ExtCss rules (valid)
+!
+example.org#?#banner
+example.org,example.com#@?#banner
+example.org#$?#banner { display: none!important; }
+example.org#@$?#banner { display: none!important; }
+
+!
+! ExtCss rules (invalid)
+!
+example.org#?#banner { invalid part of it }
+example.org,example.com|test.com#@?#banner
+|example.org#?#banner
+
+!
+! CSS rules (valid)
+!
+#$#valid_style { position: absolute!important; }
+example.org#$#some_style { visibitility: hidden; }
+example.org,example.com,test.com#@$#valid_selector { visibitility: hidden; }
+aternos.org#$##detect { height: 1px!important; }
+
+!
+! CSS rules (invalid)
+!
+#$#invalid_style
+dayt.se#$##synpit { height:1px!important; }
+example.org,example.com,test.com#$@#wrong_syntax { visibitility: hidden; }
+|example.org#$#banner { }
+
+!
+! Content-filtering rules (valid)
+!
+$$script[id="hello"]
+example.org$$script[id="hello"][tag-content="hello"][max-length="hi"]
+example.org,example.com$@$script[id="hello"][tag-content="something"]
+example.org$$script
+
+!
+! Content-filtering rules (invalid)
+!
+exam$$script[id="hello"]
+$$tag-name[id=value]
+$$tag-name[id=value
+$$div[id="value"]["val"="val"]
+
+!
+! JS rules rules (valid)
+!
+#%#window.adblock = 1;
+example.org#@%#window.adblock = 1;
+example.org,hello.com#%#window.adblock = 1;
+nj.com#%#window.hello = 1;
+southwalesargus.co.uk#%#window.hello = 1;
+
+!
+! Scriptlets (AdGuard)
+!
+example.org#%#//scriptlet('name')
+example.org#%#//scriptlet('name', '')
+example.org#%#//scriptlet('name', "")
+example.org#%#//scriptlet('name', 'param')
+example.org#%#//scriptlet("abort-on-property-read", "alert")
+example.com#%#//scriptlet('abort-current-inline-script', 'document.addEventListener', '/example|test/')
+example.com#%#//scriptlet("remove-class", 'branding', "div[class^=\"inner\"]")
+
+!
+! Scriptlets (uBO)
+!
+example.org##+js(goyavelab-defuser.js)
+ze.tt##+js(addEventListener-defuser.js, /^(?:DOMContentLoaded|load)$/, =!0)
+lablue.*##+js(setTimeout-defuser.js, r(), 500)
+
+!
+! ABP snippets
+!
+reuters.com#$#abort-current-inline-script String.fromCharCode 69bfbfdbe821fab7200e9613cab94c8b
+yandex.com#$#hide-if-contains ad li.serp-item 'li.serp-item div.label'
+zhlednito.cz#$#abort-on-property-read Aloader; abort-on-property-read ExoLoader; abort-on-property-read ExoLoader.serve
+facebook.com#$#hide-if-has-and-matches-style 'abbr .timestampContent' 'div[id^="hyperfeed_story_id_"]' 'div[id*="feed_subtitle_"] > span, div[id*="feed_subtitle_"] > s' '' 'display: none'; hide-if-contains /.*/ .ego_section 'a[href^="/ad__campaign/landing.php?"]'; hide-if-contains /.*/ .ego_section 'a[href^="/ad_campaign/landing.php?"]'; hide-if-contains /.*/ .ego_section 'a[href^="/ad___campaign/landing.php?"]'
+
+!
+! HTML filtering (uBO)
+!
+express.de,giga.de,kicker.de##^script:has-text((window);)
+wetteronline.de##^script:has-text(runCount)
+finanzen.*##^script:has-text(Inject=!)
+
+!
+! $cookie rules
+!
+$cookie=__cfduid
+$cookie=test,domain=example.org
+||example.org^$cookie
+||facebook.com^$third-party,cookie=c_user
+@@||example.org^$cookie=/regular_expression/
+||example.org^$cookie=NAME;maxAge=3600;sameSite=lax
+@@||example.org^$cookie
+
+!
+! $removeparam and $queryprune rules
+!
+||example.org^$removeparam
+||example.org^$removeparam=test
+||example.org^$removeparam=~test
+||example.org^$removeparam=/^(test|test2)=/i
+||example.org^$queryprune
+||example.org^$queryprune=test
+||example.org^$queryprune=~test
+||example.org^$queryprune=/^(test|test2)=/i
+
+!
+! $removeheader rules
+!
+||destyy.com^$removeheader=request:user-agent
+||utarget.ru/ranging/*/click/$removeheader=location
+$removeheader=location,domain=zannn.top|innal.top
+/games-pc.top\/forum\/(?!login.php)/$removeheader=location
+
+!
+! $stealth rules
+!
+@@||example.org^$stealth
+@@||example.org^$stealth,domain=example.org
+
+!
+! DNS filtering modifiers
+!
+! $client
+@@||*^$client=127.0.0.1
+||example.org^$client=192.168.0.0/24
+||example.org^$client=~'Mary\'s\, John\'s\, and Boris\'s laptops',denyallow=example.org
+||example.org^$client=~Mom|~Dad|Kids
+! $ctag
+||example.org^$ctag=device_pc|device_phone
+||example.org^$ctag=~device_phone
+! $dnstype
+||example.org^$dnstype=AAAA
+||example.org^$dnstype=~A|~CNAME
+! $dnsrewrite
+||example.com^$dnsrewrite=example.net
+||example.com^$dnsrewrite=NOERROR;CNAME;example.net
+||example.com^$dnsrewrite=NOERROR;A;1.2.3.4
+||example.com^$dnsrewrite=NOERROR;SVCB;32 example.com alpn=h3
+||example.com^$dnsrewrite=NXDOMAIN;;
+
+!
+! Cosmetic rules modifiers
+!
+[$path=/test]##banner
+[$path=/test]#@#banner
+[$path=/test]#?#.banner
+[$path=/test]#@?#.banner
+[$path=/test]#$#banner { style: display: none!important; }
+[$path=/test]#@$#banner { style: display: none!important; }
+[$path=/test,app=com.google.search]##banner
+[$path=/test,domain=example.org]##banner
+[$path=/test]$$banner
+[$path=/test]example.org#%#//scriptlet('name', '')
+
+!
+! Cosmetic rules modifiers, invalid modifiers
+!
+[$randommodifier=test]##banner

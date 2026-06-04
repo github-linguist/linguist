@@ -1,10 +1,12 @@
 ---
-type: git_submodule
 name: atom-editorconfig
-version: a256dc743b2133473aa7f7197727a5e9a873d9f2
+version: b5951387ac5e8fad7de6eec683436af1080badfa
+type: git_submodule
+homepage: https://github.com/sindresorhus/atom-editorconfig
 license: mit
 licenses:
-- text: |-
+- sources: license
+  text: |
     The MIT License (MIT)
 
     Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
@@ -26,4 +28,20 @@ licenses:
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
     THE SOFTWARE.
+- sources: readme.md
+  text: |-
+    MIT © [Sindre Sorhus](https://sindresorhus.com)
+
+
+    <!-- Referenced links -->
+    [issues]: https://github.com/sindresorhus/atom-editorconfig/issues/new
+    [contributors]: https://github.com/sindresorhus/atom-editorconfig/graphs/contributors
+
+    <!-- Badges -->
+    [TravisCI-badge]: https://travis-ci.com/sindresorhus/atom-editorconfig.svg?branch=master
+    [TravisCI-link]:  https://travis-ci.com/sindresorhus/atom-editorconfig
+    [AppVeyor-badge]: https://ci.appveyor.com/api/projects/status/h0bav8m09ld9vga2?svg=true
+    [AppVeyor-link]:  https://ci.appveyor.com/project/Alhadis/atom-editorconfig
+    [APM-badge]:      https://img.shields.io/apm/v/editorconfig.svg?colorB=brightgreen
+    [APM-link]:       https://atom.io/packages/editorconfig
 notices: []

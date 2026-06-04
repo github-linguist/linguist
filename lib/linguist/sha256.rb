@@ -13,7 +13,7 @@ module Linguist
       digest = Digest::SHA256.new
 
       case obj
-      when String, Symbol, Integer
+      when String, Symbol, Integer, Float
         digest.update "#{obj.class}"
         digest.update "#{obj}"
       when TrueClass, FalseClass, NilClass

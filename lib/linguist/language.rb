@@ -1,4 +1,4 @@
-require 'escape_utils'
+require 'cgi'
 require 'yaml'
 begin
   require 'yajl'
@@ -59,6 +59,14 @@ module Linguist
 
       # Language name index
       @index[language.name.downcase] = @name_index[language.name.downcase] = language
+
+      # Index filesystem name if defined
+      if language.fs_name
+        if @name_index.key?(language.fs_name)
+          raise ArgumentError "Duplicate language name: #{language.fs_name}"
+        end
+        @index[language.fs_name.downcase] = @name_index[language.fs_name.downcase] = language
+      end
 
       language.aliases.each do |name|
         # All Language aliases should be unique. Raise if there is a duplicate.
@@ -291,12 +299,11 @@ module Linguist
 
       # If group name is set, save the name so we can lazy load it later
       if attributes[:group_name]
-        @group = nil
         @group_name = attributes[:group_name]
 
       # Otherwise we can set it to self now
       else
-        @group = self
+        @group_name = self.name
       end
     end
 
@@ -434,7 +441,7 @@ module Linguist
     #
     # Returns the escaped String.
     def escaped_name
-      EscapeUtils.escape_url(name).gsub('+', '%20')
+      CGI.escape(name).gsub('+', '%20')
     end
 
     # Public: Get default alias name

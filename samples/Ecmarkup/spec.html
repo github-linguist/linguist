@@ -1,0 +1,185 @@
+<pre class=metadata>
+title: ES Array.fromAsync (2022)
+status: proposal
+stage: 1
+location: https://github.com/js-choi/proposal-array-async-from
+copyright: false
+contributors: J. S. Choi
+</pre>
+<script src=ecmarkup.js defer></script>
+<link rel=stylesheet href=ecmarkup.css>
+
+<emu-intro id=introduction>
+  <h1>Introduction</h1>
+  <p>This is the formal specification for a proposed `Array.fromAsync` factory method
+  in JavaScript. It modifies the original <a
+  href=https://tc39.github.io/ecma262/>ECMAScript specification</a> with
+  several new or revised clauses. See <a
+  href=https://github.com/js-choi/proposal-array-async-from/blob/main/README.md>the proposal's
+  explainer</a> for the proposal's background, motivation, and usage examples.</p>
+</emu-intro>
+
+<emu-clause id="sec-control-abstraction-objects">
+  <h1>Control Abstraction Objects</h1>
+
+  <emu-clause id="sec-iteration">
+    <h1>Iteration</h1>
+
+    <emu-clause id="sec-iterator-abstract-operations">
+      <h1>Iterator Abstract Operations</h1>
+
+      <emu-clause id="sec-ifabruptcloseasynciterator">
+        <h1>IfAbruptCloseAsyncIterator ( _value_, _iteratorRecord_ )</h1>
+        <p><dfn>IfAbruptCloseAsyncIterator</dfn> is a shorthand for a sequence of algorithm steps that use an Iterator Record. An algorithm step of the form:</p>
+        <emu-alg>
+          1. IfAbruptCloseAsyncIterator(_value_, _iteratorRecord_).
+        </emu-alg>
+        <p>means the same thing as:</p>
+        <emu-alg>
+          1. If _value_ is an abrupt completion, then
+            1. Perform ? AsyncIteratorClose(_iteratorRecord_, _value_).
+            1. Return _value_.
+          1. Else if _value_ is a Completion Record, set _value_ to _value_.[[Value]].
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-async-function-objects">
+    <h1>AsyncFunction Objects</h1>
+    <emu-clause id="sec-async-functions-abstract-operations">
+      <h1>Async Functions Abstract Operations</h1>
+      <emu-clause id="sec-asyncblockstart" type="abstract operation">
+        <h1>
+          AsyncBlockStart (
+            _promiseCapability_: a PromiseCapability Record,
+            _asyncBody_: a Parse Node <ins>or an Abstract Closure with no parameters</ins>,
+            _asyncContext_: an execution context,
+          )
+        </h1>
+        <dl class="header">
+        </dl>
+        <emu-alg>
+          1. Assert: _promiseCapability_ is a PromiseCapability Record.
+          1. Let _runningContext_ be the running execution context.
+          1. [fence-effects="user-code"] Set the code evaluation state of _asyncContext_ such that when evaluation is resumed for that execution context the following steps will be performed:
+            1. <ins> If _asyncBody_ is a Parse Node, then</ins>
+              1. <ins> Let _result_ be the result of evaluating _asyncBody_.</ins>
+            1. <ins> Else, </ins>
+              1. <ins> Assert: _asyncBody_ is an Abstract Closure with no parameters.</ins>
+              1. <ins> Let _result_ be _asyncBody_().</ins>
+            1. <del>Let _result_ be the result of evaluating _asyncBody_. </del>
+            1. Assert: If we return here, the async function either threw an exception or performed an implicit or explicit return; all awaiting is done.
+            1. Remove _asyncContext_ from the execution context stack and restore the execution context that is at the top of the execution context stack as the running execution context.
+            1. If _result_.[[Type]] is ~normal~, then
+              1. Perform ! Call(_promiseCapability_.[[Resolve]], *undefined*, &laquo; *undefined* &raquo;).
+            1. Else if _result_.[[Type]] is ~return~, then
+              1. Perform ! Call(_promiseCapability_.[[Resolve]], *undefined*, &laquo; _result_.[[Value]] &raquo;).
+            1. Else,
+              1. Assert: _result_.[[Type]] is ~throw~.
+              1. Perform ! Call(_promiseCapability_.[[Reject]], *undefined*, &laquo; _result_.[[Value]] &raquo;).
+            1. [id="step-asyncblockstart-return-undefined"] Return.
+          1. Push _asyncContext_ onto the execution context stack; _asyncContext_ is now the running execution context.
+          1. <emu-meta effects="user-code">Resume the suspended evaluation of _asyncContext_</emu-meta>. Let _result_ be the value returned by the resumed computation.
+          1. Assert: When we return here, _asyncContext_ has already been removed from the execution context stack and _runningContext_ is the currently running execution context.
+          1. Assert: _result_ is a normal completion with a value of *undefined*. The possible sources of completion values are Await or, if the async function doesn't await anything, step <emu-xref href="#step-asyncblockstart-return-undefined"></emu-xref> above.
+          1. Return.
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
+
+<emu-clause id="sec-indexed-collections">
+  <h1>Indexed Collections</h1>
+
+  <emu-clause id="sec-array-objects">
+    <h1>Array Objects</h1>
+
+    <emu-clause id="sec-properties-of-the-array-constructor">
+      <h1>Properties of the Array Constructor</h1>
+
+      <emu-clause id="sec-array.fromAsync">
+        <h1><ins>Array.fromAsync ( _asyncItems_ [ , _mapfn_ [ , _thisArg_ ] ] )</ins></h1>
+
+        <emu-note type=editor>
+          <p>This section is a wholly new subsection of the <a
+          href=https://tc39.es/ecma262/#sec-properties-of-the-array-constructor>original
+          Properties of the Array Constructor clause</a>, to be inserted before the <a
+          href=https://tc39.es/ecma262/#sec-properties-of-the-array-constructor>Array.from
+          clause</a>.</p>
+        </emu-note>
+
+        <p>When the `fromAsync` method is called, the following steps are taken:</p>
+        <emu-alg>
+          1. Let _C_ be the *this* value.
+          1. Let _promiseCapability_ be ! NewPromiseCapability(%Promise%).
+          1. Let _fromAsyncClosure_ be a new Abstract Closure with no parameters that captures _C_, _mapfn_, and _thisArg_ and performs the following steps when called:
+            1. If _mapfn_ is *undefined*, let _mapping_ be *false*.
+            1. Else,
+              1. If IsCallable(_mapfn_) is *false*, throw a *TypeError* exception.
+              1. Let _mapping_ be *true*.
+            1. Let _usingAsyncIterator_ be ? GetMethod(_asyncItems_, @@asyncIterator).
+            1. If _usingAsyncIterator_ is *undefined*, then
+              1. Let _usingSyncIterator_ be ? GetMethod(_asyncItems_, @@iterator).
+            1. If IsConstructor(_C_) is *true*, then
+              1. Let _A_ be ? Construct(_C_).
+            1. Else,
+              1. Let _A_ be ! ArrayCreate(0).
+            1. Let _iteratorRecord_ be *undefined*.
+            1. If _usingAsyncIterator_ is not *undefined*, then
+              1. Set _iteratorRecord_ to ? GetIterator(_asyncItems_, ~async~, _usingAsyncIterator_).
+            1. Else if _usingSyncIterator_ is not *undefined*, then
+              1. Set _iteratorRecord_ to ? CreateAsyncFromSyncIterator(GetIterator(_asyncItems_, ~sync~, _usingSyncIterator_)).
+            1. If _iteratorRecord_ is not *undefined*, then
+              1. Let _k_ be 0.
+              1. Repeat,
+                1. If _k_ &ge; 2<sup>53</sup> - 1, then
+                  1. Let _error_ be ThrowCompletion(a newly created *TypeError* object).
+                  1. Return ? AsyncIteratorClose(_iteratorRecord_, _error_).
+                1. Let _Pk_ be ! ToString(𝔽(_k_)).
+                1. Let _next_ be ? Await(IteratorStep(_iteratorRecord_)).
+                1. If _next_ is *false*, then
+                  1. Perform ? Set(_A_, *"length"*, 𝔽(_k_), *true*).
+                  1. Return Completion Record { [[Type]]: ~return~, [[Value]]: _A_, [[Target]]: ~empty~ }.
+                1. Let _nextValue_ be ? IteratorValue(_next_).
+                1. If _mapping_ is *true*, then
+                  1. Let _mappedValue_ be Call(_mapfn_, _thisArg_, &laquo; _nextValue_, 𝔽(_k_) &raquo;).
+                  1. IfAbruptCloseAsyncIterator(_mappedValue_, _iteratorRecord_).
+                  1. Set _mappedValue_ to Await(_mappedValue_).
+                  1. IfAbruptCloseAsyncIterator(_mappedValue_, _iteratorRecord_).
+                1. Else, let _mappedValue_ be _nextValue_.
+                1. Let _defineStatus_ be CreateDataPropertyOrThrow(_A_, _Pk_, _mappedValue_).
+                1. If _defineStatus_ is an abrupt completion, return ? AsyncIteratorClose(_iteratorRecord_, _defineStatus_).
+                1. Set _k_ to _k_ + 1.
+            1. Else,
+              1. NOTE: _asyncItems_ is neither an AsyncIterable nor an Iterable so assume it is an array-like object.
+              1. Let _arrayLike_ be ! ToObject(_asyncItems_).
+              1. Let _len_ be ? LengthOfArrayLike(_arrayLike_).
+              1. If IsConstructor(_C_) is *true*, then
+                1. Let _A_ be ? Construct(_C_, &laquo; 𝔽(_len_) &raquo;).
+              1. Else,
+                1. Let _A_ be ? ArrayCreate(_len_).
+              1. Let _k_ be 0.
+              1. Repeat, while _k_ &lt; _len_,
+                1. Let _Pk_ be ! ToString(𝔽(_k_)).
+                1. Let _kValue_ be ? Get(_arrayLike_, _Pk_).
+                1. Let _kValue_ be ? Await(_kValue_).
+                1. If _mapping_ is *true*, then
+                  1. Let _mappedValue_ be ? Call(_mapfn_, _thisArg_, &laquo; _kValue_, 𝔽(_k_) &raquo;).
+                  1. Let _mappedValue_ be ? Await(_mappedValue_).
+                1. Else, let _mappedValue_ be _kValue_.
+                1. Perform ? CreateDataPropertyOrThrow(_A_, _Pk_, _mappedValue_).
+                1. Set _k_ to _k_ + 1.
+              1. Perform ? Set(_A_, *"length"*, 𝔽(_len_), *true*).
+              1. Return Completion Record { [[Type]]: ~return~, [[Value]]: _A_, [[Target]]: ~empty~ }.
+          1. Perform AsyncFunctionStart(_promiseCapability_, _fromAsyncClosure_).
+          1. Return _promiseCapability_.[[Promise]].
+        </emu-alg>
+        <emu-note>
+          <p>The `fromAsync` function is an intentionally generic factory method; it does not require that its *this* value be the Array constructor. Therefore it can be transferred to or inherited by any other constructors that may be called with a single numeric argument.</p>
+        </emu-note>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>

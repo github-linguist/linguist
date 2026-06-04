@@ -123,6 +123,7 @@ if [ "$replace" ]; then
 	log "Deregistering submodule: $replace"
 	git submodule deinit "$replace"
 	git rm -rf "$replace"
+	rm -rf ".git/modules/$replace"
 	script/grammar-compiler update -f >/dev/null 2>&1
 fi
 
