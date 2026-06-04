@@ -6706,6 +6706,17 @@ RobotFramework:
   tm_scope: text.robot
   ace_mode: robot
   language_id: 324
+Robots Exclusion Rules:
+  type: data
+  aliases:
+  - robots
+  - robots txt
+  - robotx.txt
+  filenames:
+  - robots.txt
+  ace_mode: text
+  tm_scope: text.robots-txt
+  language_id: 674736065
 Roc:
   type: programming
   color: "#7c38f5"
@@ -9307,16 +9318,6 @@ reStructuredText:
   codemirror_mode: rst
   codemirror_mime_type: text/x-rst
   language_id: 419
-robots.txt:
-  type: data
-  aliases:
-  - robots
-  - robots txt
-  filenames:
-  - robots.txt
-  ace_mode: text
-  tm_scope: text.robots-txt
-  language_id: 674736065
 sed:
   type: programming
   color: "#64b970"
