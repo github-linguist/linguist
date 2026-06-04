@@ -637,6 +637,15 @@ disambiguations:
     pattern:
     - '(?i)\bDEFINE\s+(?:VARIABLE|TEMP-TABLE|BUFFER|QUERY|INPUT\s+PARAMETER|OUTPUT\s+PARAMETER)\b'
     - '(?i)\bEND(?:\s+(?:PROCEDURE|FUNCTION|DO|FOR\s+EACH))?\.'
+- extensions: ['.pc']
+  rules:
+  - language: Pro*C
+    pattern: '^\s*EXEC\s+SQL\s'
+  - language: pkg-config
+    and:
+      - pattern: '^Name:[ \t]+\S'
+      - pattern: '^Description:[ \t]+\S'
+      - pattern: '^Version:[ \t]+\S'
 - extensions: ['.php']
   rules:
   - language: Hack

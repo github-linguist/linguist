@@ -4572,6 +4572,7 @@ Makefile:
   - Makefile.frag
   - Makefile.in
   - Makefile.inc
+  - Makefile.pc
   - Makefile.wat
   - makefile
   - makefile.sco
@@ -6002,6 +6003,17 @@ Prisma:
   tm_scope: source.prisma
   ace_mode: prisma
   language_id: 499933428
+Pro*C:
+  fs_name: ProC
+  color: "#bb8368"
+  type: programming
+  extensions:
+  - ".pc"
+  tm_scope: source.c
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 991047534
 Processing:
   type: programming
   color: "#0096D8"
@@ -7947,6 +7959,7 @@ Text:
   - README.me
   - README.mysql
   - README.nss
+  - README.pc
   - click.me
   - delete.me
   - keep.me
@@ -9254,6 +9267,19 @@ ooc:
   tm_scope: source.ooc
   ace_mode: text
   language_id: 418
+pkg-config:
+  type: data
+  color: "#2b5e82"
+  aliases:
+  - pkgconf
+  extensions:
+  - ".pc"
+  - ".pc.in"
+  tm_scope: source.pkgconf
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 925023573
 q:
   type: programming
   extensions:
