@@ -1,0 +1,38 @@
+.docname {My recipes}
+.doctype {plain}
+.doclang {English}
+.theme {paperwhite} layout:{minimal}
+
+.docauthors
+	- John Doe
+	  - website: example.com
+
+# Chocolate cake
+
+.row alignment:{spacebetween}
+	Easy
+	
+	20-25 min
+	
+	8 servings
+
+> Tip: this recipe pairs well with a *ganache glaze*.
+
+## Ingredients
+
+- All-purpose flour
+- Cocoa powder
+- Sugar
+- Salt
+- Eggs
+- Oil
+
+## Nutritional info
+
+.csv {info.csv}
+
+## Credits
+
+.foreach {.docauthors}
+	name info:
+	Thanks to .name: .info::get {website}

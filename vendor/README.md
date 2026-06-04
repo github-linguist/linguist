@@ -513,6 +513,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Qt Script:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **Quake:** [newgrammars/quake](https://github.com/newgrammars/quake)
 - **QuakeC:** [4LT/quakec-syntax](https://github.com/4LT/quakec-syntax)
+- **Quarkdown:** [wooorm/markdown-tm-language](https://github.com/wooorm/markdown-tm-language)
 - **QuickBASIC:** [QB64Official/vscode](https://github.com/QB64Official/vscode)
 - **Quint:** [informalsystems/quint-grammars](https://github.com/informalsystems/quint-grammars)
 - **R:** [textmate/r.tmbundle](https://github.com/textmate/r.tmbundle)
