@@ -69,7 +69,6 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Blade:** [jawee/language-blade](https://github.com/jawee/language-blade)
 - **BlitzBasic:** [textmate/blitzmax.tmbundle](https://github.com/textmate/blitzmax.tmbundle)
 - **BlitzMax:** [textmate/blitzmax.tmbundle](https://github.com/textmate/blitzmax.tmbundle)
-- **Blueprint:** [kaypes/blueprint-grammar](https://github.com/kaypes/blueprint-grammar)
 - **Bluespec:** [thotypous/sublime-bsv](https://github.com/thotypous/sublime-bsv)
 - **Bluespec BH:** [B-Lang-org/language-bh](https://github.com/B-Lang-org/language-bh)
 - **Boo:** [drslump/sublime-boo](https://github.com/drslump/sublime-boo)
