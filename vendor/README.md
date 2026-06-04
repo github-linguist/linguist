@@ -252,6 +252,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Graphviz (DOT):** [textmate/graphviz.tmbundle](https://github.com/textmate/graphviz.tmbundle)
 - **Groovy:** [textmate/groovy.tmbundle](https://github.com/textmate/groovy.tmbundle)
 - **Groovy Server Pages:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
+- **GtkRC:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **HAProxy:** [abulimov/atom-language-haproxy](https://github.com/abulimov/atom-language-haproxy)
 - **HCL:** [hashicorp/syntax](https://github.com/hashicorp/syntax)
 - **HIP:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
