@@ -93,6 +93,7 @@ module Linguist
       gradle_wrapper? ||
       maven_wrapper? ||
       mise_lock? ||
+      julia_manifest? ||
       generated_go? ||
       generated_protocol_buffer_from_go? ||
       generated_protocol_buffer? ||
@@ -588,6 +589,13 @@ module Linguist
     # Returns true or false.
     def mise_lock?
       !!name.match(/(?:^|\/)mise(?:\.[^\/]+)?\.lock$/)
+    end
+
+    # Internal: Is the blob a Julia Manifest.toml file?
+    #
+    # Returns true or false.
+    def julia_manifest?
+      !!name.match(/(?:^|\/)(Julia)?Manifest(-v\d+\.\d+)?\.toml$/)
     end
 
     # Is the blob a VCR Cassette file?
