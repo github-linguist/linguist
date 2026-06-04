@@ -747,6 +747,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ooc:** [nilium/ooc.tmbundle](https://github.com/nilium/ooc.tmbundle)
 - **pkg-config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **q:** [komsit37/sublime-q](https://github.com/komsit37/sublime-q)
+- **reStructuredPython:** [sharktide/repython-vs](https://github.com/sharktide/repython-vs)
 - **reStructuredText:** [Lukasa/language-restructuredtext](https://github.com/Lukasa/language-restructuredtext)
 - **sed:** [Alhadis/language-sed](https://github.com/Alhadis/language-sed)
 - **templ:** [templ-go/templ-vscode](https://github.com/templ-go/templ-vscode)
