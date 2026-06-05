@@ -1,0 +1,29 @@
+// conio.krh — Krypton binding for the MSVCRT console-input functions.
+// Usage: import "head:conio"
+//
+// DLL: msvcrt.dll  (NOT yet IAT-registered in x64.k)
+// Pipeline: C-emit path only today — `kcc.sh --gcc` or a future
+// msvcrt-IAT rewrite.
+//
+// Status: this is the ONE Windows header that doesn't yet route
+// purely through the native IAT pipeline. `_kbhit` and `_getch` live
+// in MSVCRT (the C runtime) which `compiler/windows_x86/x64.k` does
+// not currently import. Until that's wired up, callers should EITHER:
+//
+//   (a) prefer pure-Krypton console APIs via `head:windows`. The
+//       equivalent of `_kbhit` is checking the queue with
+//       `PeekConsoleInputA(stdin, ...)`; the equivalent of `_getch`
+//       is reading one event via `ReadConsoleInputA(stdin, ...)`.
+//       Both live in kernel32.dll which IS in the IAT today; no
+//       msvcrt link required.
+//   (b) compile through `kcc.sh --gcc` if MSVCRT linkage is fine
+//       for the program. This is the deprecated path.
+//
+// `stdlib/terminal.k` currently imports this header. Migrating it to
+// pattern (a) is a follow-up that closes the last Windows-header
+// MSVCRT dependency.
+
+jxt {
+    func _kbhit() -> INT
+    func _getch() -> INT
+}

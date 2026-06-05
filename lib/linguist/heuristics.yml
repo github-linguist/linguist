@@ -443,6 +443,12 @@ disambiguations:
   - language: JSON
 - extensions: ['.k']
   rules:
+  - language: Krypton
+    pattern:
+    - '(?m)^\s*just run\s*\{'
+    - '(?m)^func\s+\w+\s*\('
+    - '(?m)^\s*emit\s'
+    - '(?m)^import\s+"k:'
   - language: KCL
     pattern:
       - '^schema [A-Za-z0-9_-]+'
@@ -453,6 +459,19 @@ disambiguations:
     - '^requires\s+"[^"]+"$'
     - '^syntax\s+\w+\s+::=.*'
     - '^endmodule$'
+- extensions: ['.ks']
+  rules:
+  - language: Krypton
+    pattern:
+    - '(?m)^\s*just run\s*\{'
+    - '(?m)^func\s+\w+\s*\('
+    - '(?m)^import\s+"k:'
+    - '(?m)^#!.*\bkr\b'
+  - language: KerboScript
+    pattern:
+    - '(?im)^\s*set\s+\w+\s+to\s'
+    - '(?im)^\s*lock\s+\w+\s+to\s'
+    - '(?im)^\s*(print|wait|stage|toggle)\b.*\.\s*$'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
