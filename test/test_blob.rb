@@ -275,8 +275,10 @@ class TestBlob < Minitest::Test
   end
 
   def test_language
+    # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
       "#{samples_path}/C/rpc.h" => ["C", "C++"],
+      "#{samples_path}/JavaScript/js" => ["JavaScript", "TypeScript"],
       "#{samples_path}/TypeScript/bin.ts" => ["JavaScript", "TypeScript"],
     }
     Samples.each do |sample|
