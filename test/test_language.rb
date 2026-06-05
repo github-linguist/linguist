@@ -207,6 +207,8 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_interpreter
     {
+      "bun" => ["JavaScript", "TypeScript"],
+      "deno" => ["JavaScript", "TypeScript"],
       "ruby" => "Ruby",
       "Rscript" => "R",
       "sh" => "Shell",

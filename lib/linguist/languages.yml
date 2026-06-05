@@ -3526,6 +3526,7 @@ JSON:
   - ".jsonl"
   - ".mcmeta"
   - ".sarif"
+  - ".slnlaunch"
   - ".tact"
   - ".tfstate"
   - ".tfstate.backup"
@@ -3751,8 +3752,10 @@ JavaScript:
   filenames:
   - Jakefile
   interpreters:
+  - bun
   - chakra
   - d8
+  - deno
   - gjs
   - js
   - node
@@ -5543,6 +5546,19 @@ Org:
   tm_scope: none
   ace_mode: text
   language_id: 267
+OverPy:
+  type: programming
+  color: "#78b355"
+  wrap: true
+  extensions:
+  - ".opy"
+  tm_scope: source.opy
+  aliases:
+  - opy
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  language_id: 492781155
 OverpassQL:
   type: programming
   color: "#cce2aa"
@@ -6644,6 +6660,14 @@ Redirect Rules:
   tm_scope: source.redirects
   ace_mode: text
   language_id: 1020148948
+Redscript:
+  type: programming
+  color: "#f44336"
+  extensions:
+  - ".reds"
+  tm_scope: source.redscript
+  ace_mode: text
+  language_id: 686691365
 Regular Expression:
   type: data
   color: "#009a00"
@@ -8297,6 +8321,7 @@ Valve Data Format:
   - vdf
   extensions:
   - ".vdf"
+  - ".vmf"
   ace_mode: text
   tm_scope: source.keyvalues
   language_id: 544060961
