@@ -1,15 +1,15 @@
 ---
-name: bicep
-version: 777e839f92dd6fba680b40a4adb275cc7840986c
+name: powerquery-language
+version: b66dc932b03fd5cf03f3b20a9e83fac97d897e65
 type: git_submodule
-homepage: https://github.com/azure/bicep
+homepage: https://github.com/microsoft/powerquery-language.git
 license: mit
 licenses:
 - sources: LICENSE
   text: |2
         MIT License
 
-        Copyright (c) Microsoft Corporation.
+        Copyright (c) Microsoft Corporation. All rights reserved.
 
         Permission is hereby granted, free of charge, to any person obtaining a copy
         of this software and associated documentation files (the "Software"), to deal
@@ -28,9 +28,4 @@ licenses:
         LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
         SOFTWARE
-- sources: README.md
-  text: |-
-    All files except for the Azure Architecture SVG Icons ([here](./src/vscode-bicep/src/visualizer/app/assets/icons/azure) and [here](./src/vscode-bicep-ui/packages/components/assets/azure-architecture-icons)) in the repository are subject to the [MIT license](./LICENSE).
-
-    The Azure Architecture SVG Icons ([here](./src/vscode-bicep/src/visualizer/app/assets/icons/azure) and [here](./src/vscode-bicep-ui/packages/components/assets/azure-architecture-icons)) used in the Bicep VS Code extension are subject to the [Terms of Use](https://learn.microsoft.com/azure/architecture/icons/#terms).
 notices: []
