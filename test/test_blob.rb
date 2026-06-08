@@ -275,8 +275,10 @@ class TestBlob < Minitest::Test
   end
 
   def test_language
+    # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
       "#{samples_path}/C/rpc.h" => ["C", "C++"],
+      "#{samples_path}/JavaScript/js" => ["JavaScript", "TypeScript"],
     }
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])
@@ -284,7 +286,6 @@ class TestBlob < Minitest::Test
       fs_name = blob.language.fs_name ? blob.language.fs_name : blob.language.name
 
       if allowed_failures.has_key? sample[:path]
-        # Failures are reasonable when a file is fully valid in more than one language.
         assert allowed_failures[sample[:path]].include?(sample[:language]), blob.name
       else
         assert_equal sample[:language], fs_name, blob.name
