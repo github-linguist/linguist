@@ -1,899 +1,312 @@
-# Author: Simon Steinbeiß
-# Theme: Greybird
-# based on "Bluebird" by Simon Steinbeiß and Pasi Lallinaho
-# Description: As is the original theme, this theme is 100% free and open source
+gtk-menu-images = 1
+gtk-fallback-icon-theme="gnome"
 
-gtk-color-scheme        = "bg_color:#3b3e3f\nselected_bg_color:#398ee7\nbase_color:#2d2e30" # Background, base
-gtk-color-scheme        = "fg_color:#eeeeec\nselected_fg_color:#ffffff\ntext_color:#ffffff" # Foreground, text
-gtk-color-scheme        = "tooltip_bg_color:#000000\ntooltip_fg_color:#E1E1E1" # Tooltips
-gtk-color-scheme        = "link_color:#35b9ab" # Hyperlinks
-gtk-color-scheme        = "panel_bg:#686868"   # Panel bg colour
-gtk-color-scheme        = "fm_color:#F7F7F7"   # Colour used in Nautilus and Thunar
-gtk-color-scheme        = "bg_color_dark:#686868\ntext_color_dark:#FFF"
-
-gtk-icon-sizes          = "panel-applications-menu=24,24:panel-menu=24,24:panel=16,16:gtk-button=16,16"
-gtk-button-images       = 1   # Disables icons for buttons with text
-gtk-toolbar-style       = 0   # Disables text in toolbar
-gtk-auto-mnemonics      = 1   # Disables ugly lines under menu items
-
-####################
-## Default Styles ##
-####################
-
-style "default"
+style "qtcurve-default"
 {
-	GnomeHRef          ::link_color                            = @link_color
-	GtkHTML            ::link-color                            = @link_color
-	GtkIMHtmlr         ::hyperlink-color                       = @link_color
-	GtkIMHtml          ::hyperlink-color                       = @link_color
-	GtkWidget          ::link-color                            = @link_color
-	GtkWidget          ::visited-link-color                    = @text_color
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::default_outside_border = { 0, 0, 0, 0 }
+  GtkMenuItem::selected_shadow_type = out
+  GtkWidget::interior_focus = 1
+  GtkButton::child_displacement_x   = 1
+  GtkButton::child_displacement_y   = 1
+  GtkMessageDialog::use-separator = 1
+  GtkDialog::content-area-border = 2
+  GtkDialog::action-area-border = 2
 
-	GtkButton          ::child-displacement-x                  = 1
-	GtkButton          ::child-displacement-y                  = 1
-	GtkButton          ::default-border                        = { 0, 0, 0, 0 }
-	GtkCheckButton     ::indicator-size                        = 15
+  GtkWidget::focus-line-width = 1
+  GtkRange::trough_border = 0
+  GtkWidget::focus-padding = 1
+  GtkButton::focus-padding = 2
+  GtkOptionMenu::focus-padding = 1
+  GtkCheckButton::focus-padding = 1
+  GtkRadioButton::focus-padding = 1
+  GtkSpinButton::focus-padding = 1
+  GtkPaned::handle_size = 6
+  GtkPaned::handle_width = 6
+  GtkRange::slider_width = 15
+  GtkRange::slider_length = 24
+  GtkRange::stepper_size = 15
+  GtkScale::slider_length = 21
+  GtkScale::slider_width = 13
+  GtkScrollbar::min_slider_length = 16
+  GtkCheckButton::indicator_size = 15
+  GtkMenuBar::internal-padding = 0
+  GtkToolbar::internal-padding = 2
+  GtkNotebook::tab-overlap = 2
+  GtkNotebook::tab-curvature = 4
+  GtkStatusbar::shadow-type = 0
+  GtkComboBoxEntry::appears-as-list = 1
+  GtkComboBoxText::appears-as-list = 1
+  GtkTreeView::allow-rules = 1
+  GtkTreeView::row-ending-details = 1
+  GtkTreeView::expander-size = 15
+  GtkMenu::vertical-padding = 0
+  GtkMenu::horizontal-offset = -2
+  GtkMenu::vertical-offset = 1
+  GtkCheckMenuItem::indicator-size=17
+  GtkEntry::honors-transparent-bg-hint = 1
+  GtkScrolledWindow::scrollbar-spacing = 3
+  xthickness = 1
+  ythickness = 1
 
-	GtkEntry           ::honors-transparent-bg-hint            = 1
-	GtkEntry           ::progress-border                       = { 3, 3, 3, 3 }
-	GtkEntry           ::state-hint                            = 0
+  # This is gone in gtk3
+  GtkRange::stepper-position-details = 1
 
-	GtkImage           ::x-ayatana-indicator-dynamic           = 1
-
-	GtkMenu            ::horizontal-padding                    = 0
-	GtkMenu            ::vertical-padding                      = 0
-
-	GtkPaned           ::handle-size                           = 3
-
-	GtkNotebook        ::tab-overlap                           =-2
-
-	GtkProgressBar     ::min-vertical-bar-width                = 10
-	GtkProgressBar     ::min-horizontal-bar-height             = 10
-
-	GtkRange           ::trough-border                         = 2
-	GtkRange           ::slider-width                          = 9
-	GtkRange           ::stepper-size                          = 13
-	GtkRange           ::stepper_spacing                       = 0
-
-	GtkScale           ::slider-length                         = 15
-	GtkScale           ::slider-width                          = 15
-	GtkScale           ::trough-side-details                   = 1
-
-	GtkScrollbar       ::min-slider-length                     = 50
-	GtkScrollbar       ::slider-width                          = 9
-	#GtkScrollbar      ::activate-slider                       = 1
-	GtkScrollbar       ::trough-border                         = 3
-	GtkScrollbar       ::has-backward-stepper                  = 0
-	GtkScrollbar       ::has-forward-stepper                   = 0
-
-	GtkScrolledWindow  ::scrollbar-spacing                     = 0
-	GtkScrolledWindow  ::scrollbars-within-bevel               = 1
-
-	GtkMenuBar         ::internal-padding                      = 0
-	GtkMenuBar         ::window-dragging                       = 1
-
-	GtkExpander        ::expander-size                         = 12
-	GtkToolbar         ::internal-padding                      = 0
-	GtkTreeView        ::expander-size                         = 10
-	GtkTreeView        ::vertical-separator                    = 0
-
-	GtkWidget          ::focus-line-width                      = 1
-	GtkWidget          ::focus-padding                         = 0
-
-	GtkWindow          ::resize-grip-height                    = 13
-	GtkWindow          ::resize-grip-width                     = 13
-
-	xthickness = 1
-	ythickness = 1
-
-	fg[NORMAL]        = @fg_color
-	fg[PRELIGHT]      = @fg_color
-	fg[SELECTED]      = @selected_fg_color
-	fg[ACTIVE]        = @fg_color
-	fg[INSENSITIVE]   = mix (0.4, @fg_color, @bg_color)
-
-	bg[NORMAL]        = @bg_color
-	bg[PRELIGHT]      = shade (1.02, @bg_color)
-	bg[SELECTED]      = @selected_bg_color
-	bg[INSENSITIVE]   = @bg_color
-	bg[ACTIVE]        = shade (1.04, @bg_color)
-
-	base[NORMAL]      = @base_color
-	base[PRELIGHT]    = shade (0.95, @bg_color)
-	base[ACTIVE]      = shade (0.92, @selected_bg_color)
-	base[SELECTED]    = shade (0.93, @selected_bg_color)
-	base[INSENSITIVE] = @bg_color
-
-	text[NORMAL]      = @text_color
-	text[PRELIGHT]    = @text_color
-	text[ACTIVE]      = @selected_fg_color
-	text[SELECTED]    = @selected_fg_color
-	text[INSENSITIVE] = darker (@bg_color)
-
-	engine "murrine"
-	{
-		animation             = FALSE
-		arrowstyle            = 2                 # 0 = normal arrows, 1 = filled arrows
-		border_shades         = { 1.2, 1.0 }      # gradient to draw on border
-		cellstyle             = 0
-		colorize_scrollbar    = TRUE
-		comboboxstyle         = 0                 # 0 = normal combobox, 1 = colourised combobox below arrow
-		contrast              = 0.4               # 0.8 for less contrast, more than 1.0 for more contrast on borders
-		default_button_color  = mix (0.2, shade(0.9,@base_color), shade (0.9, @selected_bg_color))
-		expanderstyle         = 0
-		focus_color           = mix (0.1, @bg_color, shade (0.7, @selected_bg_color))
-		focusstyle            = 3
-		glazestyle            = 1                 # 0 = flat highlight, 1 = curved highlight, 2 = concave style, 3 = top curved highlight, 4 = beryl highlight
-		gradient_shades       = {1.2,1.0,1.0,0.9} #{1.1,1.0,1.0,0.87}
-		glowstyle             = 4                 # 0,1,2,3,4
-		glow_shade            = 1.1
-		handlestyle           = 1
-		highlight_shade       = 1.0               # set highlight amount for buttons or widgets
-		lightborder_shade     = 1.1               # sets lightborder amount for buttons or widgets
-		lightborderstyle      = 0                 # 0 = lightborder on top side, 1 = lightborder on all sides
-		listviewheaderstyle   = 1                 # 0 = flat, 1 = glassy, 2 = raised
-		listviewstyle         = 2                 # 0 = nothing, 1 = dotted, 2 = solid
-		menubaritemstyle      = 0                 # 0 = menuitem look, 1 = button look
-		menubarstyle          = 2                 # 0 = flat, 1 = glassy, 2 = gradient, 3 = striped
-		menuitemstyle         = 0                 # 0 = flat, 1 = glassy, 2 = striped
-		menustyle             = 0                 # 0 = no vertical menu stripe, 1 = display vertical menu stripe
-		prelight_shade        = .9                # shade level for scrollbar`s slider, comboboxstyle(1), and prelight state with gradient_colours
-		progressbarstyle      = 0                 # 0 = nothing, 1 = stripes, 2 = lines
-		reliefstyle           = 3                 # 0 = flat, 1 = inset, 2 = shadow
-		rgba                  = FALSE             # FALSE = disabled, TRUE = enabled
-		roundness             = 2                 # 0 = squared, 1 = old default, more will increase roundness
-		scrollbarstyle        = 0                 # 0 = nothing, 1 = circles, 2 = handles, 3 = diagonal stripes, 4 = diagonal stripes and handles, 5 = horizontal stripes, 6 = horizontal stripes and handles
-		separatorstyle        = 0                 # 0 = Hard seperators 1 = Smooth seperators
-		sliderstyle           = 0                 # 0 = nothing added, 1 = handles
-		stepperstyle          = 1                 # 0 = standard, 1 = integrated stepper handles, 2 = unknown
-		shadow_shades         = { 1.0, 1.0 }      # gradient for shadows
-		textstyle             = 0                 # 0 = normal text, 1 = inset
-		toolbarstyle          = 1                 # 0 = flat, 1 = glassy, 2 = gradient
-		trough_shades         = { 0.75, 0.9 }     # draw gradient on trough of GtkScrollbar and GtkProgressbar
-		#trough_border_shades = { 0.9, 0.7 }
-	}
+  engine "qtcurve" {
+  }
 }
 
-style "resize-grip"
+style "qtcurve-dlgsep" = "qtcurve-default"
 {
-	engine "pixmap" {
-		image {
-			function        = RESIZE_GRIP
-			recolorable     = FALSE
-			detail          = "statusbar"
-			overlay_file    = "resize_grip.png"
-			overlay_border  = {0,0,0,0 }
-			overlay_stretch = FALSE
-		}
-	}
+  GtkSeparator::separator-height = 0
+  xthickness = 0
+  ythickness = 0
 }
 
-style "paned" = "default"
+style "qtcurve-pathbutton" = "qtcurve-default"
 {
-	engine "murrine"
-	{
-		contrast = 1.0
-	}
+  GtkButton::child_displacement_x = 0
+  GtkButton::child_displacement_y = 0
+  GtkButton::inner-border = { 4, 12, 0, 0 }
 }
 
-### THEME MODULES ###
-
-style "dark" {
-
-	GtkMenuBar      :: shadow-type          = GTK_SHADOW_NONE
-
-	bg[NORMAL]      = @bg_color_dark
-	bg[ACTIVE]      = shade (0.7, @bg_color_dark)
-	bg[PRELIGHT]    = shade (0.7, @bg_color_dark)
-	bg[SELECTED]    = shade (0.6, @bg_color_dark)
-
-	fg[NORMAL]      = @text_color_dark
-	fg[PRELIGHT]    = @text_color_dark
-	fg[ACTIVE]      = @text_color_dark
-	fg[SELECTED]    = @text_color_dark
-
-	text[NORMAL]    = @text_color_dark
-	text[PRELIGHT]  = @text_color_dark
-	text[ACTIVE]    = @text_color_dark
-	text[SELECTED]  = @text_color_dark
-
-	engine "murrine"
-	{
-		roundness = 0 # Roundness of menu items
-	}
-}
-
-style "wide"
+style "qtcurve-toolbar" = "qtcurve-default"
 {
-	xthickness = 2
-	ythickness = 2
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::default_outside_border = { 0, 0, 0, 0 }
+  GtkWidget::interior_focus = 1
+  GtkButton::child_displacement_x   = 1
+  GtkButton::child_displacement_y   = 1
+  GtkOptionMenu::focus-padding = 0
+  GtkWidget::focus-padding = 1
+  xthickness = 1
+  ythickness = 1
+  GtkToolbar::internal-padding = 1
 }
 
-style "wider"
+style "qtcurve-toolbarbutton" = "qtcurve-toolbar"
 {
-	xthickness = 3
-	ythickness = 3
+  xthickness = 2
+  ythickness = 2
 }
 
-style "entry" = "wider"
+style "qtcurve-swt-toolbarbutton" = "qtcurve-toolbar"
 {
-	bg[SELECTED]        = mix (0.4, @selected_bg_color, @base_color)
-	base[INSENSITIVE]   = shade (1.06, @bg_color)
-	fg[SELECTED]        = @text_color
-
-	engine "murrine"
-	{
-		contrast        = 0.4
-		focus_color     = mix (0.1, @bg_color, shade (0.8, @selected_bg_color))
-		reliefstyle     = 0
-		border_shades   = {1.03,0.8}
-	}
+  xthickness = 1
+  ythickness = 1
 }
 
-style "button" = "wider"
+style "qtcurve-sptoolbar" = "qtcurve-default"
 {
-	bg[NORMAL]        = shade (1.02, @bg_color)
-	bg[PRELIGHT]      = shade (1.07, @bg_color)
-	bg[ACTIVE]        = shade (0.85, @bg_color)
-	bg[SELECTED]      = shade (0.5, @selected_bg_color)
-	bg[INSENSITIVE]   = shade (0.95, @bg_color)
-
-	engine "murrine"
-	{
-		contrast            = 0.9
-		highlight_shade     = 1.0
-		lightborder_shade   = 1.2
-		gradient_shades     = {1.05,1.0,0.97,0.97}
-		border_shades       = { 1.1, 0.9 }
-		shadow_shades       = {1.0,1.0}
-		reliefstyle         = 0
-		roundness           = 2
-	}
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::default_outside_border = { 0, 0, 0, 0 }
+  GtkWidget::interior_focus = 1
+  GtkButton::child_displacement_x   = 1
+  GtkButton::child_displacement_y   = 1
+  GtkOptionMenu::focus-padding = 0
+  GtkWidget::focus-padding = 1
+  xthickness = 2
+  ythickness = 3
 }
 
-style "notebook-button" = "notebook-bg"
+style "qtcurve-sptoolbarbutton" = "qtcurve-sptoolbar"
 {
-	xthickness = 3 # Width of tabs and notebook borders
-	ythickness = 3
+  xthickness = 4
+  ythickness = 5
 }
 
-style "notebook-bg"
+style "qtcurve-h2" = "qtcurve-default"
 {
-	bg[NORMAL] = shade (1.05, @bg_color)
-	bg[ACTIVE] = shade (0.97, @bg_color)
-	fg[ACTIVE] = mix (0.8, @fg_color, shade (0.97, @bg_color))
+  xthickness = 1
+  ythickness = 2
 }
 
-style "notebook" = "notebook-bg"
+style "qtcurve-w2" = "qtcurve-default"
 {
-	xthickness = 3 # Width of tabs and notebook borders
-	ythickness = 3 # Height of tabs and notebook borders
-
-	engine "murrine" {
-		contrast                = .6
-		gradient_shades         = {1.1,1.05,1.05,1.0}
-		#focusstyle             = 2
-		#lightborder_shade      = 1.16
-	}
+  xthickness = 2
+  ythickness = 2
 }
 
-style "menu"
+style "qtcurve-entry" = "qtcurve-default"
 {
-	ythickness        = 3
-	xthickness        = 0
-	GtkMenuBar       ::shadow-type = GTK_SHADOW_NONE
-
-	bg[SELECTED]      = @selected_bg_color
-	bg[NORMAL]        = shade (1.18, @bg_color)
-	bg[PRELIGHT]      = @selected_bg_color
-	bg[ACTIVE]        = shade (1.18, @bg_color)
-	bg[INSENSITIVE]   = shade (1.18, @bg_color)
-	fg[NORMAL]        = @fg_color # Colour for normal text
-	fg[PRELIGHT]      = @base_color
-	fg[SELECTED]      = @base_color
-	fg[ACTIVE]        = @fg_color
-	fg[INSENSITIVE]   = mix (0.4, @fg_color, @bg_color) # Text colour for non-interactive menu items
-	text[NORMAL]      = @text_color # Colour for menu-item radio/checks
-	base[NORMAL]      = @bg_color   # Colour for menu-item radio/checks background
-	text[PRELIGHT]    = @base_color
-	text[SELECTED]    = @base_color
-	text[ACTIVE]      = @fg_color
-	text[INSENSITIVE] = mix (0.4, @fg_color, @bg_color)
-
-	engine "murrine"
-	{
-		roundness         = 0 # Roundness of menu items
-		gradient_shades   = {1.25, 1.1, 1.1, 1.0}
-		contrast          = 0.9
-		lightborder_shade = 1.5
-	}
+  xthickness = 4
+  ythickness = 4
+  GtkWidget::interior-focus = 0
+  GtkWidget::focus-line-width = 0
+  GtkEntry::inner-border = { 0, 0, 0, 0}
 }
 
-
-style "menubar" = "menu"
+style "qtcurve-range" = "qtcurve-default"
 {
-	xthickness      = 3
-	ythickness      = 2
-
-	bg[NORMAL]      = @bg_color
-
-	engine "murrine"
-	{
-		roundness = 0
-	}
+  xthickness = 4
+  ythickness = 4
+  GtkWidget::interior-focus = 0
+  GtkWidget::focus-line-width = 0
+  GtkEntry::inner-border = { 0, 0, 0, 0}
 }
 
-style "menubar-menuitem"
+style "qtcurve-tasklist" = "qtcurve-default"
 {
-	ythickness        = 4
-	xthickness        = 2
-
-	bg[PRELIGHT]   = @selected_bg_color
-	bg[SELECTED]   = @selected_bg_color
-	fg[NORMAL]     = @base_color
-	fg[PRELIGHT]   = @base_color
-	fg[SELECTED]   = @base_color
-	text[NORMAL]   = @base_color
-	text[PRELIGHT] = @base_color
-	text[SELECTED] = @base_color
-
-	engine "murrine"
-	{
-		lightborder_shade = 1.5
-	}
+  xthickness = 5
+  ythickness = 3
 }
 
-style "separator-menu-item"
+style "qtcurve-menuitem" = "qtcurve-default"
 {
-	xthickness = 1
-	ythickness = 1
+  xthickness = 1
+  ythickness = 3
 
-	GtkSeparatorMenuItem::horizontal-padding = 2
-
-	GtkWidget::wide-separators      = 1
-	GtkWidget::separator-width      = 1
-	GtkWidget::separator-height     = 7
+  GtkMenuItem::horizontal-padding = 1
+  # We are setting the desired height by using wide-separators
+  # There is no other way to get the odd height ...
+  GtkMenuItem::wide-separators = 1
+  GtkMenuItem::separator-width = 1
+  GtkMenuItem::separator-height = 1
 }
 
-style "treeview"
+style "qtcurve-menubar" = "qtcurve-default"
 {
-	bg[NORMAL]      = @bg_color
-	engine "murrine"
-	{
-		roundness = 0
-		gradient_shades     = {1.3,1.2,1.2,1.1}
-	}
+    GtkMenuBar::shadow_type = GTK_SHADOW_ETCHED_IN
+    GtkToolbar::shadow_type = GTK_SHADOW_ETCHED_IN
+
+  xthickness = 2
+  ythickness = 2
 }
 
-style "treeview-header" = "button"
+style "qtcurve-menubaritem" = "qtcurve-default"
 {
-	xthickness   = 2
-	ythickness   = 1
-
-	bg[NORMAL]      = shade (1.14, @bg_color)  # Colour for treeview headers
-	bg[PRELIGHT]    = shade (0.98, @bg_color)  # Colour for treeview header prelight
-	bg[ACTIVE]      = shade (0.85, @bg_color)  # Colour for pressed-treeview
-
-	engine "murrine"
-	{
-		roundness = 0  # This makes treeview progressbars square
-		gradient_shades = {0.98,1.0,1.3,1.35}
-	}
+  GtkMenuItem::horizontal-padding = 5
+  xthickness = 2
+  ythickness = 2
 }
 
-style "frame-title"
+style "qtcurve-swt-combo" = "qtcurve-default"
 {
-	fg[NORMAL] = lighter (@fg_color)
+  xthickness = 2
+  ythickness = 2
 }
 
-style "tooltips" = "wider"
+style "qtcurve-combo" = "qtcurve-default"
 {
-	xthickness = 7
-	ythickness = 4
-
-	bg[NORMAL]   = @tooltip_bg_color
-	bg[SELECTED] = "#000000"
-	fg[NORMAL]   = @tooltip_fg_color
-
-	engine "murrine"
-	{
-		roundness = 5
-		rgba      = TRUE
-	}
+  xthickness = 4
+  ythickness = 4
 }
 
-style "progressbar"
+style "qtcurve-combo-button" = "qtcurve-default"
 {
-	xthickness   = 0
-	ythickness   = 0
-
-	fg[PRELIGHT]    = @selected_fg_color
-	bg[NORMAL]      = shade (1.05, @bg_color)
-	bg[SELECTED]    = shade (1.05, @selected_bg_color)
-
-	engine "murrine"
-	{
-		gradient_shades      = {1.15,1.05,1.0,0.95}
-		trough_shades        = {0.95, 1.15}
-		trough_border_shades = { 0.8, 0.7 }
-		roundness            = 4
-		contrast             = 0.8
-		border_shades        = { 1.0, 0.8 }
-		lightborder_shade    = 1.1
-		glowstyle            = 0
-		glow_shade           = 1.0
-	}
+  xthickness = 1
+  ythickness = 1
 }
 
-style "scrollbar"
+style "qtcurve-separator" = "qtcurve-menuitem"
 {
-	GtkScrollbar::stepper-size      = 0
-	GtkScrollbar::arrow-scaling     = 0.0
-
-	bg[NORMAL]      = @bg_color
-
-	bg[ACTIVE]      = shade (1.75, @base_color)
-	bg[PRELIGHT]    = shade (0.8, @bg_color)
-	bg[INSENSITIVE] = shade (0.75, @bg_color)
-
-	engine "murrine"
-	{
-		colorize_scrollbar = FALSE
-		roundness          = 10
-		border_shades      = {0.75, 0.75}
-		trough_shades      = {1.1, 1.3}
-		contrast           = 0.05
-		gradient_shades    = {1.06,1.06,1.04,1.04}
-	}
+  ythickness = 1
+  GtkMenuItem::wide-separators = 1
+  GtkMenuItem::separator-width = 1
+  GtkMenuItem::separator-height = 4
 }
 
-style "hscrollbar" {
-}
-
-style "vscrollbar" {
-}
-
-style "overlay-scrollbar"
+style "qtcurve-w0" = "qtcurve-default"
 {
-	bg[SELECTED]    = shade (1.0, @selected_bg_color)
-	bg[INSENSITIVE] = shade (0.85, @bg_color)
-	bg[ACTIVE]      = shade (0.6, @bg_color)
+  xthickness = 0
+  ythickness = 0
 }
 
-style "statusbar"
+style "qtcurve-header" = "qtcurve-default"
 {
-	xthickness = 2
+  xthickness = 2
+  ythickness = 0
+  GtkButton::focus-padding = 1
 }
 
-style "comboboxentry"
+style "qtcurve-tabbutton" = "qtcurve-default"
 {
-	xthickness = 4
-	text[NORMAL] = @text_color
-	text[PRELIGHT] = @text_color
-
-	fg[NORMAL] = @text_color
-	fg[PRELIGHT] = @text_color
-
-	engine "murrine"
-	{
-		contrast = 0.4
-		reliefstyle = 0
-		border_shades = {1.03,0.8}
-		shadow_shades = {0.5,0.0}
-	}
+  GtkButton::child_displacement_x = 0
+  GtkButton::child_displacement_y = 0
+  GtkButton::focus-padding = 0
 }
 
-style "combo" = "comboboxentry"
-{
-	bg[ACTIVE] = shade (0.85, @bg_color) # Colour for pressed-spinbuttons
-}
-
-style "spin" = "combo"
-{
-	engine "murrine"
-	{
-		border_shades = {0.7, 0.8}
-	}
-}
-
-style "scale" = "button"
-{
-	GtkWidget::focus-line-width = 0
-	GtkWidget::focus-padding    = 0
-
-	bg[ACTIVE]      = shade (0.86, @bg_color)
-	bg[NORMAL]      = shade (1.30, @bg_color)
-	bg[PRELIGHT]    = mix (0.4, shade (0.9, @selected_bg_color), shade (1.05, @bg_color))
-	bg[SELECTED]    = shade (0.9, @selected_bg_color)
-	bg[INSENSITIVE] = shade (0.98, @bg_color)
-
-	engine "murrine"
-	{
-		border_shades        = {1.0, 0.75}
-		contrast             = 1.10
-		lightborderstyle     = 1
-		roundness            = 7
-		trough_shades        = {0.9, 1.1}
-		trough_border_shades = {1.20, 1.20}
-	}
-}
-
-style "vscale" = "scale"
+style "qtcurve-notebook_bg"
 {
 }
 
-style "hscale" = "scale"
+class "*GtkWidget" style "qtcurve-default"
+class "*GtkNotebook" style "qtcurve-w2"
+class "*Button" style "qtcurve-h2"
+class "*GtkOptionMenu" style "qtcurve-h2"
+class "*GtkRange" style "qtcurve-w2"
+class "*GtkMenu" style "qtcurve-w2"
+class "*GtkScrolledWindow" style "qtcurve-w2"
+class "*GtkViewport" style "qtcurve-w2"
+class "*MenuBar" style "qtcurve-menubar"
+class "*MenuItem" style "qtcurve-menuitem"
+class "*GtkFrame" style "qtcurve-w2"
+class "*GtkStatusbar" style "qtcurve-default"
+class "*GtkRadioButton" style "qtcurve-default"
+class "*GtkCheckButton" style "qtcurve-default"
+class "*GtkSpinButton" style "qtcurve-range"
+
+widget_class "*<GtkNotebook>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkEventBox>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkDrawingArea>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkLayout>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkViewport>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkScrolledWindow>" style "qtcurve-notebook_bg"
+
+widget_class "*.GtkMenuItem.*" style "qtcurve-default"
+widget_class "*.GtkAccelMenuItem.*" style "qtcurve-default"
+widget_class "*.GtkRadioMenuItem.*" style "qtcurve-default"
+widget_class "*.GtkCheckMenuItem.*" style "qtcurve-default"
+widget_class "*.GtkImageMenuItem.*" style "qtcurve-default"
+class "*GtkEntry" style "qtcurve-entry"
+widget_class "*.tooltips.*.GtkToggleButton" style "qtcurve-tasklist"
+widget_class "*Tree*GtkButton" style "qtcurve-header"
+widget_class "*List*GtkButton" style "qtcurve-header"
+widget_class "*GimpThumbBox*GtkEventBox*GtkVBox*GtkButton" style "qtcurve-header"
+widget_class "BasePWidget.GtkEventBox.GtkTable.GtkFrame" style "qtcurve-w2"
+widget_class "*<GtkToolbar>"  style "qtcurve-toolbar"
+widget_class "*Toolbar*Button" style "qtcurve-toolbarbutton"
+widget_class "*.SwtFixed.*Toolbar*Button" style "qtcurve-swt-toolbarbutton"
+widget_class "*HandleBox*HBox*SPDesktopWidget" style "qtcurve-sptoolbar"
+widget_class "*HandleBox*SPButton" style "qtcurve-sptoolbarbutton"
+widget_class "*.GtkCombo.GtkEntry" style "qtcurve-combo"
+widget_class "*.GtkCombo.GtkButton" style "qtcurve-combo-button"
+widget_class "*.SwtFixed.GtkCombo.GtkButton" style "qtcurve-swt-combo"
+widget_class "*.SwtFixed.GtkCombo.GtkEntry" style "qtcurve-entry"
+widget_class "*Toolbar*Entry" style "qtcurve-entry"
+class "GtkComboBoxEntry" style "qtcurve-w0"
+widget_class "*.GtkComboBoxEntry.*Button" style "qtcurve-w0"
+widget_class "*PathBar.*Button" style "qtcurve-pathbutton"
+class "*SeparatorMenuItem" style "qtcurve-separator"
+widget_class "*.GtkSeparatorMenuItem.*" style "qtcurve-separator"
+widget_class "*.GeditNotebook.GtkHBox.GtkButton" style "qtcurve-tabbutton"
+widget_class "*MenuBar*MenuItem" style "qtcurve-menubaritem"
+widget_class "*Dialog.*Separator" style "qtcurve-dlgsep"
+
+# This seems to crash Gimp 2.7 (well with oxygen anyway), so remove...
+#style "qtcurve-gimp-scale"
+#{
+#    # this ensures that toolpanels fonts in gimp is identical
+#    # to default font (which otherwise is ugly
+#    GimpDock::font-scale = 1.01
+#}
+#
+#class "*" style "qtcurve-gimp-scale"
+
+# Disable Ubuntu resize grips. See: http://www.omgubuntu.co.uk/2011/05/disable-the-resize-grip-in-ubuntu-11-04/
+style "qtcurve-resizegrip" = "qtcurve-default"
 {
+    GtkWindow::resize-grip-height = 0
+    GtkWindow::resize-grip-width = 0
 }
+class "GtkWidget" style "qtcurve-resizegrip"
 
-style "radio"
-{
-	bg[NORMAL]      = shade (1.06, @bg_color)
-	bg[PRELIGHT]    = shade (1.06, @bg_color)
-	bg[ACTIVE]      = shade (0.85, @bg_color)
-	bg[SELECTED]    = @base_color
-	bg[INSENSITIVE] = shade (0.95, @bg_color)
-	text[PRELIGHT]  = shade (0.8, @selected_bg_color)
-	fg[ACTIVE]      = @fg_color
-	fg[INSENSITIVE] = mix (0.4, @fg_color, @bg_color)
-
-	engine "pixmap" {
-		image {
-			function        = OPTION
-			state           = NORMAL
-			shadow          = OUT
-			overlay_file    = "assets/radio-unchecked.png"
-			overlay_stretch = FALSE
-		}
-
-		image {
-			function        = OPTION
-			state           = PRELIGHT
-			shadow          = OUT
-			overlay_file    = "assets/radio-unchecked-hover.png"
-			overlay_stretch = FALSE
-		}
-
-		image {
-			function        = OPTION
-			state           = ACTIVE
-			shadow          = OUT
-			overlay_file    = "assets/radio-unchecked-active.png"
-			overlay_stretch = FALSE
-		}
-
-		image {
-			function        = OPTION
-			state           = SELECTED
-			shadow          = OUT
-			overlay_file    = "assets/radio-unchecked.png"
-			overlay_stretch = FALSE
-		}
-	}
-}
-
-style "check"
-{
-	bg[NORMAL]      = shade (1.06, @bg_color)
-	bg[PRELIGHT]    = shade (1.06, @bg_color)
-	bg[ACTIVE]      = shade (0.85, @bg_color)
-	bg[SELECTED]    = @base_color
-	bg[INSENSITIVE] = shade (0.95, @bg_color)
-	text[PRELIGHT]  = shade (0.8, @selected_bg_color)
-	fg[ACTIVE]      = @fg_color
-	fg[INSENSITIVE] = mix (0.4, @fg_color, @bg_color)
-
-	engine "pixmap" {
-		image {
-			function        = CHECK
-			state           = NORMAL
-			shadow          = OUT
-			overlay_file    = "assets/checkbox-unchecked.png"
-			overlay_stretch = FALSE
-		}
-
-		image {
-			function        = CHECK
-			state           = PRELIGHT
-			shadow          = OUT
-			overlay_file    = "assets/checkbox-unchecked-hover.png"
-			overlay_stretch = FALSE
-		}
-
-		image {
-			function        = CHECK
-			state           = ACTIVE
-			shadow          = OUT
-			overlay_file    = "assets/checkbox-unchecked-active.png"
-			overlay_stretch = FALSE
-		}
-	}
-}
-
-style "toolbar" = "default"
-{
-	engine "murrine"
-	{
-		contrast = 1.13
-		lightborder_shade = 1.0
-		gradient_shades = {1.0,0.94,0.94,0.88}
-	}
-}
-
-style "toolbar-separator" {
-	xthickness = 0
-	ythickness = 1
-
-	GtkVSeparator::vertical-padding = 0
-	GtkWidget::wide-separators = 1
-	GtkWidget::separator-width = 7
-	GtkWidget::separator-height = 1
-
-
-	engine "murrine" {
-		contrast = 1.0
-		separatorstyle = 0
-	}
-}
-
-style "infobar" {
-	engine "murrine" {
-	}
-}
-
-style "iconview" {
-	engine "murrine" {
-		focusstyle = 1
-	}
-}
-
-style "nautilus_location" {
-	bg[NORMAL]  = mix (0.60, shade (1.05, @bg_color), @selected_bg_color)
-}
-
-style "xfce-header"
-{
-	base[NORMAL]    = shade (1.18, @bg_color)
-	engine "murrine"
-	{
-		textstyle = 1
-		text_shade = 0.85
-	}
-}
-
-style "xfwm-tabwin"
-{
-	Xfwm4TabwinWidget::border-width = 0
-	Xfwm4TabwinWidget::icon-size = 64
-	Xfwm4TabwinWidget::listview-icon-size = 24
-	Xfwm4TabwinWidget::preview-size = 128
-	Xfwm4TabwinWidget::alpha = 0.8
-	Xfwm4TabwinWidget::border-radius = 12
-
-	bg[NORMAL]   = shade (0.15, @text_color)
-	bg[ACTIVE]   = shade (0.65, @selected_bg_color)
-	bg[PRELIGHT] = shade (0.75, @selected_bg_color)
-	bg[SELECTED] = shade (0.55, @bg_color)
-
-	fg[NORMAL]   = shade (0.8, @base_color)
-	fg[ACTIVE]   = @base_color
-	fg[PRELIGHT] = @base_color
-
-	engine "murrine" {
-		roundness = 6
-		textstyle = 1
-		text_shade = 0.25
-	}
-}
-
-style "xfwm-tabwin-button"
-{
-	font_name = "bold"
-}
-
-style "xfdesktop-icon-view"
-{
-	XfdesktopIconView::label-alpha = 0
-	XfdesktopIconView::selected-label-alpha = 80
-	XfdesktopIconView::shadow-x-offset = 0
-	XfdesktopIconView::shadow-y-offset = 1
-	XfdesktopIconView::selected-shadow-x-offset = 0
-	XfdesktopIconView::selected-shadow-y-offset = 1
-	XfdesktopIconView::shadow-color = shade(1.5, @tooltip_bg_color)
-	XfdesktopIconView::selected-shadow-color = shade(1.8, @tooltip_bg_color)
-	XfdesktopIconView::shadow-blur-radius = 2
-	XfdesktopIconView::cell-spacing = 2
-	XfdesktopIconView::cell-padding = 6
-	XfdesktopIconView::cell-text-width-proportion = 1.9
-
-	fg[NORMAL] = shade (0.9, @selected_fg_color)
-	fg[ACTIVE] = @selected_fg_color
-
-	engine "murrine"
-	{
-	}
-}
-
-style "xfsm-logout"
-{
-	GtkDialog::content-area-border = 12
-	GtkDialog::content-area-spacing = 6
-	GtkDialog::action-area-spacing = 0
-
-	bg_pixmap[NORMAL] = "xfsmlogout.png"
-
-	bg[NORMAL]      = @bg_color
-	bg[SELECTED]    = shade (1.18, @bg_color) # Border around the dialog
-	fg[NORMAL]      = @fg_color
-
-	engine "murrine"
-	{
-	}
-}
-
-style "xfsm-label"
-{
-	font_name = "14"
-
-	engine "murrine"
-	{
-		textstyle = 1
-		text_shade = 0.85
-	}
-}
-
-style "xfsm-button" = "button"
-{
-	engine "murrine"
-	{
-		textstyle = 0
-	}
-}
-
-style "calendar"
-{
-	fg[NORMAL]      = "#FFFFFF"
-	fg[PRELIGHT]    = "#FFFFFF"
-	bg[NORMAL]      = shade (0.6, @bg_color_dark)
-	bg[PRELIGHT]    = shade (0.8, @selected_bg_color)
-}
-
-###############################################################################
-# The following part of the GtkRC applies the different styles to the widgets
-###############################################################################
-
-class "GtkWindow*"    style "resize-grip"
-
-# Murrine default style is applied to every widget
-class "GtkWidget"     style "default"
-
-# Increase the x/ythickness in some widgets
-class "GtkFrame"      style "wide"
-class "GtkEntry"      style "entry"
-class "GtkSeparator"  style "wide"
-class "GtkCalendar"   style "wide"
-class "GtkToolbar"    style "toolbar"
-class "GtkHandleBox*" style "toolbar"
-class "GtkStatusbar"  style "resize-grip"
-
-class "GtkSpinButton"  style "spin"
-class "GtkScale"       style "scale"
-class "GtkVScale"      style "vscale"
-class "GtkHScale"      style "hscale"
-
-class "GtkScrollbar"   style "scrollbar"
-class "GtkVScrollbar"  style "scrollbar"
-class "GtkHScrollbar"  style "scrollbar"
-
-class "GtkRadio*"      style "radio"
-class "GtkCheck*"      style "check"
-
-# General matching following, the order is choosen so that the right styles override each other
-widget_class "*<GtkNotebook>*<GtkEventBox>"       style "notebook-bg"
-widget_class "*<GtkNotebook>*<GtkDrawingArea>"    style "notebook-bg"
-widget_class "*<GtkNotebook>*<GtkLayout>"         style "notebook-bg"
-widget_class "*<GtkNotebook>*<GtkViewport>"       style "notebook-bg"
-widget_class "*<GtkNotebook>*<GtkScrolledWindow>" style "notebook-bg"
-widget_class "*<GtkNotebook>*<GtkToolbar>"        style "notebook-bg"
-widget_class "*<GtkNotebook>*<GtkLabel>"          style "notebook-bg"
-
-widget_class "*<GtkButton>"      style "button"
-widget_class "*<GtkNotebook>"    style "notebook"
-widget_class "*<GtkStatusbar>*"  style "statusbar"
-
-widget_class "*<GtkNotebook>*<GtkButton>" style "notebook-button"
-widget_class "*<GtkNotebook>*<GtkButton>*<GtkLabel>" style "notebook-button"
-
-widget_class "*<GtkComboBoxEntry>*"     style "comboboxentry"
-widget_class "*<GtkCombo>*"             style "combo"
-widget_class "*<GtkViewport>*"          style "wider"
-widget_class "*<GtkEntry>*"             style "wider"
-
-widget_class "*<GtkMenuBar>.<GtkMenuItem>*" style "menubar-menuitem"
-widget_class "*<GtkMenu>*"              style "menu"
-widget_class "*<GtkMenuBar>*"           style "menubar"
-widget_class "*<GtkSeparatorMenuItem>*" style "separator-menu-item"
-# Scale widget in menus (e.g. ubuntu's sound indicator)
-widget_class "*<GtkMenuItem>.*.<GtkScale>" style "scale"
-
-widget_class "*.<GtkFrame>.<GtkLabel>" style "frame-title"
-widget_class "*.<GtkTreeView>*"        style "treeview"
-
-widget_class "*GtkCalendar*"    style "calendar"
-
-widget_class "*GtkHPaned" style "paned"
-widget_class "*GtkVPaned" style "paned"
-
-widget_class "*<GtkProgress>"          style "progressbar"
-widget_class "*<GtkProgressBar>"       style "progressbar"
-
-widget_class "*<GtkRadioButton>*"               style "radio"
-widget_class "*<GtkCheckButton>*"               style "check"
-
-# Treeview header
-widget_class "*.<GtkTreeView>.<GtkButton>"  style "treeview-header"
-widget_class "*.<GtkCTree>.<GtkButton>"     style "treeview-header"
-widget_class "*.<GtkList>.<GtkButton>"      style "treeview-header"
-widget_class "*.<GtkCList>.<GtkButton>"     style "treeview-header"
-widget_class "*GnmSimpleCanvas*"            style "treeview-header"  # Gnumeric treeview-headers
-
-# Xfce specific theming
-widget_class "*ExoIconView*"                style "iconview"
-widget_class "*XfceHeading*"                style "xfce-header"
-widget "xfwm4-tabwin*"                      style "xfwm-tabwin"
-widget "xfwm4-tabwin*GtkButton*"            style "xfwm-tabwin-button"
-widget_class "*XfsmLogoutDialog*"           style "xfsm-logout"
-widget_class "*XfsmLogoutDialog*GtkButton*" style "xfsm-button"
-widget_class "*XfdesktopIconView*"          style "xfdesktop-icon-view"
-
-widget_class "*<OsScrollbar>"               style "overlay-scrollbar"
-widget_class "*<OsThumb>"                   style "overlay-scrollbar"
-
-# Special case the nautilus-extra-view-widget
-# ToDo: A more generic approach for all applications that have a widget like this
-widget "*.nautilus-extra-view-widget" style : highest "nautilus_location"
-
-# Work around for http://bugzilla.gnome.org/show_bug.cgi?id=382646
-style "text-is-fg-color-workaround"
-{
-	text[NORMAL]      = @fg_color
-	text[PRELIGHT]    = @fg_color
-	text[SELECTED]    = @selected_fg_color
-	text[ACTIVE]      = @fg_color
-	text[INSENSITIVE] = darker (@bg_color)
-}
-widget_class "*.<GtkComboBox>.<GtkCellView>"    style "text-is-fg-color-workaround"
-
-style "menuitem-text-is-fg-color-workaround"
-{
-	text[NORMAL]        = @fg_color
-	text[PRELIGHT]      = @selected_fg_color
-	text[SELECTED]      = @selected_fg_color
-	text[ACTIVE]        = @fg_color
-	text[INSENSITIVE]   = darker (@bg_color)
-}
-widget "*.gtk-combobox-popup-menu.*"    style "menuitem-text-is-fg-color-workaround"
-
-# Work around the usage of GtkLabel inside GtkListItems to display text
-# This breaks because the label is shown on a background that is based on the base colour set
-style "fg-is-text-color-workaround"
-{
-	fg[NORMAL]      = @text_color
-	fg[PRELIGHT]    = @text_color
-	fg[ACTIVE]      = @selected_fg_color
-	fg[SELECTED]    = @selected_fg_color
-	fg[INSENSITIVE] = mix (0.4, @text_color, @bg_color)
-}
-widget_class "*<GtkListItem>*"          style "fg-is-text-color-workaround"
-widget_class "*<GtkCList>"              style "fg-is-text-color-workaround"
-widget_class "*<EelEditableLabel>"      style "fg-is-text-color-workaround"
-
-# panel theming
-include "apps/xfce-panel.rc"
-
-# application specific theming
-include "apps/chromium.rc"
-include "apps/claws-mail.rc"
-include "apps/gmusicbrowser.rc"
-include "apps/terminal.rc"
-include "apps/thunar.rc"
+# Seems to fix issues with pidgin where some buttons have icons, and others not.
+# Messes other widgets up :-(
+#style "qtcurve-box" = "qtcurve-default"
+#{
+#  xthickness = 2
+#  ythickness = 2
+#}
+#
+#widget_class "*.*Box.*" style "qtcurve-box"
