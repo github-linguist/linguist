@@ -169,6 +169,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ECLiPSe:** [alnkpa/sublimeprolog](https://github.com/alnkpa/sublimeprolog)
 - **EJS:** [tree-sitter/tree-sitter-embedded-template](https://github.com/tree-sitter/tree-sitter-embedded-template) 🐌
 - **EQ:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
+- **ES|QL:** [elastic/esql-syntax](https://github.com/elastic/esql-syntax)
 - **Eagle:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Earthly:** [earthly/earthfile-grammar](https://github.com/earthly/earthfile-grammar)
 - **Easybuild:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
