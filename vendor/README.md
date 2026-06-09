@@ -273,6 +273,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Haxe:** [vshaxe/haxe-TmLanguage](https://github.com/vshaxe/haxe-TmLanguage)
 - **HiveQL:** [adidonato/language-hql](https://github.com/adidonato/language-hql)
+- **HlaX64:** [megaalive/language-hla64](https://github.com/megaalive/language-hla64)
 - **HolyC:** [codingdandy/holyc.tmbundle](https://github.com/codingdandy/holyc.tmbundle)
 - **Hosts File:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Hurl:** [nikeee/language-hurl](https://github.com/nikeee/language-hurl)

@@ -1,0 +1,96 @@
+// wc.hla64 - count lines, words, and bytes in a file (argv[1]).
+//
+// Stress: argv runtime, file read loop, byte classification, multiple counters,
+// multi-value stdout.put, while+if nesting.
+
+program wc;
+
+#include("stdlib64.hhf")
+
+extern procedure hlax_argv_init(): int64;
+extern procedure hlax_argv_count(): int64;
+extern procedure hlax_argv_get(index:int64): ptr;
+
+extern procedure CreateFileA(lpFileName: cstring; dwDesiredAccess: uint64; dwShareMode: uint64; lpSecurityAttributes: ptr; dwCreationDisposition: uint64; dwFlagsAndAttributes: uint64; hTemplateFile: uint64): int64 from "kernel32.dll";
+extern procedure ReadFile(hFile: int64; lpBuffer: ptr; nNumberOfBytesToRead: uint64; lpNumberOfBytesRead: ptr; lpOverlapped: ptr): int32 from "kernel32.dll";
+extern procedure CloseHandle(hObject: int64): int32 from "kernel32.dll";
+
+static
+    buffer: byte[256];
+    bytesRead: int64;
+endstatic;
+
+procedure IsSpace(b: int64); @returns("rax");
+begin IsSpace;
+    mov(0, rax);
+    if(b = 32) then mov(1, rax); endif;
+    if(b = 9) then mov(1, rax); endif;
+    if(b = 10) then mov(1, rax); endif;
+    if(b = 13) then mov(1, rax); endif;
+end IsSpace;
+
+procedure CountBuffer(n: int64); @returns("rax");
+begin CountBuffer;
+    mov(0, r11);
+    mov(0, r12);
+    mov(0, r13);
+    mov(n, r15);
+    mov(&buffer, r14);
+    mov(r14, r10);
+    add(r15, r10);
+
+    while(r14 < r10) do
+        mov([r14].byte, r9);
+
+        if(r9 = 10) then
+            add(1, r11);
+        endif;
+
+        call IsSpace(r9);
+        if(rax = 0) then
+            if(r13 = 0) then
+                add(1, r12);
+                mov(1, r13);
+            endif;
+        else
+            mov(0, r13);
+        endif;
+
+        add(1, r14);
+    endwhile;
+
+    stdout.put("lines=", r11, " words=", r12, " bytes=", r15, nl);
+    mov(0, rax);
+end CountBuffer;
+
+begin wc;
+    call hlax_argv_init();
+    call hlax_argv_count();
+
+    if(rax < 2) then
+        stdout.put("usage: wc <file>", nl);
+        mov(1, rbx);
+    else
+        call hlax_argv_get(1);
+        mov(rax, r12);
+        call CreateFileA(r12, 2147483648, 1, 0, 3, 128, 0);
+
+        if(rax = -1) then
+            stdout.put("open failed", nl);
+            mov(1, rbx);
+        else
+            mov(rax, r15);
+            call ReadFile(r15, &buffer, 256, &bytesRead, 0);
+            if(rax = 0) then
+                stdout.put("read failed", nl);
+                call CloseHandle(r15);
+                mov(1, rbx);
+            else
+                mov(bytesRead, r10);
+                call CountBuffer(r10);
+                call CloseHandle(r15);
+                mov(0, rbx);
+            endif;
+        endif;
+    endif;
+end wc;

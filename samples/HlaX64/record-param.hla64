@@ -1,0 +1,30 @@
+// record-param.hla64 — record parameter as hidden pointer (MVP)
+
+program record_param;
+
+#include("stdlib64.hhf")
+
+record Point
+    x: int64;
+    y: int64;
+endrecord;
+
+procedure SumPoint(p: Point); @returns("rax");
+begin SumPoint;
+    mov(p.x, rax);
+    add(p.y, rax);
+end SumPoint;
+
+procedure Demo; @returns("rax");
+var
+    pt: Point;
+begin Demo;
+    mov(3, pt.x);
+    mov(4, pt.y);
+    call SumPoint(&pt);
+end Demo;
+
+begin record_param;
+    call Demo;
+    stdout.put("3+4 = ", rax, nl);
+end record_param;
