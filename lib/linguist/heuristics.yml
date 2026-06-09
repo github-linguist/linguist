@@ -632,10 +632,8 @@ disambiguations:
   - language: INI
     pattern: >-
       (?x) ^ \s*
-      ( [\w#-]+\s*=
-      | STRINGTABLE
-      | LOCALE_
-      | LGRPID_
+      ( \[ [\w.]+ \]
+      | \w+ =
       )
 - extensions: ['.nr']
   rules:
