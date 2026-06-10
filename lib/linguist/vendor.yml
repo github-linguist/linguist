@@ -393,4 +393,49 @@
 - (^|/)\.teamcity/
 
 # XVBA dependencies
-- (^|/)xvba_modules/
+- (^|/)xvba_modules/$ git status
+    [...]
+    # 未追蹤的檔案：
+    [...]
+    # Documentation/foo.html
+    # Documentation/gitignore.html
+    # file.o
+    # lib.a
+    # src/internal.o
+    [...]
+    $ cat .git/info/exclude
+    # 忽略樹中任何位置的物件和歸檔檔案。
+    *.[oa]
+    $ cat Documentation/.gitignore
+    # 忽略產生的html文件，
+    *.html
+    除了 foo.html 之外，其他文件都是手動維護的。
+    !foo.html
+    $ git status
+    [...]
+    # 未追蹤的檔案：
+    [...]
+    # Documentation/foo.html
+    [...]
+另一個例子：
+
+    $ cat .gitignore
+    vmlinux*
+    $ ls arch/foo/kernel/vm*
+    arch/foo/kernel/vmlinux.lds.S
+    $ echo '!/vmlinux*' >arch/foo/kernel/.gitignore
+第二個 .gitignore 檔案阻止 Git 忽略 arch/foo/kernel/vmlinux.lds.S.
+
+例如，要排除除特定目錄之外的所有內容foo/bar （注意/*- 不帶斜杠，通配符也會排除目錄中的所有內容foo/bar）：
+
+    $ cat .gitignore
+    # 排除目錄 foo/bar 以外的所有內容
+    /*
+    !/foo
+    /foo/*
+    !/foo/bar
+參見
+git-rm[1]、 gitrepository-layout[5]、 git-check-ignore[1]
+
+GIT
+git[1]套件的一部分
