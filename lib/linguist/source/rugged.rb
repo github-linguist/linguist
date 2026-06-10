@@ -44,7 +44,22 @@ module Linguist
       end
 
       def get_tree_size(commit_id, limit)
-        get_tree(commit_id).count_recursive(limit)
+        tree_count = 0
+        count = 0
+
+        get_tree(commit_id).walk(:preorder) do |root, entry|
+          case entry[:type]
+          when :blob
+            count += 1
+            return limit if count >= limit
+          when :tree
+            tree_count += 1
+            return limit if tree_count >= limit
+          end
+          true
+        end
+
+        count
       end
 
       def set_attribute_source(commit_id)

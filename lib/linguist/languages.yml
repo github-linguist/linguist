@@ -396,6 +396,7 @@ Apollo Guidance Computer:
 AppleScript:
   type: programming
   aliases:
+  - apples
   - osascript
   extensions:
   - ".applescript"
@@ -548,6 +549,16 @@ B4X:
   codemirror_mode: vb
   codemirror_mime_type: text/x-vb
   language_id: 96642275
+BAML:
+  type: programming
+  color: "#a855f7"
+  extensions:
+  - ".baml"
+  tm_scope: source.baml
+  ace_mode: io
+  codemirror_mode: stylus
+  codemirror_mime_type: text/x-styl
+  language_id: 502521509
 BASIC:
   type: programming
   extensions:
@@ -2033,6 +2044,8 @@ Emacs Lisp:
   tm_scope: source.emacs.lisp
   color: "#c065db"
   aliases:
+  - cask
+  - eask
   - elisp
   - emacs
   filenames:
@@ -2043,6 +2056,7 @@ Emacs Lisp:
   - ".spacemacs"
   - ".viper"
   - Cask
+  - Eask
   - Project.ede
   - _emacs
   - abbrev_defs
@@ -2220,6 +2234,14 @@ Filterscript:
   tm_scope: none
   ace_mode: text
   language_id: 112
+FlatBuffers:
+  type: data
+  color: "#ed284a"
+  extensions:
+  - ".fbs"
+  tm_scope: source.flatbuffers
+  ace_mode: text
+  language_id: 577640576
 Flix:
   type: programming
   color: "#d44a45"
@@ -2909,6 +2931,23 @@ Groovy Server Pages:
   codemirror_mode: htmlembedded
   codemirror_mime_type: application/x-jsp
   language_id: 143
+GtkRC:
+  type: data
+  color: "#7fe719"
+  aliases:
+  - gtk
+  - gtk 1
+  - gtk 2
+  extensions:
+  - ".gtkrc"
+  filenames:
+  - gtkrc
+  - gtkrc-2.0
+  tm_scope: source.gtkrc
+  ace_mode: ruby
+  codemirror_mode: ruby
+  codemirror_mime_type: text/x-ruby
+  language_id: 876401352
 HAProxy:
   type: data
   color: "#106da9"
@@ -3240,6 +3279,17 @@ IGOR Pro:
   tm_scope: source.igor
   ace_mode: text
   language_id: 162
+IL Assembly:
+  type: programming
+  color: "#512BD4"
+  extensions:
+  - ".il"
+  tm_scope: source.il
+  ace_mode: text
+  aliases:
+  - ilasm
+  - msil
+  language_id: 592065806
 INI:
   type: data
   color: "#d1dbe0"
@@ -3247,12 +3297,19 @@ INI:
   - ".ini"
   - ".cfg"
   - ".cnf"
+  - ".container"
   - ".dof"
   - ".frm"
   - ".lektorproject"
+  - ".mount"
+  - ".network"
   - ".prefs"
   - ".pro"
   - ".properties"
+  - ".service"
+  - ".socket"
+  - ".target"
+  - ".timer"
   - ".url"
   filenames:
   - ".buckconfig"
@@ -3266,6 +3323,7 @@ INI:
   - vlcrc
   tm_scope: source.ini
   aliases:
+  - conf
   - dosini
   ace_mode: ini
   codemirror_mode: properties
@@ -3321,6 +3379,7 @@ Ignore List:
   - ".dockerignore"
   - ".easignore"
   - ".eleventyignore"
+  - ".eslint-ignore"
   - ".eslintignore"
   - ".gitignore"
   - ".ignore"
@@ -3484,6 +3543,7 @@ JSON:
   - ".jsonl"
   - ".mcmeta"
   - ".sarif"
+  - ".slnlaunch"
   - ".tact"
   - ".tfstate"
   - ".tfstate.backup"
@@ -3709,8 +3769,10 @@ JavaScript:
   filenames:
   - Jakefile
   interpreters:
+  - bun
   - chakra
   - d8
+  - deno
   - gjs
   - js
   - node
@@ -4241,6 +4303,14 @@ Liquid:
   tm_scope: text.html.liquid
   ace_mode: liquid
   language_id: 204
+Liquidsoap:
+  type: programming
+  color: "#990066"
+  extensions:
+  - ".liq"
+  tm_scope: source.liquidsoap
+  ace_mode: text
+  language_id: 614641732
 Literate Agda:
   type: programming
   color: "#315665"
@@ -4531,6 +4601,7 @@ Makefile:
   - Makefile.frag
   - Makefile.in
   - Makefile.inc
+  - Makefile.pc
   - Makefile.wat
   - makefile
   - makefile.sco
@@ -4632,6 +4703,14 @@ Max:
   codemirror_mode: javascript
   codemirror_mime_type: application/json
   language_id: 227
+MeTTa:
+  type: programming
+  color: "#6a5acd"
+  extensions:
+  - ".metta"
+  tm_scope: source.metta
+  ace_mode: text
+  language_id: 1037612668
 Mercury:
   type: programming
   color: "#ff2b2b"
@@ -5485,6 +5564,19 @@ Org:
   tm_scope: none
   ace_mode: text
   language_id: 267
+OverPy:
+  type: programming
+  color: "#78b355"
+  wrap: true
+  extensions:
+  - ".opy"
+  tm_scope: source.opy
+  aliases:
+  - opy
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  language_id: 492781155
 OverpassQL:
   type: programming
   color: "#cce2aa"
@@ -5910,6 +6002,16 @@ PostScript:
   - postscr
   ace_mode: text
   language_id: 291
+Power Query:
+  type: programming
+  aliases:
+    - powerquery
+  extensions:
+    - ".pq"
+  tm_scope: source.powerquery
+  ace_mode: text
+  color: "#d38e0d"
+  language_id: 37496382
 PowerBuilder:
   type: programming
   color: "#8f0f8d"
@@ -5954,6 +6056,17 @@ Prisma:
   tm_scope: source.prisma
   ace_mode: prisma
   language_id: 499933428
+Pro*C:
+  fs_name: ProC
+  color: "#bb8368"
+  type: programming
+  extensions:
+  - ".pc"
+  tm_scope: source.c
+  ace_mode: c_cpp
+  codemirror_mode: clike
+  codemirror_mime_type: text/x-csrc
+  language_id: 991047534
 Processing:
   type: programming
   color: "#0096D8"
@@ -6030,6 +6143,7 @@ Protocol Buffer Text Format:
   - ".textproto"
   - ".pbt"
   - ".pbtxt"
+  - ".txtpb"
   tm_scope: source.textproto
   ace_mode: text
   language_id: 436568854
@@ -6140,6 +6254,8 @@ Python:
   - pypy3
   - uv
   aliases:
+  - py
+  - py3
   - python3
   - rusthon
   language_id: 303
@@ -6237,6 +6353,14 @@ QuickBASIC:
   codemirror_mode: vb
   codemirror_mime_type: text/x-vb
   language_id: 593107205
+Quint:
+  type: programming
+  color: "#9d6ce5"
+  extensions:
+  - ".qnt"
+  tm_scope: source.quint
+  ace_mode: text
+  language_id: 562056483
 R:
   type: programming
   color: "#198CE7"
@@ -6564,6 +6688,14 @@ Redirect Rules:
   tm_scope: source.redirects
   ace_mode: text
   language_id: 1020148948
+Redscript:
+  type: programming
+  color: "#f44336"
+  extensions:
+  - ".reds"
+  tm_scope: source.redscript
+  ace_mode: text
+  language_id: 686691365
 Regular Expression:
   type: data
   color: "#009a00"
@@ -6634,6 +6766,17 @@ RobotFramework:
   tm_scope: text.robot
   ace_mode: robot
   language_id: 324
+Robots Exclusion Rules:
+  type: data
+  aliases:
+  - robots
+  - robots txt
+  - robotx.txt
+  filenames:
+  - robots.txt
+  ace_mode: text
+  tm_scope: text.robots-txt
+  language_id: 674736065
 Roc:
   type: programming
   color: "#7c38f5"
@@ -7420,6 +7563,14 @@ SourcePawn:
   tm_scope: source.sourcepawn
   ace_mode: text
   language_id: 354
+SpiceDB Schema:
+  type: data
+  color: "#a5318a"
+  extensions:
+  - ".zed"
+  tm_scope: source.spicedb
+  ace_mode: text
+  language_id: 864005057
 Spline Font Database:
   type: data
   extensions:
@@ -7644,7 +7795,7 @@ TMDL:
   extensions:
   - ".tmdl"
   aliases:
-  - "Tabular Model Definition Language"
+  - Tabular Model Definition Language
   tm_scope: source.tmdl
   ace_mode: text
   language_id: 769162295
@@ -7659,6 +7810,8 @@ TOML:
   - Cargo.toml.orig
   - Gopkg.lock
   - Pipfile
+  - mise.local.lock
+  - mise.lock
   - pdm.lock
   - poetry.lock
   - uv.lock
@@ -7700,6 +7853,8 @@ TSX:
   type: programming
   color: "#3178c6"
   group: TypeScript
+  aliases:
+  - typescriptreact
   extensions:
   - ".tsx"
   tm_scope: source.tsx
@@ -7877,6 +8032,7 @@ Text:
   - README.me
   - README.mysql
   - README.nss
+  - README.pc
   - click.me
   - delete.me
   - keep.me
@@ -8193,6 +8349,7 @@ Valve Data Format:
   - vdf
   extensions:
   - ".vdf"
+  - ".vmf"
   ace_mode: text
   tm_scope: source.keyvalues
   language_id: 544060961
@@ -8655,6 +8812,7 @@ XML:
   - ".grxml"
   - ".gst"
   - ".hzp"
+  - ".icls"
   - ".iml"
   - ".ivy"
   - ".jelly"
@@ -9025,11 +9183,11 @@ crontab:
   ace_mode: tcl
   language_id: 705203557
 desktop:
+  group: INI
   type: data
   extensions:
   - ".desktop"
   - ".desktop.in"
-  - ".service"
   tm_scope: source.desktop
   ace_mode: text
   language_id: 412
@@ -9183,6 +9341,19 @@ ooc:
   tm_scope: source.ooc
   ace_mode: text
   language_id: 418
+pkg-config:
+  type: data
+  color: "#2b5e82"
+  aliases:
+  - pkgconf
+  extensions:
+  - ".pc"
+  - ".pc.in"
+  tm_scope: source.pkgconf
+  ace_mode: properties
+  codemirror_mode: properties
+  codemirror_mime_type: text/x-properties
+  language_id: 925023573
 q:
   type: programming
   extensions:
@@ -9209,16 +9380,6 @@ reStructuredText:
   codemirror_mode: rst
   codemirror_mime_type: text/x-rst
   language_id: 419
-robots.txt:
-  type: data
-  aliases:
-  - robots
-  - robots txt
-  filenames:
-  - robots.txt
-  ace_mode: text
-  tm_scope: text.robots-txt
-  language_id: 674736065
 sed:
   type: programming
   color: "#64b970"
