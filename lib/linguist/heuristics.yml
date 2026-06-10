@@ -632,7 +632,7 @@ disambiguations:
   - language: INI
     pattern: >-
       (?x) ^ \s*
-      ( \[ [\w.]+ \]
+      ( \[ [\w.]+ \] \s* $
       | \w+ =
       )
 - extensions: ['.nr']
