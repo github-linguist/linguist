@@ -1,0 +1,10 @@
+// try/rollback (stile if-fi) — ramo COMMIT (condizione vera → il body resta).
+procedure main()
+    local int x = 0
+    try x == 5
+        x += 5
+    rollback
+        x += 99
+    yrt x == 5
+    show(x)              // atteso: 5 (commit, body mantenuto)
+    delocal int x = 5

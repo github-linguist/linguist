@@ -1,0 +1,330 @@
+// This is a placeholder for the content of des.kairos
+// Feel free to add your code here.
+
+// Stub crittografici (il bytecode emette START; la VM li ignora in esecuzione).
+// Esempio end-to-end: espansione chiave e round Feistel omessi — identità reversibile.
+procedure _key_expand(int mk0, int mk1, int mk2, int mk3, int key)
+
+procedure _encrypt_block(int b0, int b1, int b2, int b3,
+                         int mk0, int mk1, int mk2, int mk3)
+
+procedure _init_iv(int iv0, int iv1, int iv2, int iv3,
+                   int mk0, int mk1, int mk2, int mk3)
+    local int s0 = 0
+    local int s1 = 0
+        s0 += 51966
+        s1 += 48879
+        iv0 += mk0
+        iv0 ^= s0
+        iv0 += mk1
+        iv1 ^= mk1
+        iv1 += s1
+        iv1 ^= mk2
+        iv2 += mk2
+        iv2 ^= s1
+        iv2 += mk3
+        iv3 ^= mk3
+        iv3 += s0
+        iv3 ^= mk0
+        iv0 ^= iv1
+        iv2 ^= iv3
+        iv1 += iv2
+        iv3 += iv0
+        s1 -= 48879
+        s0 -= 51966
+    delocal int s1 = 0
+    delocal int s0 = 0
+
+
+// ----------------------------------------------------------------
+//  CBC INTERNO — lavora su 4 stack separati
+// ----------------------------------------------------------------
+
+procedure _cbc_encrypt(stack p0, stack p1, stack p2, stack p3,
+                       stack c0, stack c1, stack c2, stack c3,
+                       stack h0, stack h1, stack h2, stack h3,
+                       int mk0, int mk1, int mk2, int mk3, int n)
+
+    local int iv0 = 0   local int iv1 = 0
+    local int iv2 = 0   local int iv3 = 0
+        call _init_iv(iv0, iv1, iv2, iv3, mk0, mk1, mk2, mk3)
+
+    local int prev0 = 0   local int prev1 = 0
+    local int prev2 = 0   local int prev3 = 0
+        prev0 ^= iv0   prev1 ^= iv1
+        prev2 ^= iv2   prev3 ^= iv3
+
+    local int b0 = 0   local int b1 = 0
+    local int b2 = 0   local int b3 = 0
+
+    local int i = 0
+    from i == 0 loop
+
+        pop(b0, p0)   pop(b1, p1)
+        pop(b2, p2)   pop(b3, p3)
+
+        b0 ^= prev0   b1 ^= prev1
+        b2 ^= prev2   b3 ^= prev3
+
+        call _encrypt_block(b0, b1, b2, b3, mk0, mk1, mk2, mk3)
+
+        b0 <=> prev0   b1 <=> prev1
+        b2 <=> prev2   b3 <=> prev3
+
+        local int tc0 = 0   local int tc1 = 0
+        local int tc2 = 0   local int tc3 = 0
+            tc0 += prev0   tc1 += prev1
+            tc2 += prev2   tc3 += prev3
+            push(tc0, c0)   push(tc1, c1)
+            push(tc2, c2)   push(tc3, c3)
+        delocal int tc3 = 0   delocal int tc2 = 0
+        delocal int tc1 = 0   delocal int tc0 = 0
+
+        local int th0 = 0   local int th1 = 0
+        local int th2 = 0   local int th3 = 0
+            th0 += b0   th1 += b1
+            th2 += b2   th3 += b3
+            push(th0, h0)   push(th1, h1)
+            push(th2, h2)   push(th3, h3)
+        delocal int th3 = 0   delocal int th2 = 0
+        delocal int th1 = 0   delocal int th0 = 0
+
+        local int z0 = 0   local int z1 = 0
+        local int z2 = 0   local int z3 = 0
+            pop(z0, h0)   pop(z1, h1)
+            pop(z2, h2)   pop(z3, h3)
+            b0 -= z0   b1 -= z1
+            b2 -= z2   b3 -= z3
+            push(z0, h0)   push(z1, h1)
+            push(z2, h2)   push(z3, h3)
+        delocal int z3 = 0   delocal int z2 = 0
+        delocal int z1 = 0   delocal int z0 = 0
+
+        i += 1
+    until i == n
+
+    delocal int i = n
+    delocal int b3 = 0   delocal int b2 = 0
+    delocal int b1 = 0   delocal int b0 = 0
+
+    local int cl0 = 0   local int cl1 = 0
+    local int cl2 = 0   local int cl3 = 0
+        pop(cl0, c0)   pop(cl1, c1)
+        pop(cl2, c2)   pop(cl3, c3)
+        prev0 -= cl0   prev1 -= cl1
+        prev2 -= cl2   prev3 -= cl3
+        push(cl0, c0)   push(cl1, c1)
+        push(cl2, c2)   push(cl3, c3)
+    delocal int cl3 = 0   delocal int cl2 = 0
+    delocal int cl1 = 0   delocal int cl0 = 0
+
+    delocal int prev3 = 0   delocal int prev2 = 0
+    delocal int prev1 = 0   delocal int prev0 = 0
+
+    uncall _init_iv(iv0, iv1, iv2, iv3, mk0, mk1, mk2, mk3)
+    delocal int iv3 = 0   delocal int iv2 = 0
+    delocal int iv1 = 0   delocal int iv0 = 0
+
+
+// ----------------------------------------------------------------
+//  INTERLEAVE / DEINTERLEAVE
+//  Separa uno stack piatto [m0,m1,m2,m3, m4,m5,m6,m7, ...]
+//  in 4 stack per le 4 parole del blocco.
+//
+//  Lo stack msgs è LIFO, quindi il primo pop dà l'ultimo push.
+//  Separiamo a gruppi di 4: ogni gruppo va in p0,p1,p2,p3.
+//  n = numero di blocchi (msgs ha n*4 elementi)
+// ----------------------------------------------------------------
+
+procedure _interleave(stack msgs,
+                      stack p0, stack p1, stack p2, stack p3,
+                      int n)
+    local int i = 0
+    from i == 0 loop
+        local int w0 = 0   local int w1 = 0
+        local int w2 = 0   local int w3 = 0
+            pop(w0, msgs)
+            pop(w1, msgs)
+            pop(w2, msgs)
+            pop(w3, msgs)
+            push(w3, p3)
+            push(w2, p2)
+            push(w1, p1)
+            push(w0, p0)
+        delocal int w3 = 0   delocal int w2 = 0
+        delocal int w1 = 0   delocal int w0 = 0
+        i += 1
+    until i == n
+    delocal int i = n
+
+
+// ----------------------------------------------------------------
+//  DEINTERLEAVE — ricombina 4 stack in uno stack piatto
+//  Inverso di _interleave
+// ----------------------------------------------------------------
+
+procedure _deinterleave(stack msgs,
+                        stack p0, stack p1, stack p2, stack p3,
+                        int n)
+    local int i = 0
+    from i == 0 loop
+        local int w0 = 0   local int w1 = 0
+        local int w2 = 0   local int w3 = 0
+            pop(w0, p0)
+            pop(w1, p1)
+            pop(w2, p2)
+            pop(w3, p3)
+            push(w0, msgs)
+            push(w1, msgs)
+            push(w2, msgs)
+            push(w3, msgs)
+        delocal int w3 = 0   delocal int w2 = 0
+        delocal int w1 = 0   delocal int w0 = 0
+        i += 1
+    until i == n
+    delocal int i = n
+// ================================================================
+//  API PUBBLICA
+// ================================================================
+
+// ----------------------------------------------------------------
+//  crypto_encrypt_simple
+//
+//  Cifra n messaggi (n multiplo di 4) con chiave singola.
+//
+//  msgs    : stack int plaintext  (svuotato dopo la chiamata)
+//  cipher  : stack int ciphertext (riempito dopo la chiamata)
+//  history : stack int opaco      (usato internamente per CBC)
+//  key     : int chiave segreta
+//  n       : numero di messaggi (DEVE essere multiplo di 4)
+// ----------------------------------------------------------------
+
+procedure crypto_encrypt_simple(stack msgs, stack cipher,
+                                 stack history,
+                                 int key, int n)
+    // Espandi chiave in 128 bit
+    local int mk0 = 0   local int mk1 = 0
+    local int mk2 = 0   local int mk3 = 0
+        call _key_expand(mk0, mk1, mk2, mk3, key)
+
+    // Calcola numero di blocchi (n / 4)
+    local int nb = 0
+        nb += n
+        nb -= n   // nb = 0... serve n/4
+        // Kairos non ha divisione — passiamo n/4 come parametro
+        // nb conta i blocchi: ogni blocco = 4 messaggi
+        // Usiamo un loop che conta da 0 a n avanzando di 4
+        // => aggiungiamo nb manualmente qui sotto
+
+    delocal int nb = 0
+
+    // Stack interni per le 4 parole del blocco
+    local stack p0 = nil   local stack p1 = nil
+    local stack p2 = nil   local stack p3 = nil
+    local stack c0 = nil   local stack c1 = nil
+    local stack c2 = nil   local stack c3 = nil
+    local stack h0 = nil   local stack h1 = nil
+    local stack h2 = nil   local stack h3 = nil
+
+    // Numero di blocchi = n / 4
+    // Kairos non ha divisione, ma n è garantito multiplo di 4
+    // Usiamo un contatore che incrementa di 4 fino a n
+    local int nblocks = 0
+    local int counter = 0
+    from counter == 0 loop
+        counter += 4
+        nblocks += 1
+    until counter == n
+    delocal int counter = n
+
+    // Separa msgs in 4 stack per parola
+    call _interleave(msgs, p0, p1, p2, p3, nblocks)
+
+    // CBC encrypt
+    call _cbc_encrypt(p0, p1, p2, p3,
+                      c0, c1, c2, c3,
+                      h0, h1, h2, h3,
+                      mk0, mk1, mk2, mk3, nblocks)
+
+    // Ricombina cipher in stack piatto
+    call _deinterleave(cipher, c0, c1, c2, c3, nblocks)
+
+    // Ricombina history in stack piatto per l'utente
+    call _deinterleave(history, h0, h1, h2, h3, nblocks)
+
+    // Azzera nblocks per delocal (stesso loop al contrario)
+    local int counter2 = 0
+    from counter2 == 0 loop
+        counter2 += 4
+        nblocks -= 1
+    until counter2 == n
+    delocal int counter2 = n
+
+    delocal int nblocks = 0
+
+    delocal stack h3 = nil   delocal stack h2 = nil
+    delocal stack h1 = nil   delocal stack h0 = nil
+    delocal stack c3 = nil   delocal stack c2 = nil
+    delocal stack c1 = nil   delocal stack c0 = nil
+    delocal stack p3 = nil   delocal stack p2 = nil
+    delocal stack p1 = nil   delocal stack p0 = nil
+
+    uncall _key_expand(mk0, mk1, mk2, mk3, key)
+    delocal int mk3 = 0   delocal int mk2 = 0
+    delocal int mk1 = 0   delocal int mk0 = 0
+
+
+// ================================================================
+//  MAIN — test della libreria
+// ================================================================
+
+procedure main()
+    local stack msgs    = nil
+    local stack cipher  = nil
+    local stack history = nil
+    local int key = 31337
+    local int n   = 8
+
+    // Prepara 8 messaggi
+    local int m0 = 10   local int m1 = 20
+    local int m2 = 30   local int m3 = 40
+    local int m4 = 50   local int m5 = 60
+    local int m6 = 70   local int m7 = 80
+
+        push(m0, msgs)  push(m1, msgs)
+        push(m2, msgs)  push(m3, msgs)
+        push(m4, msgs)  push(m5, msgs)
+        push(m6, msgs)  push(m7, msgs)
+
+    show(msgs)
+
+    // CIFRA
+    call crypto_encrypt_simple(msgs, cipher, history, key, n)
+
+    show(msgs)      // vuoto
+    show(cipher)    // cifrato
+    show(history)   // opaco
+
+    // DECIFRA
+    uncall crypto_encrypt_simple(msgs, cipher, history, key, n)
+
+    show(cipher)    // vuoto
+    show(history)   // vuoto
+    show(msgs)      // ripristinato
+
+    // Pulizia — pop ripristina m0..m7 a zero per i delocal
+        pop(m7, msgs)   pop(m6, msgs)
+        pop(m5, msgs)   pop(m4, msgs)
+        pop(m3, msgs)   pop(m2, msgs)
+        pop(m1, msgs)   pop(m0, msgs)
+
+    delocal int m7 = 80   delocal int m6 = 70
+    delocal int m5 = 60   delocal int m4 = 50
+    delocal int m3 = 40   delocal int m2 = 30
+    delocal int m1 = 20   delocal int m0 = 10
+
+    delocal int n   = 8
+    delocal int key = 31337
+    delocal stack history = nil
+    delocal stack cipher  = nil
+    delocal stack msgs    = nil

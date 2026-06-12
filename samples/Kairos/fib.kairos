@@ -1,0 +1,46 @@
+procedure fib_iter(int x1, int x2, int n)
+    local int i = 0
+    local int tmp = 0
+
+    x1 += 1
+    x2 += 1
+
+    i += n
+
+    from i == n loop
+        x1 += x2
+        x1 <=> x2
+        i -= 1
+    until i == 0
+
+    delocal int tmp = 0
+    delocal int i = 0
+
+
+procedure fib_ricorsivo(int x1, int x2, int n)
+    if n == 0 then
+        x1 += 1
+        x2 += 1
+    else
+        n -= 1
+        call fib_ricorsivo(x1, x2, n)
+        n += 1
+        x1 += x2
+        x1 <=> x2
+    fi n == 0        
+
+procedure main()
+    local int Fib_of_n = 0
+    local int Fib_of_n_minus_1 = 0
+    local int n = 4
+    call fib_iter(Fib_of_n_minus_1, Fib_of_n, n)
+    show(Fib_of_n)
+    uncall fib_iter(Fib_of_n_minus_1, Fib_of_n, n)
+    show(Fib_of_n)
+    call fib_ricorsivo(Fib_of_n_minus_1, Fib_of_n, n)
+    show(Fib_of_n)
+    uncall fib_ricorsivo(Fib_of_n_minus_1, Fib_of_n, n)
+    show(Fib_of_n)
+    delocal int n = 4
+    delocal int Fib_of_n_minus_1 = 0
+    delocal int Fib_of_n = 0

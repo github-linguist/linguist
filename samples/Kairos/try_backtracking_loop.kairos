@@ -1,0 +1,38 @@
+// Backtracking dentro un ciclo che chiama una funzione.
+//
+// Si scandisce i = 1..N in un ciclo from-loop. A ogni passo si TENTA di
+// inserire nello zaino un oggetto di peso `i` chiamando la procedura
+// `add_weight`; la condizione di commit `load <= budget` decide:
+//   - vera  → la mossa è valida → confermata (commit);
+//   - falsa → il peso sfora il budget → il tentativo (call inclusa) viene
+//             ANNULLATO (rollback / backtrack) e il ciclo prosegue.
+//
+// budget = 10, N = 6. Traccia dei load: 1,3,6,10 (accettati), poi 15 e 16
+// rifiutati → backtrack a 10. Risultato: load=10, oggetti presi=4.
+
+procedure add_weight(int load, int w)
+    load += w
+
+procedure main()
+    local int budget = 10
+    local int load = 0
+    local int taken = 0
+    local int i = 0
+    local int N = 6
+
+    from i == 0 loop
+        i += 1
+        try load <= budget
+            call add_weight(load, i)
+            taken += 1
+        yrt load <= budget
+    until i == N
+
+    show(load)               // atteso: 10
+    show(taken)              // atteso: 4
+
+    delocal int N = 6
+    delocal int i = 6
+    delocal int taken = 4
+    delocal int load = 10
+    delocal int budget = 10
