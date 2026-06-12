@@ -1,0 +1,46 @@
+type Id = number | string
+type Handler = (event:string, ...any) -> ...any
+
+export type Result = {
+    ok:boolean,
+    value:any?,
+}
+
+local function wrap(value): Result
+    return { ok = true, value = value }
+end
+
+local function sum(...)
+    local total = 0
+    for _, n in ipairs({ ... }) do
+        total += n
+    end
+    return total, select("#", ...)
+end
+
+local function retry<T>(times:number, action:NotNil<any>)
+    local ok, err = pcall(action)
+    if not ok and times > 0 then
+        return retry(times - 1, action)
+    end
+    return ok, err
+end
+
+local function countdown(n, acc)
+    if n == 0 then
+        return acc
+    end
+    return countdown(n - 1, acc + 1)
+end
+
+local total, count = sum(1, 2, 3, 4)
+print(`summed {count} values to {total}`)
+print(wrap(total).ok)
+print(`tail recursion reached {countdown(100000, 0)}`)
+print(retry(2, function()
+    return "fine"
+end))
+
+local raw = "42"
+local parsed = tonumber(raw) :: number
+print(parsed + 1, TypeOf(parsed))

@@ -1,0 +1,30 @@
+enum Color {
+    Red,
+    Green,
+    Blue,
+}
+
+enum Status {
+    Idle = 0,
+    Running = 10,
+    Done = 20,
+}
+
+enum Color {
+    Cyan,
+}
+
+local function describe(c)
+    return switch(c)
+        case Color.Red return "warm" end
+        case Color.Blue return "cool" end
+        case Color.Cyan return "fresh" end
+        default return "other" end
+    end
+end
+
+for _, c in ipairs({ Color.Red, Color.Blue, Color.Cyan, Color.Green }) do
+    print(describe(c))
+end
+
+print(`status starts at {Status.Idle} and ends at {Status.Done}`)

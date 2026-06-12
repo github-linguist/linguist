@@ -1,0 +1,37 @@
+local registry = {
+    local = 1,
+    type = 2,
+    ["spaced key"] = 3,
+}
+
+local marker = { tag = "origin" }
+registry[marker] = "tables can be keys"
+print(registry[marker], registry["spaced key"])
+
+local list = { 5, 3, 8 }
+table.insert(list, 1)
+table.sort(list)
+print(table.concat(list, " < "))
+print(`list holds {#list} items`)
+table.clear(list)
+print(`after clear: {#list}`)
+
+local seen = 0
+for key, value in pairs(registry) do
+    seen += 1
+end
+print(`registry has {seen} entries`)
+
+buff 8 ring = { 1, 2, 3 }
+table.insert(ring, 4)
+print(`ring holds {#ring} of 8 slots`)
+freebuff ring
+
+local total = 0
+while true do
+    total += 17
+    if total > 60 then
+        break
+    end
+end
+print(total)
