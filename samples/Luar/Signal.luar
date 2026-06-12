@@ -1,0 +1,88 @@
+--#disable EmptyClass
+
+class Destructable {
+    abstract function Destroy()
+
+    end
+}
+
+final class Connection extends Destructable {
+    public SourceConnect:NotNil<(...any) -> ...any>
+    private Source:any
+    private Connected:boolean = true
+
+    constructor(source:any, var:(...any) -> ...any)
+        self.Source = source
+        self.SourceConnect = var
+    end
+
+    public function Disconnect()
+        if not self.Connected then
+            return
+        end
+        self.Connected = false
+        self.Source:Remove(self)
+        self.Source = nil
+    end
+
+    public function Destroy()
+        self:Disconnect()
+    end
+}
+
+final class Signal extends Destructable {
+    private Connections:{Connection} = {}
+    private Waiting:{any} = {}
+
+    public function Connect(var:(...any) -> ...any): Connection
+        local connection = Connection(self, var)
+        table.insert(self.Connections, connection)
+        return connection
+    end
+
+    public function Remove(connection:Connection)
+        for i, item in ipairs(self.Connections) do
+            if item == connection then
+                table.remove(self.Connections, i)
+                break
+            end
+        end
+    end
+
+    public function Once(var:(...any) -> ...any): Connection
+        local connection = nil
+        connection = self:Connect(function(...)
+            connection:Disconnect()
+            var(...)
+        end)
+        return connection
+    end
+
+    public function Wait(): ...any
+        local thread = coroutine.running()
+        table.insert(self.Waiting, thread)
+        return coroutine.yield()
+    end
+
+    public function Fire(...)
+        local waiting = self.Waiting
+        self.Waiting = {}
+        for _, thread in ipairs(waiting) do
+            coroutine.resume(thread, ...)
+        end
+        for _, item in ipairs(self.Connections) do
+            local routine = coroutine.create(item.SourceConnect)
+            coroutine.resume(routine, ...)
+        end
+    end
+
+    public function Destroy()
+        for i = #self.Connections, 1, -1 do
+            self.Connections[i]:Destroy()
+        end
+        table.clear(self.Connections)
+        table.clear(self.Waiting)
+    end
+}
+
+return Signal

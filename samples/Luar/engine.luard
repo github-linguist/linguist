@@ -1,0 +1,47 @@
+--#disable all
+export type Connection = {
+    Connected:boolean,
+    Disconnect:(self:Connection) -> (),
+}
+
+export type Signal<T...> = {
+    Connect:(self:Signal<T...>, callback:(T...) -> () ) -> Connection,
+    Once:(self:Signal<T...>, callback:(T...) -> ()) -> Connection,
+    Wait:(self:Signal<T...>) -> T...,
+    Fire:(self:Signal<T...>, T...) -> (),
+}
+
+export type Player = {
+    Name:string,
+    UserId:number,
+    DisplayName:string,
+    Kick:(self:Player, message:string?) -> (),
+}
+
+export type Players = {
+    LocalPlayer:Player,
+    MaxPlayers:number,
+    GetPlayers:(self:Players) -> {Player},
+    PlayerAdded:Signal<Player>,
+    PlayerRemoving:Signal<Player>,
+}
+
+export type Services = {
+    Players:Players,
+}
+
+export type DataModel = {
+    GetService:<_, service>(self:DataModel, Service:keyof<Services>) -> ValueOf<Services, service>
+}
+
+Auto {
+    key "Players" Variable "game:GetService(\"Players\")"
+}
+
+const game:NotNil<DataModel> = nil
+
+-- Reports the local player's name.
+function describeLocalPlayer(): string
+    local players = game:GetService("Players")
+    return `local player is {players.LocalPlayer.Name}`
+end
