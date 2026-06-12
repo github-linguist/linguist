@@ -1,0 +1,58 @@
+interface Measurable {
+    function area()
+}
+
+class Vec2 {
+    public x:number = 0
+    public y:number = 0
+
+    constructor(x:number, y:number)
+        self.x = x
+        self.y = y
+    end
+
+    operator +(other:Vec2)
+        return Vec2(self.x + other.x, self.y + other.y)
+    end
+
+    operator tostring()
+        return `({self.x}, {self.y})`
+    end
+
+    get length(): number
+        return math.sqrt(self.x ^ 2 + self.y ^ 2)
+    end
+}
+
+class Logger {
+    function log(msg:string)
+        print(`[shape] {msg}`)
+    end
+}
+
+abstract class Shape implements Measurable {
+    abstract function area()
+    end
+
+    public function describe()
+        return `area is {self:area()}`
+    end
+}
+
+final class Rect extends Shape mixin Logger {
+    private Size:Vec2
+
+    constructor(w:number, h:number)
+        self.Size = Vec2(w, h)
+    end
+
+    override public function area()
+        return self.Size.x * self.Size.y
+    end
+}
+
+local r = Rect(3, 4)
+r:log(r:describe())
+
+local v = Vec2(3, 4) + Vec2(1, 2)
+print(`{v} has length {v.length}`)
