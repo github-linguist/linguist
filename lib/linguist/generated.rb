@@ -93,6 +93,7 @@ module Linguist
       gradle_wrapper? ||
       maven_wrapper? ||
       mise_lock? ||
+      secrets_baseline? ||
       julia_manifest? ||
       generated_go? ||
       generated_protocol_buffer_from_go? ||
@@ -589,6 +590,13 @@ module Linguist
     # Returns true or false.
     def mise_lock?
       !!name.match(/(?:^|\/)mise(?:\.[^\/]+)?\.lock$/)
+    end
+
+    # Internal: Is the blob a detect-secrets baseline file?
+    #
+    # Returns true or false.
+    def secrets_baseline?
+      !!name.match(/uv\.lock/)
     end
 
     # Internal: Is the blob a Julia Manifest.toml file?
