@@ -596,7 +596,7 @@ module Linguist
     #
     # Returns true or false.
     def secrets_baseline?
-      !!name.match(/uv\.lock/)
+      !!name.match(/(?:^|\/)\.secrets\.baseline$/)
     end
 
     # Internal: Is the blob a Julia Manifest.toml file?
