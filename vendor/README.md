@@ -106,7 +106,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **CameLIGO:** [pewulfman/Ligo-grammar](https://github.com/pewulfman/Ligo-grammar)
 - **Cangjie:** [Zxilly/playground-cj](https://github.com/Zxilly/playground-cj)
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
-- **Carbon:** [0x9ef/vscode-vlang](https://github.com/0x9ef/vscode-vlang)
+- **Carbon:** [carbon-language/carbon.tmbundle](https://github.com/carbon-language/carbon.tmbundle)
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
 - **Ceylon:** [jeancharles-roger/ceylon-sublimetext](https://github.com/jeancharles-roger/ceylon-sublimetext)
 - **Chapel:** [chapel-lang/chapel-tmbundle](https://github.com/chapel-lang/chapel-tmbundle)
