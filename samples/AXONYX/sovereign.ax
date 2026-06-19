@@ -1,0 +1,53 @@
+// sovereign.ax -- Sovereign capability management in AXONYX
+// Copyright (c) 2026 Edison Lepiten / AIEONYX
+// SPDX-License-Identifier: Apache-2.0
+//
+// Demonstrates AXONYX sovereign keywords: sovereign, capability, seal, domain.
+
+sovereign struct CapabilityToken {
+    id: u64,
+    domain: str,
+    sealed: bool,
+}
+
+enum VerifyResult {
+    Valid,
+    Sealed,
+    UnknownDomain,
+}
+
+fn capability_new(domain: str, id: u64) -> CapabilityToken {
+    CapabilityToken {
+        id: id,
+        domain: domain,
+        sealed: false,
+    }
+}
+
+fn capability_seal(token: &mut CapabilityToken) {
+    token.sealed = true;
+}
+
+fn capability_verify(token: &CapabilityToken) -> VerifyResult {
+    if token.sealed {
+        return VerifyResult::Sealed;
+    }
+    match token.domain {
+        "axon"    => VerifyResult::Valid,
+        "onyxia"  => VerifyResult::Valid,
+        "aegis"   => VerifyResult::Valid,
+        _         => VerifyResult::UnknownDomain,
+    }
+}
+
+fn main() -> i32 {
+    let mut cap: CapabilityToken = capability_new("axon", 1);
+    let result: VerifyResult = capability_verify(&cap);
+    match result {
+        VerifyResult::Valid        => print_str("capability valid"),
+        VerifyResult::Sealed       => print_str("capability sealed"),
+        VerifyResult::UnknownDomain => print_str("unknown domain"),
+    }
+    capability_seal(&mut cap);
+    return 0;
+}

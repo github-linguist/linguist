@@ -1,0 +1,30 @@
+// fibonacci.ax -- Recursive Fibonacci sequence in AXONYX
+// Copyright (c) 2026 Edison Lepiten / AIEONYX
+// SPDX-License-Identifier: Apache-2.0
+
+fn fibonacci(n: i64) -> i64 {
+    if n <= 1 {
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+fn is_even(n: i64) -> bool {
+    n % 2 == 0
+}
+
+fn main() -> i32 {
+    let mut i: i64 = 0;
+    while i < 10 {
+        let result: i64 = fibonacci(i);
+        let even: bool = is_even(result);
+        if even {
+            print_str("even: ");
+        } else {
+            print_str("odd:  ");
+        }
+        print_i64(result);
+        i = i + 1;
+    }
+    return 0;
+}

@@ -1,0 +1,21 @@
+// hello.ax -- AXONYX greeting program
+// Copyright (c) 2026 Edison Lepiten / AIEONYX
+// SPDX-License-Identifier: Apache-2.0
+
+fn greet(name: str) -> str {
+    let prefix: str = "Hello, ";
+    concat(prefix, name)
+}
+
+fn farewell(name: str) -> str {
+    let prefix: str = "Farewell, ";
+    concat(prefix, name)
+}
+
+fn main() -> i32 {
+    let greeting: str = greet("sovereign world");
+    let goodbye: str = farewell("legacy systems");
+    print(greeting);
+    print(goodbye);
+    return 0;
+}
