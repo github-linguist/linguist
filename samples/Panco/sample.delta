@@ -1,0 +1,29 @@
+[db}database/panco.db]
+    [deltafolder}PROJECT/delta]
+    [.deltalog}/delta/logs/.deltalog]
+  
+    # ==========================================
+    #                  PANCO
+    # ==========================================
+    # File: sample.delta
+  
+    # 1. Variables and Types
+    makeword("[1] Variables & Dynamic Types")
+    [allow}message\"Hello, Panco world!"]
+    [allow}version\1.0]
+    [allow}is_active\true]
+  
+    # 2. Transforming Functions ('delta')
+    delta double(n) {
+        return n * 2
+    }
+  
+    delta add(a, b) {
+        return a + b
+    }
+  
+    [allow}num\5]
+    makeword("Double of {num} is: {double(num)}")
+  
+    # 3. Pipelines
+    [allow}pipeline_result\5 -> double]
