@@ -1,0 +1,425 @@
+// CLI argument parser. Long + short flags, three value types
+// (string / int / bool), positional capture, auto-generated --help.
+//
+// ```glide
+// import stdlib::argparse::*;
+//
+// fn main() -> i32 {
+//     let p: *ArgParser = ArgParser::new("greet", "Say hello to someone");
+//     defer p.free();
+//     p.add_string("name", "n", "world", "who to greet");
+//     p.add_int   ("count", "c", 1,       "number of greetings");
+//     p.add_bool  ("verbose", "v", false, "extra output");
+//
+//     let r: !i32 = p.parse_argv();
+//     if !r.ok { println!("error: ${r.msg}"); return 2; }
+//     if p.help_requested() { p.print_help(); return 0; }
+//
+//     let who: string = p.get_string("name");
+//     let n:   i32    = p.get_int("count");
+//     for let i: i32 = 0; i < n; i++ { println!("hello, ${who}!"); }
+//     return 0;
+// }
+// ```
+//
+// Recognised forms:
+//   --name=value        --name value        (long, value)
+//   --name              -n                  (long/short, bool)
+//   -n value                                (short, value)
+//   --help / -h                             (auto)
+//   --                                      (end-of-flags, rest positional)
+//   anything else                           (positional)
+
+import stdlib::hashmap::*;
+
+pub struct StrFlag { pub default_value: string, pub value: string }
+pub struct IntFlag { pub default_value: i32, pub value: i32 }
+pub struct BoolFlag { pub default_value: bool, pub value: bool }
+
+pub struct ArgParser {
+    prog: string,
+    desc: string,
+
+    str_flags:  *HashMap<*StrFlag>,
+    int_flags:  *HashMap<*IntFlag>,
+    bool_flags: *HashMap<*BoolFlag>,
+
+    shorts:    *HashMap<string>,    // short  -> long
+    short_of:  *HashMap<string>,    // long   -> short ("" if none)
+    types:     *HashMap<string>,    // long   -> "string"/"int"/"bool"
+    helps:     *HashMap<string>,    // long   -> help text
+    order:     *Vector<string>,     // long names in declaration order
+
+    positional: *Vector<string>,
+    help_seen: bool,
+}
+
+impl ArgParser {
+    /// Build an empty parser tagged with `prog` and `desc` (used in
+    /// `--help` output). Add flags via `add_string` / `add_int` / `add_bool`,
+    /// then call `parse_argv()`.
+    ///
+    /// ```glide
+    /// let p: *ArgParser = ArgParser::new("greet", "Say hello");
+    /// defer p.free();
+    /// p.add_string("name", "n", "world", "who to greet");
+    /// p.parse_argv();
+    /// ```
+    pub fn new(prog: string, desc: string) -> *ArgParser {
+        let p: *ArgParser = malloc(sizeof(ArgParser)) as *ArgParser;
+        p.prog = prog;
+        p.desc = desc;
+        // Local lets so the prescan sees concrete T for each HashMap mono.
+        let sf: *HashMap<*StrFlag> = HashMap::new();
+        let ifs: *HashMap<*IntFlag> = HashMap::new();
+        let bf: *HashMap<*BoolFlag> = HashMap::new();
+        let sh: *HashMap<string> = HashMap::new();
+        let so: *HashMap<string> = HashMap::new();
+        let ty: *HashMap<string> = HashMap::new();
+        let hp: *HashMap<string> = HashMap::new();
+        p.str_flags = sf;
+        p.int_flags = ifs;
+        p.bool_flags = bf;
+        p.shorts = sh;
+        p.short_of = so;
+        p.types = ty;
+        p.helps = hp;
+        p.order = Vector::new();
+        p.positional = Vector::new();
+        p.help_seen = false;
+        return p;
+    }
+
+    fn _register(self: *ArgParser, long: string, short: string, ty: string, help: string) {
+        self.order.push(long);
+        self.types.insert(long, ty);
+        self.helps.insert(long, help);
+        self.short_of.insert(long, short);
+        if !short.eq("") { self.shorts.insert(short, long); }
+    }
+
+    /// Declare a string-valued flag. `short` may be `""` if no short
+    /// form is desired.
+    ///
+    /// ```glide
+    /// p.add_string("name", "n", "world", "who to greet");
+    /// // accepts: --name=alice  --name alice  -n alice
+    /// ```
+    pub fn add_string(self: *ArgParser, long: string, short: string,
+                      default_value: string, help: string) {
+        let f: *StrFlag = malloc(sizeof(StrFlag)) as *StrFlag;
+        f.default_value = default_value;
+        f.value = default_value;
+        self.str_flags.insert(long, f);
+        self._register(long, short, "string", help);
+    }
+
+    /// Declare an int-valued flag.
+    ///
+    /// ```glide
+    /// p.add_int("count", "c", 1, "number of greetings");
+    /// // --count=5    --count 5    -c 5
+    /// ```
+    pub fn add_int(self: *ArgParser, long: string, short: string,
+                   default_value: i32, help: string) {
+        let f: *IntFlag = malloc(sizeof(IntFlag)) as *IntFlag;
+        f.default_value = default_value;
+        f.value = default_value;
+        self.int_flags.insert(long, f);
+        self._register(long, short, "int", help);
+    }
+
+    /// Declare a bool flag. Presence of the flag flips it to `true`
+    /// (or to whatever inverts the default — `add_bool(name, "", true, ...)`
+    /// means presence sets it to `false`).
+    ///
+    /// ```glide
+    /// p.add_bool("verbose", "v", false, "extra output");
+    /// // --verbose / -v sets it to true
+    /// ```
+    pub fn add_bool(self: *ArgParser, long: string, short: string,
+                    default_value: bool, help: string) {
+        let f: *BoolFlag = malloc(sizeof(BoolFlag)) as *BoolFlag;
+        f.default_value = default_value;
+        f.value = default_value;
+        self.bool_flags.insert(long, f);
+        self._register(long, short, "bool", help);
+    }
+
+    /// Read a parsed string flag. UB if the flag wasn't declared.
+    ///
+    /// ```glide
+    /// p.parse_argv();
+    /// let who: string = p.get_string("name");
+    /// ```
+    pub fn get_string(self: *ArgParser, long: string) -> string {
+        return self.str_flags.get(long).value;
+    }
+
+    /// Read a parsed int flag.
+    ///
+    /// ```glide
+    /// let n: i32 = p.get_int("count");
+    /// ```
+    pub fn get_int(self: *ArgParser, long: string) -> i32 {
+        return self.int_flags.get(long).value;
+    }
+
+    /// Read a parsed bool flag.
+    ///
+    /// ```glide
+    /// if p.get_bool("verbose") { eprintln("verbose mode on"); }
+    /// ```
+    pub fn get_bool(self: *ArgParser, long: string) -> bool {
+        return self.bool_flags.get(long).value;
+    }
+
+    /// Positional arguments captured after flags. Includes everything
+    /// after a `--` separator and any non-flag tokens before/between.
+    ///
+    /// ```glide
+    /// let files: *Vector<string> = p.positional();
+    /// for let i: i32 = 0; i < files.len(); i++ { fs_read(files.get(i)); }
+    /// ```
+    pub fn positional(self: *ArgParser) -> *Vector<string> {
+        return self.positional;
+    }
+
+    /// `true` if `--help` or `-h` was encountered while parsing.
+    /// `print_help()` is not called automatically — callers decide.
+    ///
+    /// ```glide
+    /// if p.help_requested() { p.print_help(); env_exit(0); }
+    /// ```
+    pub fn help_requested(self: *ArgParser) -> bool {
+        return self.help_seen;
+    }
+
+    fn _set_value(self: *ArgParser, long: string, val: string) -> !i32 {
+        if !self.types.contains(long) {
+            return err("unknown flag: --".concat(long));
+        }
+        let ty: string = self.types.get(long);
+        if ty.eq("string") {
+            self.str_flags.get(long).value = val;
+            return ok(0);
+        }
+        if ty.eq("int") {
+            let r: !i32 = val.try_parse_int();
+            if !r.ok { return err("flag --".concat(long).concat(" expects an integer, got: ").concat(val)); }
+            self.int_flags.get(long).value = r.val;
+            return ok(0);
+        }
+        // Bool: accept "true"/"false"/"1"/"0".
+        if val.eq("true") || val.eq("1") {
+            self.bool_flags.get(long).value = true;
+            return ok(0);
+        }
+        if val.eq("false") || val.eq("0") {
+            self.bool_flags.get(long).value = false;
+            return ok(0);
+        }
+        return err("flag --".concat(long).concat(" expects a bool, got: ").concat(val));
+    }
+
+    /// Parse the process's argv starting at index 1 (index 0 is the
+    /// program path, conventionally skipped). Returns `ok(0)` on
+    /// success or `err(message)` on the first malformed token.
+    ///
+    /// ```glide
+    /// let r: !i32 = p.parse_argv();
+    /// if !r.ok { eprintln(r.err); env_exit(2); }
+    /// ```
+    pub fn parse_argv(self: *ArgParser) -> !i32 {
+        let mut tokens: *Vector<string> = Vector::new();
+        for let i: i32 = 1; i < args_count(); i++ {
+            tokens.push(args_at(i));
+        }
+        return self.parse_tokens(tokens);
+    }
+
+    /// Same as `parse_argv` but consumes an arbitrary token list. Useful
+    /// for tests and for parsing nested commands.
+    ///
+    /// ```glide
+    /// let toks: *Vector<string> = Vector::new();
+    /// toks.push_all!("--name=alice", "--count", "3");
+    /// p.parse_tokens(toks);
+    /// p.get_string("name");   // "alice"
+    /// ```
+    pub fn parse_tokens(self: *ArgParser, tokens: *Vector<string>) -> !i32 {
+        let n: i32 = tokens.len();
+        let mut i: i32 = 0;
+        let mut all_positional: bool = false;
+        while i < n {
+            let tok: string = tokens.get(i);
+            if all_positional {
+                self.positional.push(tok);
+                i = i + 1;
+                continue;
+            }
+            if tok.eq("--") { all_positional = true; i = i + 1; continue; }
+            if tok.eq("--help") || tok.eq("-h") {
+                self.help_seen = true;
+                i = i + 1;
+                continue;
+            }
+            // Long form: --name or --name=value
+            if tok.len() > 2 && tok.at(0).to_int() == 45 && tok.at(1).to_int() == 45 {
+                let body: string = tok.substring(2, tok.len());
+                let eq_pos: i32 = body.index_of("=");
+                if eq_pos >= 0 {
+                    let name: string = body.substring(0, eq_pos);
+                    let val:  string = body.substring(eq_pos + 1, body.len());
+                    let r: !i32 = self._set_value(name, val);
+                    if !r.ok { return err(r.err); }
+                    i = i + 1;
+                    continue;
+                }
+                // No "=" — bare bool flag, or value is next token.
+                if self.bool_flags.contains(body) {
+                    self.bool_flags.get(body).value = !self.bool_flags.get(body).default_value;
+                    i = i + 1;
+                    continue;
+                }
+                if !self.types.contains(body) {
+                    return err("unknown flag: --".concat(body));
+                }
+                if i + 1 >= n {
+                    return err("flag --".concat(body).concat(" requires a value"));
+                }
+                let r: !i32 = self._set_value(body, tokens.get(i + 1));
+                if !r.ok { return err(r.err); }
+                i = i + 2;
+                continue;
+            }
+            // Short form: -x [value] (single char, no combining)
+            if tok.len() >= 2 && tok.at(0).to_int() == 45 {
+                let s: string = tok.substring(1, tok.len());
+                if !self.shorts.contains(s) {
+                    // Not a known short. Could be a negative-number positional
+                    // ("-3"), so treat as positional.
+                    self.positional.push(tok);
+                    i = i + 1;
+                    continue;
+                }
+                let long: string = self.shorts.get(s);
+                if self.bool_flags.contains(long) {
+                    self.bool_flags.get(long).value = !self.bool_flags.get(long).default_value;
+                    i = i + 1;
+                    continue;
+                }
+                if i + 1 >= n {
+                    return err("flag -".concat(s).concat(" requires a value"));
+                }
+                let r: !i32 = self._set_value(long, tokens.get(i + 1));
+                if !r.ok { return err(r.err); }
+                i = i + 2;
+                continue;
+            }
+            // Plain positional.
+            self.positional.push(tok);
+            i = i + 1;
+        }
+        return ok(0);
+    }
+
+    /// Build a human-readable help string. Includes the program name,
+    /// description, and a `--flag (-f)  default=...   help text` line
+    /// per flag in declaration order.
+    ///
+    /// ```glide
+    /// let txt: string = p.format_help();
+    /// // either print or write to a file
+    /// ```
+    pub fn format_help(self: *ArgParser) -> string {
+        let mut out: string = "usage: ".concat(self.prog).concat(" [flags] [positional...]\n");
+        if !self.desc.eq("") {
+            out = out.concat("\n").concat(self.desc).concat("\n");
+        }
+        out = out.concat("\nflags:\n");
+        for let i: i32 = 0; i < self.order.len(); i++ {
+            let name: string = self.order.get(i);
+            let short: string = self.short_of.get(name);
+            let ty: string = self.types.get(name);
+            let help: string = self.helps.get(name);
+            out = out.concat("  --").concat(name);
+            if !short.eq("") { out = out.concat(" (-").concat(short).concat(")"); }
+            out = out.concat("  ");
+            if ty.eq("string") {
+                out = out.concat("[string, default=\"")
+                          .concat(self.str_flags.get(name).default_value)
+                          .concat("\"]");
+            }
+            if ty.eq("int") {
+                out = out.concat("[int, default=")
+                          .concat(int_to_str(self.int_flags.get(name).default_value))
+                          .concat("]");
+            }
+            if ty.eq("bool") {
+                let dv: string = "false";
+                if self.bool_flags.get(name).default_value { dv = "true"; }
+                out = out.concat("[bool, default=").concat(dv).concat("]");
+            }
+            if !help.eq("") { out = out.concat("\n      ").concat(help); }
+            out = out.concat("\n");
+        }
+        out = out.concat("  --help (-h)  show this message\n");
+        return out;
+    }
+
+    /// Print `format_help()` to stdout.
+    ///
+    /// ```glide
+    /// if p.help_requested() { p.print_help(); env_exit(0); }
+    /// ```
+    pub fn print_help(self: *ArgParser) {
+        print!(self.format_help());
+    }
+
+    /// Free every owned struct + hashmap + vector. Pointer is dangling
+    /// after the call. Pair with `defer`.
+    ///
+    /// ```glide
+    /// let p: *ArgParser = ArgParser::new("greet", "Say hello");
+    /// defer p.free();
+    /// ```
+    pub fn free(self: *ArgParser) {
+        // Free per-flag value structs.
+        let snames: *Vector<string> = self.str_flags.keys();
+        for let i: i32 = 0; i < snames.len(); i++ {
+            free(self.str_flags.get(snames.get(i)) as *void);
+        }
+        let inames: *Vector<string> = self.int_flags.keys();
+        for let i: i32 = 0; i < inames.len(); i++ {
+            free(self.int_flags.get(inames.get(i)) as *void);
+        }
+        let bnames: *Vector<string> = self.bool_flags.keys();
+        for let i: i32 = 0; i < bnames.len(); i++ {
+            free(self.bool_flags.get(bnames.get(i)) as *void);
+        }
+        self.str_flags.free();
+        self.int_flags.free();
+        self.bool_flags.free();
+        self.shorts.free();
+        self.short_of.free();
+        self.types.free();
+        self.helps.free();
+        free(self as *void);
+    }
+}
+
+fn int_to_str(n: i32) -> string {
+    if n == 0 { return "0"; }
+    let mut x: i32 = n;
+    let mut neg: bool = false;
+    if x < 0 { neg = true; x = 0 - x; }
+    let mut s: string = "";
+    while x > 0 {
+        let d: i32 = x % 10;
+        s = ((d + 48) as char).to_string().concat(s);
+        x = x / 10;
+    }
+    if neg { s = "-".concat(s); }
+    return s;
+}

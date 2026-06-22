@@ -1,0 +1,313 @@
+// stdlib::iter — Iterator trait + eager combinators on `Vector<T>`.
+//
+//   fn double(x: int) -> int { return x * 2; }
+//   fn keep_pos(x: int) -> bool { return x > 0; }
+//
+//   let v: *Vector<int> = iter_range(0 - 3, 5);            // [-3..4]
+//   let m* = iter_map(v, double);
+//   let f* = iter_filter(m, keep_pos);
+//   let total: int = iter_sum_int(f);                      // 2+4+6+8 = 20
+//
+// Each transformer (`map`, `filter`, `take`, `skip`, `take_while`,
+// `skip_while`) returns a fresh `*Vector<U>` — caller owns it (use
+// `let v* = ...` for auto-drop). Reducers (`fold`, `count`, `any`,
+// `all`, `find`, `sum_int`, `max_int`, `min_int`) read the vector and
+// return a value. Constructors (`range`, `range_step`, `repeat`) build
+// new vectors.
+//
+// All combinators take fn pointers, not closures-with-capture (Sprint 3
+// deferred). Define top-level `fn name(...) { ... }` or use anonymous
+// fns without capturing outer vars: `fn(x: int) -> int { return x + 1; }`.
+
+pub trait Iterator {
+    type Item;
+    fn next(self: *Self) -> ?Self::Item;
+}
+
+// Plug VecIter (defined in builtins/vector.glide) into the trait so any
+// `fn f<I: Iterator>(it: *I)` accepts `v.iter()` after this import.
+impl<T> Iterator for VecIter<T> {
+    type Item = T;
+    fn next(self: *VecIter<T>) -> ?T {
+        if self.idx >= self.vec.len { return none(); }
+        let v: T = self.vec.data[self.idx];
+        self.idx = self.idx + 1;
+        return some(v);
+    }
+}
+
+// ============================================================================
+// Transformers (return *Vector<U>; caller owns)
+// ============================================================================
+
+/// Apply `f` to each element, returning a new Vector.
+///
+/// ```glide
+/// fn double(x: i32) -> i32 { return x * 2; }
+/// let v: *Vector<i32> = iter_range(1, 4);     // [1, 2, 3]
+/// let m: *Vector<i32> = iter_map(v, double);  // [2, 4, 6]
+/// ```
+pub fn iter_map<T, U>(v: *Vector<T>, f: fn(T) -> U) -> *Vector<U> {
+    let out: *Vector<U> = Vector::new();
+    for let i: i32 = 0; i < v.len(); i++ {
+        let item: T = v.get(i);
+        out.push(f(item));
+    }
+    return out;
+}
+
+/// Keep only elements where `p` returns true.
+///
+/// ```glide
+/// fn keep_pos(x: i32) -> bool { return x > 0; }
+/// let v: *Vector<i32> = iter_range(-2, 3);          // [-2, -1, 0, 1, 2]
+/// let pos: *Vector<i32> = iter_filter(v, keep_pos); // [1, 2]
+/// ```
+pub fn iter_filter<T>(v: *Vector<T>, p: fn(T) -> bool) -> *Vector<T> {
+    let out: *Vector<T> = Vector::new();
+    for let i: i32 = 0; i < v.len(); i++ {
+        let item: T = v.get(i);
+        if p(item) { out.push(item); }
+    }
+    return out;
+}
+
+/// First `n` elements (or all if `n` exceeds length).
+///
+/// ```glide
+/// let v: *Vector<i32> = iter_range(0, 10);
+/// iter_take(v, 3);    // [0, 1, 2]
+/// iter_take(v, 99);   // entire 10-element vector
+/// ```
+pub fn iter_take<T>(v: *Vector<T>, n: i32) -> *Vector<T> {
+    let out: *Vector<T> = Vector::new();
+    let mut limit: i32 = n;
+    if limit > v.len() { limit = v.len(); }
+    if limit < 0 { limit = 0; }
+    for let i: i32 = 0; i < limit; i++ { out.push(v.get(i)); }
+    return out;
+}
+
+/// Drop first `n` elements; return the rest.
+///
+/// ```glide
+/// let v: *Vector<i32> = iter_range(0, 5);   // [0,1,2,3,4]
+/// iter_skip(v, 2);                          // [2, 3, 4]
+/// ```
+pub fn iter_skip<T>(v: *Vector<T>, n: i32) -> *Vector<T> {
+    let out: *Vector<T> = Vector::new();
+    let mut start: i32 = n;
+    if start < 0 { start = 0; }
+    for let i: i32 = start; i < v.len(); i++ { out.push(v.get(i)); }
+    return out;
+}
+
+/// Take elements until `p` returns false (then stop).
+///
+/// ```glide
+/// fn lt3(x: i32) -> bool { return x < 3; }
+/// let v: *Vector<i32> = iter_range(0, 6);   // [0,1,2,3,4,5]
+/// iter_take_while(v, lt3);                  // [0, 1, 2]
+/// ```
+pub fn iter_take_while<T>(v: *Vector<T>, p: fn(T) -> bool) -> *Vector<T> {
+    let out: *Vector<T> = Vector::new();
+    for let i: i32 = 0; i < v.len(); i++ {
+        let item: T = v.get(i);
+        if !p(item) { return out; }
+        out.push(item);
+    }
+    return out;
+}
+
+/// Skip elements while `p` returns true; keep the rest from first false.
+///
+/// ```glide
+/// fn lt3(x: i32) -> bool { return x < 3; }
+/// let v: *Vector<i32> = iter_range(0, 6);   // [0,1,2,3,4,5]
+/// iter_skip_while(v, lt3);                  // [3, 4, 5]
+/// ```
+pub fn iter_skip_while<T>(v: *Vector<T>, p: fn(T) -> bool) -> *Vector<T> {
+    let out: *Vector<T> = Vector::new();
+    let mut skipping: bool = true;
+    for let i: i32 = 0; i < v.len(); i++ {
+        let item: T = v.get(i);
+        if skipping {
+            if !p(item) { skipping = false; out.push(item); }
+        } else {
+            out.push(item);
+        }
+    }
+    return out;
+}
+
+// ============================================================================
+// Reducers (return value)
+// ============================================================================
+
+/// Fold over the vector. `f(acc, item)` returns the new accumulator.
+///
+/// ```glide
+/// fn add(acc: i32, x: i32) -> i32 { return acc + x; }
+/// let v: *Vector<i32> = iter_range(1, 5);   // [1,2,3,4]
+/// iter_fold(v, 0, add);                     // 10
+/// iter_fold(v, 100, add);                   // 110
+/// ```
+pub fn iter_fold<T, U>(v: *Vector<T>, init: U, f: fn(U, T) -> U) -> U {
+    let mut acc: U = init;
+    for let i: i32 = 0; i < v.len(); i++ {
+        let item: T = v.get(i);
+        acc = f(acc, item);
+    }
+    return acc;
+}
+
+/// Number of elements. Same as `v.len()`; provided for API symmetry.
+///
+/// ```glide
+/// iter_count(iter_range(0, 5));   // 5
+/// ```
+pub fn iter_count<T>(v: *Vector<T>) -> i32 { return v.len(); }
+
+/// `true` if any element matches `p`. Short-circuits on first hit.
+///
+/// ```glide
+/// fn is_neg(x: i32) -> bool { return x < 0; }
+/// let v: *Vector<i32> = iter_range(-1, 3);   // [-1, 0, 1, 2]
+/// iter_any(v, is_neg);                       // true
+/// ```
+pub fn iter_any<T>(v: *Vector<T>, p: fn(T) -> bool) -> bool {
+    for let i: i32 = 0; i < v.len(); i++ {
+        if p(v.get(i)) { return true; }
+    }
+    return false;
+}
+
+/// `true` if all elements match `p`. Short-circuits on first miss.
+/// Empty vector returns `true` (vacuous truth).
+///
+/// ```glide
+/// fn is_pos(x: i32) -> bool { return x > 0; }
+/// let v: *Vector<i32> = iter_range(1, 4);   // [1, 2, 3]
+/// iter_all(v, is_pos);                      // true
+/// ```
+pub fn iter_all<T>(v: *Vector<T>, p: fn(T) -> bool) -> bool {
+    for let i: i32 = 0; i < v.len(); i++ {
+        if !p(v.get(i)) { return false; }
+    }
+    return true;
+}
+
+/// First element matching `p`, or `none` if no match.
+///
+/// ```glide
+/// fn is_even(x: i32) -> bool { return x % 2 == 0; }
+/// let v: *Vector<i32> = iter_range(1, 5);   // [1,2,3,4]
+/// match iter_find(v, is_even) {
+///     some(x) => println!(x),               // 2
+///     none()  => {},
+/// }
+/// ```
+pub fn iter_find<T>(v: *Vector<T>, p: fn(T) -> bool) -> ?T {
+    for let i: i32 = 0; i < v.len(); i++ {
+        let item: T = v.get(i);
+        if p(item) { return some(item); }
+    }
+    return none();
+}
+
+// ============================================================================
+// Type-specific reducers (avoid generic numeric constraints)
+// ============================================================================
+
+/// Sum of `int` elements.
+///
+/// ```glide
+/// let v: *Vector<i32> = iter_range(1, 5);   // [1,2,3,4]
+/// iter_sum_int(v);                          // 10
+/// ```
+pub fn iter_sum_int(v: *Vector<i32>) -> i32 {
+    let mut acc: i32 = 0;
+    for let i: i32 = 0; i < v.len(); i++ { acc = acc + v.get(i); }
+    return acc;
+}
+
+/// Max of `int` elements; `none` for empty vector.
+///
+/// ```glide
+/// let v: *Vector<i32> = Vector::new();  defer v.free();
+/// v.push_all!(3, 7, 2, 9, 4);
+/// iter_max_int(v);   // some(9)
+/// ```
+pub fn iter_max_int(v: *Vector<i32>) -> ?i32 {
+    if v.len() == 0 { return none(); }
+    let mut m: i32 = v.get(0);
+    for let i: i32 = 1; i < v.len(); i++ {
+        let x: i32 = v.get(i);
+        if x > m { m = x; }
+    }
+    return some(m);
+}
+
+/// Min of `int` elements; `none` for empty vector.
+///
+/// ```glide
+/// let v: *Vector<i32> = Vector::new();  defer v.free();
+/// v.push_all!(3, 7, 2, 9, 4);
+/// iter_min_int(v);   // some(2)
+/// ```
+pub fn iter_min_int(v: *Vector<i32>) -> ?i32 {
+    if v.len() == 0 { return none(); }
+    let mut m: i32 = v.get(0);
+    for let i: i32 = 1; i < v.len(); i++ {
+        let x: i32 = v.get(i);
+        if x < m { m = x; }
+    }
+    return some(m);
+}
+
+// ============================================================================
+// Constructors
+// ============================================================================
+
+/// `[start, end)` as a `Vector<int>`. Empty if `end <= start`.
+///
+/// ```glide
+/// iter_range(0, 5);    // [0, 1, 2, 3, 4]
+/// iter_range(3, 3);    // []
+/// iter_range(2, 6);    // [2, 3, 4, 5]
+/// ```
+pub fn iter_range(start: i32, end: i32) -> *Vector<i32> {
+    let out: *Vector<i32> = Vector::new();
+    let mut i: i32 = start;
+    while i < end { out.push(i); i = i + 1; }
+    return out;
+}
+
+/// `[start, start+step, start+2*step, ...)` up to (but not including) `end`.
+/// Returns empty if `step <= 0` or `end <= start`.
+///
+/// ```glide
+/// iter_range_step(0, 10, 2);    // [0, 2, 4, 6, 8]
+/// iter_range_step(10, 0, 1);    // []   (end <= start)
+/// iter_range_step(0, 5, 0);     // []   (step <= 0)
+/// ```
+pub fn iter_range_step(start: i32, end: i32, step: i32) -> *Vector<i32> {
+    let out: *Vector<i32> = Vector::new();
+    if step <= 0 { return out; }
+    let mut i: i32 = start;
+    while i < end { out.push(i); i = i + step; }
+    return out;
+}
+
+/// `n` copies of `value`. Empty if `n <= 0`.
+///
+/// ```glide
+/// iter_repeat(0, 4);            // [0, 0, 0, 0]
+/// iter_repeat("x", 3);          // ["x", "x", "x"]
+/// iter_repeat(true, 0).len();   // 0
+/// ```
+pub fn iter_repeat<T>(value: T, n: i32) -> *Vector<T> {
+    let out: *Vector<T> = Vector::new();
+    for let i: i32 = 0; i < n; i++ { out.push(value); }
+    return out;
+}
