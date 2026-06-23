@@ -1,0 +1,112 @@
+# Example 23: Sendable thread safety + chan_select
+#
+# Demonstrates:
+#   1. Sendable interface — compiler enforces thread safety at spawn sites
+#   2. chan_select:        — select over multiple channels (Go-style)
+#   3. chan_select with timeout and default (non-blocking)
+
+# ── Sendable: user class opt-in ──────────────────────────────────────────────
+
+class SafeCounter implements Sendable:
+    pub val: Atomic[int]
+
+extend SafeCounter:
+    pub def init() -> SafeCounter:
+        mut c = SafeCounter()
+        c.val = Atomic.new(0)
+        return c
+    pub def inc(self) -> void:
+        self.val.add(1)
+    pub def get(self) -> int:
+        return self.val.load()
+
+def count_task(c: SafeCounter) -> void:
+    mut i = 0
+    while i < 500:
+        c.inc()
+        i = i + 1
+
+async def test_sendable():
+    print("--- Sendable + spawn ---")
+    mut counter = SafeCounter.init()
+    task_group:
+        spawn count_task(counter)
+        spawn count_task(counter)
+    print(f"  counter after 2×500: {counter.get()}")   # 1000
+
+# ── chan_select: basic recv/send ─────────────────────────────────────────────
+
+def producer(ch: Chan[int]) -> void:
+    ch.send(10)
+    ch.send(20)
+    ch.send(30)
+    ch.close()
+
+async def test_chan_select_recv():
+    print("--- chan_select recv ---")
+    mut ch: Chan[int] = Chan.init(8)
+    mut done: Chan[int] = Chan.init(1)
+    task_group:
+        spawn producer(ch)
+    mut total = 0
+    mut going = true
+    while going:
+        chan_select:
+            case v = ch.recv():
+                total = total + v
+            case default:
+                going = false
+    print(f"  total from select: {total}")   # 60
+
+# ── chan_select: timeout ─────────────────────────────────────────────────────
+
+async def test_chan_select_timeout():
+    print("--- chan_select timeout ---")
+    mut empty: Chan[int] = Chan.init(1)   # nothing will be sent
+    mut got_timeout = false
+    chan_select:
+        case v = empty.recv():
+            print(f"  unexpected recv: {v}")
+        case timeout(50):
+            got_timeout = true
+    if got_timeout:
+        print("  timeout fired correctly")
+    else:
+        print("  ERROR: timeout did not fire")
+
+# ── chan_select: two channels ─────────────────────────────────────────────────
+
+def fill_a(ch: Chan[int]) -> void:
+    ch.send(42)
+
+def fill_b(ch: Chan[int]) -> void:
+    Thread.sleep(5)
+    ch.send(99)
+
+async def test_chan_select_two():
+    print("--- chan_select two channels ---")
+    mut ca: Chan[int] = Chan.init(4)
+    mut cb: Chan[int] = Chan.init(4)
+    task_group:
+        spawn fill_a(ca)
+        spawn fill_b(cb)
+    Thread.sleep(20)   # let both send
+    mut sum = 0
+    chan_select:
+        case v = ca.recv():
+            sum = sum + v
+        case default:
+            pass
+    chan_select:
+        case v = cb.recv():
+            sum = sum + v
+        case default:
+            pass
+    print(f"  sum from two channels: {sum}")   # 141
+
+async def main():
+    await test_sendable()
+    await test_chan_select_recv()
+    await test_chan_select_timeout()
+    await test_chan_select_two()
+    print("all thread-safety tests passed")

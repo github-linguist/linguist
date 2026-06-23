@@ -1,0 +1,80 @@
+# 21 — Closures with Parameters
+# Covers: closures that take arguments, closures that capture AND take params,
+# passing closures as function arguments (higher-order style).
+
+def main():
+    # ── 1. Single parameter closure ──────────────────────────────────────────
+    print("=== Single-param closures ===")
+    mut double = def (x: int) -> int:
+        return x * 2
+    print(double(5))     # 10
+    print(double(21))    # 42
+
+    mut negate = def (x: int) -> int:
+        return -x
+    print(negate(7))     # -7
+    print(negate(-3))    # 3
+
+    # ── 2. Multi-param closure ───────────────────────────────────────────────
+    print("=== Multi-param closures ===")
+    mut add = def (a: int, b: int) -> int:
+        return a + b
+    print(add(3, 4))     # 7
+    print(add(10, 20))   # 30
+
+    mut power = def (base: int, exp: int) -> int:
+        mut result: int = 1
+        mut i: int = 0
+        while i < exp:
+            result = result * base
+            i = i + 1
+        return result
+    print(power(2, 8))   # 256
+    print(power(3, 4))   # 81
+
+    # ── 3. Closure that captures AND takes params ────────────────────────────
+    print("=== Capture + params ===")
+    mut base_val: int = 100
+    mut add_to_base = def (n: int) -> int:
+        return base_val + n
+    print(add_to_base(5))    # 105
+    print(add_to_base(-10))  # 90
+    base_val = 200
+    print(add_to_base(5))    # 205 — sees updated capture
+
+    mut multiplier: int = 3
+    mut scale = def (x: int) -> int:
+        return x * multiplier
+    print(scale(7))      # 21
+    multiplier = 10
+    print(scale(7))      # 70 — sees updated multiplier
+
+    # ── 4. Closure that mutates capture via params ───────────────────────────
+    print("=== Mutating captures via params ===")
+    mut total: int = 0
+    mut accumulate = def (n: int):
+        total = total + n
+    accumulate(5)
+    accumulate(10)
+    accumulate(3)
+    print(total)         # 18
+
+    mut product: int = 1
+    mut multiply_into = def (n: int):
+        product = product * n
+    multiply_into(2)
+    multiply_into(3)
+    multiply_into(4)
+    print(product)       # 24
+
+    # ── 5. Closure returning a closure ──────────────────────────────────────
+    print("=== Adder factory ===")
+    mut offset: int = 10
+    mut make_adder_of_offset = def (n: int) -> int:
+        return n + offset
+    print(make_adder_of_offset(5))   # 15
+    print(make_adder_of_offset(90))  # 100
+    offset = 1000
+    print(make_adder_of_offset(5))   # 1005
+
+    print("=== done ===")

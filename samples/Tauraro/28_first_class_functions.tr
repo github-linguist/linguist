@@ -1,0 +1,53 @@
+# Example 28: First-class functions (callables)
+#
+# A top-level function can be used as a value: stored in a variable, passed as
+# an argument, reassigned, and held in a struct field. A function value is a
+# zero-cost function pointer. Its type is written `def(ParamTypes) -> Return`.
+
+from core.vec import Vec
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+def sub(a: int, b: int) -> int:
+    return a - b
+
+def mul(a: int, b: int) -> int:
+    return a * b
+
+# Takes a function as a parameter and applies it.
+def apply(op: def(int, int) -> int, a: int, b: int) -> int:
+    return op(a, b)
+
+# A named operation: a callable stored in a struct field.
+pub class Op:
+    pub name: str
+    pub fn:   def(int, int) -> int
+
+extend Op:
+    pub def init(name: str, fn: def(int, int) -> int) -> Op:
+        mut o = Op()
+        o.name = name
+        o.fn   = fn
+        return o
+
+def main():
+    # 1. Function in a variable, called through the value.
+    mut f: def(int, int) -> int = add
+    print(f(3, 4))            # 7
+    f = mul
+    print(f(3, 4))            # 12
+
+    # 2. Function passed as an argument.
+    print(apply(sub, 10, 3))  # 7
+
+    # 3. A table of named operations (handler-field pattern).
+    mut ops = Vec[Op].init(3)
+    ops.push(Op.init("add", add))
+    ops.push(Op.init("sub", sub))
+    ops.push(Op.init("mul", mul))
+    mut i = 0
+    while i < ops.len:
+        mut o = ops.get(i)
+        print(o.name + "(6, 2) = " + o.fn(6, 2).to_str())   # direct field call
+        i = i + 1

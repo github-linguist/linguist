@@ -1,0 +1,435 @@
+# 06 — Collections: List[T], Dict[K,V], Tuple, enumerate, zip, dict.items()
+# Covers: List creation, append/pop/index/modify, iteration, enumerate,
+# zip, list comprehension, Dict create/get/set/has, typed Dict, tuples,
+# for k,v in dict.items() iteration, ownership rules.
+
+def sum_list(items: List[int]) -> int:
+    mut total = 0
+    for x in items:
+        total += x
+    return total
+
+def filter_positive(nums: List[int]) -> List[int]:
+    mut result: List[int] = []
+    for x in nums:
+        if x > 0: result.append(x)
+    return result
+
+def reverse_list(items: List[int]) -> List[int]:
+    mut result: List[int] = []
+    for v in items:
+        result.append(v)
+    mut lo = 0
+    mut hi = len(result) - 1
+    while lo < hi:
+        mut tmp = result[lo + 0]
+        result[lo + 0] = result[hi + 0]
+        result[hi + 0] = tmp
+        lo += 1
+        hi -= 1
+    return result
+
+def make_range(n: int) -> List[int]:
+    mut result: List[int] = []
+    for i in range(n):
+        result.append(i)
+    return result    # ownership transferred — no free here
+
+def min_max(items: List[int]) -> (int, int):
+    mut lo = items[0]
+    mut hi = items[0]
+    for x in items:
+        if x < lo: lo = x
+        if x > hi: hi = x
+    return (lo, hi)
+
+def divmod_pair(a: int, b: int) -> (int, int):
+    return (a / b, a % b)
+
+def main():
+
+    # ── 1. Creating lists ──────────────────────────────────────────────────────
+    print("=== Creating Lists ===")
+    mut primes: List[int]  = [2, 3, 5, 7, 11]
+    mut names:  List[str]  = ["Alice", "Bob", "Charlie"]
+    mut flags:  List[bool] = [true, false, true]
+
+    # Empty list — type annotation required (compiler can't infer from nothing):
+    mut scores: List[int] = []
+    mut words:  List[str] = []
+
+    print(f"primes: {len(primes)} elements")
+    print(f"names:  {len(names)} elements")
+
+    # ── 2. Appending elements ─────────────────────────────────────────────────
+    print("=== Append ===")
+    scores.append(90)
+    scores.append(85)
+    scores.append(72)
+    scores.append(61)
+    print(f"scores len: {len(scores)}")    # 4
+
+    # ── 3. Reading elements ────────────────────────────────────────────────────
+    print("=== Indexing ===")
+    print(f"primes[0] = {primes[0]}")    # 2
+    print(f"primes[4] = {primes[4]}")    # 11
+
+    # Last element:
+    mut last: int = primes[len(primes) - 1]
+    print(f"last = {last}")              # 11
+
+    # Bounds checking (always validate when index is not statically known):
+    idx: int = 2
+    if idx < len(primes):
+        print(f"primes[{idx}] = {primes[idx + 0]}")    # 5
+
+    # ── 4. Modifying elements ─────────────────────────────────────────────────
+    print("=== Modify ===")
+    mut vals: List[int] = [10, 20, 30, 40, 50]
+    vals[0] = 99
+    vals[2] += 5
+    print(f"vals[0] = {vals[0]}")   # 99
+    print(f"vals[2] = {vals[2]}")   # 35
+
+    # ── 5. Removing the last element ──────────────────────────────────────────
+    print("=== Pop ===")
+    mut popped: int = vals.pop()
+    print(f"popped: {popped}")          # 50
+    print(f"len after pop: {len(vals)}")  # 4
+
+    # ── 6. Iteration ──────────────────────────────────────────────────────────
+    print("=== Iteration ===")
+    mut ni2: int = 0
+    while ni2 < len(names):
+        mut nm2: str = names[ni2 + 0]
+        print(f"  Hello, {nm2}!")
+        ni2 += 1
+
+    # While loop when you need full index control:
+    mut i = 0
+    while i < len(scores):
+        print(f"  scores[{i}] = {scores[i + 0]}")
+        i += 1
+
+    # ── 7. enumerate — index + value ──────────────────────────────────────────
+    print("=== Enumerate ===")
+    mut fruits: List[str] = ["apple", "banana", "cherry"]
+    for i, fruit in enumerate(fruits):
+        print(f"  [{i}] {fruit}")
+
+    mut countdown: List[int] = [10, 20, 30]
+    for idx, val in enumerate(countdown):
+        print(f"  idx={idx} val={val}")
+
+    # ── 8. List building (comprehension-style) ───────────────────────────────
+    print("=== Comprehension ===")
+    mut numbers: List[int] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    # Transform: square each element
+    mut squares: List[int] = []
+    mut si: int = 0
+    while si < len(numbers):
+        mut sx: int = numbers[si + 0]
+        squares.append(sx * sx)
+        si += 1
+    print(f"squares: first={squares[0]}, last={squares[9]}")   # 1, 100
+
+    # Filter: keep only evens
+    mut evens: List[int] = []
+    mut evi: int = 0
+    while evi < len(numbers):
+        mut ex: int = numbers[evi + 0]
+        if ex % 2 == 0: evens.append(ex)
+        evi += 1
+    print(f"evens len: {len(evens)}")   # 5
+
+    # Transform + filter combined:
+    mut even_squares: List[int] = []
+    mut esi: int = 0
+    while esi < len(numbers):
+        mut esx: int = numbers[esi + 0]
+        if esx % 2 == 0: even_squares.append(esx * esx)
+        esi += 1
+    mut vi: int = 0
+    while vi < len(even_squares):
+        mut vv: int = even_squares[vi + 0]
+        print(f"  {vv}")   # 4 16 36 64 100
+        vi += 1
+
+    # ── 9. Passing lists to functions (borrow — caller keeps ownership) ────────
+    print("=== Functions with Lists ===")
+    mut data: List[int] = [-3, 7, -1, 4, -2, 9, 0]
+    print(f"sum:      {sum_list(data)}")             # 14
+    mut pos = filter_positive(data)
+    print(f"positive: {len(pos)} elements")          # 3 (7, 4, 9)
+    mut rev = reverse_list([1, 2, 3, 4, 5])
+    print(f"reversed[0] = {rev[0]}")                 # 5
+
+    # ── 10. List[str] operations ──────────────────────────────────────────────
+    print("=== List[str] ===")
+    mut tags: List[str] = []
+    tags.append("tauraro")
+    tags.append("systems")
+    tags.append("fast")
+
+    print(f"tags: {len(tags)}")
+    print(f"tags[1] = {tags[1]}")    # systems
+
+    mut ti: int = 0
+    while ti < len(tags):
+        mut tg: str = tags[ti + 0]
+        print(f"  #{tg}")
+        ti += 1
+
+    # ── 11. List[float] ────────────────────────────────────────────────────────
+    print("=== List[float] ===")
+    mut temps: List[float] = [36.6, 37.1, 36.9, 38.2, 37.5]
+    mut sum_f: float = 0.0
+    mut ti2: int = 0
+    while ti2 < len(temps):
+        mut t: float = temps[ti2 + 0]
+        sum_f += t
+        ti2 += 1
+    mut avg: float = sum_f / len(temps) as float
+    print(f"avg temp: {avg}")
+
+    # ── 12. Dict — string-keyed hash map ──────────────────────────────────────
+    print("=== Dict ===")
+    # Create with a literal:
+    mut config: Dict = {"host": "localhost", "port": "8080", "debug": "true"}
+
+    # Read a value:
+    host_val: str = config.get("host")
+    print(f"host: {host_val}")    # localhost
+
+    # Write/update a value:
+    config.set("timeout", "30")
+    config.set("port", "9090")
+
+    # Check if key exists:
+    if config.has("debug"):
+        debug_val: str = config.get("debug")
+        print(f"debug = {debug_val}")    # true
+
+    if not config.has("missing_key"):
+        print("missing_key not present")
+
+    # Empty Dict:
+    mut store: Dict = {}
+    store.set("name", "Tauraro")
+    store.set("version", "2")
+    has_name: bool = store.has("name")
+    print(f"store has name: {has_name}")
+
+    # ── 13. Dict — counting pattern ───────────────────────────────────────────
+    print("=== Dict Counting ===")
+    sentence: str = "the quick brown fox jumps over the lazy dog the"
+    mut word_counts: Dict = {}
+    mut ws: List[str] = sentence.split(" ")
+    mut wi: int = 0
+    while wi < len(ws):
+        mut word: str = ws[wi + 0]
+        if word_counts.has(word):
+            mut wval: str = word_counts.get(word)
+            mut n: int = int(wval)
+            word_counts.set(word, str(n + 1))
+        else:
+            word_counts.set(word, "1")
+        wi += 1
+
+    the_count: str = word_counts.get("the")
+    fox_count: str = word_counts.get("fox")
+    print(f"the appears: {the_count} times")    # 3
+    print(f"fox appears: {fox_count} times")    # 1
+
+    # ── 14. zip — parallel iteration over two lists ──────────────────────────
+    print("=== zip ===")
+    mut zip_names: List[str] = ["Alice", "Bob", "Carol"]
+    mut zip_scores: List[int] = [95, 82, 78]
+    for name, score in zip(zip_names, zip_scores):
+        print(f"  {name}: {score}")
+
+    mut zip_keys: List[str] = ["x", "y", "z"]
+    mut zip_vals: List[int] = [1, 2, 3]
+    for k, v in zip(zip_keys, zip_vals):
+        print(f"  {k}={v}")
+
+    # ── 15. Typed Dict[str, int] — integer values, no string casting ─────────────
+    print("=== Typed Dict[str, int] ===")
+    mut player_scores: Dict[str, int] = {}
+    player_scores.set("alice", 95)
+    player_scores.set("bob",   82)
+    player_scores.set("carol", 91)
+
+    mut alice_score = player_scores.get("alice")
+    mut bob_score   = player_scores.get("bob")
+    print(f"alice = {alice_score}")    # 95
+    print(f"bob   = {bob_score}")      # 82
+
+    if player_scores.has("carol"):
+        mut cs = player_scores.get("carol")
+        print(f"carol = {cs}")         # 91
+
+    # Word frequency counter — no str()/int() casts needed
+    mut freq: Dict[str, int] = {}
+    mut sample_words = ["go", "fast", "go", "run", "fast", "go"]
+    for w in sample_words:
+        if freq.has(w):
+            mut c = freq.get(w)
+            freq.set(w, c + 1)
+        else:
+            freq.set(w, 1)
+    mut go_count = freq.get("go")
+    print(f"go appears {go_count} times")    # 3
+
+    # Iterate all entries with .items()
+    print("=== Dict[str,int].items() ===")
+    mut word_iter: Dict[str, int] = {}
+    word_iter.set("apple", 3)
+    word_iter.set("banana", 1)
+    word_iter.set("cherry", 5)
+    for word, cnt in word_iter.items():
+        print(f"  {word}: {cnt}")
+
+    # ── 16. Typed Dict[int, str] — integer keys ───────────────────────────────
+    print("=== Typed Dict[int, str] ===")
+    mut http: Dict[int, str] = {}
+    http.set(200, "OK")
+    http.set(201, "Created")
+    http.set(400, "Bad Request")
+    http.set(404, "Not Found")
+    http.set(500, "Internal Server Error")
+
+    mut msg_200 = http.get(200)
+    mut msg_404 = http.get(404)
+    print(f"200 -> {msg_200}")    # OK
+    print(f"404 -> {msg_404}")    # Not Found
+
+    if http.has(500):
+        mut msg_500 = http.get(500)
+        print(f"500 -> {msg_500}")    # Internal Server Error
+
+    # Iterate all entries with .items()
+    print("=== Dict[int,str].items() ===")
+    for code, msg in http.items():
+        print(f"  {code}: {msg}")
+
+    # ── 17. Tuples — fixed groups of values ──────────────────────────────────
+    print("=== Tuples ===")
+    # Tuple literal — elements can be any type
+    mut point = (10, 20)
+    mut triple = (1, "hello", 42)
+    mut empty_tup = ()
+
+    # Unpack into named variables
+    mut px, py = point
+    print(f"point: x={px} y={py}")    # x=10 y=20
+
+    mut a, b, c = (100, 200, 300)
+    print(f"triple unpack: a={a} b={b} c={c}")    # 100 200 300
+
+    # Function that returns a tuple (see min_max above)
+    mut lo, hi = min_max([3, 1, 4, 1, 5, 9, 2, 6])
+    print(f"min={lo} max={hi}")    # min=1 max=9
+
+    mut q, r = divmod_pair(17, 5)
+    print(f"17 div 5: quotient={q} remainder={r}")    # quotient=3 remainder=2
+
+    # Print a whole tuple (Python-style repr): mixed element types are shown
+    # with str elements quoted.
+    print(point)      # (10, 20)
+    print(triple)     # (1, 'hello', 42)
+    mut mixed = (1, "hello", 3.14)
+    print(mixed)      # (1, 'hello', 3.14)
+
+    # A vector of tuples — pairing values with the builtin tuple type:
+    mut pairs: Vec[Tuple] = Vec[Tuple].init(3)
+    pairs.push((1, 10))
+    pairs.push((2, 20))
+    pairs.push((3, 30))
+    print(f"pairs len: {pairs.len}")    # 3
+    # Unpack a stored tuple back into named values:
+    mut fa, fb = pairs.get(0)
+    print(f"first pair: ({fa}, {fb})")  # (1, 10)
+
+    # ── 18. Ownership — lists returned from functions ─────────────────────────
+    print("=== Ownership ===")
+    mut my_range = make_range(5)
+    print(f"make_range(5): {len(my_range)} elements")
+    print(f"first: {my_range[0]}, last: {my_range[4]}")
+
+    # ── 19. List.sort / sort_desc ─────────────────────────────────────────────
+    print("=== List.sort ===")
+    mut ns: List[int] = [5, 2, 8, 1, 9, 3]
+    ns.sort()                            # ascending in-place
+    print(f"sorted asc: first={ns.get(0)} last={ns.get(5)}")   # 1 9
+
+    mut ds: List[int] = [5, 2, 8, 1, 9, 3]
+    ds.sort_desc()                       # descending in-place
+    print(f"sorted desc: first={ds.get(0)} last={ds.get(5)}")  # 9 1
+
+    mut words_sort: List[str] = ["banana", "apple", "cherry", "date"]
+    words_sort.sort()
+    print(f"words[0]={words_sort.get(0)}  words[3]={words_sort.get(3)}")  # apple date
+
+    # ── 20. List.sum / min_val / max_val ─────────────────────────────────────
+    print("=== List aggregates ===")
+    mut agg_vals: List[int] = [3, 1, 4, 1, 5, 9, 2, 6]
+    print(f"sum:     {agg_vals.sum()}")      # 31
+    print(f"min:     {agg_vals.min_val()}")  # 1
+    print(f"max:     {agg_vals.max_val()}")  # 9
+
+    mut fvals: List[float] = [1.5, 2.5, 0.5, 3.0]
+    print(f"float sum: {fvals.sum()}")   # 7.5
+
+    # ── 21. Set[T] — unique unordered values ──────────────────────────────────
+    print("=== Set[T] ===")
+
+    # String Set
+    mut fruit_set: Set[str] = Set[str].init()
+    fruit_set.add("apple")
+    fruit_set.add("banana")
+    fruit_set.add("cherry")
+    fruit_set.add("apple")   # duplicate — ignored
+    print(f"fruits len: {fruit_set.len()}")   # 3
+    print(f"has apple:  {fruit_set.contains('apple')}")    # true
+    print(f"has grape:  {fruit_set.contains('grape')}")    # false
+
+    fruit_set.remove("banana")
+    print(f"after remove: {fruit_set.len()}")  # 2
+
+    # Integer Set — useful for deduplication
+    mut nums_set: Set[int] = Set[int].init()
+    mut raw_data: List[int] = [1, 2, 3, 2, 1, 4, 3, 5]
+    for v in raw_data:
+        nums_set.add(v)
+    print(f"unique nums: {nums_set.len()}")   # 5  (1 2 3 4 5)
+
+    # Convert set to list for sorting / iteration
+    mut unique_list = nums_set.to_list()
+    unique_list.sort()
+    print(f"sorted unique: first={unique_list.get(0)} last={unique_list.get(4)}")  # 1 5
+
+    # Set operations: is_empty / is_subset
+    mut empty_set: Set[int] = Set[int].init()
+    print(f"empty: {empty_set.is_empty()}")   # true
+
+    # ── 22. defer — LIFO cleanup ──────────────────────────────────────────────
+    # defer runs at FUNCTION return; effects are visible to the caller afterward.
+    print("=== defer ===")
+    mut dlog: List[str] = []
+    collect_with_defers(dlog)        # helper below registers the defers
+    assert dlog.get(0) == "start"
+    assert dlog.get(1) == "middle"
+    assert dlog.get(2) == "deferred 2"   # LIFO: last defer runs first
+    assert dlog.get(3) == "deferred 1"
+    print("defer ok")
+
+    print("=== done ===")
+
+# Helper for the defer demo — appends run when this function returns (LIFO).
+def collect_with_defers(log: List[str]) -> void:
+    log.append("start")
+    defer log.append("deferred 1")
+    defer log.append("deferred 2")
+    log.append("middle")

@@ -1,0 +1,105 @@
+# Example 30: Async I/O, Non-blocking TCP, and Thread Panic Recovery
+#
+# Demonstrates:
+#   1. StructuredGroup — threads that panic don't kill the process
+#   2. IOPoll          — epoll/IOCP/kqueue abstraction
+#   3. TcpStream non-blocking API
+#   4. EventLoop       — single-threaded reactor
+
+from std.async.structured import StructuredGroup
+from std.io.poll           import IOPoll
+from std.io.event_loop     import EventLoop
+
+# ── 1. Thread Panic Recovery ─────────────────────────────────────────────────
+
+def worker_ok():
+    print("worker: running normally")
+
+def worker_panic():
+    print("worker: about to panic")
+    raise "deliberate panic from worker thread"
+
+def test_panic_recovery():
+    print("--- StructuredGroup panic recovery ---")
+    mut sg = StructuredGroup.new()
+
+    # Launch two threads: one normal, one that panics.
+    sg.go(worker_ok as Pointer[char])
+    sg.go(worker_panic as Pointer[char])
+
+    sg.wait_all()
+
+    if sg.ok():
+        print("  all threads OK")
+    else:
+        print(f"  caught panic: {sg.first_panic()}")
+
+    print("  process still alive after thread panic")
+
+# ── 2. IOPoll basic usage ────────────────────────────────────────────────────
+
+def test_iopoll():
+    print("--- IOPoll creation ---")
+    mut poll = IOPoll.new()
+    print("  poll created (epoll/IOCP/kqueue/stub depending on platform)")
+
+    # Poll with 0ms timeout — no fds registered, returns immediately.
+    mut evs = poll.wait(0)
+    print(f"  wait(0ms) returned {evs.len} events (expected 0)")
+
+    poll.destroy()
+    print("  poll destroyed")
+
+# ── 3. EventLoop usage ───────────────────────────────────────────────────────
+
+def test_event_loop():
+    print("--- EventLoop ---")
+    mut el = EventLoop.new()
+    print("  event loop created")
+
+    # Run 3 cycles with 1ms timeout — no fds, returns immediately each time.
+    mut total = el.run(3, 1)
+    print(f"  ran 3 cycles, processed {total} events")
+    print(f"  elapsed: {el.elapsed_ms()} ms")
+    print(f"  iterations: {el.iter_count}")
+
+    el.destroy()
+    print("  event loop destroyed")
+
+# ── 4. Non-blocking TCP (connection attempt) ──────────────────────────────────
+
+def test_nonblocking_tcp():
+    print("--- Non-blocking TCP ---")
+    # Attempt a non-blocking connect to a port that's not listening.
+    # The fd will be > 0 (connect initiated), or -1 on hard error.
+    mut stream = TcpStream.connect_nb("127.0.0.1", 19999)
+    if stream.fd >= 0:
+        print(f"  non-blocking connect initiated: fd={stream.fd}")
+        stream.close()
+    else:
+        print("  connect_nb returned fd<0 (platform/network not available)")
+
+    # Non-blocking TcpListener
+    mut listener = TcpListener.listen("127.0.0.1", 19998)
+    if listener.is_listening():
+        listener.set_nonblocking()
+        print(f"  non-blocking listener fd={listener.fd}")
+        mut client = listener.accept_nb()
+        if client._wb:
+            print("  accept_nb: no client yet (WOULD_BLOCK) — correct")
+        listener.close()
+    else:
+        print("  listener bind failed (port in use or permission denied)")
+
+from std.net.tcp import TcpStream, TcpListener
+
+def main():
+    test_panic_recovery()
+    print("")
+    test_iopoll()
+    print("")
+    test_event_loop()
+    print("")
+    test_nonblocking_tcp()
+    print("")
+    print("all tests passed")

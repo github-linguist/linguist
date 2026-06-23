@@ -1,0 +1,222 @@
+# 03 — Control Flow
+# Covers: if/elif/else, ternary, while, for (range/list/enumerate),
+# break, continue, match (value and enum), pass.
+
+enum Direction:
+    North
+    South
+    East
+    West
+
+enum Shape:
+    Circle(radius: int)
+    Rect(width: int, height: int)
+    Point
+
+def main():
+
+    # ── 1. if / elif / else ───────────────────────────────────────────────────
+    print("=== if / elif / else ===")
+    score = 85
+
+    if score >= 90:
+        print("A")
+    elif score >= 80:
+        print("B")
+    elif score >= 70:
+        print("C")
+    else:
+        print("F")
+
+    # ── 2. Inline (single-statement) if ──────────────────────────────────────
+    # When the body is exactly one statement it can go on the same line.
+    # Best used for short guards and early exits.
+    print("=== Inline if ===")
+    mut value = -5
+    if value < 0: value = 0     # clamp to zero
+    print(f"clamped: {value}")  # 0
+
+    x = 10
+    if x > 0: print("positive")
+
+    # ── 3. Ternary expression ─────────────────────────────────────────────────
+    # Both branches must have the same type.
+    print("=== Ternary ===")
+    label:       str = "pass" if score >= 60 else "fail"
+    mut sign:    int = 1 if x > 0 else -1
+    mut abs_val: int = x if x >= 0 else -x
+
+    print(f"label: {label}")    # pass
+    print(f"sign:  {sign}")     # 1
+    print(f"abs:   {abs_val}")  # 10
+
+    # ── 4. Compound conditions ────────────────────────────────────────────────
+    print("=== Compound Conditions ===")
+    age  = 25
+    role = "admin"
+
+    if age >= 18 and age < 65:
+        print("working age")
+
+    if role == "admin" or role == "root":
+        print("privileged access")
+
+    if not (age < 18):
+        print("adult")
+
+    # ── 5. while loop ─────────────────────────────────────────────────────────
+    print("=== while ===")
+    mut i = 1
+    while i <= 5:
+        print(f"  i = {i}")
+        i = i + 1
+
+    # ── 6. while true + break ─────────────────────────────────────────────────
+    print("=== while true + break ===")
+    mut n = 0
+    while true:
+        n += 1
+        if n >= 3: break
+    print(f"n after break: {n}")   # 3
+
+    # ── 7. break and continue ─────────────────────────────────────────────────
+    print("=== break / continue ===")
+    mut k = 0
+    while k < 10:
+        k += 1
+        if k % 2 == 0: continue    # skip even numbers
+        if k > 7: break            # stop after 7
+        print(f"  {k}")            # 1 3 5 7
+
+    # ── 8. for range (basic) ──────────────────────────────────────────────────
+    # range(n) → 0, 1, ..., n-1
+    print("=== for range ===")
+    for i in range(5):
+        print(f"  {i}")   # 0 1 2 3 4
+
+    # range(start, stop)
+    for i in range(1, 6):
+        print(f"  {i}")   # 1 2 3 4 5
+
+    # range(start, stop, step)
+    for i in range(0, 10, 2):
+        print(f"  {i}")   # 0 2 4 6 8
+
+    # countdown
+    print("=== countdown ===")
+    mut cd: int = 5
+    while cd > 0:
+        print(f"  {cd}")
+        cd -= 1
+
+    # ── 9. for over a list ────────────────────────────────────────────────────
+    print("=== for list ===")
+    mut names: List[str] = ["Alice", "Bob", "Charlie"]
+    mut ni: int = 0
+    while ni < len(names):
+        mut nm: str = names[ni + 0]
+        print(f"  Hello, {nm}!")
+        ni += 1
+
+    scores = [92, 78, 65, 88]
+    mut total = 0
+    for s in scores:
+        total += s
+    print(f"total: {total}")   # 323
+
+    # ── 10. for with enumerate ────────────────────────────────────────────────
+    # enumerate(list) gives (index, value) pairs.
+    print("=== enumerate ===")
+    mut fruits: List[str] = ["apple", "banana", "cherry"]
+    mut ei = 0
+    while ei < len(fruits):
+        mut fname: str = fruits[ei + 0]
+        print(f"  [{ei}] {fname}")
+        ei += 1
+
+    # ── 11. Nested loops — break only exits innermost ─────────────────────────
+    # Use a flag variable to break out of nested loops.
+    print("=== Nested loops + flag ===")
+    mut found = false
+    mut row = 0
+    while row < 3 and not found:
+        mut col = 0
+        while col < 3:
+            if row == 1 and col == 2:
+                found = true
+                break
+            col += 1
+        row += 1
+    print(f"found at row={row - 1}, col=2: {found}")
+
+    # ── 12. match — value matching ────────────────────────────────────────────
+    # match dispatches on discrete values. 'case _:' is the wildcard.
+    print("=== match value ===")
+    code = 404
+
+    match code:
+        case 200: print("OK")
+        case 201: print("Created")
+        case 400: print("Bad Request")
+        case 404: print("Not Found")
+        case 500: print("Server Error")
+        case _:   print(f"Unknown: {code}")
+
+    # ── 13. match — enum with destructuring ───────────────────────────────────
+    print("=== match enum ===")
+    mut dir = Direction.North
+    match dir:
+        case Direction.North: print("heading north")
+        case Direction.South: print("heading south")
+        case Direction.East:  print("heading east")
+        case Direction.West:  print("heading west")
+        case _: pass
+
+    # Enum variants that carry data — fields are bound as local variables.
+    match Shape.Circle(5):
+        case Shape.Circle(r):
+            print(f"circle area = {r * r * 3}")
+        case _: pass
+    match Shape.Rect(3, 4):
+        case Shape.Rect(w, h):
+            print(f"rect area = {w * h}")
+        case _: pass
+    match Shape.Point:
+        case Shape.Point:
+            print("point (area = 0)")
+        case _: pass
+
+    # ── 14. pass — explicit no-op ─────────────────────────────────────────────
+    # 'pass' marks an intentionally empty block.
+    print("=== pass ===")
+    flag = true
+    if flag:
+        pass    # nothing to do — placeholder
+
+    match dir:
+        case Direction.North: print("north")
+        case _: pass          # all other directions: do nothing
+
+    # ── 15. Scoping — variables live only in their block ──────────────────────
+    print("=== Scoping ===")
+    mut outer = 10
+    if true:
+        mut inner = 20
+        outer = outer + inner   # outer is in scope here
+    # inner is out of scope here
+    print(f"outer: {outer}")   # 30
+    # print(inner)             # ERROR: 'inner' is not in scope
+
+    # ── 16. FizzBuzz — combining everything ───────────────────────────────────
+    print("=== FizzBuzz (1..20) ===")
+    for i in range(1, 21):
+        if i % 15 == 0:
+            print("FizzBuzz")
+        elif i % 3 == 0:
+            print("Fizz")
+        elif i % 5 == 0:
+            print("Buzz")
+        else:
+            print(str(i))
+
+    print("=== done ===")

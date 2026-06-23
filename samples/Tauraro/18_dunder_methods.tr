@@ -1,0 +1,230 @@
+# 18 — Dunder (operator overloading) methods
+# Python-style special methods that let user-defined classes hook into
+# operators, builtins, and language constructs.
+
+# ── 1. Vec2 — arithmetic, comparison, and string dunders ─────────────────────
+class Vec2:
+    pub x: float
+    pub y: float
+
+extend Vec2:
+    pub def init(x: float, y: float) -> Vec2:
+        mut v = Vec2()
+        v.x = x
+        v.y = y
+        return v
+
+    pub def __add__(self, other: Vec2) -> Vec2:
+        return Vec2.init(self.x + other.x, self.y + other.y)
+
+    pub def __sub__(self, other: Vec2) -> Vec2:
+        return Vec2.init(self.x - other.x, self.y - other.y)
+
+    pub def __mul__(self, scalar: float) -> Vec2:
+        return Vec2.init(self.x * scalar, self.y * scalar)
+
+    pub def __neg__(self) -> Vec2:
+        return Vec2.init(-self.x, -self.y)
+
+    pub def __eq__(self, other: Vec2) -> bool:
+        return self.x == other.x and self.y == other.y
+
+    pub def __ne__(self, other: Vec2) -> bool:
+        return not (self.x == other.x and self.y == other.y)
+
+    pub def __str__(self) -> str:
+        return "Vec2(" + str(self.x) + ", " + str(self.y) + ")"
+
+    pub def __repr__(self) -> str:
+        return "Vec2(x=" + str(self.x) + ", y=" + str(self.y) + ")"
+
+    pub def __bool__(self) -> bool:
+        return self.x != 0.0 or self.y != 0.0
+
+    pub def __len__(self) -> int:
+        return 2
+
+# ── 2. Bag — container dunders ────────────────────────────────────────────────
+class Bag:
+    pub items: List[int]
+    pub count: int
+
+extend Bag:
+    pub def init() -> Bag:
+        mut b = Bag()
+        b.items = []
+        b.count = 0
+        return b
+
+    pub def add(self, val: int):
+        self.items.append(val)
+        self.count += 1
+
+    pub def __len__(self) -> int:
+        return self.count
+
+    pub def __getitem__(self, i: int) -> int:
+        return self.items.get(i)
+
+    pub def __setitem__(self, i: int, val: int):
+        self.items.set(i, val)
+
+    pub def __contains__(self, val: int) -> bool:
+        mut i = 0
+        while i < self.count:
+            if self.items.get(i) == val: return true
+            i += 1
+        return false
+
+    pub def __bool__(self) -> bool:
+        return self.count > 0
+
+    pub def __str__(self) -> str:
+        mut s = "Bag["
+        mut i = 0
+        while i < self.count:
+            if i > 0: s = s + ", "
+            s = s + str(self.items.get(i))
+            i += 1
+        return s + "]"
+
+# ── 3. Counter — iterator protocol (__iter__ + __next__) ─────────────────────
+class Counter:
+    pub current: int
+    pub stop: int
+
+extend Counter:
+    pub def init(stop: int) -> Counter:
+        mut c = Counter()
+        c.current = 0
+        c.stop = stop
+        return c
+
+    pub def __iter__(self) -> Counter:
+        self.current = 0
+        return self
+
+    pub def __next__(self) -> Option[int]:
+        if self.current >= self.stop: return Option.none()
+        mut val = self.current
+        self.current += 1
+        return Option.some(val)
+
+# ── 4. FileCtx — context manager (__enter__ + __exit__) ──────────────────────
+class FileCtx:
+    pub name: str
+    pub opened: bool
+
+extend FileCtx:
+    pub def init(name: str) -> FileCtx:
+        mut fc = FileCtx()
+        fc.name = name
+        fc.opened = false
+        return fc
+
+    pub def __enter__(self) -> FileCtx:
+        self.opened = true
+        print(f"[open]  {self.name}")
+        return self
+
+    pub def __exit__(self, exc_type: str, exc_val: str, exc_tb: str) -> bool:
+        self.opened = false
+        print(f"[close] {self.name}")
+        return false
+
+# ── 5. Multiplier — callable object (__call__) ───────────────────────────────
+class Multiplier:
+    pub factor: int
+
+extend Multiplier:
+    pub def init(factor: int) -> Multiplier:
+        mut m = Multiplier()
+        m.factor = factor
+        return m
+
+    pub def __call__(self, x: int) -> int:
+        return x * self.factor
+
+    pub def __repr__(self) -> str:
+        return "Multiplier(x" + str(self.factor) + ")"
+
+def main():
+
+    # ── Vec2: arithmetic and comparison dunders ───────────────────────────────
+    print("=== Vec2 arithmetic ===")
+    mut va: Vec2 = Vec2.init(1.0, 2.0)
+    mut vb: Vec2 = Vec2.init(3.0, 4.0)
+    mut vc: Vec2 = va + vb
+    mut vd: Vec2 = vb - va
+    mut ve: Vec2 = va * 3.0
+    mut vn: Vec2 = -va
+    print(str(vc))
+    print(str(vd))
+    print(str(ve))
+    print(str(vn))
+
+    print("=== Vec2 comparison ===")
+    mut vc1: Vec2 = Vec2.init(1.0, 2.0)
+    mut veq: bool = va == vc1
+    mut vne: bool = va != vb
+    print(f"va==vc1: {veq}")
+    print(f"va!=vb:  {vne}")
+
+    print("=== Vec2 __bool__ and __len__ ===")
+    mut zero: Vec2 = Vec2.init(0.0, 0.0)
+    mut vbool: bool = va.__bool__()
+    mut zbool: bool = zero.__bool__()
+    mut vlen: int = len(va)
+    print(f"va bool: {vbool}")
+    print(f"zero bool: {zbool}")
+    print(f"len(va): {vlen}")
+
+    # ── Bag: container dunders ────────────────────────────────────────────────
+    print("=== Bag container ===")
+    mut bag: Bag = Bag.init()
+    bag.add(10)
+    bag.add(20)
+    bag.add(30)
+    print(str(bag))
+    print(f"len(bag): {len(bag)}")
+
+    mut g0: int = bag[0]
+    mut g1: int = bag[1]
+    print(f"bag[0]: {g0}")
+    print(f"bag[1]: {g1}")
+
+    bag[1] = 99
+    mut g1b: int = bag[1]
+    print(f"bag[1] after set: {g1b}")
+
+    mut c10: bool = 10 in bag
+    mut c55: bool = 55 in bag
+    print(f"10 in bag: {c10}")
+    print(f"55 in bag: {c55}")
+
+    mut bbool: bool = bag.__bool__()
+    print(f"bag bool: {bbool}")
+
+    # ── Counter: iterator dunders ─────────────────────────────────────────────
+    print("=== Counter iterator ===")
+    mut ctr: Counter = Counter.init(5)
+    for n in ctr:
+        mut ni: int = n
+        print(f"  n={ni}")
+
+    # ── FileCtx: context manager ──────────────────────────────────────────────
+    print("=== FileCtx context manager ===")
+    with FileCtx.init("data.txt") as fc:
+        mut is_open: bool = fc.opened
+        print(f"  opened: {is_open}")
+
+    # ── Multiplier: callable object ───────────────────────────────────────────
+    print("=== Multiplier callable ===")
+    mut triple: Multiplier = Multiplier.init(3)
+    mut r1: int = triple(7)
+    mut r2: int = triple(10)
+    print(repr(triple))
+    print(f"triple(7)  = {r1}")
+    print(f"triple(10) = {r2}")
+
+    print("=== done ===")

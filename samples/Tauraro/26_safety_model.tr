@@ -1,0 +1,360 @@
+# 26 — Safety Model: Ownership, Move, Borrow, Shared, Phases + Lifetimes
+# Covers: automatic ownership, move/borrow semantics, Shared[T],
+# safety phases (use-before-init, mutate-while-borrowed, Shared cycles),
+# branch-scoped snapshots, Copy class, 'from' lifetime annotations,
+# ref/mut_ref parameter types, unsafe blocks.
+
+# ═══════════════════════════════════════════════════════════════════
+# PART 1 — OWNERSHIP & BORROWING
+# ═══════════════════════════════════════════════════════════════════
+
+class Counter:
+    pub value: int
+
+extend Counter:
+    pub def init(n: int) -> Counter:
+        mut c = Counter()
+        c.value = n
+        return c
+    pub def increment(self) -> void: self.value = self.value + 1
+    pub def get(self) -> int:        return self.value
+
+# Copy class — all-primitive fields, no move tracking required
+class Point:
+    pub x: int
+    pub y: int
+
+extend Point:
+    pub def init(x: int, y: int) -> Point:
+        mut p = Point()
+        p.x = x
+        p.y = y
+        return p
+    pub def dist_sq(self) -> int:
+        return self.x * self.x + self.y * self.y
+
+# Copy class — floats are also primitives
+class Vec3:
+    pub x: float
+    pub y: float
+    pub z: float
+
+extend Vec3:
+    pub def init(x: float, y: float, z: float) -> Vec3:
+        mut v = Vec3()
+        v.x = x; v.y = y; v.z = z
+        return v
+    pub def dot(self, other: Vec3) -> float:
+        return self.x * other.x + self.y * other.y + self.z * other.z
+
+# Non-Copy class — has a List field; move tracking applies
+class NameList:
+    pub names: List[str]
+
+extend NameList:
+    pub def init() -> NameList:
+        mut nl = NameList()
+        nl.names = List[str].init(4)
+        return nl
+
+def process(c: Counter) -> int:
+    return c.value * 2
+
+# ── 1. Borrow — pass to function, caller retains ownership ───────────────────
+def test_borrow():
+    mut a = Counter.init(10)
+    mut result = process(a)   # borrow: a is passed by pointer, caller still owns it
+    assert result == 20
+    assert a.value == 10      # still accessible — borrow, not move
+    print(f"borrow: result={result}  a.value={a.value}")
+
+# ── 2. Move semantics ─────────────────────────────────────────────────────────
+def test_move():
+    mut b = Counter.init(42)
+    mut c2 = b                # b is MOVED into c2; b can no longer be used
+    assert c2.value == 42
+    # Using b after this point → [M-1] compile error
+    print(f"move: c2.value={c2.value}")
+
+# ── 3. Shared[T] — reference-counted shared ownership ────────────────────────
+def test_shared():
+    shared s1 = Counter.init(100)
+    shared s2 = s1            # clones the shared box; both point to same Counter
+    assert s1.value == 100
+    assert s2.value == 100
+    s1.increment()            # increment through s1 …
+    assert s2.value == 101    # … visible via s2 (same instance)
+    s2.increment()
+    assert s1.value == 102
+    print(f"shared: s1={s1.value}  s2={s2.value}")
+
+# ═══════════════════════════════════════════════════════════════════
+# PART 2 — SAFETY PHASES
+# ═══════════════════════════════════════════════════════════════════
+
+# ── 4. Phase D — use-before-init ─────────────────────────────────────────────
+# Compiler rule [I-1]: a variable must be assigned on every path before use.
+#
+# Uncomment to see the [I-1] error:
+# def broken_uninit():
+#     mut x: int
+#     print(x)    # [I-1] x used before being assigned
+
+def test_phase_d():
+    # Simple: assign before use — OK
+    mut x: int
+    x = 42
+    assert x == 42
+
+    # All-branch init: x is init'd in both branches → definitely init'd after
+    mut flag = true
+    mut y: int
+    if flag: y = 10
+    else:    y = 20
+    assert y == 10
+
+    # Loop init — also definitely init'd
+    mut total = 0
+    for i in range(5): total += i
+    assert total == 10
+
+    print(f"phase D ok: x={x}  y={y}  total={total}")
+
+# ── 5. Phase C — mutate-while-borrowed ───────────────────────────────────────
+# Compiler rule [M-4]: cannot mutate a container while a borrow into it is live.
+#
+# Uncomment to see the [M-4] error:
+# def broken_borrow_mut():
+#     mut data = List[Point].init(4)
+#     mut item = data.get(0)      # borrows 'data'
+#     data.push(Point.init(1,2))  # [M-4] cannot mutate 'data' while borrow is live
+
+def test_phase_c():
+    mut items = List[int].init(4)
+    items.push(1)
+    items.push(2)
+    items.push(3)
+
+    # Read via borrow loop first, then mutate — borrow ends before mutation
+    mut total = 0
+    mut i = 0
+    while i < items.len:
+        total += items.get(i)
+        i += 1
+    items.push(4)   # borrow loop finished → safe to mutate now
+    assert total == 6
+    assert items.len == 4
+    print(f"phase C ok: total={total}  len={items.len}")
+
+# ── 6. Phase F — Shared[T] cycles ────────────────────────────────────────────
+# Compiler rule [S-1]: a Shared[T] cannot reference the same type (would be
+# a self-referential cycle that leaks memory). Use Weak[T] instead.
+#
+# Uncomment to see the [S-1] error:
+# class Tree:
+#     pub left: Shared[Tree]   # [S-1]: self-referential Shared — use Weak[Tree]
+
+# ═══════════════════════════════════════════════════════════════════
+# PART 3 — BRANCH SNAPSHOTS & COPY CLASSES
+# ═══════════════════════════════════════════════════════════════════
+
+# ── 7. Branch snapshots — no false [M-1] across sibling branches ─────────────
+# Before fix: using p in either branch triggered [M-1].
+# After fix: the compiler takes a branch-scoped snapshot — sibling branches
+# each see p as still available.
+def branch_use(flag: bool) -> int:
+    mut p = Point.init(3, 4)
+    if flag: return p.x + p.y     # uses p in then-branch  → 7
+    else:    return p.dist_sq()   # uses p in else-branch  → 25
+
+# Definitive move in BOTH branches → p is moved after the if
+def branch_move(flag: bool) -> int:
+    mut nl = NameList.init()
+    nl.names.push("hello")
+    if flag:
+        mut nl2 = nl          # moves nl in then
+        return nl2.names.len
+    else:
+        mut nl3 = nl          # moves nl in else
+        return nl3.names.len
+    # nl is definitely moved — any use here would be [M-1]
+
+def test_branch_snapshots():
+    assert branch_use(true)  == 7
+    assert branch_use(false) == 25
+    assert branch_move(true)  == 1
+    assert branch_move(false) == 1
+    print("branch snapshots ok")
+
+# ── 8. Copy class — all-primitive fields ─────────────────────────────────────
+# When every field is a primitive type (int, float, bool, char), the compiler
+# marks the class as Copy. Assignments are copies, not moves — 'a' stays valid.
+def test_copy_class():
+    mut a = Point.init(1, 2)
+    mut b = a              # COPY — a is NOT moved
+    mut c = a              # Can use a again (and again)
+    assert a.x + b.y + c.x == 4     # 1+2+1
+
+    mut v1 = Vec3.init(1.0, 0.0, 0.0)
+    mut v2 = v1            # copy
+    mut v3 = v1            # copy again — no move errors
+    assert v1.dot(v2) + v2.dot(v3) == 2.0
+    print("copy class ok")
+
+# ── 9. Nested branches — all paths covered ───────────────────────────────────
+def classify(n: int) -> str:
+    mut msg = ""
+    if n < 0:      msg = "negative"
+    elif n == 0:   msg = "zero"
+    else:          msg = "positive"
+    return msg    # init'd on every branch — no [I-1] or [I-2]
+
+def test_nested_branches():
+    assert classify(-5) == "negative"
+    assert classify(0)  == "zero"
+    assert classify(7)  == "positive"
+    print("nested branches ok")
+
+# ═══════════════════════════════════════════════════════════════════
+# PART 4 — LIFETIME ANNOTATIONS ('from' keyword)
+# ═══════════════════════════════════════════════════════════════════
+#
+# The 'from param_name' clause appears after the return type:
+#
+#   def fn(params...) -> ReturnType from param_name:
+#
+# It is ONLY needed when:
+#   1. The return type is Pointer[T], ref T, or mut_ref T
+#   2. The returned pointer/reference comes from a parameter
+#   3. The function has 2+ non-primitive parameters
+#      (single-param case is auto-inferred by the compiler)
+#
+# Returning by value never needs 'from'.
+
+# ── 10. ref T / mut ref T parameter types ────────────────────────────────────
+# 'ref T' means "read-only borrow of T"; 'mut ref T' means "mutable borrow".
+# In the generated C these are just pointers — they communicate intent in source.
+# These are intended for PRIMITIVE in/out params (ref int, mut ref float).
+# Collections are passed as normal borrows: 'items: List[int]' (see scale_all).
+
+def add_one(x: ref int) -> int:
+    return x + 1
+
+def double_it(x: mut ref int) -> int:
+    return x * 2
+
+# Collections use a plain borrow — the caller keeps ownership, no ref wrapper.
+def scale_all(items: List[int], factor: int) -> int:
+    mut total = 0
+    mut i = 0
+    while i < items.len:
+        total += items.get(i) * factor
+        i += 1
+    return total
+
+# ── 11. Single-param — auto-inferred lifetime (no annotation needed) ──────────
+# When there is exactly one non-primitive parameter, the compiler automatically
+# infers that any returned Pointer/ref comes from that parameter.
+
+def first_or_default(items: List[int], default_val: int) -> int:
+    # items is the only non-primitive param → lifetime inferred
+    if items.len > 0: return items.get(0)
+    return default_val
+
+# ── 12. Multi-param — return by VALUE avoids lifetime annotations entirely ───
+# With 2+ non-primitive parameters the compiler cannot infer which one a returned
+# pointer would borrow from. The clean solution is to return a VALUE (a copy):
+# no pointer, no lifetime, no 'from' annotation needed.
+
+def larger_of(a: List[int], b: List[int]) -> int:
+    mut va = a.get(0) if a.len > 0 else 0
+    mut vb = b.get(0) if b.len > 0 else 0
+    if va >= vb: return va
+    return vb
+
+def pick_value(a: List[int], b: List[int], use_a: bool) -> int:
+    if use_a: return a.get(0)   # copy of the value — no pointer lifetime
+    return b.get(0)
+
+# ── 13. The 'from' annotation — syntax reference ─────────────────────────────
+# When a function genuinely returns a Pointer[T] / ref T that borrows from a
+# parameter, annotate the lifetime source after the return type:
+#
+#   def find_slot(buf: Pointer[int], other: int) -> Pointer[int] from buf:
+#       return buf.offset(0)       # the returned pointer's lifetime = buf's
+#
+# Rules:
+#   • Single non-primitive param → auto-inferred, no annotation needed.
+#   • 2+ non-primitive params returning a pointer → 'from param' required.
+#   • Returning a LOCAL pointer without 'from' → caught as [L-1]:
+#
+# Uncomment to see the [L-1] error:
+# def bad_escape() -> Pointer[int]:
+#     unsafe:
+#         mut local = alloc[int](1)
+#         return local    # [L-1]: local Pointer may not outlive this function.
+#                         # FIX: annotate 'from <param>' if it borrows a param,
+#                         #      or return by value instead.
+
+# ── 15. unsafe: block — manual memory management ─────────────────────────────
+# Low-level operations (alloc, dealloc, raw pointers, asm) require unsafe:.
+# The compiler suspends [L-1] and raw-pointer checks inside the block.
+def manual_alloc_demo() -> int:
+    mut result = 0
+    unsafe:
+        mut p = alloc[int](1)
+        p.write(99)
+        result = p.read()
+        dealloc(p)
+    return result
+
+def test_lifetimes():
+    # ref / mut_ref parameters
+    mut n = 5
+    assert add_one(n)    == 6
+    assert double_it(n)  == 10
+
+    mut nums: List[int] = [10, 20, 30]
+    assert scale_all(nums, 3) == 180   # (10+20+30) * 3
+
+    # Single-param auto-inferred
+    assert first_or_default(nums, 99) == 10
+    mut empty: List[int] = []
+    assert first_or_default(empty, 99) == 99
+
+    # Multi-param — larger_of returns by value
+    mut a: List[int] = [50, 1, 2]
+    mut b: List[int] = [30, 7, 8]
+    assert larger_of(a, b) == 50
+
+    # Pick by value (no lifetime issue)
+    assert pick_value(a, b, true)  == 50
+    assert pick_value(a, b, false) == 30
+
+    # Manual allocation via unsafe:
+    assert manual_alloc_demo() == 99
+
+    print("lifetime annotations ok")
+
+# ═══════════════════════════════════════════════════════════════════
+# MAIN
+# ═══════════════════════════════════════════════════════════════════
+def main():
+    print("=== Part 1: Ownership & Borrowing ===")
+    test_borrow()
+    test_move()
+    test_shared()
+
+    print("=== Part 2: Safety Phases ===")
+    test_phase_d()
+    test_phase_c()
+
+    print("=== Part 3: Branch Snapshots & Copy ===")
+    test_branch_snapshots()
+    test_copy_class()
+    test_nested_branches()
+
+    print("=== Part 4: Lifetimes ===")
+    test_lifetimes()
+
+    print("=== all safety model checks passed ===")

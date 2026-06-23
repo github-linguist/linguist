@@ -1,0 +1,169 @@
+# 16 — Extern and C FFI (Foreign Function Interface)
+# Covers: extern "C" declarations, calling C library functions,
+# struct interop, function pointer callbacks.
+# Tauraro compiles to C, giving zero-cost access to the entire C ecosystem.
+
+# ── 1. Declare C library functions ────────────────────────────────────────────
+# extern "C" emits C 'extern' prototypes in the output header.
+# Type mapping: float->double, str->char*, usize->size_t, Pointer[void]->void*
+#
+# Only declare functions whose C types map cleanly. The runtime already
+# includes <stdio.h>, <stdlib.h>, <string.h>, <math.h> — so sqrt, strcmp etc.
+# are available without re-declaration.
+
+extern "C":
+    # Math (from <math.h>) — float maps to double, which matches exactly
+    def sqrt(x: float) -> float
+    def pow(base: float, exp: float) -> float
+    def floor(x: float) -> float
+    def ceil(x: float) -> float
+    def fabs(x: float) -> float
+    def sin(x: float) -> float
+    def cos(x: float) -> float
+    def log(x: float) -> float
+    def atan2(y: float, x: float) -> float
+
+# extern "CPP" / extern "C++" are accepted as synonyms for extern "C" — use
+# them to mark declarations that come from a C++ library (the C++ side must
+# expose them through an `extern "C"` boundary, library-provided or a thin
+# shim; see docs/lang/17_extern_and_ffi.md).
+extern "CPP":
+    def cpp_widget_version() -> int
+
+# ── 2. Safe wrappers ──────────────────────────────────────────────────────────
+def c_sqrt(x: float) -> float:
+    if x < 0.0: raise(f"sqrt of negative: {x}")
+    return sqrt(x)
+
+def c_hypot(x: float, y: float) -> float:
+    return sqrt(x * x + y * y)
+
+# ── 3. Struct interop — Tauraro class matching a C struct layout ──────────────
+# When a C library uses structs, declare a matching Tauraro class.
+# Field types must match exactly.
+
+class Vec2:
+    pub x: float
+    pub y: float
+
+extend Vec2:
+    pub def init(x: float, y: float) -> Vec2:
+        mut v = Vec2()
+        v.x = x
+        v.y = y
+        return v
+
+    pub def length(self) -> float:
+        return sqrt(self.x * self.x + self.y * self.y)
+
+    pub def dot(self, other: Vec2) -> float:
+        return self.x * other.x + self.y * other.y
+
+    pub def angle(self) -> float:
+        return atan2(self.y, self.x)
+
+# ── 4. Callback pattern — sort with a comparator function ─────────────────────
+# In C, you pass a function pointer as a callback.
+# In Tauraro, a 'lambda' parameter holds a reference to any callable.
+# Non-capturing top-level functions generate plain C functions,
+# which means they can be passed to C APIs that accept function pointers.
+
+def sort_ints_asc(items: List[int]) -> void:
+    mut n = len(items)
+    mut i = 0
+    while i < n:
+        mut j = 0
+        while j < n - i - 1:
+            mut a = items[j + 0]
+            mut b = items[j + 1]
+            if a > b:
+                items[j + 0] = b
+                items[j + 1] = a
+            j += 1
+        i += 1
+
+def sort_ints_desc(items: List[int]) -> void:
+    mut n = len(items)
+    mut i = 0
+    while i < n:
+        mut j = 0
+        while j < n - i - 1:
+            mut a = items[j + 0]
+            mut b = items[j + 1]
+            if a < b:
+                items[j + 0] = b
+                items[j + 1] = a
+            j += 1
+        i += 1
+
+# ── 5. Raw pointer operations (unsafe) ────────────────────────────────────────
+# alloc[T](n) wraps malloc; dealloc wraps free. Use for C interop buffers.
+
+def main():
+
+    # ── C math functions ──────────────────────────────────────────────────────
+    print("=== C Math ===")
+    print(f"sqrt(16.0)     = {sqrt(16.0)}")
+    print(f"sqrt(2.0)      = {c_sqrt(2.0)}")
+    print(f"pow(2.0, 10.0) = {pow(2.0, 10.0)}")
+    print(f"floor(3.7)     = {floor(3.7)}")
+    print(f"ceil(3.2)      = {ceil(3.2)}")
+    print(f"fabs(-9.5)     = {fabs(-9.5)}")
+    print(f"sin(0.0)       = {sin(0.0)}")
+    print(f"cos(0.0)       = {cos(0.0)}")
+    print(f"hypot(3,4)     = {c_hypot(3.0, 4.0)}")
+
+    # ── Struct interop ────────────────────────────────────────────────────────
+    print("=== Struct interop ===")
+    mut v1 = Vec2.init(3.0, 4.0)
+    mut v2 = Vec2.init(1.0, 0.0)
+    print(f"v1.length() = {v1.length()}")       # 5.0
+    print(f"v1 dot v2   = {v1.dot(v2)}")        # 3.0
+
+    # ── Memory management via Tauraro alloc/dealloc ───────────────────────────
+    # alloc[T](n) allocates n*sizeof(T) bytes, returns Pointer[T].
+    # dealloc(p) frees the allocation.
+    print("=== alloc / dealloc ===")
+    unsafe:
+        mut buf: Pointer[u8] = alloc[u8](128)
+        # write some bytes
+        buf.write(72 as u8)          # 'H'
+        buf.offset(1).write(105 as u8)   # 'i'
+        buf.offset(2).write(0 as u8)     # null terminator
+        # read them back
+        mut b0 = buf.read() as int
+        mut b1 = buf.offset(1).read() as int
+        print(f"  buf[0]={b0} buf[1]={b1}")   # 72 105
+        dealloc(buf)
+    print("  allocated 128 bytes, read/wrote, freed")
+
+    # ── Sorting with comparator functions ─────────────────────────────────────
+    # Top-level functions compile to plain C functions,
+    # so they can be passed as function pointers to C sort APIs.
+    print("=== Sort with comparator ===")
+    mut nums: List[int] = [5, 2, 8, 1, 9, 3, 7, 4, 6]
+
+    sort_ints_asc(nums)
+    print("ascending:")
+    mut i = 0
+    while i < len(nums):
+        mut v = nums[i + 0]
+        print(f"  {v}")
+        i += 1
+
+    sort_ints_desc(nums)
+    print("descending:")
+    mut j = 0
+    while j < len(nums):
+        mut v = nums[j + 0]
+        print(f"  {v}")
+        j += 1
+
+    # ── FFI best practices ────────────────────────────────────────────────────
+    # 1. Use extern "C" only for functions whose types map cleanly.
+    # 2. Wrap C calls in Tauraro functions for error checking.
+    # 3. Use alloc[T]/dealloc instead of malloc/free where possible.
+    # 4. Use unsafe: for all raw pointer arithmetic.
+    # 5. Keep the extern "C" block close to the functions that use it.
+
+    print("=== done ===")

@@ -1,0 +1,186 @@
+# 11 — Error Handling
+# Covers: try/except/finally, raise, throws + ?, Result[T,E] inspection,
+# custom error types, mixing both models.
+
+# ── Model 1: throws + ? (zero-overhead, explicit in signature) ────────────────
+
+# 'throws ErrorType' changes the return type to Result[ReturnType, ErrorType].
+# 'return value'  → wraps as Ok  (is_err=false, data.value=value)
+# 'raise(err)'    → wraps as Err (is_err=true,  data.error=err) and returns
+def parse_int_safe(s: str) throws str -> int:
+    if len(s) == 0:
+        raise("empty string")
+    mut i = 0
+    mut result = 0
+    while i < len(s):
+        mut code = ord(s[i + 0])
+        if code < 48 or code > 57:
+            raise(f"not a digit at position {i}: '{s[i + 0]}'")
+        result = result * 10 + (code - 48)
+        i += 1
+    return result
+
+def doubled(s: str) throws str -> int:
+    mut n = parse_int_safe(s)?   # ? = unwrap Ok or propagate Err immediately
+    return n * 2
+
+def quadrupled(s: str) throws str -> int:
+    mut n = doubled(s)?          # chain propagation up
+    return n * 2
+
+# Throws with a richer error type:
+class ParseError:
+    pub message:  str
+    pub position: int
+
+extend ParseError:
+    pub def init(msg: str, pos: int) -> ParseError:
+        mut e = ParseError()
+        e.message  = msg
+        e.position = pos
+        return e
+
+    pub def describe(self) -> void:
+        print(f"  ParseError at pos {self.position}: {self.message}")
+
+def parse_strict(s: str) throws ParseError -> int:
+    if len(s) == 0:
+        raise(ParseError.init("empty input", 0))
+    mut i = 0
+    while i < len(s):
+        if ord(s[i + 0]) < 48 or ord(s[i + 0]) > 57:
+            raise(ParseError.init(f"unexpected char '{s[i + 0]}'", i))
+        i += 1
+    return int(s)
+
+# ── Model 2: try / except / finally (setjmp-based, for boundaries) ────────────
+
+def risky_divide(a: int, b: int) -> int:
+    if b == 0:
+        raise("division by zero")
+    return a / b
+
+# ── Deep chain helpers (must be top-level for forward declarations) ───────────
+def level3(s: str) throws str -> int:
+    return parse_int_safe(s)?
+
+def level2(s: str) throws str -> int:
+    return level3(s)?
+
+def level1(s: str) throws str -> int:
+    return level2(s)?
+
+def main():
+
+    # ── throws: call without ? → get a Result[T,E] ────────────────────────────
+    print("=== throws without ? ===")
+    mut r1: Result[int, str] = parse_int_safe("42")
+    if r1.is_ok:
+        print(f"parsed: {r1.ok}")     # 42
+
+    mut r2: Result[int, str] = parse_int_safe("abc")
+    if r2.is_err:
+        print(f"error: {r2.err}")     # not a digit at position 0
+
+    mut r3: Result[int, str] = parse_int_safe("")
+    if r3.is_err:
+        print(f"error: {r3.err}")     # empty string
+
+    mut r4: Result[int, str] = parse_int_safe("100")
+    print(f"r4.is_ok={r4.is_ok}  value={r4.ok}")
+
+    # ── throws: ? propagation chain ──────────────────────────────────────────
+    print("=== ? propagation ===")
+    mut d1: Result[int, str] = doubled("7")
+    if d1.is_ok:
+        print(f"doubled(7) = {d1.ok}")     # 14
+
+    mut d2: Result[int, str] = doubled("xyz")
+    if d2.is_err:
+        print(f"doubled error: {d2.err}")
+
+    mut q1: Result[int, str] = quadrupled("3")
+    if q1.is_ok:
+        print(f"quadrupled(3) = {q1.ok}")   # 12
+
+    mut q2: Result[int, str] = quadrupled("bad")
+    if q2.is_err:
+        print(f"quadrupled error: {q2.err}")
+
+    # ── Custom error type ─────────────────────────────────────────────────────
+    print("=== Custom Error Type ===")
+    mut ps1: Result[int, ParseError] = parse_strict("123")
+    if ps1.is_ok:
+        print(f"strict parsed: {ps1.ok}")     # 123
+
+    mut ps2: Result[int, ParseError] = parse_strict("12x4")
+    if ps2.is_err:
+        ps2.err.describe()    # ParseError at pos 2: unexpected char 'x'
+
+    # ── try / except ─────────────────────────────────────────────────────────
+    print("=== try / except ===")
+    try:
+        mut result = risky_divide(10, 2)
+        print(f"10 / 2 = {result}")    # 5
+    except e:
+        print(f"caught: {e}")
+
+    try:
+        mut result = risky_divide(10, 0)
+        print(f"result = {result}")   # never reached
+    except e:
+        print(f"caught: {e}")         # caught: division by zero
+
+    # ── try / except / finally ────────────────────────────────────────────────
+    # 'finally' always runs — whether or not an exception was raised.
+    print("=== try / except / finally ===")
+    try:
+        print("  try: doing work")
+        raise("something went wrong")
+        print("  try: after raise")   # never reached
+    except e:
+        print(f"  except: caught '{e}'")
+    finally:
+        print("  finally: always runs")
+
+    print("after try block")   # execution continues here
+
+    # ── try / finally (no except) ─────────────────────────────────────────────
+    try:
+        print("  working...")
+    finally:
+        print("  cleanup (always)")   # runs even without an exception
+
+    # ── Nested try ────────────────────────────────────────────────────────────
+    print("=== Nested try ===")
+    try:
+        try:
+            raise("inner error")
+        except e:
+            print(f"  inner caught: {e}")
+            raise("outer error propagated from inner")
+    except e:
+        print(f"  outer caught: {e}")
+
+    # ── Mixing models: call throws inside try ──────────────────────────────────
+    # The two models interoperate freely.
+    print("=== Mixed models ===")
+    try:
+        mut r: Result[int, str] = parse_int_safe("hello")
+        if r.is_err:
+            raise(r.err)    # convert Result error into exception
+        print(f"value: {r.ok}")
+    except e:
+        print(f"converted to exception: {e}")
+
+    # ── throws across a deep call chain, caught at main ───────────────────────
+    print("=== Deep chain ===")
+    mut chain_r: Result[int, str] = level1("999")
+    if chain_r.is_ok:
+        print(f"chain result: {chain_r.ok}")    # 999
+
+    mut chain_e: Result[int, str] = level1("bad")
+    if chain_e.is_err:
+        print(f"chain error: {chain_e.err}")
+
+    print("=== done ===")

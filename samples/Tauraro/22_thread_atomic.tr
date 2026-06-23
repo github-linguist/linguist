@@ -1,0 +1,97 @@
+# Example 22: Thread, Atomic[T], ThreadLocal[T], and auto-unlock
+#
+# Demonstrates:
+#   1. Thread.spawn(fn, arg) — explicit joinable thread
+#   2. Thread.sleep(ms)      — sleep current thread
+#   3. Thread.id()           — current thread OS id
+#   4. Atomic[int]           — lock-free atomic integer
+#   5. ThreadLocal[int]      — per-thread storage
+#   6. Mutex auto-unlock     — no manual unlock needed
+
+def inc_task(counter: Atomic[int]) -> void:
+    mut i = 0
+    while i < 1000:
+        counter.add(1)
+        i = i + 1
+
+def sleep_task(ms: int) -> void:
+    Thread.sleep(ms)
+
+def local_task(tl: ThreadLocal[int]) -> void:
+    tl.set(999)
+
+def safe_read(m: Mutex[int]) -> void:
+    mut v = m.get()
+    # No m.unlock() needed — compiler auto-unlocks when v goes out of scope
+    # (m.set() would also work, which unlocks after storing)
+
+async def test_thread_spawn():
+    print("--- Thread.spawn / join ---")
+    mut t1: Thread = Thread.spawn(sleep_task, 10)
+    mut t2: Thread = Thread.spawn(sleep_task, 10)
+    t1.join()
+    t2.join()
+    print("  both threads joined")
+
+async def test_atomic():
+    print("--- Atomic[int] ---")
+    mut counter: Atomic[int] = Atomic.new(0)
+    task_group:
+        spawn inc_task(counter)
+        spawn inc_task(counter)
+        spawn inc_task(counter)
+    mut total = counter.load()
+    print(f"  counter after 3×1000 increments: {total}")    # 3000
+
+    # swap
+    mut old = counter.swap(0)
+    print(f"  swap to 0, old={old}")                         # 3000
+    print(f"  after swap: {counter.load()}")                 # 0
+
+    # CAS: succeeds when current == expected
+    mut ok1 = counter.cas(0, 42)
+    print(f"  cas(0→42) ok={ok1}, val={counter.load()}")     # true, 42
+
+    # CAS: fails when current != expected
+    mut ok2 = counter.cas(0, 99)
+    print(f"  cas(0→99) ok={ok2}, val={counter.load()}")     # false, 42
+
+    counter.free()
+
+async def test_thread_local():
+    print("--- ThreadLocal[int] ---")
+    mut tl: ThreadLocal[int] = ThreadLocal.new(0)
+    tl.set(100)
+    print(f"  main thread value: {tl.get()}")                # 100
+
+    # Spawn a thread that sets a DIFFERENT value
+    mut t: Thread = Thread.spawn(local_task, tl)
+    t.join()
+    # Main thread still sees its own value
+    print(f"  main thread after spawn: {tl.get()}")          # still 100
+
+    tl.free()
+
+async def test_auto_unlock():
+    print("--- Mutex auto-unlock ---")
+    mut m: Mutex[int] = Mutex.init(0)
+    task_group:
+        spawn safe_read(m)
+        spawn safe_read(m)
+        spawn safe_read(m)
+    # Manually read/update after task_group
+    mut v = m.get()
+    m.set(42)
+    print(f"  mutex value after auto-unlock test: {m.get()}")  # 42
+    mut _ = 0
+    _ = _
+    # Final unlock after last get
+    m.unlock()
+    print("  all done, no deadlocks")
+
+async def main():
+    await test_thread_spawn()
+    await test_atomic()
+    await test_thread_local()
+    await test_auto_unlock()
+    print(f"current thread id: {Thread.id()}")

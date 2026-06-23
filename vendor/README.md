@@ -637,6 +637,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TXL:** [MikeHoffert/Sublime-Text-TXL-syntax](https://github.com/MikeHoffert/Sublime-Text-TXL-syntax)
 - **Tact:** [tact-lang/tact-sublime](https://github.com/tact-lang/tact-sublime)
 - **Talon:** [mrob95/vscode-TalonScript](https://github.com/mrob95/vscode-TalonScript)
+- **Tauraro:** [tauraro/tauraro-grammar](https://github.com/tauraro/tauraro-grammar)
 - **Tcl:** [textmate/tcl.tmbundle](https://github.com/textmate/tcl.tmbundle)
 - **Tcsh:** [atom/language-shellscript](https://github.com/atom/language-shellscript)
 - **TeX:** [textmate/latex.tmbundle](https://github.com/textmate/latex.tmbundle)

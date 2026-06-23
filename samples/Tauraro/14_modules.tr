@@ -1,0 +1,155 @@
+# 14 — Modules
+# Covers: import syntax, from...import, aliases, pub visibility, export.
+#
+# A module = a .tr source file. Every file is a module.
+# Module name = file path relative to project root, dots replace slashes.
+#
+# This file demonstrates module SYNTAX and concepts in a single file.
+# For a real multi-file demo see the layout comments below.
+
+# ── Import syntax reference (these would live in a real project) ──────────────
+#
+# ❶ Plain import — access via qualified name:
+#     import math.geometry
+#     mut area = math.geometry.circle_area(5.0)
+#
+# ❷ Import with alias:
+#     import math.geometry as geo
+#     mut area = geo.circle_area(5.0)
+#
+# ❸ Selective import — names land directly in current scope:
+#     from math.geometry import circle_area, rect_area
+#     mut area = circle_area(5.0)
+#
+# ❹ Selective import with alias:
+#     from math.geometry import circle_area as area
+#     from core.string import StringBuilder as SB
+#
+# ❺ Module resolved from file system:
+#     "math/geometry.tr"    → import as: math.geometry
+#     "math/geometry/mod.tr" → import as: math.geometry  (mod.tr convention)
+
+# ── Visibility: pub controls what other modules can use ───────────────────────
+#
+# By default everything is PRIVATE — visible only inside this file.
+# Use 'pub' to expose to other modules.
+
+# Private — only this file can call it:
+def _internal_helper(x: int) -> int:
+    return x * 2
+
+# Public — importable from other modules:
+pub def public_add(a: int, b: int) -> int:
+    return a + b
+
+# Public class — all fields and methods need 'pub' individually:
+pub class MathUtils:
+    pub precision: int    # public field
+    scale: int            # private field — not accessible from other modules
+
+extend MathUtils:
+    pub def init(precision: int) -> MathUtils:
+        mut m = MathUtils()
+        m.precision = precision
+        m.scale     = 10    # private — only set internally
+        return m
+
+    pub def square(self, x: float) -> float:      # public method
+        return x * x
+
+    def _scale_up(self, x: float) -> float:       # private method
+        return x * self.scale as float
+
+# ── export — stable C symbol for FFI / shared library ────────────────────────
+#
+# Without 'export': function 'add' in module 'utils' → C symbol 'utils_add'
+# With    'export': → C symbol 'add' (no prefix, stable across refactors)
+
+pub def add(a: int, b: int) -> int:
+    return a + b
+
+pub def tauraro_version() -> str:
+    return "2.0"
+
+# ── mod.tr — re-export hub for a directory of modules ────────────────────────
+#
+# If you have:
+#   math/vec2.tr
+#   math/matrix.tr
+#   math/mod.tr          ← re-exports both
+#
+# math/mod.tr contains:
+#   from math.vec2   import Vec2
+#   from math.matrix import Matrix4
+#
+# Then callers can write:
+#   from math import Vec2, Matrix4
+# Instead of importing each sub-module separately.
+
+# ── Project layout examples ───────────────────────────────────────────────────
+#
+# Small project:
+#   main.tr          ← entry point
+#   utils.tr         ← helper functions
+#   types.tr         ← shared data types
+#
+# Medium project:
+#   main.tr
+#   config.tr
+#   math/
+#     vec2.tr        ← import as: math.vec2
+#     matrix.tr      ← import as: math.matrix
+#   network/
+#     http.tr        ← import as: network.http
+#     tcp.tr         ← import as: network.tcp
+#     mod.tr         ← re-exports: from network import Http, Tcp
+#
+# Tauraro standard library:
+#   from std.core.vec   import Vec
+#   from std.core.map   import Map
+#   from std.core.io    import File
+
+# ── Symbol naming in generated C ──────────────────────────────────────────────
+#
+# math.geometry.circle_area  →  math_geometry_circle_area  in C
+# core.string.to_upper       →  core_string_to_upper       in C
+# main.process               →  process                    (no prefix for main)
+#
+# Don't hardcode C symbol names — module refactors change them.
+# Use 'export' for names that must be stable.
+
+# ── Circular imports are not allowed ─────────────────────────────────────────
+#
+# If module A imports B, and B imports A → compile error:
+#   ERROR: circular import: main → utils → main
+#
+# Fix: extract the shared types into a third module that both import.
+
+def main():
+    print("=== Module Concepts ===")
+
+    # Within this single file, we can use all declarations directly:
+    print(f"public_add(3, 4)    = {public_add(3, 4)}")       # 7
+    print(f"_internal_helper(5) = {_internal_helper(5)}")    # 10 (private, same file)
+
+    mut m = MathUtils.init(6)
+    print(f"square(4.0)  = {m.square(4.0)}")                 # 16.0
+    print(f"precision    = {m.precision}")                   # 6
+    # print(m.scale)  # ERROR if this were another module — field is private
+
+    print(f"add(10, 20)          = {add(10, 20)}")           # 30 (exported)
+    print(f"tauraro_version()    = {tauraro_version()}")     # 2.0
+
+    # ── Demonstrate import path resolution ───────────────────────────────────
+    # The compiler searches for modules in this order:
+    #   1. current working directory
+    #   2. directory of the main source file
+    #   3. std/   (if exists)
+    #   4. stdlib/ (if exists)
+    #   5. paths from -I <dir> flags
+    #
+    # Standard library:
+    #   from std.core.vec import Vec    → looks for std/core/vec.tr
+    #   from std.core.map import Map    → looks for std/core/map.tr
+
+    print("=== done ===")

@@ -1,0 +1,171 @@
+# 12 — Memory and Ownership
+# Covers: automatic ownership (Own/Borrow/Move), immutability default,
+# shared reference counting, none requires pointer type.
+# The compiler inserts every free() — you never write one.
+
+class Point:
+    pub x: int
+    pub y: int
+
+extend Point:
+    pub def init(x: int, y: int) -> Point:
+        mut p = Point()
+        p.x = x
+        p.y = y
+        return p
+
+    pub def describe(self) -> void:
+        print(f"  Point({self.x}, {self.y})")
+
+class Counter:
+    pub value: int
+
+extend Counter:
+    pub def init(start: int) -> Counter:
+        mut c = Counter()
+        c.value = start
+        return c
+
+    pub def increment(self) -> void:
+        self.value += 1
+
+    pub def get(self) -> int:
+        return self.value
+
+# ── Function showing conditional ownership transfer ───────────────────────────
+def make_or_default(use_real: bool) -> Point:
+    if use_real:
+        mut p2 = Point.init(99, 88)
+        return p2              # ownership transferred to caller
+    return Point.init(0, 0)    # new object, also transferred
+
+# ── Functions that borrow (don't take ownership) ──────────────────────────────
+# Class parameters are passed by pointer (borrow). The caller still owns them.
+def describe_point(p: Point) -> void:
+    p.describe()          # reads p but does not consume it
+    # no free injected here — caller owns p
+
+def sum_list(items: List[int]) -> int:
+    mut total = 0
+    for x in items:
+        total += x
+    return total    # no free — caller owns items
+
+# ── Functions that return ownership ───────────────────────────────────────────
+# When a function returns a heap object, ownership transfers to the caller.
+def make_point(x: int, y: int) -> Point:
+    return Point.init(x, y)    # ownership transferred to caller
+
+def make_list(n: int) -> List[int]:
+    mut result: List[int] = []
+    for i in range(n):
+        result.append(i * i)
+    return result    # caller owns this list — no free injected here
+
+def main():
+
+    # ── Rule M-1: Automatic ownership inference ────────────────────────────────
+    # Every heap allocation is marked 'Own'. free() is injected at scope exit.
+    print("=== Own — auto free at scope exit ===")
+    mut p = Point.init(3, 4)   # Own: p owns this heap Point
+    p.describe()
+    # Scope ends → compiler injects: if (p) free(p);
+    # You never write free(p).
+
+    # ── Borrow — passing to a function ────────────────────────────────────────
+    # Passing a class to a function is a BORROW — function gets a pointer,
+    # caller retains ownership.
+    print("=== Borrow ===")
+    mut pt = Point.init(10, 20)
+    describe_point(pt)     # borrow — pt still valid
+    describe_point(pt)     # borrow again — still valid
+    print(f"  pt.x still accessible: {pt.x}")   # 10
+    # Scope ends → free(pt) injected once
+
+    # ── Returning ownership ───────────────────────────────────────────────────
+    print("=== Return ownership ===")
+    mut new_pt = make_point(5, 6)   # owns the returned Point
+    new_pt.describe()
+    # Scope ends → free(new_pt)
+
+    mut my_list = make_list(5)      # owns the returned List
+    print(f"  list len: {len(my_list)}")
+    mut idx3: int = 3
+    print(f"  list[3]:  {my_list[idx3 + 0]}")   # 9 (3²)
+    # Scope ends → List_i64_free(my_list)
+
+    # ── Rule M-6: Immutable by default ────────────────────────────────────────
+    print("=== Immutable by default ===")
+    immutable_point = Point.init(1, 2)
+    # immutable_point.x = 5   # ERROR [M-6]: cannot assign to immutable binding
+    # immutable_point = Point.init(3, 4)  # ERROR: same
+
+    mut mutable_point = Point.init(1, 2)
+    mutable_point.x = 5         # OK — declared with 'mut'
+    mutable_point.describe()    # Point(5, 2)
+
+    # ── Rule M-7: none only for Option[T] ─────────────────────────────────────
+    # Use Option[T] for optional values — Option.None is the null constructor.
+    print("=== none / Option ===")
+    mut opt_str: Option[str] = Option.None
+    match opt_str:
+        case Option.None: print("  opt_str is none")
+        case Option.Some(v): print("  opt_str has some value")
+
+    opt_str = Option.Some("assigned")
+    match opt_str:
+        case Option.Some(v): print("  opt_str: assigned")
+        case Option.None: pass
+
+    # mut bad: int = none   # ERROR [M-7]: int is a value type, not optional
+    # mut bad: bool = none  # ERROR [M-7]: same
+
+    # ── Ownership through multiple borrows ────────────────────────────────────
+    print("=== Multiple borrows ===")
+    mut items: List[int] = [1, 2, 3, 4, 5]
+    print(f"  sum: {sum_list(items)}")       # 15 — borrow
+    print(f"  sum: {sum_list(items)}")       # 15 — borrow again
+    mut first_item = items[0]
+    print(f"  items[0]: {first_item}")       # 1  — still owned
+
+    # ── Ownership and branching ────────────────────────────────────────────────
+    # The compiler injects free() on EVERY exit path — never twice.
+    print("=== Conditional ownership ===")
+    mut real_pt = make_or_default(true)
+    real_pt.describe()     # Point(99, 88)
+
+    mut def_pt = make_or_default(false)
+    def_pt.describe()      # Point(0, 0)
+
+    # ── shared — reference-counted ownership ──────────────────────────────────
+    # 'shared' wraps a value in an atomic reference-counted box.
+    # Use when multiple owners need access to the same instance.
+    print("=== shared ===")
+    mut c = Counter.init(0)
+    shared s1 = c        # ref count = 1; s1 points to the same Counter
+    shared s2 = s1       # ref count = 2; s1 and s2 share one Counter
+
+    s1.increment()
+    s2.increment()
+    s1.increment()
+
+    print(f"  s1.get() = {s1.get()}")   # 3 (both accessed same Counter)
+    print(f"  s2.get() = {s2.get()}")   # 3
+
+    # When s2 goes out of scope → ref count drops to 1
+    # When s1 goes out of scope → ref count drops to 0 → Counter freed
+    # You never write free() for shared values either.
+
+    # ── String ownership ──────────────────────────────────────────────────────
+    # String literals → read-only data segment, never freed.
+    # Dynamic strings (f-strings, concatenation) → heap, freed at scope exit.
+    print("=== String ownership ===")
+    literal = "static string"   # not heap — never freed
+    mut dyn  = f"dynamic: {literal}"   # heap allocated — freed at scope exit
+    mut concat = "hello" + " " + "world"  # heap — freed at scope exit
+
+    print(literal)
+    print(dyn)
+    print(concat)
+
+    print("=== done ===")

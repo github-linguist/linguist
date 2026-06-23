@@ -1,0 +1,115 @@
+# 10 — Generics
+# User-defined generic classes and functions: Stack[T], identity[T], and
+# built-in generic containers (List[T], Dict).
+
+# ── 1. Generic Stack[T] class ─────────────────────────────────────────────────
+class Stack[T]:
+    pub items: List[T]
+    pub size:  int
+
+extend Stack:
+    pub def init() -> Stack[T]:
+        mut s = Stack()
+        s.items = []
+        s.size = 0
+        return s
+
+    pub def push(self, val: T) -> void:
+        self.items.append(val)
+        self.size += 1
+
+    pub def pop(self) -> T:
+        if self.size == 0: raise("pop from empty stack")
+        mut idx = self.size - 1
+        mut result = self.items[idx]
+        self.size -= 1
+        return result
+
+    pub def peek(self) -> T:
+        if self.size == 0: raise("peek at empty stack")
+        mut idx = self.size - 1
+        return self.items[idx]
+
+    pub def is_empty(self) -> bool:
+        return self.size == 0
+
+# ── 2. Generic identity function ─────────────────────────────────────────────
+def identity[T](x: T) -> T:
+    return x
+
+# ── 3. Type-specific helpers ──────────────────────────────────────────────────
+def clamp(v: int, lo: int, hi: int) -> int:
+    if v < lo: return lo
+    if v > hi: return hi
+    return v
+
+def sum_ints(items: List[int]) -> int:
+    mut total = 0
+    for x in items:
+        total += x
+    return total
+
+def main():
+
+    # ── Stack[int] ────────────────────────────────────────────────────────────
+    print("=== Stack[int] ===")
+    mut si: Stack[int] = Stack[int].init()
+    si.push(10)
+    si.push(20)
+    si.push(30)
+    print(f"size: {si.size}")
+    mut top_i: int = si.peek()
+    print(f"peek: {top_i}")
+    while not si.is_empty():
+        mut v: int = si.pop()
+        print(f"  pop: {v}")
+
+    # ── Stack[str] ────────────────────────────────────────────────────────────
+    print("=== Stack[str] ===")
+    mut ss: Stack[str] = Stack[str].init()
+    ss.push("alpha")
+    ss.push("beta")
+    ss.push("gamma")
+    print(f"size: {ss.size}")
+    mut top_s: str = ss.peek()
+    print(f"peek: {top_s}")
+    while not ss.is_empty():
+        mut w: str = ss.pop()
+        print(f"  pop: {w}")
+
+    # ── Generic identity[T] ───────────────────────────────────────────────────
+    print("=== identity[T] ===")
+    mut ri: int   = identity[int](99)
+    mut rf: float = identity[float](2.718)
+    mut rs: str   = identity[str]("tauraro")
+    print(f"identity[int](99)      = {ri}")
+    print(f"identity[float](2.718) = {rf}")
+    print(f"identity[str]          = {rs}")
+
+    # ── Built-in generic containers ───────────────────────────────────────────
+    print("=== List[T] ===")
+    mut int_list: List[int]   = [1, 2, 3, 4, 5]
+    mut str_list: List[str]   = ["x", "y", "z"]
+    mut f_list:   List[float] = [0.1, 0.2, 0.3]
+    print(f"int_list len:  {len(int_list)}")
+    print(f"str_list[1]:   {str_list[1]}")
+    print(f"f_list[2]:     {f_list[2]}")
+
+    # ── Type-specific helpers ─────────────────────────────────────────────────
+    print("=== Helpers ===")
+    print(f"clamp(15, 0, 10)  = {clamp(15, 0, 10)}")
+    print(f"clamp(-3, 0, 10)  = {clamp(-3, 0, 10)}")
+    nums = [1, 2, 3, 4, 5]
+    print(f"sum [1..5] = {sum_ints(nums)}")
+
+    # ── Dict ──────────────────────────────────────────────────────────────────
+    print("=== Dict ===")
+    mut d: Dict = {}
+    d.set("x", "100")
+    d.set("y", "200")
+    mut vx: str = d.get("x")
+    mut vy: str = d.get("y")
+    print(f"x={vx}")
+    print(f"y={vy}")
+
+    print("=== done ===")

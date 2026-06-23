@@ -1,0 +1,60 @@
+# Optional Rust-like lifetimes ("named regions") in Tauraro.
+#
+# Lifetimes are ALWAYS optional. Omit them and every value is ARC-managed — zero
+# ceremony. Opt in with `ref` / `mut_ref` + `from <region>` to express a borrow and
+# let the compiler check that the borrowed source outlives the borrow. A `ref T`
+# reads and behaves EXACTLY like a `T`; the region is a checking layer over the
+# ARC floor (no `'a` ticks — a region is just a name, usually a parameter name).
+
+from std.string.str import Str
+
+# 1) Single-source borrow — `from s` is AUTO-INFERRED (one non-primitive param).
+def first_word(s: str) -> ref str:
+    mut sp = Str.index_of(s, " ")
+    if sp < 0:
+        return s
+    return Str.slice(s, 0, sp)
+
+# 2) Explicit single source.
+def head(a: str, b: str) -> ref str from a:
+    return a
+
+# 3) Multi-source: the result is valid for the SHORTER of a and b (intersection).
+def longest(a: str, b: str) -> ref str from a, b:
+    if Str.len(a) >= Str.len(b):
+        return a
+    return b
+
+# 4) Output tied to either of two shared-region inputs.
+def either(flag: bool, x: str, y: str) -> ref str from x, y:
+    if flag:
+        return x
+    return y
+
+# 5) A struct PARAMETERIZED by a region: `Parser from src`. Its `text` field borrows
+#    for region `src`; the source must outlive the Parser.
+class Parser from src:
+    text: ref str from src
+    pos:  int
+
+extend Parser:
+    pub def init(t: str) -> Parser:
+        mut p = Parser()
+        p.text = t
+        p.pos  = 0
+        return p
+    pub def rest(self) -> ref str from src:
+        return Str.slice(self.text, self.pos, Str.len(self.text))
+
+def main():
+    mut doc = "hello wonderful world"
+
+    print(first_word(doc))             # hello
+    print(head("alpha", "beta"))       # alpha
+    print(longest("a", "bcd"))         # bcd
+    print(either(true, "yes", "no"))   # yes
+
+    mut p = Parser.init(doc)           # p borrows `doc` for region `src`
+    p.pos = 6
+    print(p.rest())                    # wonderful world
+    print(Str.len(p.text))             # 21

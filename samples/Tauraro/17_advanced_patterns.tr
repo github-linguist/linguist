@@ -1,0 +1,357 @@
+# 17 -- Advanced Patterns
+# Covers: operator overloading, builder pattern, strategy pattern,
+# state machine (enum + class), memoization (class-based),
+# early-return guards, bit flags, observer pattern, dependency injection.
+
+extern "C":
+    def sqrt(x: float) -> float
+
+# -- 1. Operator Overloading --------------------------------------------------
+# Classes can define __add__, __sub__, __mul__, __eq__ etc. as regular methods.
+# Call them explicitly as a.__add__(b); operator syntax dispatching not yet impl.
+class Vec2:
+    pub x: float
+    pub y: float
+
+extend Vec2:
+    pub def init(x: float, y: float) -> Vec2:
+        mut v = Vec2()
+        v.x = x
+        v.y = y
+        return v
+
+    pub def __add__(self, other: Vec2) -> Vec2:
+        return Vec2.init(self.x + other.x, self.y + other.y)
+
+    pub def __sub__(self, other: Vec2) -> Vec2:
+        return Vec2.init(self.x - other.x, self.y - other.y)
+
+    pub def __mul__(self, scalar: float) -> Vec2:
+        return Vec2.init(self.x * scalar, self.y * scalar)
+
+    pub def __eq__(self, other: Vec2) -> bool:
+        return self.x == other.x and self.y == other.y
+
+    pub def __str__(self) -> str:
+        return f"({self.x}, {self.y})"
+
+    pub def dot(self, other: Vec2) -> float:
+        return self.x * other.x + self.y * other.y
+
+    pub def length(self) -> float:
+        return sqrt(self.x * self.x + self.y * self.y)
+
+# -- 2. Builder Pattern -------------------------------------------------------
+# Construct complex objects step-by-step with method chaining.
+class HttpRequest:
+    pub url:     str
+    pub method:  str
+    pub body:    str
+    pub timeout: int
+
+extend HttpRequest:
+    pub def init() -> HttpRequest:
+        mut r = HttpRequest()
+        r.url     = ""
+        r.method  = "GET"
+        r.body    = ""
+        r.timeout = 30
+        return r
+
+    pub def with_url(self, url: str) -> HttpRequest:
+        self.url = url
+        return self
+
+    pub def with_method(self, method: str) -> HttpRequest:
+        self.method = method
+        return self
+
+    pub def with_body(self, body: str) -> HttpRequest:
+        self.body = body
+        return self
+
+    pub def with_timeout(self, seconds: int) -> HttpRequest:
+        self.timeout = seconds
+        return self
+
+    pub def describe(self) -> void:
+        print(f"  {self.method} {self.url} (timeout={self.timeout}s)")
+
+# -- 3. Strategy Pattern ------------------------------------------------------
+# Swap sort direction by picking a different comparator function.
+def cmp_asc(a: int, b: int) -> int:
+    if a < b: return -1
+    if a > b: return 1
+    return 0
+
+def cmp_desc(a: int, b: int) -> int:
+    if a > b: return -1
+    if a < b: return 1
+    return 0
+
+def insertion_sort_asc(data: List[int]) -> void:
+    mut i = 1
+    while i < len(data):
+        mut key = data[i + 0]
+        mut j = i - 1
+        while j >= 0 and cmp_asc(data[j + 0], key) > 0:
+            data[j + 1] = data[j + 0]
+            j -= 1
+        data[j + 1] = key
+        i += 1
+
+def insertion_sort_desc(data: List[int]) -> void:
+    mut i = 1
+    while i < len(data):
+        mut key = data[i + 0]
+        mut j = i - 1
+        while j >= 0 and cmp_desc(data[j + 0], key) > 0:
+            data[j + 1] = data[j + 0]
+            j -= 1
+        data[j + 1] = key
+        i += 1
+
+# -- 4. State Machine ---------------------------------------------------------
+# Encode states as an enum; transitions as methods on a class.
+enum ConnState:
+    Idle
+    Connecting
+    Connected
+    Disconnected(reason: str)
+
+class Connection:
+    pub state: ConnState
+    pub host:  str
+
+extend Connection:
+    pub def init(host: str) -> Connection:
+        mut c = Connection()
+        c.state = ConnState.Idle
+        c.host  = host
+        return c
+
+    pub def connect(self) -> void:
+        match self.state:
+            case ConnState.Idle:
+                self.state = ConnState.Connecting
+                print(f"  connecting to {self.host}...")
+                self.state = ConnState.Connected
+                print("  connected")
+            case ConnState.Connected:
+                print("  already connected")
+            case _:
+                print("  cannot connect in current state")
+
+    pub def disconnect(self, reason: str) -> void:
+        match self.state:
+            case ConnState.Connected:
+                self.state = ConnState.Disconnected(reason)
+                print(f"  disconnected: {reason}")
+            case _:
+                print("  not connected")
+
+    pub def status(self) -> str:
+        match self.state:
+            case ConnState.Idle:             return "idle"
+            case ConnState.Connecting:       return "connecting"
+            case ConnState.Connected:        return "connected"
+            case ConnState.Disconnected(r):  return f"disconnected: {r}"
+            case _:                          return "unknown"
+
+# -- 5. Memoization -----------------------------------------------------------
+# Pass memo state as a class so it's accessible from all helper functions.
+class FibMemo:
+    pub vals: List[int]
+    pub done: List[bool]
+
+extend FibMemo:
+    pub def init(n: int) -> FibMemo:
+        mut m = FibMemo()
+        m.vals = []
+        m.done = []
+        mut i = 0
+        while i <= n:
+            m.vals.append(-1)
+            m.done.append(false)
+            i += 1
+        return m
+
+def fib(n: int, memo: FibMemo) -> int:
+    if n <= 1: return n
+    mut dn = memo.done[n + 0]
+    if dn: return memo.vals[n + 0]
+    mut result = fib(n - 1, memo) + fib(n - 2, memo)
+    memo.vals[n + 0] = result
+    memo.done[n + 0] = true
+    return result
+
+# -- 6. Bit flags -------------------------------------------------------------
+def has_flag(perms: int, flag: int) -> bool:
+    return (perms & flag) != 0
+
+# Pass flag values as parameters so the function is self-contained.
+def flag_str(perms: int, fr: int, fw: int, fx: int, fh: int) -> str:
+    mut s = ""
+    if has_flag(perms, fr): s = s + "r"
+    if has_flag(perms, fw): s = s + "w"
+    if has_flag(perms, fx): s = s + "x"
+    if has_flag(perms, fh): s = s + "h"
+    return s
+
+# -- 7. Observer pattern (string-key dispatch) --------------------------------
+class EventBus:
+    pub subscribers: List[str]
+
+extend EventBus:
+    pub def init() -> EventBus:
+        mut b = EventBus()
+        b.subscribers = []
+        return b
+
+    pub def subscribe(self, key: str) -> void:
+        self.subscribers.append(key)
+
+    pub def emit(self, event: str) -> void:
+        mut i = 0
+        while i < len(self.subscribers):
+            mut key = self.subscribers[i + 0]
+            if key == "login":   print(f"  login: {event}")
+            elif key == "audit": print(f"  audit: {event}")
+            i += 1
+
+# -- 8. Early-return guard pattern --------------------------------------------
+def process(input: str) -> str:
+    if len(input) == 0: return ""
+    if input == "skip": return ""
+    return input.upper()
+
+# -- 9. Dependency injection via separate functions ---------------------------
+def verbose_transform(data: str) -> str:
+    print(f"  LOG: transforming: {data}")
+    return data.upper()
+
+def silent_transform(data: str) -> str:
+    return data.upper()
+
+def main():
+
+    # -- Operator overloading -------------------------------------------------
+    print("=== Operator Overloading ===")
+    mut a = Vec2.init(1.0, 2.0)
+    mut b = Vec2.init(3.0, 4.0)
+
+    mut c = a.__add__(b)
+    mut d = b.__sub__(a)
+    mut e = a.__mul__(3.0)
+
+    print(f"a = {a.__str__()}")
+    print(f"b = {b.__str__()}")
+    print(f"a + b = {c.__str__()}")
+    print(f"b - a = {d.__str__()}")
+    print(f"a * 3 = {e.__str__()}")
+    print(f"a.__eq__(a) = {a.__eq__(a)}")
+    print(f"a.__eq__(b) = {a.__eq__(b)}")
+    print(f"dot(a,b) = {a.dot(b)}")
+    print(f"|b| = {b.length()}")
+
+    # -- Builder pattern ------------------------------------------------------
+    print("=== Builder ===")
+    mut req = HttpRequest.init().with_url("https://api.example.com/data").with_method("POST").with_body("{}").with_timeout(60)
+    req.describe()
+    mut req2 = HttpRequest.init().with_url("https://example.com/health")
+    req2.describe()
+
+    # -- Strategy pattern -----------------------------------------------------
+    print("=== Strategy (sort) ===")
+    mut nums: List[int] = [5, 2, 8, 1, 9, 3]
+
+    insertion_sort_asc(nums)
+    print("ascending:")
+    mut si = 0
+    while si < len(nums):
+        mut sv = nums[si + 0]
+        print(f"  {sv}")
+        si += 1
+
+    insertion_sort_desc(nums)
+    print("descending:")
+    mut di = 0
+    while di < len(nums):
+        mut dv = nums[di + 0]
+        print(f"  {dv}")
+        di += 1
+
+    # -- State machine --------------------------------------------------------
+    print("=== State Machine ===")
+    mut conn = Connection.init("db.example.com")
+    print(f"  status: {conn.status()}")
+    conn.connect()
+    print(f"  status: {conn.status()}")
+    conn.connect()
+    conn.disconnect("timeout")
+    print(f"  status: {conn.status()}")
+    conn.disconnect("again")
+
+    # -- Memoization ----------------------------------------------------------
+    print("=== Memoization ===")
+    mut memo = FibMemo.init(40)
+    mut fi = 0
+    while fi <= 10:
+        mut fv = fib(fi, memo)
+        print(f"  fib({fi}) = {fv}")
+        fi += 1
+    mut fib30 = fib(30, memo)
+    print(f"  fib(30) = {fib30}")
+
+    # -- Swap with temp variable (no tuple swap syntax needed) ----------------
+    print("=== Swap ===")
+    mut x = 10
+    mut y = 20
+    print(f"  before: x={x} y={y}")
+    mut tmp = x
+    x = y
+    y = tmp
+    print(f"  after:  x={x} y={y}")
+
+    # -- Observer pattern -----------------------------------------------------
+    print("=== Observer ===")
+    mut bus = EventBus.init()
+    bus.subscribe("login")
+    bus.subscribe("audit")
+    bus.emit("user:logged_in")
+    bus.emit("user:logged_out")
+
+    # -- Bit flags ------------------------------------------------------------
+    print("=== Bit Flags ===")
+    mut flag_r = 1
+    mut flag_w = 2
+    mut flag_x = 4
+    mut flag_h = 8
+    mut perms = flag_r | flag_w
+    print(f"  perms: {flag_str(perms, flag_r, flag_w, flag_x, flag_h)}")
+
+    perms = perms | flag_x
+    print(f"  after +exec: {flag_str(perms, flag_r, flag_w, flag_x, flag_h)}")
+
+    perms = perms & ~flag_w
+    print(f"  after -write: {flag_str(perms, flag_r, flag_w, flag_x, flag_h)}")
+
+    perms = perms ^ flag_h
+    print(f"  after ^hidden: {flag_str(perms, flag_r, flag_w, flag_x, flag_h)}")
+
+    # -- Early return guards --------------------------------------------------
+    print("=== Early Return Guards ===")
+    mut hello_in = "hello"
+    mut empty_in = ""
+    mut skip_in  = "skip"
+    print(f"  process(hello) = {process(hello_in)}")
+    print(f"  process(empty) = {process(empty_in)}")
+    print(f"  process(skip)  = {process(skip_in)}")
+
+    # -- Dependency injection -------------------------------------------------
+    print("=== Dependency Injection ===")
+    mut r1 = verbose_transform("hello")
+    mut r2 = silent_transform("world")
+    print(f"  r1={r1}  r2={r2}")
+
+    print("=== done ===")

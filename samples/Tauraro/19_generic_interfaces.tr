@@ -1,0 +1,148 @@
+# 19 — Generic Interfaces
+# Interfaces can be generic: interface Container[T]:
+# A generic class can implement a generic interface: class Stack[T] implements Container[T]:
+# The compiler auto-generates a monomorphized vtable for each concrete type used.
+
+# ── 1. Generic interface declaration ─────────────────────────────────────────
+interface Container[T]:
+    def push(self, item: T) -> void
+    def pop(self) -> T
+    def peek(self) -> T
+    def size(self) -> int
+    def is_empty(self) -> bool
+
+# ── 2. Generic class implementing the generic interface ───────────────────────
+class Stack[T] implements Container[T]:
+    pub items: List[T]
+    pub count: int
+
+extend Stack:
+    pub def init() -> Stack[T]:
+        mut s = Stack[T]()
+        s.items = List[T].init(8)
+        s.count = 0
+        return s
+
+    pub def push(self, item: T) -> void:
+        self.items.push(item)
+        self.count = self.count + 1
+
+    pub def pop(self) -> T:
+        self.count = self.count - 1
+        return self.items.pop()
+
+    pub def peek(self) -> T:
+        return self.items.get(self.count - 1)
+
+    pub def size(self) -> int:
+        return self.count
+
+    pub def is_empty(self) -> bool:
+        return self.count == 0
+
+# A second implementation of Container[T]
+class BoundedStack[T] implements Container[T]:
+    pub items: List[T]
+    pub count: int
+    pub cap: int
+
+extend BoundedStack:
+    pub def init(capacity: int) -> BoundedStack[T]:
+        mut s = BoundedStack[T]()
+        s.items = List[T].init(capacity)
+        s.count = 0
+        s.cap   = capacity
+        return s
+
+    pub def push(self, item: T) -> void:
+        if self.count < self.cap:
+            self.items.push(item)
+            self.count = self.count + 1
+
+    pub def pop(self) -> T:
+        self.count = self.count - 1
+        return self.items.pop()
+
+    pub def peek(self) -> T:
+        return self.items.get(self.count - 1)
+
+    pub def size(self) -> int:
+        return self.count
+
+    pub def is_empty(self) -> bool:
+        return self.count == 0
+
+# ── 3. Polymorphic functions accepting the generic interface ──────────────────
+def drain_all(c: Container[int]) -> void:
+    while not c.is_empty():
+        mut v = c.pop()
+        print(f"  popped: {v}")
+
+def fill(c: Container[int], from_val: int, count: int) -> void:
+    mut i = 0
+    while i < count:
+        c.push(from_val + i)
+        i = i + 1
+
+def print_top(c: Container[int]) -> void:
+    if not c.is_empty():
+        print(f"  top={c.peek()}, size={c.size()}")
+
+# ── 4. Non-generic interface for comparison ───────────────────────────────────
+interface Describable:
+    def describe(self) -> void
+
+class IntStack implements Describable:
+    pub items: List[int]
+    pub count: int
+
+extend IntStack:
+    pub def init() -> IntStack:
+        mut s = IntStack()
+        s.items = List[int].init(4)
+        s.count = 0
+        return s
+
+    pub def push(self, v: int) -> void:
+        self.items.push(v)
+        self.count = self.count + 1
+
+    pub def describe(self) -> void:
+        print(f"  IntStack with {self.count} items")
+
+def main():
+    # ── Generic interface with Stack[int] ────────────────────────────────────
+    print("=== Generic Container[int]: Stack ===")
+    mut s1 = Stack[int].init()
+    fill(s1, 10, 4)          # Stack[int] → Container[int], auto-converted
+    print_top(s1)
+    drain_all(s1)
+
+    # ── Generic interface with BoundedStack[int] ─────────────────────────────
+    print("=== Generic Container[int]: BoundedStack (cap=3) ===")
+    mut bs = BoundedStack[int].init(3)
+    fill(bs, 100, 5)         # only 3 fit
+    print(f"  size after fill: {bs.size()}")
+    print_top(bs)
+    drain_all(bs)
+
+    # ── Interface-typed variables ─────────────────────────────────────────────
+    print("=== Interface-typed variable ===")
+    mut s2 = Stack[int].init()
+    s2.push(7)
+    s2.push(8)
+    s2.push(9)
+    mut c: Container[int] = s2     # auto-converted at assignment
+    print(f"  via Container: size={c.size()}, top={c.peek()}")
+    c.push(99)
+    print(f"  after push via interface: size={c.size()}, top={c.peek()}")
+
+    # ── Non-generic interface ─────────────────────────────────────────────────
+    print("=== Non-generic Describable ===")
+    mut is1 = IntStack.init()
+    is1.push(1)
+    is1.push(2)
+    mut d: Describable = is1
+    d.describe()
+
+    print("=== done ===")

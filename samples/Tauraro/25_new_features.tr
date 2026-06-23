@@ -1,0 +1,311 @@
+# 25 — v0.0.5 Features + Compile-Time Safety
+# Covers: triple-quoted strings, assert/assert_eq/ne, str.split_once,
+# float math methods, int format methods (hex/octal/binary), defer,
+# Set[T], List.sort/sum/min_val/max_val, gcd/lcm, f-string format spec,
+# match guards, method overloading, multi-line chaining, data race prevention.
+
+from std.async import Mutex, Atomic, Thread, Chan
+
+# ── 1. Triple-quoted strings ──────────────────────────────────────────────────
+def test_triple_string():
+    mut sql = """
+SELECT *
+FROM users
+WHERE active = 1
+"""
+    assert sql.len() > 0, "triple string should not be empty"
+    mut template = """name: {name}
+age: {age}"""
+    assert template.len() > 0
+    print("triple-quoted strings ok")
+
+# ── 2. assert / assert_eq / assert_ne / assert_lt / assert_le / assert_gt ───
+def test_asserts():
+    assert 2 + 2 == 4
+    assert 2 + 2 == 4, "basic arithmetic must hold"
+    assert_eq(10, 10, "ten equals ten")
+    assert_ne(10, 20, "ten != twenty")
+    assert_lt(5, 10,  "5 < 10")
+    assert_le(5, 5,   "5 <= 5")
+    assert_gt(10, 5,  "10 > 5")
+    assert_ge(10, 10, "10 >= 10")
+    print("assert family ok")
+
+# ── 3. str methods ────────────────────────────────────────────────────────────
+def test_str_methods():
+    mut s = "  Hello World  "
+    assert s.trim() == "Hello World"
+    assert s.trim().to_lower() == "hello world"
+    assert s.trim().to_upper() == "HELLO WORLD"
+    assert "hello".starts_with("hel")
+    assert "hello".ends_with("llo")
+    assert "hello".contains("ell")
+    assert "hello".len() == 5
+    assert "hello".index_of("ll") == 2
+
+    # split / join
+    mut parts = "a,b,c".split(",")
+    assert parts.len == 3
+    mut joined = Str.join(parts, "-")
+    assert joined == "a-b-c"
+
+    # split_once — splits into exactly 2 parts on first separator
+    mut path = "user/profile/settings"
+    mut pair = path.split_once("/")
+    assert pair.get(0) == "user",             "first part should be 'user'"
+    assert pair.get(1) == "profile/settings", "rest should be 'profile/settings'"
+
+    print("str methods ok")
+
+# ── 4. f-string format spec ───────────────────────────────────────────────────
+def test_fstring_format():
+    mut pi = 3.141592
+    mut formatted = f"{pi:.2f}"   # rounds to 2 decimal places
+    assert formatted == "3.14"
+
+    mut n = 255
+    mut hex_str = f"{n:x}"       # lowercase hex
+    assert hex_str == "ff"
+
+    print("f-string format spec ok")
+
+# ── 5. Float math methods ─────────────────────────────────────────────────────
+def test_float_math():
+    mut x = 2.5
+    assert x.floor() == 2.0
+    assert x.ceil()  == 3.0
+
+    mut y = 9.0
+    assert y.sqrt() == 3.0
+
+    mut neg = -5.5
+    assert neg.fabs() == 5.5
+
+    # Rounding
+    mut r = 3.7
+    assert r.round() == 4.0
+
+    # is_nan / is_inf
+    mut normal = 1.0
+    assert not normal.is_nan()
+    assert not normal.is_inf()
+
+    print("float math methods ok")
+
+# ── 6. Int format methods ─────────────────────────────────────────────────────
+def test_int_format():
+    mut n = 255
+    assert n.to_hex()    == "ff"
+    assert n.to_HEX()    == "FF"
+    assert n.to_octal()  == "377"
+    assert n.to_binary() == "11111111"
+
+    mut m = 10
+    assert m.to_binary() == "1010"
+    assert m.to_hex()    == "a"
+
+    print("int format methods ok")
+
+# ── 7. gcd / lcm ─────────────────────────────────────────────────────────────
+def test_math_builtins():
+    mut a = 12
+    mut b = 8
+    assert a.gcd(b) == 4
+    assert a.lcm(b) == 24
+
+    mut p = 15
+    mut q = 25
+    assert p.gcd(q) == 5
+    assert p.lcm(q) == 75
+
+    print("gcd / lcm ok")
+
+# ── 8. defer — LIFO cleanup ───────────────────────────────────────────────────
+# 'defer stmt' runs stmt when the ENCLOSING FUNCTION returns, in LIFO order.
+# The deferred effects are observable only AFTER the function returns — so we
+# record into a borrowed list and inspect it in the caller.
+def run_with_defers(log: List[str]) -> void:
+    log.append("start")
+    defer log.append("deferred 1")   # scheduled — runs LAST  (LIFO)
+    defer log.append("deferred 2")   # scheduled — runs FIRST (LIFO)
+    log.append("middle")
+    # On return here: "deferred 2" is appended, then "deferred 1"
+
+def test_defer():
+    mut log: List[str] = []
+    run_with_defers(log)             # after this returns, the defers have run
+    assert log.get(0) == "start"
+    assert log.get(1) == "middle"
+    assert log.get(2) == "deferred 2"   # LIFO: last-registered defer ran first
+    assert log.get(3) == "deferred 1"
+    print("defer ok")
+
+# ── 9. Set[T] — unordered unique values ──────────────────────────────────────
+def test_set():
+    mut s: Set[str] = Set[str].init()
+    s.add("apple")
+    s.add("banana")
+    s.add("apple")    # duplicate — no-op
+    assert s.len() == 2
+    assert s.contains("apple")
+    assert s.contains("banana")
+    assert not s.contains("cherry")
+
+    s.remove("banana")
+    assert s.len() == 1
+    assert not s.contains("banana")
+
+    mut nums: Set[int] = Set[int].init()
+    nums.add(1)
+    nums.add(2)
+    nums.add(3)
+    nums.add(2)    # duplicate
+    assert nums.len() == 3
+    assert nums.contains(1)
+    assert not nums.contains(99)
+
+    print("Set[T] ok")
+
+# ── 10. List.sort / sum / min_val / max_val ───────────────────────────────────
+def test_list_aggregates():
+    mut ns: List[int] = [5, 2, 8, 1, 9, 3]
+    ns.sort()
+    assert ns.get(0) == 1
+    assert ns.get(5) == 9
+
+    mut desc: List[int] = [5, 2, 8, 1, 9, 3]
+    desc.sort_desc()
+    assert desc.get(0) == 9
+    assert desc.get(5) == 1
+
+    mut vals: List[int] = [1, 2, 3, 4, 5]
+    assert vals.sum()     == 15
+    assert vals.min_val() == 1
+    assert vals.max_val() == 5
+
+    mut words: List[str] = ["banana", "apple", "cherry"]
+    words.sort()
+    assert words.get(0) == "apple"
+    assert words.get(2) == "cherry"
+
+    print("List aggregates ok")
+
+# ── 11. Match guards ──────────────────────────────────────────────────────────
+def classify(n: int) -> str:
+    match n:
+        case x if x < 0:  return "negative"
+        case x if x == 0: return "zero"
+        case x if x < 10: return "small"
+        case _:            return "large"
+
+def test_match_guards():
+    assert classify(-5)  == "negative"
+    assert classify(0)   == "zero"
+    assert classify(7)   == "small"
+    assert classify(100) == "large"
+    print("match guards ok")
+
+# ── 12. Method overloading (by parameter count / arity) ──────────────────────
+# Tauraro dispatches overloads by the number of parameters. Each overload of a
+# method must have a DISTINCT non-self parameter count.
+class Formatter:
+    pub prefix: str
+
+extend Formatter:
+    pub def init(prefix: str) -> Formatter:
+        mut f = Formatter()
+        f.prefix = prefix
+        return f
+
+    # 1 arg — just prefix the number
+    pub def format(self, n: int) -> str:
+        return self.prefix + n.to_str()
+
+    # 2 args — zero-pad to a given width
+    pub def format(self, n: int, width: int) -> str:
+        mut padded = n.to_str()
+        mut i = padded.len()
+        while i < width:
+            padded = "0" + padded
+            i = i + 1
+        return self.prefix + padded
+
+    # 3 args — pad with a custom fill character
+    pub def format(self, n: int, width: int, fill: str) -> str:
+        mut padded = n.to_str()
+        mut i = padded.len()
+        while i < width:
+            padded = fill + padded
+            i = i + 1
+        return self.prefix + padded
+
+def test_overloading():
+    mut fmt = Formatter.init(">> ")
+    assert fmt.format(42)         == ">> 42"      # 1-arg overload
+    assert fmt.format(7, 4)       == ">> 0007"    # 2-arg overload
+    assert fmt.format(7, 4, "*")  == ">> ***7"    # 3-arg overload
+    print("method overloading ok")
+
+# ── 13. Multi-line method chaining ────────────────────────────────────────────
+def test_method_chaining():
+    # Dot continuation: a line ending in a method call continues on the next line
+    mut result = "  Hello, World!  "
+        .trim()
+        .to_lower()
+        .replace("world", "tauraro")
+
+    assert result == "hello, tauraro!"
+    print("multi-line chaining ok")
+
+# ── 14. User-defined decorator ────────────────────────────────────────────────
+decorator def log_call() -> str:
+    return "hot"
+
+@log_call
+def compute_sum(n: int) -> int:
+    mut s = 0
+    mut i = 0
+    while i < n:
+        s = s + i
+        i = i + 1
+    return s
+
+def test_decorator():
+    assert compute_sum(100) == 4950
+    print("decorator ok")
+
+# ── 15. Data race prevention (Sendable + Thread.spawn) ───────────────────────
+def atomic_inc(a: Atomic[int]) -> void:
+    mut i = 0
+    while i < 10:
+        a.increment()
+        i += 1
+
+def test_data_race_prevention():
+    # Atomic[T] is Sendable — safe to share across threads
+    mut counter = Atomic[int].new(0)
+    mut t1 = Thread.spawn(atomic_inc, counter)
+    mut t2 = Thread.spawn(atomic_inc, counter)
+    t1.join()
+    t2.join()
+    mut final = counter.load()
+    assert final == 20, "counter should be 20 after two threads each do 10 increments"
+    print(f"data race prevention ok: counter={final}")
+
+def main():
+    test_triple_string()
+    test_asserts()
+    test_str_methods()
+    test_fstring_format()
+    test_float_math()
+    test_int_format()
+    test_math_builtins()
+    test_defer()
+    test_set()
+    test_list_aggregates()
+    test_match_guards()
+    test_overloading()
+    test_method_chaining()
+    test_decorator()
+    test_data_race_prevention()
+    print("=== all v0.0.5 features pass ===")

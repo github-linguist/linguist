@@ -1,0 +1,102 @@
+# Example 24: Advanced concurrency features
+#
+# Demonstrates:
+#   1. Global async thread pool (await reuses threads, no per-call spawn)
+#   2. await_timeout — time-limited async call
+#   3. Thread.spawn with multiple args (3+)
+#   4. Atomic memory orderings (relaxed/acquire/release/acqrel)
+
+# ── 1: async pool: many awaits share a fixed pool ─────────────────────────────
+
+async def add_one(x: int) -> int:
+    return x + 1
+
+async def test_pool():
+    print("--- async pool (thread reuse) ---")
+    mut s = 0
+    mut i = 0
+    while i < 10:
+        s = s + await add_one(i)
+        i = i + 1
+    print(f"  sum 0..9 each +1 = {s}")   # 55
+
+# ── 2: await_timeout ──────────────────────────────────────────────────────────
+
+async def fast_fn(x: int) -> int:
+    return x * 2
+
+async def slow_fn(x: int) -> int:
+    Thread.sleep(200)
+    return x * 3
+
+async def test_await_timeout():
+    print("--- await_timeout ---")
+    # fast_fn completes well within 500ms timeout
+    mut r1 = await_timeout(fast_fn(21), 500)
+    print(f"  fast result: {r1}")          # 42
+
+    # slow_fn takes 200ms; give it 50ms — times out → returns 0
+    mut r2 = await_timeout(slow_fn(7), 50)
+    print(f"  slow timed-out result: {r2}")  # 0
+
+# ── 3: Thread.spawn multi-arg (3+ args) ──────────────────────────────────────
+
+def add_three(a: int, b: int, c: int) -> void:
+    mut result = a + b + c
+    print(f"  add_three({a},{b},{c}) = {result}")   # 6, 60
+
+def test_spawn_multi():
+    print("--- Thread.spawn multi-arg ---")
+    mut t1 = Thread.spawn(add_three, 1, 2, 3)
+    mut t2 = Thread.spawn(add_three, 10, 20, 30)
+    t1.join()
+    t2.join()
+
+# ── 4: Atomic memory orderings ────────────────────────────────────────────────
+
+class SpinFlag implements Sendable:
+    pub flag: Atomic[int]
+
+extend SpinFlag:
+    pub def init() -> SpinFlag:
+        mut f = SpinFlag()
+        f.flag = Atomic.new(0)
+        return f
+
+def writer_task(sf: SpinFlag) -> void:
+    Thread.sleep(5)
+    sf.flag.store_release(1)   # release write — visible to acquire readers
+
+def reader_task(sf: SpinFlag) -> void:
+    mut v = 0
+    while v == 0:
+        v = sf.flag.load_acquire() as int  # acquire read
+
+async def test_atomic_ordering():
+    print("--- Atomic memory orderings ---")
+    mut sf = SpinFlag.init()
+    task_group:
+        spawn writer_task(sf)
+        spawn reader_task(sf)
+    print(f"  store_release / load_acquire completed (flag={sf.flag.load()})")
+
+    # cas_weak and cas_acqrel
+    mut counter2 = Atomic.new(0)
+    mut prev = counter2.cas_acqrel(0, 42)
+    print(f"  cas_acqrel(0→42) succeeded={prev}")   # true
+    mut prev2 = counter2.cas_weak(0, 99)
+    print(f"  cas_weak(0→99 on 42) succeeded={prev2}")  # false
+    print(f"  counter2 value: {counter2.load()}")       # 42
+
+    # add_relaxed / add_acqrel
+    mut cnt3 = Atomic.new(0)
+    cnt3.add_relaxed(5)
+    cnt3.add_acqrel(3)
+    print(f"  relaxed+acqrel add: {cnt3.load()}")  # 8
+
+async def main():
+    await test_pool()
+    await test_await_timeout()
+    test_spawn_multi()
+    await test_atomic_ordering()
+    print("all advanced concurrency tests passed")

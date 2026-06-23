@@ -1,0 +1,192 @@
+# 01 — Variables and Types
+# Covers: immutable/mutable variables, const, all primitive types,
+# numeric literals, type inference, the 'as' cast operator, none.
+
+def main():
+
+    # ── 1. Immutable variables (default) ─────────────────────────────────────
+    # Variables without 'mut' cannot be reassigned after declaration.
+    print("=== Immutable Variables ===")
+    name:    str   = "Tauraro"   # explicit type annotation
+    version: int   = 2            # type inferred: int
+    pi:      float = 3.14159     # explicit float annotation
+
+    print(name)
+    print(f"version: {version}")
+    print(f"pi: {pi}")
+    # name = "other"  # ERROR [M-6]: cannot assign to immutable binding
+
+    # ── 2. Mutable variables ──────────────────────────────────────────────────
+    print("=== Mutable Variables ===")
+    mut count = 0
+    count = count + 1   # reassignment allowed
+    count += 2          # augmented assignment
+    print(f"count: {count}")   # 3
+
+    mut x: int = 10
+    x = 20
+    print(f"x: {x}")   # 20
+
+    # ── 3. Constants ──────────────────────────────────────────────────────────
+    # Evaluated at compile time, inlined wherever used — like C #define.
+    print("=== Constants ===")
+    const MAX_CONNECTIONS = 1024
+    const APP_NAME        = "Tauraro"
+    const FLAG_READ       = 0x01
+    const FLAG_WRITE      = 0x02
+
+    print(APP_NAME)
+    print(f"max: {MAX_CONNECTIONS}")
+    print(f"read|write: {FLAG_READ | FLAG_WRITE}")   # 3
+
+    # ── 4. Integer types ──────────────────────────────────────────────────────
+    # int (64-bit) is the default. Use fixed-width types for FFI/protocols.
+    print("=== Integer Types ===")
+    big:   int   = 9_000_000_000   # long long — default integer type
+    med:   i32   = 2_147_483_647   # int — 32-bit signed
+    sml:   i16   = 32_767          # short — 16-bit signed
+    tiny:  i8    = 127             # int8_t — 8-bit signed
+    ubig:  u64   = 18_000_000_000  # unsigned long long
+    ubyte: u8    = 255             # uint8_t — byte / pixel data
+    sz:    usize = 4096            # size_t — for sizes and indices
+
+    print(f"int:   {big}")
+    print(f"i32:   {med}")
+    print(f"u8:    {ubyte}")
+    print(f"usize: {sz}")
+
+    # ── 5. Float types ────────────────────────────────────────────────────────
+    # float/f64 (64-bit double) is default. f32 saves memory in large arrays.
+    print("=== Float Types ===")
+    fa: float = 3.14159     # double — default float type
+    fb: f64   = 2.71828     # identical to float
+    fc: f32   = 1.41 as f32 # float — 32-bit, lower precision
+
+    # print() and f-strings both handle floats natively (using %g format)
+    print(fa)
+    print(f"f64: {fb}")
+    print(f"f32: {fc}")
+
+    # Scientific notation
+    big_f:  float = 1.5e10
+    tiny_f: float = 1.5e-7
+    print(f"1.5e10:  {big_f}")
+    print(f"1.5e-7:  {tiny_f}")
+
+    # ── 6. Boolean ────────────────────────────────────────────────────────────
+    print("=== Boolean ===")
+    active:   bool = true
+    disabled: bool = false
+
+    print(active)          # true  (print handles bool natively)
+    print(disabled)        # false
+    print(f"active: {active}, disabled: {disabled}")
+
+    # ── 7. Character ──────────────────────────────────────────────────────────
+    # char = single byte (ASCII). Not a Unicode code point.
+    print("=== Character ===")
+    letter:  char = 'A'
+    tab_ch:  char = '\t'
+    null_ch: char = '\0'
+
+    print(f"char: {letter}")
+    print(f"ASCII value: {ord(letter)}")   # ord() is a built-in: char → int
+    print(f"chr(66): {chr(66)}")           # chr() is a built-in: int → char
+
+    # ── 8. String ─────────────────────────────────────────────────────────────
+    # str = C char* — null-terminated UTF-8. Literals live in read-only memory.
+    print("=== String ===")
+    greeting: str = "Hello, world!"
+    empty:    str = ""
+    escapes:  str = "tab:\there\nnewline"
+    path:     str = "C:\\Users\\Tauraro"
+    quoted:   str = "She said \"hello\""
+
+    print(greeting)
+    print(escapes)
+    print(f"len: {len(greeting)}")
+
+    # ── 9. Numeric literals ───────────────────────────────────────────────────
+    print("=== Numeric Literals ===")
+    decimal:     int = 42
+    readability: int = 1_000_000    # underscores for readability
+    hex_val:     int = 0xFF         # 255
+    binary_val:  int = 0b1010_1010  # 170
+    octal_val:   int = 0o755        # 493
+
+    print(f"1_000_000 = {readability}")
+    print(f"0xFF      = {hex_val}")
+    print(f"0b1010_1010 = {binary_val}")
+    print(f"0o755     = {octal_val}")
+
+    # ── 10. Type inference ────────────────────────────────────────────────────
+    # Compiler infers from the initializer — annotations optional for locals.
+    print("=== Type Inference ===")
+    auto_int:   int   = 42        # int
+    auto_float: float = 3.14      # float
+    auto_str:   str   = "hello"   # str
+    auto_bool:  bool  = true      # bool
+    auto_char:  char  = 'Z'       # char
+
+    print(f"int={auto_int}  float={auto_float}  str={auto_str}")
+
+    # Force a non-default type when you need it:
+    small_int: i32 = 42 as i32    # force 32-bit
+    byte_val:  u8  = 200 as u8    # force unsigned byte
+    print(f"i32={small_int as int}  u8={byte_val as int}")
+
+    # ── 11. The 'as' cast operator ────────────────────────────────────────────
+    # All type coercions must be EXPLICIT — Tauraro never coerces silently.
+    print("=== 'as' Cast ===")
+    n: int = 1000
+    f: float = n as float      # int → float (widening, exact)
+    back: int = f as int       # float → int (truncates toward 0)
+    print(f"1000 as float as int = {back}")   # 1000
+
+    f2: float = 3.99
+    i2: int   = f2 as int      # truncates — 3, NOT 4
+    print(f"3.99 as int = {i2}")              # 3
+
+    wrapping: i8 = 300 as i8   # 300 mod 256 = 44
+    print(f"300 as i8 = {wrapping as int}")   # 44
+
+    zero_bool: bool = 0 as bool   # any zero → false
+    one_bool:  bool = 5 as bool   # any non-zero → true
+    print(f"0 as bool = {zero_bool}  5 as bool = {one_bool}")
+
+    # ── 12. str() and other conversion builtins ───────────────────────────────
+    # str(x) is a built-in that converts any value to its string representation.
+    print("=== str() Conversions ===")
+    s_int:   str = str(42)         # "42"
+    s_float: str = str(3.14)       # "3.14"
+    s_bool:  str = str(true)       # "true"
+
+    print(s_int)
+    print(s_float)
+    print(s_bool)
+
+    # Parsing strings back to numbers:
+    mut parsed_int   = int("123")       # 123
+    mut parsed_float = float("9.81")    # 9.81
+    print(f"parsed int:   {parsed_int}")
+    print(f"parsed float: {parsed_float}")
+
+    # ── 13. none — the null value ────────────────────────────────────────────
+    # 'none' is only valid for Option[T].
+    # Assigning none to bare int/float/bool/str causes a compile error [M-7].
+    print("=== none / Option ===")
+    mut opt: Option[str] = Option.None
+    match opt:
+        case Option.None:
+            print("opt is none")
+        case Option.Some(v):
+            print(v)
+
+    opt = Option.Some("assigned")
+    match opt:
+        case Option.Some(v):
+            print(v)
+        case Option.None:
+            pass
+
+    print("=== done ===")

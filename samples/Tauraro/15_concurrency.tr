@@ -1,0 +1,188 @@
+# 15 — Concurrency (production-ready)
+# Covers: async/await, spawn, task_group: (unlimited),
+# Chan[T] (typed channels), Mutex[T] (guarded values),
+# RwLock[T] (reader-writer lock), ThreadPool,
+# await_all (parallel concurrent calls), multi-arg spawn.
+
+# ── 1. async / await ──────────────────────────────────────────────────────────
+async def fetch(id: int) -> str:
+    return f"item-{id}"
+
+async def process(n: int) -> int:
+    mut data = await fetch(n)
+    return len(data)
+
+async def pipeline(ids: List[int]) -> int:
+    mut total = 0
+    for id in ids:
+        mut r = await process(id)
+        total += r
+    return total
+
+# ── 2. spawn — detached OS threads ────────────────────────────────────────────
+def worker(id: int) -> void:
+    print(f"  worker {id} running")
+
+# ── 3. task_group — structured concurrency (now unlimited threads) ────────────
+def compute(n: int) -> void:
+    mut result = n * n
+    print(f"  compute({n}) = {result}")
+
+# ── 4. Multi-arg spawn (now working) ─────────────────────────────────────────
+def compute2(a: int, b: int) -> void:
+    print(f"  compute2({a}, {b}) = {a * b}")
+
+# ── 5. Chan[T] — typed buffered channel ───────────────────────────────────────
+def producer(ch: Chan[int]) -> void:
+    mut i = 0
+    while i < 5:
+        ch.send(i * 10)
+        i += 1
+    ch.close()
+
+def consumer(ch: Chan[int]) -> void:
+    mut total = 0
+    for v in ch:
+        total += v
+    print(f"  consumer total = {total}")    # 0+10+20+30+40 = 100
+
+# ── 6. Mutex[T] — thread-safe guarded value ───────────────────────────────────
+def safe_inc(m: Mutex[int]) -> void:
+    mut v = m.get()     # acquires lock, returns current value
+    m.set(v + 1)        # stores new value, releases lock
+
+# ── 7. RwLock[T] — reader-writer lock ────────────────────────────────────────
+def read_config(rw: RwLock[int]) -> void:
+    mut v = rw.read()           # acquires read lock, returns value
+    rw.read_unlock()            # release read lock
+    print(f"  config read: {v}")
+
+# ── 8. ThreadPool ─────────────────────────────────────────────────────────────
+def pool_job(id: int) -> void:
+    print(f"  pool job {id} done")
+
+# ── 9. await_all — parallel concurrent calls ──────────────────────────────────
+def heavy(n: int) -> void:
+    mut s = 0
+    mut i = 0
+    while i < n:
+        s += i
+        i += 1
+    print(f"  heavy({n}) sum = {s}")
+
+# ── 10. Shared counter — Atomic[int] for lock-free thread-safe counting ──────
+class SharedCounter implements Sendable:
+    pub value: Atomic[int]
+
+extend SharedCounter:
+    pub def init() -> SharedCounter:
+        mut c = SharedCounter()
+        c.value = Atomic.new(0)
+        return c
+    pub def increment(self) -> void:
+        self.value.increment()
+    pub def get(self) -> int:
+        return self.value.load()
+
+def increment_shared(c: SharedCounter) -> void:
+    c.increment()
+
+async def main():
+
+    # ── async / await ─────────────────────────────────────────────────────────
+    print("=== async / await ===")
+    mut r1 = await process(1)
+    mut r2 = await process(42)
+    print(f"process(1)  = {r1}")    # 6
+    print(f"process(42) = {r2}")    # 7
+
+    mut ids = [1, 2, 3, 10]
+    mut total = await pipeline(ids)
+    print(f"pipeline total = {total}")    # 28
+
+    # ── spawn (detached) ─────────────────────────────────────────────────────
+    print("=== spawn (detached) ===")
+    spawn worker(1)
+    spawn worker(2)
+    print("  main continues (workers may still run)")
+
+    # ── task_group (now unlimited — no 64-thread cap) ─────────────────────────
+    print("=== task_group: (unlimited) ===")
+    task_group:
+        spawn compute(4)
+        spawn compute(7)
+        spawn compute(12)
+        spawn compute(20)
+        spawn compute(50)
+    print("  all compute() finished")
+
+    # ── Multi-arg spawn (now working) ─────────────────────────────────────────
+    print("=== Multi-arg spawn ===")
+    task_group:
+        spawn compute2(3, 4)
+        spawn compute2(5, 6)
+        spawn compute2(7, 8)
+    print("  all compute2() finished")
+
+    # ── Chan[T] producer-consumer ─────────────────────────────────────────────
+    print("=== Chan[T] ===")
+    mut ch: Chan[int] = Chan.init(10)
+    task_group:
+        spawn producer(ch)
+        spawn consumer(ch)
+
+    # Chan send/recv directly
+    mut ch2: Chan[int] = Chan.init(4)
+    ch2.send(100)
+    ch2.send(200)
+    mut a = ch2.recv()
+    mut b = ch2.recv()
+    print(f"  ch2 recv: {a}, {b}")    # 100, 200
+    ch2.close()
+
+    # ── Mutex[T] — thread-safe counter ────────────────────────────────────────
+    print("=== Mutex[T] ===")
+    mut counter: Mutex[int] = Mutex.init(0)
+    task_group:
+        spawn safe_inc(counter)
+        spawn safe_inc(counter)
+        spawn safe_inc(counter)
+    mut final_count = counter.get()
+    counter.unlock()
+    print(f"  counter after 3 threads: {final_count}")    # 3
+
+    # ── RwLock[T] ─────────────────────────────────────────────────────────────
+    print("=== RwLock[T] ===")
+    mut config_val: RwLock[int] = RwLock.init(42)
+    task_group:
+        spawn read_config(config_val)
+        spawn read_config(config_val)
+    # Write lock
+    mut old_v = config_val.write()
+    config_val.write_set(100)
+    print(f"  config updated from {old_v} to 100")
+
+    # ── ThreadPool ────────────────────────────────────────────────────────────
+    print("=== ThreadPool ===")
+    mut pool: ThreadPool = ThreadPool.new(4)
+    pool.spawn(pool_job, 1)
+    pool.spawn(pool_job, 2)
+    pool.spawn(pool_job, 3)
+    pool.wait()
+    pool.free()
+    print("  pool jobs done")
+
+    # ── await_all — run multiple calls in parallel ─────────────────────────────
+    print("=== await_all ===")
+    await_all(heavy(1000), heavy(2000), heavy(3000))
+    print("  all heavy() finished (ran in parallel)")
+
+    # ── shared counter (Atomic[int] — lock-free, Sendable) ───────────────────
+    print("=== shared counter ===")
+    mut sc = SharedCounter.init()
+    task_group:
+        spawn increment_shared(sc)
+        spawn increment_shared(sc)
+    print(f"  counter: {sc.get()}")
+
+    print("=== done ===")

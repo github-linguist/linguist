@@ -1,0 +1,67 @@
+# 29 — Reflection (instanceOf / inspect) and Variadic Functions
+# Covers: instanceOf(obj, T) compile-time type checks, inspect(T) help()-style
+# descriptions for classes/enums/interfaces/functions/builtins, and trailing
+# `args...` variadic parameters that collect into a List[T].
+
+class Point:
+    pub x: int
+    pub y: int
+
+extend Point:
+    pub def init(x: int, y: int) -> Point:
+        mut p = Point()
+        p.x = x
+        p.y = y
+        return p
+
+    pub def dist(self) -> float:
+        """Returns distance from origin."""
+        return 0.0
+
+enum Shape:
+    Circle(r: float)
+    Square(side: float)
+
+interface Drawable:
+    def draw(self)
+
+# ── 1. instanceOf(obj, T) — compile-time static type check ───────────────────
+def test_instance_of():
+    mut p = Point.init(1, 2)
+    assert instanceOf(p, Point)
+    assert not instanceOf(p, int)
+    print("instanceOf ok")
+
+# ── 2. inspect(T) — help()-style description ─────────────────────────────────
+def add(a: int, b: int) -> int:
+    """Adds two integers."""
+    return a + b
+
+def test_inspect():
+    print(inspect(Point))
+    print(inspect(Shape))
+    print(inspect(Drawable))
+    print(inspect(add))
+    print(inspect(int))
+    print(inspect(List))
+    print("inspect ok")
+
+# ── 3. Variadic functions: trailing `args...` collects into List[T] ──────────
+def total(label: str, args: int...) -> int:
+    mut sum = 0
+    for v in args:
+        sum = sum + v
+    print(label + ": " + sum.to_str())
+    return sum
+
+def test_variadic():
+    assert total("a", 1, 2, 3) == 6
+    assert total("b", 10) == 10
+    assert total("c") == 0
+    print("variadic ok")
+
+def main():
+    test_instance_of()
+    test_inspect()
+    test_variadic()
+    print("=== reflection and variadic ok ===")

@@ -1,0 +1,166 @@
+# 13 — Unsafe Blocks and Raw Pointers
+# Covers: unsafe: block, Pointer[T], &address, read/write/offset,
+# alloc[T]/dealloc, sizeof, Pointer[void] casting, asm().
+# unsafe: is for containment — it makes low-level operations visible
+# and auditable without forbidding them.
+
+# ── Safe buffer wrapper class (must be at top-level) ──────────────────────────
+# Put raw pointer operations inside a class with a safe public API.
+# Callers see only the safe interface; unsafe: is invisible to them.
+class IntBuf:
+    pub ptr:  Pointer[int]
+    pub size: int
+
+extend IntBuf:
+    pub def init(n: int) -> IntBuf:
+        mut b = IntBuf()
+        b.size = n
+        unsafe:
+            b.ptr = alloc[int](n)
+        return b
+
+    pub def get(self, i: int) -> int:
+        if i < 0 or i >= self.size: raise("index out of bounds")
+        unsafe:
+            return self.ptr.offset(i).read()
+
+    pub def set(self, i: int, v: int) -> void:
+        if i < 0 or i >= self.size: raise("index out of bounds")
+        unsafe:
+            self.ptr.offset(i).write(v)
+
+    pub def drop(self) -> void:
+        unsafe:
+            dealloc(self.ptr)
+
+def main():
+
+    # ── 1. Basic unsafe: block ────────────────────────────────────────────────
+    # Pointer[T] is a raw C pointer (T*). The compiler does NOT track its
+    # lifetime or inject free() for it.
+    print("=== Basic Pointer ===")
+    mut x: int = 42
+    mut y: int = 0
+
+    unsafe:
+        mut p: Pointer[int] = &x    # take address of x → int*
+        y = p.read()                 # dereference: y = *p = 42
+        p.write(100)                 # *p = 100  →  x is now 100
+
+    print(f"y = {y}")    # 42
+    print(f"x = {x}")    # 100 (modified through pointer)
+
+    # ── 2. Pointer arithmetic: offset ────────────────────────────────────────
+    # offset(n) advances by n * sizeof(T) bytes — same as C pointer arithmetic.
+    print("=== Pointer Arithmetic ===")
+    mut arr_a: int = 10
+
+    unsafe:
+        mut base: Pointer[int] = &arr_a
+        print(f"base.read() = {base.read()}")              # 10
+
+    # ── 3. Manual heap allocation ─────────────────────────────────────────────
+    # alloc[T](n) allocates n elements of type T, zero-initialised.
+    # dealloc(ptr) frees the allocation.
+    # YOU are responsible for calling dealloc — the compiler will NOT.
+    print("=== alloc / dealloc ===")
+    unsafe:
+        mut buf: Pointer[int] = alloc[int](8)    # 8 ints, zero-initialized
+
+        # Write values:
+        mut i = 0
+        while i < 8:
+            buf.offset(i).write(i * 10)
+            i += 1
+
+        # Read values:
+        mut j = 0
+        while j < 8:
+            print(f"  buf[{j}] = {buf.offset(j).read()}")   # 0 10 20 ... 70
+            j += 1
+
+        dealloc(buf)    # MUST free — compiler will not do this for Pointer[T]
+
+    # ── 4. sizeof — size of a type in bytes ──────────────────────────────────
+    print("=== sizeof ===")
+    print(f"sizeof(int)         = {sizeof(int)}")          # 8
+    print(f"sizeof(float)       = {sizeof(float)}")        # 8
+    print(f"sizeof(bool)        = {sizeof(bool)}")         # 1
+    print(f"sizeof(char)        = {sizeof(char)}")         # 1
+    print(f"sizeof(i32)         = {sizeof(i32)}")          # 4
+    print(f"sizeof(u8)          = {sizeof(u8)}")           # 1
+    print(f"sizeof(Pointer[int]) = {sizeof(Pointer[int])}")  # 8 (64-bit)
+
+    # ── 5. Pointer casts ──────────────────────────────────────────────────────
+    print("=== Pointer Casts ===")
+    mut val: int = 255
+
+    unsafe:
+        # int* → void* (type erasure, common in C APIs)
+        mut val_p: Pointer[int] = &val
+        mut vp: Pointer[void] = val_p as Pointer[void]
+
+        # void* → int* (restore type)
+        mut tp: Pointer[int] = vp as Pointer[int]
+        print(f"through void*: {tp.read()}")    # 255
+
+        # Pointer → integer address (for printing or arithmetic)
+        mut addr: usize = tp as usize
+        print(f"address (usize): {addr}")
+
+        # Integer → pointer (dangerous — only when you know the address is valid)
+        mut rp: Pointer[int] = addr as Pointer[int]
+        print(f"from address: {rp.read()}")    # 255
+
+    # ── 6. Null pointer pattern ───────────────────────────────────────────────
+    print("=== Null Pointer ===")
+    mut maybe: Pointer[int] = 0 as Pointer[int]    # null pointer via cast
+
+    unsafe:
+        if maybe as usize == 0 as usize:
+            print("pointer is null — skipping dereference")
+        else:
+            print(f"value: {maybe.read()}")
+
+    # ── 7. Safe Buffer Wrapper ────────────────────────────────────────────────
+    print("=== Safe Buffer Wrapper ===")
+    mut buf2 = IntBuf.init(5)
+    buf2.set(0, 100)
+    buf2.set(1, 200)
+    buf2.set(2, 300)
+    buf2.set(3, 400)
+    buf2.set(4, 500)
+
+    mut k = 0
+    while k < buf2.size:
+        print(f"  buf[{k}] = {buf2.get(k)}")
+        k += 1
+
+    buf2.drop()    # explicit destructor — frees the raw allocation
+
+    # ── 8. Pointer[void] for C-style type-erased APIs ─────────────────────────
+    print("=== Pointer[void] ===")
+    mut data: int = 42
+
+    unsafe:
+        # Store as void* (type-erased), retrieve later
+        mut data_p: Pointer[int] = &data
+        mut erased: Pointer[void] = data_p as Pointer[void]
+        mut restored: Pointer[int] = erased as Pointer[int]
+        print(f"restored: {restored.read()}")    # 42
+
+    # ── 9. Inline assembly ────────────────────────────────────────────────────
+    # asm() emits raw assembly inside unsafe:. Use only for hardware-specific
+    # operations where no Tauraro/C equivalent exists.
+    print("=== Inline ASM ===")
+    unsafe:
+        asm("nop")       # no-op instruction — does nothing, demonstrates syntax
+        asm("nop")
+        print("  asm(nop) executed")
+
+    # Memory barrier — prevent compiler from reordering across this point:
+    unsafe:
+        asm("", "", "", "memory")
+        print("  memory barrier emitted")
+
+    print("=== done ===")

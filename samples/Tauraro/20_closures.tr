@@ -1,0 +1,27 @@
+def main():
+    # Basic closure capturing an outer variable
+    mut count: int = 0
+    mut counter = def () -> int:
+        count = count + 1
+        return count
+    print(counter())
+    print(counter())
+    print(counter())
+
+    # Closure capturing multiple variables
+    mut x: int = 10
+    mut y: int = 5
+    mut add_xy = def () -> int:
+        return x + y
+    print(add_xy())
+
+    # Closure that modifies multiple captured vars
+    mut a: int = 0
+    mut b: int = 0
+    mut swap_inc = def ():
+        mut tmp: int = a
+        a = b + 1
+        b = tmp + 1
+    swap_inc()
+    print(a)
+    print(b)

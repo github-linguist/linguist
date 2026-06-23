@@ -1,0 +1,158 @@
+# 02 — Operators
+# Covers: arithmetic, comparison, logical, bitwise, augmented assignment,
+# 'in' membership, operator precedence, and the 'as' cast operator.
+
+def main():
+
+    # ── 1. Arithmetic operators ───────────────────────────────────────────────
+    print("=== Arithmetic ===")
+    print(f"10 + 3  = {10 + 3}")    # 13
+    print(f"10 - 3  = {10 - 3}")    # 7
+    print(f"10 * 3  = {10 * 3}")    # 30
+    print(f"10 / 3  = {10 / 3}")    # 3  (integer division — truncates toward 0)
+    print(f"10 % 3  = {10 % 3}")    # 1  (modulo)
+    print(f"-10     = {-10}")       # unary negation
+
+    # CRITICAL: '/' on two int operands is INTEGER division.
+    # To get a float result, cast at least one operand first:
+    print(f"10 / 3 (int)   = {10 / 3}")              # 3
+    print(f"10.0 / 3 (float) = {10.0 / 3 as float}") # 3.333...
+
+    # Wrong order matters:
+    mut wrong: float = (10 / 3) as float    # 3.0  — division first, then cast
+    mut right: float = 10 as float / 3      # 3.333...  — cast first, then divide
+    print(f"(10/3) as float = {wrong}")
+    print(f"10 as float / 3 = {right}")
+
+    # Modulo sign follows the dividend (left operand) — like C:
+    print(f"-10 % 3  = {-10 % 3}")   # -1
+    print(f"10 % -3  = {10 % -3}")   # 1
+
+    # ── 2. Comparison operators ───────────────────────────────────────────────
+    # All comparisons produce a bool.
+    print("=== Comparison ===")
+    a: int = 10
+    b: int = 20
+    print(f"10 == 20: {a == b}")    # false
+    print(f"10 != 20: {a != b}")    # true
+    print(f"10 <  20: {a < b}")     # true
+    print(f"10 >  20: {a > b}")     # false
+    print(f"10 <= 10: {a <= a}")    # true
+    print(f"10 >= 20: {a >= b}")    # false
+
+    # String comparison uses strcmp — content equality, not pointer equality:
+    s1: str = "hello"
+    s2: str = "hello"
+    s3: str = "world"
+    print("hello == hello: " + str(s1 == s2))   # true
+    print("hello <  world: " + str(s1 < s3))    # true (lexicographic)
+
+    # ── 3. Logical operators ──────────────────────────────────────────────────
+    print("=== Logical ===")
+    t: bool = true
+    f_val: bool = false
+
+    print(f"true and false: {t and f_val}")   # false
+    print(f"true or  false: {t or f_val}")    # true
+    print(f"not true:       {not t}")         # false
+
+    # Short-circuit: right side is NOT evaluated if result is already known.
+    # 'and' stops at first false; 'or' stops at first true.
+    # Short-circuit: 'and' stops at first false, 'or' stops at first true.
+    mut y = 42
+    if y > 0 and y < 100:
+        print("y is in range")      # both sides evaluated only when needed
+
+    mut zz = -5
+    if zz < 0 or zz > 100:
+        print("zz is out of normal range")   # second side skipped
+
+    # ── 4. Bitwise operators ──────────────────────────────────────────────────
+    print("=== Bitwise ===")
+    mut p: int = 5    # 0b0101
+    mut q: int = 6    # 0b0110
+
+    print(f"0b0101 & 0b0110 = {p & q}")    # 0b0100 = 4  (AND)
+    print(f"0b0101 | 0b0110 = {p | q}")    # 0b0111 = 7  (OR)
+    print(f"0b0101 ^ 0b0110 = {p ^ q}")    # 0b0011 = 3  (XOR)
+    print(f"~0b0101          = {~p}")       # -6           (NOT — all bits flipped)
+    print(f"1 << 3           = {1 << 3}")  # 8            (left shift)
+    print(f"32 >> 2          = {32 >> 2}") # 8            (right shift)
+
+    # Classic flag-manipulation pattern:
+    const PERM_READ  = 1 << 0   # 0b001
+    const PERM_WRITE = 1 << 1   # 0b010
+    const PERM_EXEC  = 1 << 2   # 0b100
+
+    mut perms = PERM_READ | PERM_WRITE    # grant read + write
+    print(f"perms = {perms}")             # 3
+
+    if (perms & PERM_READ) != 0:
+        print("read allowed")
+
+    perms = perms & ~PERM_WRITE    # revoke write
+    perms = perms ^ PERM_EXEC      # toggle exec
+    print(f"after changes: {perms}")    # 5 (read + exec)
+
+    # ── 5. Augmented assignment ───────────────────────────────────────────────
+    # Only works on 'mut' variables.
+    print("=== Augmented Assignment ===")
+    mut n = 10
+    n += 5    # n = n + 5  → 15
+    n -= 3    # n = n - 3  → 12
+    n *= 2    # n = n * 2  → 24
+    n /= 4    # n = n / 4  → 6  (integer division)
+    n %= 4    # n = n % 4  → 2
+    print(f"n after +=5 -=3 *=2 /=4 %%=4: {n}")   # 2
+
+    # ── 6. The 'in' / 'not in' membership operators ──────────────────────────
+    print("=== 'in' Membership ===")
+    mut items: List[int] = [1, 2, 3, 4, 5]
+
+    # Direct 'in' on a List:
+    if 3 in items:
+        print("3 is in items")
+    if 99 not in items:
+        print("99 is not in items")
+
+    # 'in' on a string checks for substring:
+    msg: str = "Hello, Tauraro!"
+    if "Tauraro" in msg:
+        print("found Tauraro in msg")
+    if "Python" not in msg:
+        print("Python not in msg")
+
+    # ── 7. Operator precedence ────────────────────────────────────────────────
+    # From highest to lowest: () . [] call | unary | as | * / % | + - |
+    # << >> | & | ^ | | | comparisons | not | and | or | =
+    print("=== Precedence ===")
+
+    # DANGER: bitwise & has LOWER precedence than ==
+    # This is parsed as: x & (1 == 1)  which is: x & true  → wrong!
+    x = 5
+    mut wrong_check: int = x & 1 == 1   # parsed as: x & (1 == 1) = 5 & 1 = 1 (truthy but wrong semantics)
+    mut right_check: bool = (x & 1) == 1  # correct: test if bit 0 is set
+    print("x & 1 == 1  (ambiguous): " + str(wrong_check))
+    print("(x & 1) == 1 (correct):  " + str(right_check))
+
+    # Always parenthesize when mixing bitwise and comparison:
+    mut result: int = (10 + 20 * 2) & 0xFF    # clear: add with doubled b, then mask
+    print(f"(10 + 20*2) & 0xFF = {result}")   # 50
+
+    # Unary minus has higher precedence than *:
+    print(f"-2 * 3 = {-2 * 3}")   # -6
+
+    # 'as' binds tighter than arithmetic:
+    mut mixed: float = 10 as float / 3   # (10 as float) / 3 = 3.333
+    print(f"10 as float / 3 = {mixed}")
+
+    # ── 8. Built-in math helpers ──────────────────────────────────────────────
+    print("=== Built-in Math ===")
+    print(f"abs(-42)    = {abs(-42)}")        # 42
+    print(f"abs(-3.14)  = {abs(-3.14)}")      # 3.14
+    print(f"min(5, 3)   = {min(5, 3)}")       # 3
+    print(f"max(5, 3)   = {max(5, 3)}")       # 5
+    print(f"round(3.7)  = {round(3.7)}")      # 4.0
+    print(f"round(3.2)  = {round(3.2)}")      # 3.0
+
+    print("=== done ===")

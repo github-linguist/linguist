@@ -1,0 +1,252 @@
+# 05 — Strings and F-Strings
+# Covers: string literals (single/double/triple-quoted), escape sequences,
+# concatenation, f-strings, format spec, str.method() dispatch
+# (trim/upper/lower/replace/split/split_once/join/starts_with/ends_with/contains/
+#  index_of/len/repeat/reverse/slice/to_int/to_float),
+# multi-line chaining, type↔string conversion.
+
+def main():
+
+    # ── 1. String literals ────────────────────────────────────────────────────
+    print("=== String Literals ===")
+    plain   = "Hello, world!"
+    empty   = ""
+    escaped = "tab:\there\nnewline"
+    path    = "C:\\Users\\Tauraro"
+    quoted  = "She said \"hello\""
+    single  = 'also valid'
+
+    print(plain)
+    print(escaped)
+    print(path)
+    print(quoted)
+
+    # ── 2. Triple-quoted strings ──────────────────────────────────────────────
+    # Span multiple lines without escape sequences.
+    print("=== Triple-Quoted Strings ===")
+    mut sql = """
+SELECT *
+FROM users
+WHERE active = 1
+"""
+    assert sql.len() > 0
+    print("triple-quoted string ok")
+
+    mut json_template = """
+{
+  "name": "tauraro",
+  "version": 2
+}
+"""
+    assert json_template.contains("tauraro")
+    print("json template ok")
+
+    # ── 3. String length and character access ─────────────────────────────────
+    print("=== Length & Indexing ===")
+    s: str = "Hello"
+    print(f"len: {len(s)}")      # 5
+
+    first_char: char = s[0]
+    last_char:  char = s[4]
+    print(f"ASCII of H = {ord(first_char)}")   # 72
+    print(f"ASCII of o = {ord(last_char)}")    # 111
+
+    # str.len() method (same as len() builtin)
+    assert "hello".len() == 5
+    assert "".len() == 0
+
+    # ── 4. String concatenation ───────────────────────────────────────────────
+    print("=== Concatenation ===")
+    mut combined = "Hello" + ", " + "world" + "!"
+    print(combined)
+
+    count: int = 42
+    print("count: " + str(count))
+
+    # ── 5. F-strings ──────────────────────────────────────────────────────────
+    print("=== F-Strings ===")
+    name:    str   = "Tauraro"
+    version: int   = 2
+    pi:      float = 3.14159
+
+    print(f"Hello from {name} v{version}!")
+    print(f"pi = {pi}")
+    print(f"1 + 1 = {1 + 1}")
+
+    a: int = 10
+    b: int = 3
+    print(f"{a} + {b} = {a + b}")
+    print(f"{a} / {b} = {a / b}")
+    print(f"{a} / {b} (float) = {a as float / b}")
+
+    flag: bool = true
+    print(f"flag = {flag}")
+
+    # ── 6. F-string format spec ────────────────────────────────────────────────
+    # Use '{value:spec}' for formatted output (printf-compatible specs).
+    print("=== F-String Format Spec ===")
+    mut price = 3.14159
+    print(f"price: {price:.2f}")       # 3.14
+    print(f"price: {price:.4f}")       # 3.1416
+
+    mut big = 1234567
+    print(f"big:   {big:,d}")          # 1,234,567  (where supported)
+
+    mut byte_val = 255
+    print(f"hex:   {byte_val:x}")      # ff
+    print(f"HEX:   {byte_val:X}")      # FF
+    print(f"oct:   {byte_val:o}")      # 377
+
+    mut padded = 7
+    print(f"zero:  {padded:04d}")      # 0007
+    print(f"right: {padded:>6d}")      # "     7"
+
+    # ── 7. str.method() dispatch ──────────────────────────────────────────────
+    print("=== str.method() ===")
+
+    # trim / strip variants
+    mut raw = "  Hello, World!  "
+    assert raw.trim() == "Hello, World!"
+    assert raw.trim_left()  == "Hello, World!  "
+    assert raw.trim_right() == "  Hello, World!"
+
+    # case conversion
+    assert "hello".to_upper() == "HELLO"
+    assert "HELLO".to_lower() == "hello"
+
+    # contains / starts_with / ends_with
+    assert "tauraro".contains("aura")
+    assert "tauraro".starts_with("tau")
+    assert "tauraro".ends_with("raro")
+    assert not "tauraro".contains("rust")
+
+    # index_of  (returns -1 if not found)
+    assert "hello".index_of("ll") == 2
+    assert "hello".index_of("xy") == -1
+
+    # replace
+    assert "hello world".replace("world", "tauraro") == "hello tauraro"
+    assert "aababab".replace("ab", "X") == "aXXX"
+
+    # repeat / reverse
+    assert "ab".repeat(3) == "ababab"
+    assert "hello".reverse() == "olleh"
+
+    # slice(start, end)
+    assert "hello world".slice(6, 11) == "world"
+    assert "abcdef".slice(2, 5)       == "cde"
+
+    # to_int / to_float
+    assert "42".to_int()    == 42
+    assert "3.14".to_float() == 3.14
+
+    print("str.method() ok")
+
+    # ── 8. split / join ───────────────────────────────────────────────────────
+    print("=== split / join ===")
+    csv: str = "one,two,three,four"
+    mut parts: List[str] = csv.split(",")
+    assert parts.len == 4
+    assert parts.get(0) == "one"
+    assert parts.get(3) == "four"
+
+    mut joined = Str.join(parts, " | ")
+    assert joined == "one | two | three | four"
+    print(f"split and join: {joined}")
+
+    # ── 9. split_once — first-occurrence split into exactly 2 parts ───────────
+    # Returns a List[str] with exactly 2 elements:
+    #   [0] = everything before the first separator
+    #   [1] = everything after the first separator
+    print("=== split_once ===")
+
+    # Split a URL-like path on the first '/'
+    mut path2 = "users/profile/settings"
+    mut pair = path2.split_once("/")
+    assert pair.get(0) == "users"
+    assert pair.get(1) == "profile/settings"
+    print(f"head: {pair.get(0)}  tail: {pair.get(1)}")
+
+    # Split a key=value configuration line
+    mut kv = "host=localhost:8080"
+    mut kv_pair = kv.split_once("=")
+    assert kv_pair.get(0) == "host"
+    assert kv_pair.get(1) == "localhost:8080"
+    print(f"key={kv_pair.get(0)}  value={kv_pair.get(1)}")
+
+    # When separator is NOT present, head = full string, tail = ""
+    mut no_sep = "noseparator"
+    mut ns_pair = no_sep.split_once("/")
+    assert ns_pair.get(0) == "noseparator"
+    assert ns_pair.get(1) == ""
+    print("no-separator case ok")
+
+    # Parsing "first rest" commands (shell-style)
+    mut cmd = "STORE mykey myvalue"
+    mut cmd_pair = cmd.split_once(" ")
+    assert cmd_pair.get(0) == "STORE"
+    assert cmd_pair.get(1) == "mykey myvalue"
+    print(f"command: {cmd_pair.get(0)}  args: {cmd_pair.get(1)}")
+
+    # ── 10. Multi-line method chaining ────────────────────────────────────────
+    # A line ending inside a method chain continues on the next line
+    # when the next line starts with '.'.
+    print("=== Multi-Line Chaining ===")
+    mut result = "  Hello, World!  "
+        .trim()
+        .to_lower()
+        .replace("world", "tauraro")
+    assert result == "hello, tauraro!"
+    print(f"chained: {result}")
+
+    mut words_str = "alpha:beta:gamma:delta"
+    mut word_list = words_str
+        .split(":")
+    assert word_list.len == 4
+    assert word_list.get(2) == "gamma"
+    print("chaining ok")
+
+    # ── 11. Type-to-string and string-to-type ─────────────────────────────────
+    print("=== Conversions ===")
+    s_int   = str(42)
+    s_float = str(3.14)
+    s_bool  = str(true)
+    print(s_int)
+    print(s_float)
+    print(s_bool)
+
+    mut n_int   = int("123")
+    mut n_float = float("9.81")
+    print(f"int:   {n_int}")
+    print(f"float: {n_float}")
+
+    # ── 12. String comparison ──────────────────────────────────────────────────
+    print("=== Comparison ===")
+    p1 = "hello"
+    p2 = "hello"
+    p3 = "world"
+
+    print("hello == hello: " + str(p1 == p2))
+    print("hello != world: " + str(p1 != p3))
+    print("hello <  world: " + str(p1 < p3))
+
+    # ── 13. Raw character access ───────────────────────────────────────────────
+    print("=== Raw Bytes ===")
+    bytes_str: str = "ABC"
+    mut bi = 0
+    while bi < len(bytes_str):
+        mut bch: char = bytes_str[bi + 0]
+        print(f"  bytes_str[{bi}] ASCII = {ord(bch)}")
+        bi += 1
+
+    # ── 14. Building strings efficiently ──────────────────────────────────────
+    print("=== String Building ===")
+    mut data: List[int] = [1, 2, 3, 4, 5]
+    mut parts2: List[str] = []
+    for num in data:
+        parts2.append(str(num))
+    mut built = Str.join(parts2, ", ")
+    assert built == "1, 2, 3, 4, 5"
+    print(f"built: {built}")
+
+    print("=== done ===")

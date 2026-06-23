@@ -1,0 +1,213 @@
+# 09 — Interfaces
+# Interfaces compile to C vtables (fat pointer: data + vtable pointer).
+# Declare an interface, then write  class Dog implements Animal:
+# The compiler auto-generates the vtable + wrapper and inserts the conversion
+# everywhere a Dog appears in a context that expects an Animal.
+# Users never need to write Dog_as_Animal() or any explicit cast.
+
+# ── 1. Declare an interface ───────────────────────────────────────────────────
+interface Animal:
+    def speak(self) -> void
+    def name(self) -> str
+    def legs(self) -> int
+
+# ── 2. Implement the interface on concrete classes ────────────────────────────
+class Dog implements Animal:
+    pub label: str
+    pub breed: str
+
+extend Dog:
+    pub def init(name: str, breed: str) -> Dog:
+        mut d = Dog()
+        d.label = name
+        d.breed = breed
+        return d
+
+    pub def speak(self) -> void:
+        print(f"  {self.label}: Woof!")
+
+    pub def name(self) -> str:
+        return self.label
+
+    pub def legs(self) -> int:
+        return 4
+
+class Cat implements Animal:
+    pub label: str
+
+extend Cat:
+    pub def init(name: str) -> Cat:
+        mut c = Cat()
+        c.label = name
+        return c
+
+    pub def speak(self) -> void:
+        print(f"  {self.label}: Meow!")
+
+    pub def name(self) -> str:
+        return self.label
+
+    pub def legs(self) -> int:
+        return 4
+
+class Bird implements Animal:
+    pub label: str
+    pub can_fly: bool
+
+extend Bird:
+    pub def init(name: str, can_fly: bool) -> Bird:
+        mut b = Bird()
+        b.label   = name
+        b.can_fly = can_fly
+        return b
+
+    pub def speak(self) -> void:
+        print(f"  {self.label}: Tweet!")
+
+    pub def name(self) -> str:
+        return self.label
+
+    pub def legs(self) -> int:
+        return 2
+
+# ── 3. Polymorphic functions — accept any Animal ──────────────────────────────
+def introduce(a: Animal) -> void:
+    print(f"  Name: {a.name()},  Legs: {a.legs()}")
+    a.speak()
+
+def loudest_first(a: Animal, b: Animal) -> void:
+    a.speak()
+    b.speak()
+
+# ── 4. Second interface ───────────────────────────────────────────────────────
+interface Drawable:
+    def draw(self) -> void
+    def bounding_box(self) -> str
+
+class Circle implements Drawable:
+    pub radius: float
+
+extend Circle:
+    pub def init(r: float) -> Circle:
+        mut c = Circle()
+        c.radius = r
+        return c
+
+    pub def area(self) -> float:
+        return 3.14159 * self.radius * self.radius
+
+    pub def draw(self) -> void:
+        print(f"  drawing circle r={self.radius}")
+
+    pub def bounding_box(self) -> str:
+        mut d = self.radius * 2.0
+        return f"{d}x{d}"
+
+class Rect implements Drawable:
+    pub width: float
+    pub height: float
+
+extend Rect:
+    pub def init(w: float, h: float) -> Rect:
+        mut r = Rect()
+        r.width  = w
+        r.height = h
+        return r
+
+    pub def area(self) -> float:
+        return self.width * self.height
+
+    pub def draw(self) -> void:
+        print(f"  drawing rect {self.width}x{self.height}")
+
+    pub def bounding_box(self) -> str:
+        return f"{self.width}x{self.height}"
+
+def render(s: Drawable) -> void:
+    s.draw()
+    print(f"    bbox: {s.bounding_box()}")
+
+# ── 5. Multiple interfaces on one class ──────────────────────────────────────
+interface Printable:
+    def print_info(self) -> void
+
+interface Serializable:
+    def serialize(self) -> str
+
+class Employee implements Printable, Serializable:
+    pub name:   str
+    pub salary: int
+    pub dept:   str
+
+extend Employee:
+    pub def init(name: str, salary: int, dept: str) -> Employee:
+        mut e = Employee()
+        e.name   = name
+        e.salary = salary
+        e.dept   = dept
+        return e
+
+    pub def print_info(self) -> void:
+        print(f"  Employee: {self.name} | dept={self.dept} | salary={self.salary}")
+
+    pub def serialize(self) -> str:
+        return f"{self.name},{self.salary},{self.dept}"
+
+def print_one(item: Printable) -> void:
+    item.print_info()
+
+def serialize_one(item: Serializable) -> str:
+    return item.serialize()
+
+def main():
+
+    # ── Animal interface ──────────────────────────────────────────────────────
+    print("=== Animal Interface ===")
+    mut dog1 = Dog.init("Rex", "German Shepherd")
+    mut cat1 = Cat.init("Whiskers")
+    mut bird = Bird.init("Tweety", true)
+
+    # Concrete objects passed directly — compiler wraps them automatically
+    introduce(dog1)
+    introduce(cat1)
+    introduce(bird)
+
+    # ── Interface-typed variables ─────────────────────────────────────────────
+    # Assignment from concrete class to interface type — auto-wrapped
+    print("=== Direct Dispatch ===")
+    mut a_dog: Animal = dog1
+    mut a_cat: Animal = cat1
+    mut a_bird: Animal = bird
+
+    a_dog.speak()
+    a_cat.speak()
+    a_bird.speak()
+
+    print(f"  Rex has {a_dog.legs()} legs")
+    print(f"  Tweety name: {a_bird.name()}")
+
+    loudest_first(a_dog, a_cat)
+
+    # ── Drawable interface ────────────────────────────────────────────────────
+    print("=== Drawable Interface ===")
+    mut c = Circle.init(5.0)
+    mut r = Rect.init(3.0, 4.0)
+
+    render(c)    # Circle → Drawable, auto-wrapped at the call site
+    render(r)    # Rect   → Drawable, auto-wrapped at the call site
+
+    # ── Multiple interfaces ───────────────────────────────────────────────────
+    print("=== Multiple Interfaces ===")
+    mut e1 = Employee.init("Alice", 95000, "Engineering")
+    mut e2 = Employee.init("Bob",   72000, "Sales")
+    mut e3 = Employee.init("Carol", 88000, "Design")
+
+    # Each call site selects the right interface automatically
+    print_one(e1)
+    print_one(e2)
+    print_one(e3)
+
+    mut serialized = serialize_one(e1)
+    print(f"serialized: {serialized}")
+
+    print("=== done ===")

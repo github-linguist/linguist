@@ -1,0 +1,268 @@
+# 08 — Enums (Algebraic Data Types)
+# Covers: simple enums, data-carrying variants, match destructuring,
+# methods on enums, Option[T] pattern, Result[T,E] pattern,
+# enums in lists, expression evaluator example.
+
+# ── 1. Simple enum (no data) ──────────────────────────────────────────────────
+enum Direction:
+    North
+    South
+    East
+    West
+
+# Methods on enums work exactly like methods on classes.
+extend Direction:
+    pub def opposite(self) -> Direction:
+        match self:
+            case Direction.North: return Direction.South
+            case Direction.South: return Direction.North
+            case Direction.East:  return Direction.West
+            case Direction.West:  return Direction.East
+            case _:               return Direction.North
+
+    pub def is_vertical(self) -> bool:
+        match self:
+            case Direction.North: return true
+            case Direction.South: return true
+            case _:               return false
+
+    pub def name(self) -> str:
+        match self:
+            case Direction.North: return "North"
+            case Direction.South: return "South"
+            case Direction.East:  return "East"
+            case Direction.West:  return "West"
+            case _:               return "Unknown"
+
+# ── 2. Data-carrying variants ─────────────────────────────────────────────────
+# Each variant can hold different data. Compiles to a tagged union in C —
+# no heap allocation, no virtual dispatch.
+enum Shape:
+    Circle(radius: float)
+    Rect(width: float, height: float)
+    Triangle(base: float, height: float)
+    Point                                  # no data
+
+extend Shape:
+    pub def area(self) -> float:
+        match self:
+            case Shape.Circle(r):
+                return 3.14159 * r * r
+            case Shape.Rect(w, h):
+                return w * h
+            case Shape.Triangle(b, h):
+                return b * h / 2.0
+            case Shape.Point:
+                return 0.0
+            case _:
+                return 0.0
+
+    pub def perimeter(self) -> float:
+        match self:
+            case Shape.Circle(r):
+                return 2.0 * 3.14159 * r
+            case Shape.Rect(w, h):
+                return 2.0 * (w + h)
+            case Shape.Triangle(b, h):
+                return b + h + b   # simplified
+            case Shape.Point:
+                return 0.0
+            case _:
+                return 0.0
+
+    pub def describe(self) -> void:
+        match self:
+            case Shape.Circle(r):
+                mut ca: float = self.area()
+                print(f"Circle(r={r}): area={ca}")
+            case Shape.Rect(w, h):
+                mut ra: float = self.area()
+                print(f"Rect({w}x{h}): area={ra}")
+            case Shape.Triangle(b, h):
+                mut ta: float = self.area()
+                print(f"Triangle(b={b},h={h}): area={ta}")
+            case Shape.Point:
+                print("Point")
+            case _:
+                pass
+
+# ── 3. Message enum — multiple data types per variant ─────────────────────────
+enum Message:
+    Text(content: str)
+    Image(path: str, width: int, height: int)
+    Error(code: int, msg: str)
+    Close
+
+extend Message:
+    pub def describe(self) -> void:
+        match self:
+            case Message.Text(content):
+                print(f"  text: {content}")
+            case Message.Image(path, w, h):
+                print(f"  image: {path} ({w}x{h})")
+            case Message.Error(code, msg):
+                print(f"  error {code}: {msg}")
+            case Message.Close:
+                print("  connection closed")
+            case _:
+                pass
+
+# ── 4. Enum as expression result ──────────────────────────────────────────────
+enum ParseResult:
+    Ok(value: int)
+    Err(message: str)
+
+def safe_parse(s: str) -> ParseResult:
+    if len(s) == 0:
+        return ParseResult.Err("empty string")
+    mut n = int(s)
+    if n < 0:
+        return ParseResult.Err(f"negative not allowed: {s}")
+    return ParseResult.Ok(n)
+
+# ── 5. State machine via enum ─────────────────────────────────────────────────
+enum TrafficLight:
+    Red
+    Yellow
+    Green
+
+extend TrafficLight:
+    pub def next(self) -> TrafficLight:
+        match self:
+            case TrafficLight.Red:    return TrafficLight.Green
+            case TrafficLight.Green:  return TrafficLight.Yellow
+            case TrafficLight.Yellow: return TrafficLight.Red
+            case _:                   return TrafficLight.Red
+
+    pub def action(self) -> str:
+        match self:
+            case TrafficLight.Red:    return "Stop"
+            case TrafficLight.Yellow: return "Caution"
+            case TrafficLight.Green:  return "Go"
+            case _:                   return "Unknown"
+
+def find_first(items: List[int], target: int) -> Option[int]:
+    mut i = 0
+    while i < len(items):
+        mut cur: int = items[i + 0]
+        if cur == target:
+            return Option.Some(i)
+        i += 1
+    return Option.None
+
+def main():
+
+    # ── Simple enum usage ─────────────────────────────────────────────────────
+    print("=== Direction ===")
+    mut d: Direction = Direction.North
+    print(d.name())                     # North
+    print(d.opposite().name())          # South
+    mut iv1: bool = d.is_vertical()
+    print(f"is_vertical: {iv1}")        # true
+
+    d = Direction.East
+    print(d.name())                     # East
+    mut iv2: bool = d.is_vertical()
+    print(f"is_vertical: {iv2}")        # false
+
+    # ── Data-carrying variants ────────────────────────────────────────────────
+    print("=== Shapes ===")
+    mut circle:   Shape = Shape.Circle(5.0)
+    mut rect:     Shape = Shape.Rect(3.0, 4.0)
+    mut triangle: Shape = Shape.Triangle(6.0, 8.0)
+    mut pt:       Shape = Shape.Point
+
+    circle.describe()     # Circle(r=5.0): area=78.53...
+    rect.describe()       # Rect(3.0x4.0): area=12.0
+    triangle.describe()   # Triangle(b=6.0,h=8.0): area=24.0
+    pt.describe()         # Point
+
+    # Accumulate area without List[Shape] (user-defined enum lists unsupported):
+    mut total_area: float = 0.0
+    total_area += circle.area()
+    total_area += rect.area()
+    total_area += triangle.area()
+    total_area += pt.area()
+    print(f"total area: {total_area}")
+
+    # ── Match with destructuring ──────────────────────────────────────────────
+    print("=== Match Destructuring ===")
+    mut msg1: Message = Message.Text("hello, world")
+    mut msg2: Message = Message.Image("photo.png", 1920, 1080)
+    mut msg3: Message = Message.Error(404, "not found")
+    mut msg4: Message = Message.Close
+    msg1.describe()
+    msg2.describe()
+    msg3.describe()
+    msg4.describe()
+
+    # Destructuring in match arm — fields bound as local immutable variables:
+    match rect:
+        case Shape.Rect(w, h):
+            print(f"rect is {w} wide and {h} tall")
+        case _:
+            pass
+
+    # Wildcard _ to ignore a field:
+    match rect:
+        case Shape.Rect(w, _):
+            print(f"width only: {w}")
+        case _:
+            pass
+
+    # ── ParseResult pattern ───────────────────────────────────────────────────
+    print("=== ParseResult ===")
+    mut inputs: List[str] = []
+    inputs.append("42")
+    inputs.append("-5")
+    inputs.append("")
+    inputs.append("100")
+    mut ii: int = 0
+    while ii < len(inputs):
+        mut inp: str = inputs[ii + 0]
+        match safe_parse(inp):
+            case ParseResult.Ok(v):
+                print(f"  ok: {v}")
+            case ParseResult.Err(e):
+                print(f"  err: {e}")
+            case _:
+                pass
+        ii += 1
+
+    # ── Traffic light state machine ───────────────────────────────────────────
+    print("=== Traffic Light ===")
+    mut light: TrafficLight = TrafficLight.Red
+    mut step: int = 0
+    while step < 6:
+        mut act: str = light.action()
+        print(f"  {act}")
+        light = light.next()
+        step += 1
+
+    # ── Option[T] — built-in optional type ────────────────────────────────────
+    print("=== Option[T] ===")
+    mut data: List[int] = [10, 20, 30, 40, 50]
+    match find_first(data, 30):
+        case Option.Some(idx):
+            print(f"found 30 at index {idx}")    # 2
+        case Option.None:
+            print("not found")
+        case _:
+            pass
+
+    match find_first(data, 99):
+        case Option.Some(idx):
+            print(f"found at {idx}")
+        case Option.None:
+            print("99 not found")    # this prints
+        case _:
+            pass
+
+    # ── Best practice: always include 'case _:' ───────────────────────────────
+    # Even if you think all variants are handled, a future enum change can
+    # add a new variant that silently falls through without the wildcard.
+    match d:
+        case Direction.North: print("north specific logic")
+        case _: pass    # catches East, West, South, and any future variants
+
+    print("=== done ===")

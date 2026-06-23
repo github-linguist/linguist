@@ -1,0 +1,247 @@
+# 04 — Functions
+# Covers: def, parameters, return types, early return, decorators
+# (@inline, @hot, @cold), closures (lambda), generic functions,
+# throws / ? error propagation, async functions.
+
+# ── 1. Basic function definition ─────────────────────────────────────────────
+def add(a: int, b: int) -> int:
+    return a + b
+
+def greet(name: str) -> void:
+    print(f"Hello, {name}!")
+
+def write_log(msg: str):       # void return type is optional
+    print(msg)
+
+# ── 2. Multiple parameters and explicit return ────────────────────────────────
+def clamp(value: int, lo: int, hi: int) -> int:
+    if value < lo: return lo
+    if value > hi: return hi
+    return value
+
+# ── 3. All code paths must return (rule F-3) ─────────────────────────────────
+def classify(n: int) -> str:
+    if n > 0:   return "positive"
+    elif n < 0: return "negative"
+    else:       return "zero"    # all paths covered — no compiler error
+
+# ── 4. Early return for guard clauses ────────────────────────────────────────
+def safe_divide(a: int, b: int) -> int:
+    if b == 0: return 0          # guard: exit early on bad input
+    return a / b
+
+# ── 5. @inline — force inlining for small hot functions ──────────────────────
+@inline
+def square(x: int) -> int:
+    return x * x
+
+@inline
+def is_even(n: int) -> bool:
+    return n % 2 == 0
+
+# ── 6. @hot / @cold — branch prediction hints ────────────────────────────────
+@hot
+def hot_path(x: int) -> int:     # called frequently — tell GCC to optimize
+    return x * x + x + 1
+
+@cold
+def error_handler(msg: str) -> void:   # rarely called — GCC deprioritizes
+    print(f"ERROR: {msg}")
+
+# ── 7. Generic functions — work with any type ─────────────────────────────────
+# [T] declares a type parameter. Compiler generates a concrete version per type.
+def identity[T](x: T) -> T:
+    return x
+
+def first[T](items: List[T]) -> T:
+    return items[0]
+
+def clamp_generic[T](v: T, lo: T, hi: T) -> T:
+    if v < lo: return lo
+    if v > hi: return hi
+    return v
+
+# ── 8. throws — functions that can fail ──────────────────────────────────────
+# 'throws ErrorType' changes the return type to Result[ReturnType, ErrorType].
+# Inside: 'return value' wraps as Ok, 'raise(err)' wraps as Err and returns.
+def parse_positive(s: str) throws str -> int:
+    if len(s) == 0:
+        raise("empty string")
+    mut n = int(s)
+    if n <= 0:
+        raise(f"expected positive number, got: {s}")
+    return n
+
+# ── 9. ? — propagate errors up the call chain ─────────────────────────────────
+# '?' after a throws call: unwraps success value OR propagates error to caller.
+def doubled(s: str) throws str -> int:
+    mut n = parse_positive(s)?   # if parse_positive fails, return its error
+    return n * 2
+
+def quadrupled(s: str) throws str -> int:
+    mut n = doubled(s)?          # if doubled fails, propagate
+    return n * 2
+
+# ── 10. Higher-order functions (lambda types not yet fully supported) ─────────
+# Pass functions by using named function references.
+def add_n(x: int, n: int) -> int:
+    return x + n
+
+def apply_sq(x: int) -> int:
+    return x * x
+
+# ── 11. Async functions ───────────────────────────────────────────────────────
+# 'async def' marks a function as thread-dispatchable.
+# 'await f(x)' launches f on a real OS thread, blocks until done, returns value.
+async def fetch_data(id: int) -> str:
+    return f"item-{id}"
+
+async def process(id: int) -> int:
+    mut data: str = await fetch_data(id)
+    return len(data)
+
+# ── 12. Tuple return types ────────────────────────────────────────────────────
+# Functions can return multiple values as a tuple using -> (T1, T2, ...).
+# Callers unpack with: mut a, b = fn(...)
+def min_max(items: List[int]) -> (int, int):
+    mut lo = items[0]
+    mut hi = items[0]
+    for x in items:
+        if x < lo: lo = x
+        if x > hi: hi = x
+    return (lo, hi)
+
+def stats(items: List[int]) -> (int, int, int):
+    mut total = 0
+    mut lo = items[0]
+    mut hi = items[0]
+    for x in items:
+        total += x
+        if x < lo: lo = x
+        if x > hi: hi = x
+    return (total, lo, hi)
+
+def main():
+
+    # ── Basic calls ───────────────────────────────────────────────────────────
+    print("=== Basic Functions ===")
+    print(f"add(3, 4) = {add(3, 4)}")        # 7
+    greet("Tauraro")
+    write_log("this is a log message")
+
+    # ── Clamp ─────────────────────────────────────────────────────────────────
+    print("=== Clamp ===")
+    print(f"clamp(5, 0, 10)  = {clamp(5, 0, 10)}")    # 5
+    print(f"clamp(-3, 0, 10) = {clamp(-3, 0, 10)}")   # 0
+    print(f"clamp(15, 0, 10) = {clamp(15, 0, 10)}")   # 10
+
+    # ── Classify ──────────────────────────────────────────────────────────────
+    print("=== Classify ===")
+    print(classify(42))     # positive
+    print(classify(-1))     # negative
+    print(classify(0))      # zero
+
+    # ── Safe divide ───────────────────────────────────────────────────────────
+    print("=== Safe Divide ===")
+    print(f"10 / 2 = {safe_divide(10, 2)}")   # 5
+    print(f"10 / 0 = {safe_divide(10, 0)}")   # 0 (guard returned)
+
+    # ── @inline helpers ───────────────────────────────────────────────────────
+    print("=== @inline ===")
+    print(f"square(7)   = {square(7)}")       # 49
+    print(f"is_even(4)  = {is_even(4)}")      # true
+    print(f"is_even(7)  = {is_even(7)}")      # false
+
+    # ── Generic functions (work with pointer types; int generics use void*) ──────
+    print("=== Generics ===")
+    hi_val: str = "hi"
+    mut id_str: str = identity[str](hi_val)
+    print(f"identity[str](hi) = {id_str}")
+
+    # ── throws + ? ────────────────────────────────────────────────────────────
+    print("=== throws + ? ===")
+
+    # Call without ? — get back a Result[int, str]
+    mut r1: Result[int, str] = parse_positive("42")
+    if r1.is_ok:
+        print(f"parsed: {r1.ok}")    # 42
+
+    mut r2: Result[int, str] = parse_positive("-5")
+    if r2.is_err:
+        print(f"error: {r2.err}")    # expected positive number, got: -5
+
+    mut r3: Result[int, str] = parse_positive("")
+    if r3.is_err:
+        print(f"error: {r3.err}")    # empty string
+
+    # Deep chain via ?:
+    mut r4: Result[int, str] = quadrupled("3")
+    if r4.is_ok:
+        print(f"quadrupled(3) = {r4.ok}")   # 12
+
+    abc_val: str = "abc"
+    mut r5: Result[int, str] = quadrupled(abc_val)
+    if r5.is_err:
+        print(f"quadrupled(abc) error: {r5.err}")
+
+    # ── Higher-order functions ───────────────────────────────────────────────
+    print("=== Higher-order functions ===")
+    mut r_add5: int = add_n(3, 5)
+    print(f"add_n(3, 5)  = {r_add5}")    # 8
+    mut r_add10: int = add_n(7, 10)
+    print(f"add_n(7, 10) = {r_add10}")   # 17
+
+    mut result: int = apply_sq(7)
+    print(f"apply_sq(7) = {result}")   # 49
+
+    # ── Async — real OS thread per await ─────────────────────────────────────
+    print("=== Async ===")
+    mut r_proc: int = process(42)    # called from non-async: runs normally
+    print(f"process(42) = {r_proc}")    # 7 (len of "item-42")
+
+    # ── Tuple returns ─────────────────────────────────────────────────────────
+    print("=== Tuple Returns ===")
+    mut data_vals = [5, 2, 9, 1, 7, 3]
+    mut lo, hi = min_max(data_vals)
+    print(f"min={lo} max={hi}")    # min=1 max=9
+
+    mut total, mn, mx = stats(data_vals)
+    print(f"sum={total} min={mn} max={mx}")    # sum=27 min=1 max=9
+
+    # Inline tuple literal unpacking:
+    mut x, y, z = (10, 20, 30)
+    print(f"x={x} y={y} z={z}")    # x=10 y=20 z=30
+
+    # ── Local (nested) declarations — main() only, Java-style ────────────────
+    print("=== Local declarations ===")
+    class Vec2:
+        pub x: int
+        pub y: int
+
+    extend Vec2:
+        pub def init(x: int, y: int) -> Vec2:
+            mut v = Vec2()
+            v.x = x
+            v.y = y
+            return v
+
+        pub def length_sq(self) -> int:
+            return self.x * self.x + self.y * self.y
+
+    enum Color:
+        Red
+        Green
+        Blue
+
+    def describe(c: Color) -> str:
+        match c:
+            case Color.Red: return "red"
+            case Color.Green: return "green"
+            case Color.Blue: return "blue"
+        return ""
+
+    mut v2 = Vec2.init(3, 4)
+    print(f"v2.length_sq() = {v2.length_sq()}")     # 25
+    print(f"describe(Green) = {describe(Color.Green)}")   # green
+
+    print("=== done ===")

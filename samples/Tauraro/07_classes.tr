@@ -1,0 +1,297 @@
+# 07 — Classes
+# Covers: class with inline methods, optional extend blocks, constructor pattern
+# (init), self, pub visibility, static methods, extends inheritance,
+# super() calls, @packed decorator.
+
+# ── 1. Inline style: fields + methods in one block ────────────────────────────
+# Methods can live directly inside the class body — 'extend' is optional.
+# Use this compact style for small, self-contained classes.
+class Point:
+    pub x: int
+    pub y: int
+
+    # Constructor: static method named 'init' by convention.
+    pub def init(px: int, py: int) -> Point:
+        mut p = Point()
+        p.x = px
+        p.y = py
+        return p
+
+    # Static method — no 'self'. Called as Point.origin()
+    pub def origin() -> Point:
+        return Point.init(0, 0)
+
+    # Instance method — 'self' is a pointer to the current instance.
+    pub def distance_sq(self) -> int:
+        return self.x * self.x + self.y * self.y
+
+    pub def translate(self, dx: int, dy: int) -> void:
+        self.x += dx
+        self.y += dy
+
+    pub def describe(self) -> void:
+        print(f"Point({self.x}, {self.y})")
+
+    pub def __str__(self) -> str:
+        return f"({self.x}, {self.y})"
+
+# ── 2. Separate 'extend' blocks — organise methods by concern ────────────────
+# 'extend' is the other style: keep data layout separate from methods.
+# Both styles work; mix freely within the same project.
+class Counter:
+    pub value: int
+    step: int       # private — only accessible inside this file
+
+extend Counter:    # construction
+    pub def init(start: int, step: int) -> Counter:
+        mut c = Counter()
+        c.value = start
+        c.step  = step
+        return c
+
+extend Counter:    # mutation
+    pub def increment(self) -> void:
+        self.value += self.step
+
+    pub def reset(self) -> void:
+        self.value = 0
+
+extend Counter:    # querying
+    pub def get(self) -> int:
+        return self.value
+
+    pub def describe(self) -> void:
+        print(f"Counter(value={self.value}, step={self.step})")
+
+# ── 3. Class with various field types ─────────────────────────────────────────
+class Config:
+    pub host:    str
+    pub port:    i32
+    pub timeout: float
+    pub debug:   bool
+    pub tags:    List[str]
+
+extend Config:
+    pub def init(host: str, port: i32) -> Config:
+        mut cfg = Config()
+        cfg.host    = host
+        cfg.port    = port
+        cfg.timeout = 30.0
+        cfg.debug   = false
+        cfg.tags    = []
+        return cfg
+
+    pub def add_tag(self, tag: str) -> void:
+        self.tags.append(tag)
+
+    pub def describe(self) -> void:
+        print(f"Config: {self.host}:{self.port as int}")
+        print(f"  timeout={self.timeout}  debug={self.debug}")
+        print(f"  tags: {len(self.tags)}")
+
+# ── 4. Classes sharing common patterns ───────────────────────────────────────
+# Both Animal and Dog have name/sound fields — demonstrated via composition.
+class Animal:
+    pub name: str
+    pub sound: str
+
+extend Animal:
+    pub def init(name: str, sound: str) -> Animal:
+        mut a = Animal()
+        a.name  = name
+        a.sound = sound
+        return a
+
+    pub def speak(self) -> void:
+        print(f"{self.name} says {self.sound}!")
+
+# Dog has its own name/sound/breed/tricks fields (no embedding needed)
+class Dog:
+    pub name:   str
+    pub sound:  str
+    pub breed:  str
+    pub tricks: int
+
+extend Dog:
+    pub def init(name: str, breed: str) -> Dog:
+        mut d = Dog()
+        d.name   = name
+        d.sound  = "Woof"
+        d.breed  = breed
+        d.tricks = 0
+        return d
+
+    pub def speak(self) -> void:
+        print(f"{self.name} says {self.sound}!")
+
+    pub def learn_trick(self) -> void:
+        self.tricks += 1
+        print(f"{self.name} learned a trick! ({self.tricks} total)")
+
+    pub def describe(self) -> void:
+        print(f"Dog: {self.name} ({self.breed}), {self.tricks} tricks")
+
+# ── 5. @packed — exact byte layout for hardware/network structs ───────────────
+@packed
+class NetworkHeader:
+    pub version: u8
+    pub flags:   u8
+    pub length:  u16
+    pub seq:     u32
+
+extend NetworkHeader:
+    pub def init(ver: u8, len_val: u16, seq_val: u32) -> NetworkHeader:
+        mut h = NetworkHeader()
+        h.version = ver
+        h.flags   = 0 as u8
+        h.length  = len_val
+        h.seq     = seq_val
+        return h
+
+    pub def describe(self) -> void:
+        print(f"Header: ver={self.version as int} len={self.length as int} seq={self.seq as int}")
+
+# ── 5b. @copy — opt a class into shareable (value) semantics ──────────────────
+# By default a class with a non-primitive field (here: List[int]) is move-tracked:
+# `mut b = a` MOVES a, and using a afterwards is a compile error [M-1].
+# Mark the class @copy to tell the compiler the instance is freely shareable —
+# assignment then aliases instead of moving, so both handles stay usable.
+# Use @copy for immutable / arena-allocated reference types that are safe to
+# share. (Classes whose fields are ALL primitive, like Point, are already copy.)
+@copy
+class Label:
+    pub text: str
+    pub ids:  List[int]
+
+extend Label:
+    pub def init(text: str) -> Label:
+        mut l = Label()
+        l.text = text
+        l.ids  = []
+        return l
+
+    pub def add_id(self, n: int) -> void:
+        self.ids.append(n)
+
+    pub def describe(self) -> void:
+        print(f"Label '{self.text}' with {self.ids.len} ids")
+
+# ── 6. Inheritance via 'extends' ──────────────────────────────────────────────
+# 'extends' embeds all parent fields into the child struct and enables
+# inherited method dispatch. Use super(ClassName).method() to call the parent.
+class Shape:
+    pub color: str
+
+    pub def init(color: str) -> Shape:
+        mut s = Shape()
+        s.color = color
+        return s
+
+    pub def describe(self) -> void:
+        print(f"Shape color={self.color}")
+
+    pub def area(self) -> float:
+        return 0.0
+
+class Circle extends Shape:
+    pub radius: float
+
+    pub def init(color: str, radius: float) -> Circle:
+        mut c = Circle()
+        c.color  = color
+        c.radius = radius
+        return c
+
+    pub def area(self) -> float:
+        return 3.14159 * self.radius * self.radius
+
+    pub def describe(self) -> void:
+        super(Shape).describe()
+        print(f"  radius={self.radius} area={self.area()}")
+
+def main():
+
+    # ── Point usage ───────────────────────────────────────────────────────────
+    print("=== Point ===")
+    mut p = Point.init(3, 4)
+    p.describe()                           # Point(3, 4)
+    print(f"distance_sq = {p.distance_sq()}")   # 25
+
+    p.translate(1, -1)
+    p.describe()                           # Point(4, 3)
+
+    # Direct field access (pub fields only):
+    print(f"p.x = {p.x}")
+    p.y = 10
+    print(f"p.y after assign = {p.y}")    # 10
+
+    # Static method:
+    mut origin = Point.origin()
+    origin.describe()    # Point(0, 0)
+
+    # ── Counter with multiple extend blocks ───────────────────────────────────
+    print("=== Counter ===")
+    mut c = Counter.init(0, 5)
+    c.describe()
+    c.increment()
+    c.increment()
+    c.increment()
+    print(f"value: {c.get()}")    # 15
+    c.reset()
+    print(f"after reset: {c.get()}")    # 0
+
+    # ── Config with list field ────────────────────────────────────────────────
+    print("=== Config ===")
+    mut cfg = Config.init("localhost", 8080 as i32)
+    cfg.add_tag("api")
+    cfg.add_tag("v2")
+    cfg.debug = true
+    cfg.describe()
+
+    # ── Dog with its own fields ───────────────────────────────────────────────
+    print("=== Dog ===")
+    mut dog = Dog.init("Rex", "German Shepherd")
+    dog.speak()           # Rex says Woof!
+    dog.learn_trick()     # Rex learned a trick!
+    dog.learn_trick()
+    dog.describe()        # Dog: Rex (German Shepherd), 2 tricks
+
+    mut cat = Animal.init("Whiskers", "Meow")
+    cat.speak()           # Whiskers says Meow!
+
+    # ── @packed header ────────────────────────────────────────────────────────
+    print("=== NetworkHeader (@packed) ===")
+    mut hdr = NetworkHeader.init(1 as u8, 256 as u16, 42 as u32)
+    hdr.describe()
+
+    # ── @copy shareable class ─────────────────────────────────────────────────
+    print("=== Label (@copy) ===")
+    mut a = Label.init("alpha")
+    a.add_id(1)
+    a.add_id(2)
+    mut b = a              # @copy: aliases a (no move) — both stay usable
+    a.describe()           # OK: without @copy this line would be [M-1] (a moved)
+    b.describe()           # b shares the same instance
+    b.add_id(3)
+    a.describe()           # shows 3 ids — a and b refer to the same Label
+
+    # ── Immutability rule ─────────────────────────────────────────────────────
+    print("=== Mutability ===")
+    # Without 'mut', fields cannot be assigned:
+    immutable_p = Point.init(1, 2)
+    # immutable_p.x = 5   # ERROR [M-6]: cannot assign field of immutable binding
+
+    mut mutable_p = Point.init(1, 2)
+    mutable_p.x = 5        # OK — binding is mut
+    mutable_p.describe()   # Point(5, 2)
+
+    # ── Inheritance ───────────────────────────────────────────────────────────
+    print("=== Inheritance (extends + super) ===")
+    mut circle = Circle.init("red", 5.0)
+    circle.describe()       # Shape color=red \n   radius=5.0 area=78.5...
+    circle.area()
+
+    mut plain_shape = Shape.init("blue")
+    plain_shape.describe()  # Shape color=blue
+
+    print("=== done ===")
