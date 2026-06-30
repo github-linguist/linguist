@@ -107,6 +107,29 @@ disambiguations:
   - language: LTspice Symbol
     pattern: '^SymbolType[ \t]'
   - language: Asymptote
+- extensions: ['.b']
+  rules:
+  - language: Bantu
+    pattern: '\bdef\s*\(\s*\$'
+  - language: Bantu
+    pattern: '\bsua\.(server|sqlite|postgres|mysql|webrtc)\b'
+  - language: Bantu
+    pattern: '\binclude\s+"[^"]+"\s+as\s+\w+\s*;'
+  - language: Bantu
+    pattern: '^\s*(string|number|dict|list|bool|any|func)\s+\$\w+\s*='
+  - language: Bantu
+    pattern: '\bprint\s*\('
+  - language: Limbo
+    pattern: '^implement\s+\w+\s*;'
+  - language: Limbo
+    pattern: '^\s*\w+\s*:\s*module\s*\{'
+  - language: Limbo
+    pattern: '\binclude\s+"sys\.m"\s*;'
+  - language: Limbo
+    pattern: '\bload\s+\w+\s+\w+->PATH\b'
+  - language: Limbo
+    pattern: '\b(?:chan\[\d+\]\s+of\s+|array\[\w+\]\s+of\s+byte|:=)'
+  - language: Brainfuck
 - extensions: ['.bas']
   rules:
   - language: B4X
