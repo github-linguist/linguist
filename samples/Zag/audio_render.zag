@@ -1,0 +1,27 @@
+// Ported slice of zenith-daw's audio render path.
+// renderBlock runs ON the realtime audio thread, so it must never allocate, lock,
+// or touch the OS. Today you enforce that by hand (AudioThreadSafeProcessor.cpp).
+// In Zag, @realtime makes the COMPILER prove it.
+
+fn gain(x: f32, g: f32) f32 @realtime {
+    return x * g;
+}
+
+fn renderBlock(buf: []f32, n: i32, freq: f32) void @realtime {
+    let phase: f32 = 0.0;
+    let inc: f32 = freq * 0.0001;
+    let i: i32 = 0;
+    while (i < n) {
+        buf[i] = gain(sinf(phase), 0.5);
+        phase = phase + inc;
+        i = i + 1;
+    }
+}
+
+fn main() i32 {
+    let buf: []f32 = zalloc(8);     // allocating here is fine: main is NOT @realtime
+    renderBlock(buf, 8, 440.0);
+    print_f32(buf[1]);
+    zfree(buf);
+    return 0;
+}

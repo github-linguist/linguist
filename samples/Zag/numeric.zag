@@ -1,0 +1,29 @@
+// Real fixed-width integer types, compiled to native code. Integer literals are comptime
+// (like Zig's comptime_int): `1` and `0` below take the type of the slot they flow into, so
+// they become u64 / i64 with no annotation noise. factorial(20) overflows i32 but fits u64.
+
+fn factorial(n: u64) u64 {
+    let acc: u64 = 1;
+    let i: u64 = 1;
+    while (i <= n) {
+        acc = acc * i;
+        i = i + 1;
+    }
+    return acc;
+}
+
+fn triangle(rounds: i64) i64 {
+    let h: i64 = 0;
+    let k: i64 = 0;
+    while (k < rounds) {
+        h = h + k * 2;
+        k = k + 1;
+    }
+    return h;
+}
+
+fn main() i32 {
+    print_u64(factorial(20));     // 2432902008176640000  (does not fit in i32)
+    print_i64(triangle(100));     // sum of 2k, k=0..99 = 9900
+    return 0;
+}
