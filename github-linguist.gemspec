@@ -33,5 +33,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'yajl-ruby', '~> 1.4'
   s.add_development_dependency 'licensed', '~> 5.0'
   s.add_development_dependency 'licensee', '~> 9.15'
-  s.add_development_dependency 'bundler', '~> 2.0'
 end

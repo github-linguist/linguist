@@ -207,6 +207,8 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_interpreter
     {
+      "bun" => ["JavaScript", "TypeScript"],
+      "deno" => ["JavaScript", "TypeScript"],
       "ruby" => "Ruby",
       "Rscript" => "R",
       "sh" => "Shell",
@@ -217,7 +219,8 @@ class TestLanguage < Minitest::Test
       "sbcl" => "Common Lisp",
       "sclang" => "SuperCollider"
     }.each do |interpreter, language|
-      assert_equal [Language[language]], Language.find_by_interpreter(interpreter)
+      languages = Array(language).map { |lang| Language[lang] }
+      assert_equal languages, Language.find_by_interpreter(interpreter)
     end
 
     assert_equal [], Language.find_by_interpreter(nil)

@@ -298,6 +298,8 @@ vendor/grammars/bikeshed:
 - source.csswg
 vendor/grammars/blitzmax:
 - source.blitzmax
+vendor/grammars/blueprint-grammar:
+- source.blueprint
 vendor/grammars/boogie-vscode:
 - source.boogie
 vendor/grammars/bqn-vscode:
@@ -499,6 +501,7 @@ vendor/grammars/ispc.syntax:
 - source.ispc
 vendor/grammars/jac-vscode:
 - source.jac
+- source.jactoml
 vendor/grammars/jade-tmbundle:
 - source.pyjade
 - text.jade
@@ -596,13 +599,17 @@ vendor/grammars/language-etc:
 - source.futhark
 - source.generic-config
 - source.generic-db
+- source.gimprc
+- source.gimpres
 - source.gitattributes
 - source.gitconfig
 - source.gitignore
+- source.gtkrc
 - source.hgignore
 - source.hosts
 - source.ini.npmrc
 - source.inputrc
+- source.interp
 - source.lcov
 - source.m3u
 - source.m4
@@ -613,6 +620,7 @@ vendor/grammars/language-etc:
 - source.odin-ehr
 - source.openbsd-pkg.contents
 - source.opts
+- source.pkgconf
 - source.psl
 - source.record-jar
 - source.sexp
@@ -628,12 +636,16 @@ vendor/grammars/language-etc:
 - source.torrc
 - source.ucd.nameslist
 - source.ucd.unidata
+- source.uri-list
 - source.wgetrc
+- text.cachedir
 - text.checksums
 - text.codeowners
+- text.cookie-jar
 - text.html.ecmarkup
 - text.jira
 - text.lesshst
+- text.mac-tts
 - text.openbsd-pkg.desc
 - text.savane
 - text.xml.svg
@@ -917,12 +929,11 @@ vendor/grammars/mint-vscode:
 - source.mint
 vendor/grammars/mlir-grammar:
 - source.mlir
-vendor/grammars/mojo-syntax:
-- source.mojo
 vendor/grammars/monkey:
 - source.monkey
 vendor/grammars/moonbit-tmLanguage:
 - source.moonbit
+- source.moonbit.config
 vendor/grammars/moonscript-tmbundle:
 - source.moonscript
 vendor/grammars/mps-vscode:
@@ -961,6 +972,8 @@ vendor/grammars/openscad.tmbundle:
 - source.scad
 vendor/grammars/overpassql-tmlanguage:
 - source.overpassql
+vendor/grammars/overpy-grammar:
+- source.opy
 vendor/grammars/oz-tmbundle:
 - source.oz
 vendor/grammars/pact-atom:
@@ -990,6 +1003,8 @@ vendor/grammars/polar-grammar:
 - source.polar
 vendor/grammars/portugol-grammar:
 - source.portugol
+vendor/grammars/powerquery-language:
+- source.powerquery
 vendor/grammars/powershell:
 - source.powershell
 vendor/grammars/praatvscode:
@@ -1018,6 +1033,8 @@ vendor/grammars/rascript-syntax:
 - source.rascript
 vendor/grammars/razor-plus:
 - text.html.cshtml
+vendor/grammars/redscript-syntax-highlighting:
+- source.redscript
 vendor/grammars/rescript-vscode:
 - markdown.rescript.codeblock
 - source.rescript
@@ -1068,6 +1085,8 @@ vendor/grammars/sourcepawn-vscode:
 vendor/grammars/spicedb-vscode:
 - source.cel
 - source.spicedb
+- source.spicedb-yaml
+- spicedb-yaml.injection
 vendor/grammars/sprocket-vscode:
 - source.wdl
 vendor/grammars/sql.tmbundle:
@@ -1179,6 +1198,9 @@ vendor/grammars/tcl.tmbundle:
 - text.html.tcl
 vendor/grammars/templ-vscode:
 - source.templ
+vendor/grammars/textMate-baml:
+- source.baml
+- source.baml-jinja
 vendor/grammars/textmate:
 - source.flix
 vendor/grammars/textmate.tmbundle:
@@ -1233,6 +1255,7 @@ vendor/grammars/vscode-bitbake:
 - source.bb
 vendor/grammars/vscode-brightscript-language:
 - source.brs
+- source.brs.embedded.xml
 vendor/grammars/vscode-c3:
 - source.c3
 vendor/grammars/vscode-caddyfile:
@@ -1326,6 +1349,9 @@ vendor/grammars/vscode-livecodescript:
 - source.livecodescript
 vendor/grammars/vscode-minizinc:
 - source.mzn
+vendor/grammars/vscode-mojo:
+- markdown.mojo.codeblock
+- source.mojo
 vendor/grammars/vscode-monkey-c:
 - source.mc
 vendor/grammars/vscode-motoko:
