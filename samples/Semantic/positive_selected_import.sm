@@ -1,0 +1,7 @@
+Import "helper.sm" { score }
+
+fn main() {
+    let value: i32 = score(2);
+    assert(value == 3);
+    return;
+}

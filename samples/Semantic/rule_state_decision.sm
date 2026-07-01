@@ -1,0 +1,35 @@
+record DecisionContext {
+    camera: quad,
+    override_state: quad,
+    ready: bool,
+}
+
+fn decide(ctx: DecisionContext) -> Result(quad, quad) {
+    if ctx.override_state == T {
+        return Result::Ok(T);
+    }
+    if ctx.override_state == F {
+        return Result::Ok(F);
+    }
+    if ctx.camera == N {
+        return Result::Err(N);
+    }
+    if ctx.ready == true {
+        return Result::Ok(T);
+    }
+    return Result::Err(S);
+}
+
+fn main() {
+    let ctx: DecisionContext = DecisionContext {
+        camera: T,
+        override_state: S,
+        ready: true,
+    };
+    let verdict: quad = match decide(ctx) {
+        Result::Ok(value) => { value }
+        Result::Err(code) => { code }
+    };
+    assert(verdict == T);
+    return;
+}

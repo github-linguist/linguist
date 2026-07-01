@@ -1,0 +1,60 @@
+trait Iterable {
+    fn next(self: Self, index: i32) -> Option(i32);
+}
+
+record Samples {
+    first: i32,
+    second: i32,
+    third: i32,
+}
+
+record AuditSummary {
+    saw_alert: bool,
+    saw_retry: bool,
+}
+
+impl Iterable for Samples {
+    fn next(self: Self, index: i32) -> Option(i32) {
+        if index == 0 {
+            return Option::Some(self.first);
+        }
+        if index == 1 {
+            return Option::Some(self.second);
+        }
+        if index == 2 {
+            return Option::Some(self.third);
+        }
+        return Option::None;
+    }
+}
+
+fn summarize(samples: Samples) -> AuditSummary {
+    let saw_alert: bool = false;
+    let saw_retry: bool = false;
+    for value in samples {
+        if value == 9 {
+            saw_alert ||= true;
+        }
+        if value == 2 {
+            saw_retry ||= true;
+        }
+    }
+    return AuditSummary {
+        saw_alert: saw_alert,
+        saw_retry: saw_retry,
+    };
+}
+
+fn main() {
+    let samples: Samples = Samples {
+        first: 2,
+        second: 9,
+        third: 4,
+    };
+    let summary: AuditSummary = summarize(samples);
+    let patched: AuditSummary = summary with { saw_retry: false };
+    assert(summary.saw_alert == true);
+    assert(summary.saw_retry == true);
+    assert(patched.saw_retry == false);
+    return;
+}

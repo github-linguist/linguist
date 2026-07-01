@@ -1,0 +1,26 @@
+fn classify_exit(codes: Sequence(i32)) -> text {
+    let saw_error: bool = false;
+    let saw_retry: bool = false;
+    for code in codes {
+        if code == 9 {
+            saw_error ||= true;
+        }
+        if code == 2 {
+            saw_retry ||= true;
+        }
+    }
+    if saw_error == true {
+        return "error";
+    }
+    if saw_retry == true {
+        return "retry";
+    }
+    return "ok";
+}
+
+fn main() {
+    let argv_like: Sequence(i32) = [2, 1, 0];
+    let mode: text = classify_exit(argv_like);
+    assert(mode == "retry");
+    return;
+}
