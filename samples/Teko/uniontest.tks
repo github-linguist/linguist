@@ -1,0 +1,27 @@
+// An inline `Box | error` producer + matchers that exercise BOTH arms of the union.
+// (Box is a named struct so BOTH the VM's name-tagged value model and the native tagged-union
+//  lowering can discriminate the member — the inline-union codegen is what is under test.)
+
+pub type Box = struct { v: i64 }
+
+// Returns the Box success member (wraps a bare Box into the `Box | error` slot).
+fn ok() -> Box | error { Box { v = 7 } }
+
+// Returns the error member (a bare `error { … }` wraps into the same `Box | error` slot).
+fn fail() -> Box | error { error { message = "boom" } }
+
+// match over the Box success arm → binds and returns its v (→ 7).
+pub fn classify_ok() -> i64 {
+    match ok() {
+        Box as b  => b.v
+        error     => 0
+    }
+}
+
+// match over the error arm → the success arm is skipped, the error arm returns 99 (→ 99).
+pub fn classify_err() -> i64 {
+    match fail() {
+        Box as b  => b.v
+        error     => 99
+    }
+}

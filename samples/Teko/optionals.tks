@@ -1,0 +1,27 @@
+// Each pub fn returns a small i64; main sums a selection to a deterministic exit code.
+
+pub type Box = struct { v: i64 }
+
+// the dominant idiom: match over an error? — null arm vs present (error as e) arm.
+fn mk_err() -> error? { error { message = "x" } }
+fn mk_ok()  -> error? { null }
+pub fn idiom_present() -> i64 { match mk_err() { null => 0; error as e => 1 } }   // → 1
+pub fn idiom_null()    -> i64 { match mk_ok()  { null => 0; error as e => 1 } }   // → 0
+
+// a T? binding + present-match.
+pub fn bind_present() -> i64 {
+    let x: i64? = 5
+    match x { null => 0; i64 as v => v }                                          // → 5
+}
+
+// fn -> i64? returning null, matched.
+fn maybe() -> i64? { null }
+pub fn ret_null() -> i64 { match maybe() { null => 0; i64 as v => v } }           // → 0
+
+// ?. + ?? : present field, and NONE falling back.
+pub fn safe_present() -> i64 { let b: Box? = Box { v = 4 }; b?.v ?? 8 }           // → 4
+pub fn safe_none()    -> i64 { let b: Box? = null;        b?.v ?? 8 }             // → 8 (NONE → fallback)
+
+// ?? : present unwraps, NONE falls back.
+pub fn coalesce_present() -> i64 { let a: i64? = 7; a ?? 9 }                       // → 7
+pub fn coalesce_none()    -> i64 { let a: i64? = null; a ?? 9 }                   // → 9

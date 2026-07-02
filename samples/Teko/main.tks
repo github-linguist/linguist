@@ -1,0 +1,53 @@
+// ROUND 1 `~` binary string-concat operator — reproducer.
+// Exercises chain flattening (a~b~c -> ONE concat call, not nested), adjacent-literal
+// compile-time folding (a run of literal pieces collapses to one literal; an all-literal
+// chain collapses to a bare literal with ZERO runtime concat calls), AND the FULL
+// string-literal-kind matrix (2026-07-01): plain / verbatim / multi-line all fold identically
+// (they decode to a plain literal by parse time, no flag leaks); an interpolated string with a
+// REAL hole cannot fold (genuinely runtime); an interpolated string with ZERO holes still folds
+// (a rare but real edge case — `$"…"`/`$@"…"` with nothing to interpolate).
+//
+// Sum (first 3, the original chain-flatten/fold cases):
+//   "lit" ~ "eral" ~ "-fold"                 all-literal -> folds to "literal-fold" (len 12) => +12
+//   x ~ " " ~ y  (x="hello", y="world")      no adjacent literals to fold  (len 11)          => +11
+//   "pre-" ~ "fix-" ~ x ~ "-suf" ~ "-fix"    literal runs fold at both ends (len 21)          => +21
+// Sum (string-kind matrix, verified against generated C to confirm which fold to bare literals):
+//   "foo" ~ "bar"                                    plain~plain, folds        (len 6)  => +6
+//   @"C:\raw" ~ "-tail"                              verbatim~plain, folds     (len 11) => +11
+//   """multi\nline""" ~ "-tail"                      multi-line~plain, folds   (len 15) => +15
+//   @"""verbatim\nmulti""" ~ "-tail"                 verbatim-multi~plain, folds (len 19) => +19
+//   $"hi {name}" ~ "!"  (name="world")               real hole, does NOT fold  (len 9)  => +9
+//   $"""hi\n{name}""" ~ "!"                          real hole multi-line, does NOT fold (len 9) => +9
+//   $@"raw {name}\n" ~ "!"                           verbatim-interp real hole (len 12) => +12
+//   $@"""raw\n{name}""" ~ "!"                        verbatim-interp multi real hole (len 10) => +10
+//   "pre-" ~ @"""mid\npart""" ~ name ~ "-post"       mixed chain, partial fold (len 22) => +22
+//   $"no holes here" ~ "-tail"                       zero-hole interp, folds   (len 18) => +18
+//   $@"""no holes\nmultiline""" ~ "-tail"            zero-hole verbatim-interp multi, folds (len 23) => +23
+//   total = 44 + 6+11+15+19+9+9+12+10+22+18+23 = 198
+
+let x = "hello"
+let y = "world"
+let a = "lit" ~ "eral" ~ "-fold"
+let b = x ~ " " ~ y
+let c = "pre-" ~ "fix-" ~ x ~ "-suf" ~ "-fix"
+
+let name = "world"
+let m1 = "foo" ~ "bar"
+let m2 = @"C:\raw" ~ "-tail"
+let m3 = """multi
+line""" ~ "-tail"
+let m4 = @"""verbatim
+multi""" ~ "-tail"
+let m5 = $"hi {name}" ~ "!"
+let m6 = $"""hi
+{name}""" ~ "!"
+let m7 = $@"raw {name}\n" ~ "!"
+let m8 = $@"""raw
+{name}""" ~ "!"
+let m9 = "pre-" ~ @"""mid
+part""" ~ name ~ "-post"
+let m10 = $"no holes here" ~ "-tail"
+let m11 = $@"""no holes
+multiline""" ~ "-tail"
+
+return a.len + b.len + c.len + m1.len + m2.len + m3.len + m4.len + m5.len + m6.len + m7.len + m8.len + m9.len + m10.len + m11.len

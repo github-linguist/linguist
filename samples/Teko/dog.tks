@@ -1,0 +1,20 @@
+// (W10b.CLASS increment 1) a basic sealed class: a static factory + an instance method,
+// exactly the sealed/no-inheritance/no-arena shape increment 1 covers.
+// (W10b.CLASS residual -- intern visibility) class members default to PRIVATE; anything
+// called/read from OUTSIDE the class (like main.tks below) must be marked `pub`.
+type Dog = class {
+    pub name: str
+    pub age: i64
+
+    pub fn make(n: str, a: i64) -> Dog {
+        Dog { name = n; age = a }
+    }
+
+    pub fn bark(self) -> str {
+        self.name
+    }
+
+    pub fn is_puppy(self) -> bool {
+        self.age < 1
+    }
+}

@@ -1,0 +1,146 @@
+// src/checker/generics_test.tkt — (S4b) end-to-end generics coverage. Generic functions whose
+// bodies span varied expression / statement kinds, called at several distinct instantiations, so
+// the monomorph pass (typer → monomorphize) is exercised broadly: it stamps idg__g__i64 /
+// idg__g__str / pickg__g__i64 / wrapg__g__i64 / firstg__g__i64 / … , rewrites the calls, and
+// drives the Phase-2 fixpoint (a generic fn that calls another generic fn → transitive insts).
+// Runs on the VM in BOTH engines (the build/test gate), so the pass must be wired before
+// run_tests — proving a generic program type-checks, STAMPS, and EXECUTES correctly.
+
+// A box struct so a generic body can exercise struct-init + field-access node rewrites.
+type GBox = struct { v: i64 }
+
+// (S4 type-generics) a GENERIC struct — instantiated via an annotation. The instantiation pass
+// stamps Gen__g__i64 / Gen__g__str into the table, mono emits the concrete decls into the program,
+// and codegen/VM build + construct + field-read them. Exercises the full type-generic pipeline.
+type Gen<T> = struct { val: T }
+
+// the identity generic — one opaque type-param in param + return position.
+fn idg<T>(x: T) -> T { return x }
+
+// a generic body with a TIfExpr / TBinary / TCompare (the value the param flows into is concrete
+// after stamping; the param itself is opaque, so we branch on a separate concrete operand).
+fn pickg<T>(x: T, y: T, useFirst: bool) -> T {
+    let r = if useFirst { x } else { y }
+    return r
+}
+
+// a generic that CALLS another generic (idg) — drives the Phase-2 fixpoint (transitive insts).
+fn wrapg<T>(x: T) -> T {
+    let inner = idg(x)
+    return inner
+}
+
+// a generic over a SLICE type-param shape: `firstg([]T) -> T` (exercises the Slice unify +
+// the slice_<elem> mangle branch). Indexing a slice is an honest stop in codegen but the VM
+// constructs/reads it; keep this VM-only by not building it into the binary example.
+fn firstg<T>(xs: []T) -> T { return xs[0] }
+
+#test fn generic_id_i64_runs() {
+    teko::assert::is_true(idg(7) == 7)
+}
+
+#test fn generic_id_str_runs() {
+    teko::assert::is_true(teko::runtime::str_eq(idg("hi"), "hi"))
+}
+
+#test fn generic_id_box_runs() {
+    let b = idg(GBox { v = 5 })
+    teko::assert::is_true(b.v == 5)
+}
+
+#test fn generic_pick_runs() {
+    teko::assert::is_true(pickg(3, 9, true) == 3)
+    teko::assert::is_true(pickg(3, 9, false) == 9)
+}
+
+#test fn generic_wrap_runs() {
+    teko::assert::is_true(wrapg(11) == 11)
+}
+
+#test fn generic_first_runs() {
+    let xs = teko::list::push(teko::list::push(teko::list::empty(), 4), 8)
+    teko::assert::is_true(firstg(xs) == 4)
+}
+
+#test fn generic_struct_i64_runs() {
+    let g: Gen<i64> = Gen { val = 42 }
+    teko::assert::is_true(g.val == 42)
+}
+
+#test fn generic_struct_str_runs() {
+    let s: Gen<str> = Gen { val = "ok" }
+    teko::assert::is_true(teko::runtime::str_eq(s.val, "ok"))
+}
+
+#test fn generic_nested_struct_runs() {
+    // nested `Gen<Gen<i64>>` — `>>` parser close-split + the expected type threaded into the inner
+    // constructor; stamps Gen__g__i64 + Gen__g__Gen__g__i64 (S4 crumb 1b).
+    let g: Gen<Gen<i64>> = Gen { val = Gen { val = 7 } }
+    teko::assert::is_true(g.val.val == 7)
+}
+
+// (W9.4) construct a generic struct via EXPLICIT type-args with NO annotation — the construction-site
+// `Gen<i64>{ … }` stamps + targets Gen__g__i64 by itself. Runs VM==native via the gate.
+#test fn generic_struct_explicit_type_args_runs() {
+    let g = Gen<i64>{ val = 42 }
+    teko::assert::is_true(g.val == 42)
+}
+
+#test fn generic_struct_explicit_type_args_str_runs() {
+    let s = Gen<str>{ val = "ok" }
+    teko::assert::is_true(teko::runtime::str_eq(s.val, "ok"))
+}
+
+// (W9.4) nested explicit type-args at BOTH levels with NO annotation — `Gen<Gen<i64>>{ … }` outer +
+// `Gen<i64>{ … }` inner; stamps Gen__g__i64 + Gen__g__Gen__g__i64 from the construction sites alone.
+#test fn generic_struct_explicit_nested_runs() {
+    let g = Gen<Gen<i64>>{ val = Gen<i64>{ val = 7 } }
+    teko::assert::is_true(g.val.val == 7)
+}
+
+// (W9.4) GENERIC INSTANCE AS A VARIANT MEMBER — end-to-end (construct → wrap → match → bind), run
+// VM==native by the gate. The normalization pass rewrites the syntactic `Gen<i64>` in the variant
+// decl body to the bare stamped `Gen__g__i64`, so the typedef member key, the wrap, the match tag
+// and the VM case-name all agree. A non-generic member (`GenOther`) is the reference path.
+type GenOther = struct { x: i64 }
+type GenWrap  = variant Gen<i64> | GenOther
+type GenMulti = variant Gen<i64> | Gen<str> | GenOther
+
+fn gw_mk_gen() -> GenWrap   { return Gen<i64>{ val = 7 } }       // W9.4 syntax — no annotation
+fn gw_mk_gen_ann() -> GenWrap { let g: Gen<i64> = Gen { val = 7 }; return g }   // bare annotated form
+fn gw_mk_other() -> GenWrap { return GenOther{ x = 42 } }
+fn gm_mk_i() -> GenMulti { return Gen<i64>{ val = 100 } }
+fn gm_mk_s() -> GenMulti { return Gen<str>{ val = "hi" } }
+fn gm_mk_o() -> GenMulti { return GenOther{ x = 9 } }
+
+// the reproducer (bare annotated form) → 7.
+#test fn generic_variant_member_annotated_runs() {
+    let r = match gw_mk_gen_ann() { Gen<i64> as gg => gg.val; GenOther as o => o.x }
+    teko::assert::is_true(r == 7)
+}
+
+// the W9.4-syntax form (construct `Gen<i64>{ … }` with no annotation, wrap, match) → 7.
+#test fn generic_variant_member_explicit_runs() {
+    let r = match gw_mk_gen() { Gen<i64> as gg => gg.val; GenOther as o => o.x }
+    teko::assert::is_true(r == 7)
+}
+
+// the OTHER (non-generic) arm → its value, the reference path that already worked.
+#test fn generic_variant_member_other_arm_runs() {
+    let r = match gw_mk_other() { Gen<i64> as gg => gg.val; GenOther as o => o.x }
+    teko::assert::is_true(r == 42)
+}
+
+// multi-instance: a variant with `Gen<i64>` AND `Gen<str>` (distinct stamped members) — match each.
+#test fn generic_variant_multi_instance_i_runs() {
+    let r = match gm_mk_i() { Gen<i64> as a => a.val; Gen<str> as b => 1; GenOther as c => c.x }
+    teko::assert::is_true(r == 100)
+}
+#test fn generic_variant_multi_instance_s_runs() {
+    let r = match gm_mk_s() { Gen<i64> as a => a.val; Gen<str> as b => 2; GenOther as c => c.x }
+    teko::assert::is_true(r == 2)
+}
+#test fn generic_variant_multi_instance_o_runs() {
+    let r = match gm_mk_o() { Gen<i64> as a => a.val; Gen<str> as b => 3; GenOther as c => c.x }
+    teko::assert::is_true(r == 9)
+}

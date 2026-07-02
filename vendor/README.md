@@ -642,6 +642,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TeX:** [textmate/latex.tmbundle](https://github.com/textmate/latex.tmbundle)
 - **Tea:** [pferruggiaro/sublime-tea](https://github.com/pferruggiaro/sublime-tea)
 - **Teal:** [teal-language/vscode-teal](https://github.com/teal-language/vscode-teal)
+- **Teko:** [schivei/teko-tmlanguage](https://github.com/schivei/teko-tmlanguage)
 - **Terra:** [pyk/sublime-terra](https://github.com/pyk/sublime-terra)
 - **Terraform Template:** [hashicorp/syntax](https://github.com/hashicorp/syntax)
 - **Texinfo:** [Alhadis/language-texinfo](https://github.com/Alhadis/language-texinfo)
