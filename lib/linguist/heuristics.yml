@@ -107,6 +107,11 @@ disambiguations:
   - language: LTspice Symbol
     pattern: '^SymbolType[ \t]'
   - language: Asymptote
+- extensions: ['.b']
+  rules:
+  - language: B
+    pattern: '^\s*(?:extrn|auto|goto)\b'
+    negative_pattern: '^\s*(?:implement|include|load|ref)\b'
 - extensions: ['.bas']
   rules:
   - language: B4X
