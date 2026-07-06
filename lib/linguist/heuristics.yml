@@ -796,6 +796,19 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
+- extensions: [".rux"]
+  rules:
+    - language: Rux
+      and:
+        - contains: '\bfunc\s+[A-Za-z_][A-Za-z0-9_]*(?:<[^>]+>)?\s*\('
+        - or:
+          - contains: '\bimport\s+[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)+'
+          - contains: '\b(let|var)\b'
+          - contains: '\b(pub|struct|enum|union|interface|type|extern)\b'
+          - contains: '@\[[A-Za-z_][A-Za-z0-9_]*(?:\([^]]*\))?\]'
+          - contains: '->\s*\*?(?:const\s+)?[A-Za-z_][A-Za-z0-9_<>]*'
+          - contains: '\b(as|is)\b'
+          - contains: '\.\.=?'
 - extensions: ['.s']
   rules:
   - language: Unix Assembly
