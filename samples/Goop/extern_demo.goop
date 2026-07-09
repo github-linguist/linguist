@@ -1,0 +1,40 @@
+module main
+
+import (
+  golang "strings" {
+    val ToUpper : string -> string
+    val ToLower : string -> string
+  }
+  golang "fmt"
+  golang "time"
+)
+
+@golang {
+  func greet(name string) string {
+    return "Hello, " + name + "!"
+  }
+  func addPrefix(prefix string, msg string) string {
+    return "[" + prefix + "] " + msg
+  }
+}
+val greet : string -> string
+val addPrefix : string -> string -> string
+
+@golang {
+  func nowString() string {
+    return time.Now().Format("15:04:05")
+  }
+}
+val nowString : unit -> string
+
+let main () =
+  let a = ToUpper "hello from Goop" in
+  let b = ToLower "GOODBYE" in
+  let c = greet "Goop" in
+  let d = addPrefix "INFO" "inline Go extern works" in
+  let e = nowString () in
+  let report =
+    a ^ "\n" ^ b ^ "\n" ^ c ^ "\n" ^ d ^ "\n" ^
+    "The time is " ^ e
+  in
+  print_line report

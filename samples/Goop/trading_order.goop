@@ -1,0 +1,16 @@
+module Trading.Order
+
+type OrderAck =
+  | Filled of { order_id: string; qty: int }
+  | Rejected of { reason: string }
+  | PartialFill of { order_id: string; filled: int; remaining: int }
+
+let handleAck (ack: OrderAck) : string =
+  match ack with
+  | Filled { order_id; qty } -> "filled " ^ order_id
+  | Rejected { reason } -> "rejected: " ^ reason
+  | PartialFill { order_id; filled; remaining } ->
+      "partial " ^ order_id
+
+let route (ack: OrderAck) : string =
+  handleAck ack

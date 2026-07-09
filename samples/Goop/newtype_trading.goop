@@ -1,0 +1,12 @@
+module Trading.Newtype
+
+type order_id = newtype string
+type symbol = newtype string
+
+let place (sym: symbol) (oid: order_id) : string =
+  "order on branded ids"
+
+let main () : unit with { io } =
+  let oid = OrderId "ord-1" in
+  let sym = Symbol "ETH-USD" in
+  print_line (place sym oid)
