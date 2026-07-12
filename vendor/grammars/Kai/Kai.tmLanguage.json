@@ -1,0 +1,200 @@
+{
+  "name": "Kai",
+  "scopeName": "source.kai",
+  "fileTypes": ["kai"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#characters" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#function-declaration" },
+    { "include": "#operators" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.kai",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.kai",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.kai",
+      "begin": "\"",
+      "end": "\"",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.kai" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.kai" }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.kai",
+          "match": "\\\\[nrt0\"\\\\']"
+        }
+      ]
+    },
+    "characters": {
+      "name": "string.quoted.single.kai",
+      "begin": "'",
+      "end": "'",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.char.begin.kai" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.char.end.kai" }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.kai",
+          "match": "\\\\[nrt0\"\\\\']"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.integer.hex.kai",
+          "match": "\\b0[xX][0-9a-fA-F](_?[0-9a-fA-F])*\\b"
+        },
+        {
+          "name": "constant.numeric.integer.binary.kai",
+          "match": "\\b0[bB][01](_?[01])*\\b"
+        },
+        {
+          "name": "constant.numeric.integer.octal.kai",
+          "match": "\\b0[oO][0-7](_?[0-7])*\\b"
+        },
+        {
+          "name": "constant.numeric.float.kai",
+          "match": "\\b[0-9](_?[0-9])*\\.[0-9](_?[0-9])*([eE][+-]?[0-9](_?[0-9])*)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.kai",
+          "match": "\\b[0-9](_?[0-9])*\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.kai",
+          "match": "\\b(if|else|while|for|in|return|break|continue|match|case|check)\\b"
+        },
+        {
+          "name": "keyword.declaration.kai",
+          "match": "\\b(let|var|fn|struct|impl|enum|trait|error|extern|pub|import|cimport|from|as|use|own)\\b"
+        },
+        {
+          "name": "keyword.other.kai",
+          "match": "\\b(mut|unsafe|sizeof|defer|errdefer|none|try|catch|asm|volatile)\\b"
+        },
+        {
+          "name": "constant.language.boolean.kai",
+          "match": "\\b(true|false)\\b"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "storage.type.primitive.kai",
+          "match": "\\b(Int|Float|Bool|Char|Str|Void)\\b"
+        },
+        {
+          "name": "storage.type.numeric.kai",
+          "match": "\\b(usize|u8|u16|u32|u64|i8|i16|i32|i64)\\b"
+        },
+        {
+          "name": "storage.type.reference.kai",
+          "match": "\\*\\s*(mut\\s+)?"
+        },
+        {
+          "name": "storage.type.optional.kai",
+          "match": "\\?"
+        }
+      ]
+    },
+    "function-declaration": {
+      "name": "meta.function.kai",
+      "begin": "\\b(fn)\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*(<[^>]*>)?\\s*\\(",
+      "beginCaptures": {
+        "1": { "name": "keyword.declaration.kai" },
+        "2": { "name": "entity.name.function.kai" },
+        "3": { "name": "meta.generic.parameters.kai" }
+      },
+      "end": "(?=\\{|;)",
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#types"
+        },
+        {
+          "include": "#keywords"
+        },
+        {
+          "include": "#parameters"
+        }
+      ]
+    },
+    "parameters": {
+      "name": "meta.parameters.kai",
+      "begin": "\\(",
+      "end": "\\)",
+      "beginCaptures": {
+        "0": { "name": "punctuation.parenthesis.begin.kai" }
+      },
+      "endCaptures": {
+        "0": { "name": "punctuation.parenthesis.end.kai" }
+      },
+      "patterns": [
+        {
+          "include": "#comments"
+        },
+        {
+          "include": "#types"
+        },
+        {
+          "include": "#keywords"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        { "name": "keyword.operator.arithmetic.kai", "match": "[+\\-*/%]" },
+        { "name": "keyword.operator.comparison.kai", "match": "==|!=|<=|>=|<|>" },
+        { "name": "keyword.operator.logical.kai", "match": "&&|\\|\\||!" },
+        { "name": "keyword.operator.bitwise.kai", "match": "~|\\^|\\||&|<<|>>" },
+        { "name": "keyword.operator.assignment.kai", "match": "=>|[-+*/%]=|=" },
+        { "name": "keyword.operator.range.kai", "match": "\\..=?" },
+        { "name": "keyword.operator.access.kai", "match": "\\." },
+        { "name": "keyword.operator.arrow.kai", "match": "->" },
+        { "name": "keyword.operator.address.kai", "match": "&" }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        { "name": "punctuation.separator.kai", "match": "[,:;]" },
+        { "name": "punctuation.bracket.round.kai", "match": "[()]" },
+        { "name": "punctuation.bracket.curly.kai", "match": "[{}]" },
+        { "name": "punctuation.bracket.square.kai", "match": "[\\[\\]]" },
+        { "name": "keyword.operator.hash.kai", "match": "#" }
+      ]
+    }
+  }
+}
