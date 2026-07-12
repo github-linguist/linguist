@@ -1,0 +1,87 @@
+import ArrayList from std.core.array
+import Allocator from std.core.allocator
+import write_string from std.io.file
+import length from std.core.string
+
+struct Renderer {
+    allocator: *Allocator
+    lines: ArrayList<Str>
+    indent_level: Int
+}
+
+impl Renderer {
+    fn init(self, allocator: *Allocator) {
+        self.allocator = allocator
+        self.lines = ArrayList<Str>(allocator)
+        self.indent_level = 0
+    }
+
+    fn emit_line(self, text: Str) {
+        var prefix = ""
+        var i = 0
+        while i < self.indent_level {
+            prefix = prefix + "    "
+            i = i + 1
+        }
+        self.lines.push(prefix + text)
+    }
+
+    fn indent(self) {
+        self.indent_level = self.indent_level + 1
+    }
+
+    fn dedent(self) {
+        if self.indent_level > 0 {
+            self.indent_level = self.indent_level - 1
+        }
+    }
+
+    fn get_result(self) -> Str {
+        var result = ""
+        var i = 0
+        while i < self.lines.length {
+            if i > 0 { result = result + "\n" }
+            result = result + self.lines.get(i)
+            i = i + 1
+        }
+        return result
+    }
+}
+
+enum Option<T> {
+    case some(value: T)
+    case none
+}
+
+impl Option {
+    fn is_some(self) -> Bool {
+        match self {
+            case .some => return true
+            case else => return false
+        }
+    }
+
+    fn unwrap(self) -> T {
+        match self {
+            case .some(val) => return val
+            case else => unsafe {
+                extern fn exit(code: Int)
+                exit(1)
+            }
+        }
+    }
+}
+
+fn main() -> Int {
+    var alloc = Allocator_new()
+    var renderer = Renderer(allocator: &alloc, lines: ArrayList<Str>(&alloc), indent_level: 0)
+    renderer.init(&alloc)
+    renderer.emit_line("fn hello() -> Int {")
+    renderer.indent()
+    renderer.emit_line("return 42")
+    renderer.dedent()
+    renderer.emit_line("}")
+    let output = renderer.get_result()
+    printf("%s\n", output)
+    return 0
+}
