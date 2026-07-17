@@ -112,6 +112,10 @@ disambiguations:
   - language: B
     pattern: '^\s*(?:extrn|auto|goto)\b'
     negative_pattern: '^\s*(?:implement|include|load|ref)\b'
+  - language: Brainfuck
+    pattern: '(>\+>|>\+<)'
+  - language: Limbo
+    pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.bas']
   rules:
   - language: B4X
