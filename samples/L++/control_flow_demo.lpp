@@ -1,0 +1,8 @@
+def main() -> Void:
+    mut i := 0
+    while i < 5:
+        if i == 2:
+            print(100)
+        else:
+            print(i)
+        i = i + 1
