@@ -236,6 +236,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Glimmer TS:** [lifeart/vsc-ember-syntax](https://github.com/lifeart/vsc-ember-syntax)
 - **Glyph:** [textmate/tcl.tmbundle](https://github.com/textmate/tcl.tmbundle)
 - **Glyph Bitmap Distribution Format:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
+- **Gno:** [gnoverse/vscode-gno](https://github.com/gnoverse/vscode-gno)
 - **Gnuplot:** [mattfoster/gnuplot-tmbundle](https://github.com/mattfoster/gnuplot-tmbundle)
 - **Go:** [tree-sitter/tree-sitter-go](https://github.com/tree-sitter/tree-sitter-go) 🐌
 - **Go Checksums:** [golang/vscode-go](https://github.com/golang/vscode-go)
