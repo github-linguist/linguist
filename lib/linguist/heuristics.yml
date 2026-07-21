@@ -1024,7 +1024,6 @@ disambiguations:
   - language: ucode
     named_pattern: ucode
   - language: UnrealScript
-    named_pattern: unrealscript
 - extensions: ['.url']
   rules:
   - language: INI
@@ -1150,12 +1149,6 @@ named_patterns:
   - '\b(?:require|include)\s*\(\s*[''"]'
   - '^\s*let\s+\w+'
   - '\b(?:printf|sprintf)\s*\('
-  unrealscript:
-  - '(?i)^\s*class\s+\w+\s+extends\s+[\w.]+'
-  - '(?i)^\s*defaultproperties\b'
-  - '(?i)^\s*var\s*\('
-  - '(?i)^\s*(?:simulated|exec|native|reliable|unreliable|static\s+final|final)\s+(?:function|event)\b'
-  - '(?i)^\s*#exec\b'
   vb-class: '^[ ]*VERSION [0-9]\.[0-9] CLASS'
   vb-form: '^[ ]*VERSION [0-9]\.[0-9]{2}'
   vb-module: '^[ ]*Attribute VB_Name = '
