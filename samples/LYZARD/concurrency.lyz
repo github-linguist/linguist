@@ -1,0 +1,90 @@
+-- LYZARD Sample: Concurrency with spawn and select
+
+struct Channel {
+    buffer: [int],
+    head: int,
+    tail: int,
+    capacity: int,
+}
+
+impl Channel {
+    fn new(capacity: int) -> Channel {
+        return Channel {
+            buffer: [],
+            head: 0,
+            tail: 0,
+            capacity: capacity,
+        }
+    }
+
+    fn send(self, value: int) {
+        self.buffer[self.tail] = value
+        self.tail = (self.tail + 1) % self.capacity
+    }
+
+    fn recv(self) -> int {
+        let value = self.buffer[self.head]
+        self.head = (self.head + 1) % self.capacity
+        return value
+    }
+}
+
+fn producer(ch: Channel) {
+    for i in 0..10 {
+        ch.send(i * i)
+        print("Produced: " + str(i * i))
+    }
+}
+
+fn consumer(ch: Channel) {
+    for i in 0..10 {
+        let val = ch.recv()
+        print("Consumed: " + str(val))
+    }
+}
+
+fn fibonacci_stream(n: int) -> int {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci_stream(n - 1) + fibonacci_stream(n - 2)
+}
+
+fn main() {
+    let ch = Channel.new(16)
+
+    spawn {
+        producer(ch)
+    }
+
+    spawn {
+        consumer(ch)
+    }
+
+    -- Select statement for multiplexing
+    let ch1 = Channel.new(8)
+    let ch2 = Channel.new(8)
+
+    spawn {
+        for i in 0..5 {
+            ch1.send(i)
+        }
+    }
+
+    spawn {
+        for i in 10..15 {
+            ch2.send(i)
+        }
+    }
+
+    select {
+        ch1 -> {
+            let val = ch1.recv()
+            print("From ch1: " + str(val))
+        }
+        ch2 -> {
+            let val = ch2.recv()
+            print("From ch2: " + str(val))
+        }
+    }
+}

@@ -1,0 +1,97 @@
+-- LYZARD Sample: Structs, Enums, and Pattern Matching
+
+struct Point {
+    x: float,
+    y: float,
+}
+
+struct Rectangle {
+    origin: Point,
+    width: float,
+    height: float,
+}
+
+enum Direction {
+    North,
+    South,
+    East,
+    West,
+}
+
+enum Option {
+    Some(value: any),
+    None,
+}
+
+enum Result {
+    Ok(value: any),
+    Err(error: str),
+}
+
+impl Point {
+    fn new(x: float, y: float) -> Point {
+        return Point { x: x, y: y }
+    }
+
+    fn distance(self, other: Point) -> float {
+        let dx = self.x - other.x
+        let dy = self.y - other.y
+        return (dx * dx + dy * dy) as float
+    }
+
+    fn origin() -> Point {
+        return Point { x: 0.0, y: 0.0 }
+    }
+}
+
+impl Rectangle {
+    fn area(self) -> float {
+        return self.width * self.height
+    }
+
+    fn contains(self, point: Point) -> bool {
+        return point.x >= self.origin.x &&
+               point.x <= self.origin.x + self.width &&
+               point.y >= self.origin.y &&
+               point.y <= self.origin.y + self.height
+    }
+}
+
+fn describe_direction(dir: Direction) -> str {
+    match dir {
+        Direction.North -> "Going up"
+        Direction.South -> "Going down"
+        Direction.East  -> "Going right"
+        Direction.West  -> "Going left"
+    }
+}
+
+fn divide(a: float, b: float) -> Result {
+    if b == 0.0 {
+        return Result.Err("Division by zero")
+    }
+    return Result.Ok(a / b)
+}
+
+fn main() {
+    let p1 = Point.new(0.0, 0.0)
+    let p2 = Point.new(3.0, 4.0)
+    let dist = p1.distance(p2)
+    print("Distance: " + str(dist))
+
+    let rect = Rectangle {
+        origin: Point.new(0.0, 0.0),
+        width: 10.0,
+        height: 5.0,
+    }
+    print("Area: " + str(rect.area()))
+
+    let dir = Direction.North
+    print(describe_direction(dir))
+
+    let result = divide(10.0, 3.0)
+    match result {
+        Result.Ok(val)  -> print("Result: " + str(val))
+        Result.Err(msg) -> print("Error: " + msg)
+    }
+}

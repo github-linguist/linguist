@@ -1,0 +1,104 @@
+-- LYZARD Sample: Error handling and option types
+
+enum Error {
+    NotFound,
+    PermissionDenied,
+    InvalidInput(msg: str),
+    IoError(detail: str),
+}
+
+impl Error {
+    fn message(self) -> str {
+        match self {
+            Error.NotFound          -> "Resource not found"
+            Error.PermissionDenied  -> "Permission denied"
+            Error.InvalidInput(msg) -> "Invalid input: " + msg
+            Error.IoError(detail)   -> "IO error: " + detail
+        }
+    }
+}
+
+fn parse_int(s: str) -> Result {
+    -- Simplified parsing logic
+    if s == "" {
+        return Result.Err("Empty string")
+    }
+    -- In real implementation, would iterate chars
+    return Result.Ok(42)
+}
+
+fn read_file(path: str) -> Result {
+    if path == "" {
+        return Result.Err("Empty path")
+    }
+    if !file_exists(path) {
+        return Result.Err("File not found: " + path)
+    }
+    return Result.Ok("file contents here")
+}
+
+fn divide_safe(a: float, b: float) -> Result {
+    if b == 0.0 {
+        return Result.Err("Cannot divide by zero")
+    }
+    return Result.Ok(a / b)
+}
+
+fn find_user(id: int) -> Result {
+    if id < 0 {
+        return Result.Err("Invalid user ID")
+    }
+    return Result.Ok("User " + str(id))
+}
+
+fn process_data(data: str) -> Result {
+    let parsed = parse_int(data)?
+    let user = find_user(parsed)?
+    return Result.Ok("Processed: " + str(parsed))
+}
+
+fn main() {
+    -- Basic error handling with match
+    let result = read_file("config.lyz")
+    match result {
+        Result.Ok(contents)  -> print("Loaded: " + contents)
+        Result.Err(error)    -> print("Failed: " + error)
+    }
+
+    -- Chaining with ? operator
+    let value = divide_safe(10.0, 3.0)
+    match value {
+        Result.Ok(v)    -> print("10 / 3 = " + str(v))
+        Result.Err(msg) -> print("Error: " + msg)
+    }
+
+    -- Division by zero
+    let bad = divide_safe(10.0, 0.0)
+    match bad {
+        Result.Ok(v)    -> print("Got: " + str(v))
+        Result.Err(msg) -> print("Expected error: " + msg)
+    }
+
+    -- Iterating with range
+    for i in 0..5 {
+        let result = find_user(i)
+        match result {
+            Result.Ok(name) -> print("Found: " + name)
+            Result.Err(msg) -> print("Skip: " + msg)
+        }
+    }
+
+    -- Nullable values
+    let maybe_name: Option = Option.Some("LYZARD")
+    let nothing: Option = Option.None
+
+    match maybe_name {
+        Option.Some(name) -> print("Name: " + name)
+        Option.None       -> print("No name")
+    }
+
+    match nothing {
+        Option.Some(name) -> print("Name: " + name)
+        Option.None       -> print("Nothing here")
+    }
+}

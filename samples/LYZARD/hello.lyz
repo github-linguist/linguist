@@ -1,0 +1,42 @@
+-- LYZARD Sample: Hello World and basic programs
+
+fn greet(name: str) -> str {
+    return "Hello, " + name + "!"
+}
+
+fn add(a: int, b: int) -> int {
+    return a + b
+}
+
+fn factorial(n: int) -> int {
+    if n <= 1 {
+        return 1
+    }
+    return n * factorial(n - 1)
+}
+
+fn main() {
+    let message = greet("LYZARD")
+    print(message)
+
+    let sum = add(10, 20)
+    print("10 + 20 = " + str(sum))
+
+    let fact = factorial(5)
+    print("5! = " + str(fact))
+
+    let x: int = 42
+    let pi: float = 3.14159
+    let flag: bool = true
+    let initial: char = 'L'
+
+    if x > 0 && flag {
+        print("x is positive")
+    }
+
+    let i = 0
+    while i < 10 {
+        print(i)
+        i = i + 1
+    }
+}

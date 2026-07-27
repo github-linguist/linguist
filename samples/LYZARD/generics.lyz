@@ -1,0 +1,141 @@
+-- LYZARD Sample: Generics and collections
+
+struct Vec2 {
+    x: float,
+    y: float,
+}
+
+struct Matrix {
+    rows: int,
+    cols: int,
+    data: [float],
+}
+
+impl Matrix {
+    fn new(rows: int, cols: int) -> Matrix {
+        return Matrix {
+            rows: rows,
+            cols: cols,
+            data: [],
+        }
+    }
+
+    fn get(self, row: int, col: int) -> float {
+        return self.data[row * self.cols + col]
+    }
+
+    fn set(self, row: int, col: int, val: float) {
+        self.data[row * self.cols + col] = val
+    }
+
+    fn identity(n: int) -> Matrix {
+        let m = Matrix.new(n, n)
+        for i in 0..n {
+            m.set(i, i, 1.0)
+        }
+        return m
+    }
+
+    fn multiply(self, other: Matrix) -> Matrix {
+        let result = Matrix.new(self.rows, other.cols)
+        for i in 0..self.rows {
+            for j in 0..other.cols {
+                let sum = 0.0
+                for k in 0..self.cols {
+                    sum = sum + self.get(i, k) * other.get(k, j)
+                }
+                result.set(i, j, sum)
+            }
+        }
+        return result
+    }
+
+    fn display(self) {
+        for i in 0..self.rows {
+            let row_str = ""
+            for j in 0..self.cols {
+                row_str = row_str + str(self.get(i, j)) + " "
+            }
+            print(row_str)
+        }
+    }
+}
+
+fn sum_list(items: [int]) -> int {
+    let total = 0
+    for item in items {
+        total = total + item
+    }
+    return total
+}
+
+fn map_ints(items: [int], f: fn(int) -> int) -> [int] {
+    let result = []
+    for item in items {
+        result.push(f(item))
+    }
+    return result
+}
+
+fn double(x: int) -> int {
+    return x * 2
+}
+
+fn square(x: int) -> int {
+    return x * x
+}
+
+fn main() {
+    -- Matrix operations
+    let m1 = Matrix.new(2, 2)
+    m1.set(0, 0, 1.0)
+    m1.set(0, 1, 2.0)
+    m1.set(1, 0, 3.0)
+    m1.set(1, 1, 4.0)
+
+    let m2 = Matrix.identity(2)
+    let product = m1.multiply(m2)
+
+    print("Matrix * Identity:")
+    product.display()
+
+    -- Array operations
+    let numbers = [1, 2, 3, 4, 5]
+    let total = sum_list(numbers)
+    print("Sum: " + str(total))
+
+    let doubled = map_ints(numbers, double)
+    print("Doubled: " + str(doubled))
+
+    let squared = map_ints(numbers, square)
+    print("Squared: " + str(squared))
+
+    -- Range-based loops
+    let matrix_size = 3
+    let big_matrix = Matrix.new(matrix_size, matrix_size)
+    for i in 0..matrix_size {
+        for j in 0..matrix_size {
+            big_matrix.set(i, j, (i + j) as float)
+        }
+    }
+    print("3x3 matrix:")
+    big_matrix.display()
+
+    -- Nested data structures
+    let grid: [[int]] = []
+    for i in 0..3 {
+        let row = []
+        for j in 0..3 {
+            row.push(i * 3 + j)
+        }
+        grid.push(row)
+    }
+
+    for row in grid {
+        let line = ""
+        for val in row {
+            line = line + str(val) + " "
+        }
+        print(line)
+    }
+}
