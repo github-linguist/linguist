@@ -174,6 +174,12 @@ disambiguations:
   rules:
   - language: XML
     pattern: '^(\s*)(?i:<Project|<Import|<Property|<?xml|xmlns)'
+- extensions: ['.c3t']
+  rules:
+    - language: JSON
+      pattern: '\A\s*\{'
+    - language: C3
+      pattern: '^[ \t]*(?:module|const|alias|typedef|struct|fn|constdef|union)\s'
 - extensions: ['.cairo']
   rules:
     - language: Cairo Zero

@@ -339,6 +339,13 @@ class TestHeuristics < Minitest::Test
     }, "test.builds")
   end
 
+  def test_c3t_by_heuristics
+    assert_heuristics({
+      "C3" => all_fixtures("C3", "*.c3t"),
+      "JSON" => all_fixtures("JSON", "*.c3t")
+    })
+  end
+
   def test_cairo_by_heuristics
     assert_heuristics({
       "Cairo Zero" => all_fixtures("Cairo Zero"),
