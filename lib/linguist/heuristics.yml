@@ -442,6 +442,17 @@ disambiguations:
     pattern:
     - '^(?i)[^"m]*mov\s+[^\s]+,'
     - '^\s+(?i)db\s+[a-z\d]'
+- extensions: ['.j']
+  rules:
+  - language: Jasmin
+    pattern: '^\s*\.(?:class|super|method|end\s+method|limit|field|source|bytecode)\b'
+  - language: Objective-J
+    pattern: '^\s*@(?:import|implementation|protocol|interface|typedef|end)\b'
+  - language: JASS
+    pattern:
+    - '^\s*(?:constant\s+)?(?:function|native)\s+\w+\s+takes\b'
+    - '^\s*end(?:function|globals|loop)\s*$'
+    - '^\s*(?:call|set|local|exitwhen)\s+\S'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
