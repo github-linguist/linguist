@@ -1,0 +1,455 @@
+# ============================================================================
+# Zpx Lexer - Tokenizes source code into tokens
+# Ported from src/lexer.py
+# ============================================================================
+
+let ESCAPES = {
+  "n": "\n",
+  "t": "\t",
+  "r": "\r",
+  "\\": "\\",
+  '"': '"',
+  "'": "'",
+}
+
+let DIGITS = {
+  "0": 0, "1": 1, "2": 2, "3": 3, "4": 4,
+  "5": 5, "6": 6, "7": 7, "8": 8, "9": 9,
+}
+
+fn resolve_escape(esc):
+  let mapped = ESCAPES[esc]
+  if mapped != none:
+    ret mapped
+  ret esc
+
+fn digit_val(ch):
+  ret DIGITS[ch]
+
+fn is_alpha(ch):
+  ret (ch >= "a" and ch <= "z") or (ch >= "A" and ch <= "Z") or ch == "_"
+
+fn is_alnum(ch):
+  ret is_alpha(ch) or (ch >= "0" and ch <= "9")
+
+fn is_digit(ch):
+  ret ch >= "0" and ch <= "9"
+
+fn parse_int(str):
+  let result = 0
+  let idx = 0
+  let sign = 1
+  if len(str) > 0 and str[0] == "-":
+    sign = -1
+    idx = 1
+  el:
+    if len(str) > 0 and str[0] == "+":
+      idx = 1
+  while idx < len(str):
+    let code = str[idx]
+    if is_digit(code):
+      result = result * 10 + digit_val(code)
+    idx = idx + 1
+  ret result * sign
+
+fn parse_float(str):
+  let integer_part = ""
+  let decimal_part = ""
+  let start = 0
+  let first = str[0]
+  let sign = 1
+  if first == "-":
+    sign = -1
+    start = 1
+  el:
+    if first == "+":
+      start = 1
+  let dot_pos = -1
+  let pos = start
+  while pos < len(str):
+    if str[pos] == ".":
+      dot_pos = pos
+      break
+    pos = pos + 1
+  if dot_pos == -1:
+    pos = start
+    while pos < len(str):
+      integer_part = integer_part + str[pos]
+      pos = pos + 1
+  el:
+    pos = start
+    while pos < dot_pos:
+      integer_part = integer_part + str[pos]
+      pos = pos + 1
+    pos = dot_pos + 1
+    while pos < len(str):
+      decimal_part = decimal_part + str[pos]
+      pos = pos + 1
+  let int_value = 0
+  if len(integer_part) > 0:
+    int_value = parse_int(integer_part)
+  if len(decimal_part) == 0:
+    ret float(int_value) * sign
+  let decimal_value = 0
+  let multiplier = 0.1
+  let d = 0
+  while d < len(decimal_part):
+    let dv = digit_val(decimal_part[d])
+    decimal_value = decimal_value + dv * multiplier
+    multiplier = multiplier * 0.1
+    d = d + 1
+  ret (int_value + decimal_value) * sign
+
+# ============================================================================
+# Token Types
+# ============================================================================
+
+let TT_EOF = "EOF"
+let TT_NEWLINE = "NEWLINE"
+let TT_INDENT = "INDENT"
+let TT_DEDENT = "DEDENT"
+let TT_IDENT = "IDENTIFIER"
+let TT_NUMBER = "NUMBER"
+let TT_STRING = "STRING"
+let TT_FLOAT = "FLOAT"
+let TT_LPAREN = "LPAREN"
+let TT_RPAREN = "RPAREN"
+let TT_LBRACE = "LBRACE"
+let TT_RBRACE = "RBRACE"
+let TT_LBRACKET = "LBRACKET"
+let TT_RBRACKET = "RBRACKET"
+let TT_COMMA = "COMMA"
+let TT_DOT = "DOT"
+let TT_COLON = "COLON"
+let TT_ARROW = "ARROW"
+let TT_PIPE = "PIPE"
+let TT_PLUS = "PLUS"
+let TT_MINUS = "MINUS"
+let TT_STAR = "STAR"
+let TT_SLASH = "SLASH"
+let TT_PERCENT = "PERCENT"
+let TT_POW = "POW"
+let TT_MATMUL = "MATMUL"
+let TT_EQ = "EQ"
+let TT_EQEQ = "EQEQ"
+let TT_NEQ = "NEQ"
+let TT_LT = "LT"
+let TT_GT = "GT"
+let TT_LTE = "LTE"
+let TT_GTE = "GTE"
+let TT_AND = "AND"
+let TT_OR = "OR"
+let TT_NOT = "NOT"
+let TT_ASSIGN = "ASSIGN"
+let TT_PLUS_ASSIGN = "PLUS_ASSIGN"
+let TT_MINUS_ASSIGN = "MINUS_ASSIGN"
+
+let KEYWORDS = {
+  "fn": "KW_FN", "let": "KW_LET", "if": "KW_IF",
+  "el": "KW_EL", "else": "KW_EL", "for": "KW_FOR",
+  "in": "KW_IN", "while": "KW_WHILE", "ret": "KW_RET",
+  "true": "KW_TRUE", "false": "KW_FALSE", "none": "KW_NONE",
+  "and": "KW_AND", "or": "KW_OR", "not": "KW_NOT",
+  "import": "KW_IMPORT", "from": "KW_FROM", "class": "KW_CLASS",
+  "async": "KW_ASYNC", "await": "KW_AWAIT", "match": "KW_MATCH",
+  "break": "KW_BREAK", "continue": "KW_CONTINUE",
+  "intend": "KW_INTEND", "service": "KW_SERVICE",
+  "database": "KW_DATABASE", "api": "KW_API", "page": "KW_PAGE",
+  "schema": "KW_SCHEMA", "model": "KW_MODEL", "expose": "KW_EXPOSE",
+  "requires": "KW_REQUIRES", "ensures": "KW_ENSURES",
+  "invariant": "KW_INVARIANT", "expect": "KW_EXPECT",
+  "permission": "KW_PERMISSION", "concurrent": "KW_CONCURRENT",
+  "channel": "KW_CHANNEL", "guarantees": "KW_GUARANTEES",
+  "version": "KW_VERSION", "check": "KW_CHECK",
+}
+
+let TWO_CHAR_OPS = {
+  "=>": "ARROW", "==": "EQEQ", "!=": "NEQ",
+  "<=": "LTE", ">=": "GTE", "::": "ASSIGN",
+  "->": "ARROW", "|>": "PIPE", "**": "POW",
+  "@@": "MATMUL", "+=": "PLUS_ASSIGN", "-=": "MINUS_ASSIGN",
+}
+
+let SINGLE_CHAR_OPS = {
+  "(": "LPAREN", ")": "RPAREN", "{": "LBRACE", "}": "RBRACE",
+  "[": "LBRACKET", "]": "RBRACKET", ",": "COMMA", ".": "DOT",
+  ":": "COLON", "+": "PLUS", "-": "MINUS", "*": "STAR",
+  "/": "SLASH", "%": "PERCENT", "<": "LT", ">": "GT",
+  "=": "EQ", "@": "KW_AT", "!": "NOT",
+}
+
+# ============================================================================
+# Token class
+# ============================================================================
+
+class Token:
+  fn init(self, typ, val, ln, cl):
+    self.typ = typ
+    self.value = val
+    self.line = ln
+    self.col = cl
+
+# ============================================================================
+# Lexer class
+# ============================================================================
+
+class Lexer:
+  fn init(self, source, filename):
+    self.source = source
+    self.filename = filename
+    self.pos = 0
+    self.line = 1
+    self.col = 1
+    self.tokens = []
+    self.indent_stack = [0]
+    self.bracket_depth = 0
+
+  fn in_brackets(self):
+    ret self.bracket_depth > 0
+
+  fn peek(self, offset):
+    let idx = self.pos + offset
+    if idx < len(self.source):
+      ret self.source[idx]
+    ret "\0"
+
+  fn advance(self):
+    let ch = self.source[self.pos]
+    self.pos = self.pos + 1
+    self.col = self.col + 1
+    ret ch
+
+  fn read_number(self):
+    let start = self.pos
+    let is_float = false
+    while self.peek(0) >= "0" and self.peek(0) <= "9":
+      self.advance()
+    if self.peek(0) == ".":
+      is_float = true
+      self.advance()
+      while self.peek(0) >= "0" and self.peek(0) <= "9":
+        self.advance()
+    if self.peek(0) == "e" or self.peek(0) == "E":
+      is_float = true
+      self.advance()
+      if self.peek(0) == "+" or self.peek(0) == "-":
+        self.advance()
+      while self.peek(0) >= "0" and self.peek(0) <= "9":
+        self.advance()
+    let val = ""
+    let p = start
+    while p < self.pos:
+      val = val + self.source[p]
+      p = p + 1
+    if is_float:
+      ret Token(TT_FLOAT, parse_float(val), self.line, start)
+    else:
+      ret Token(TT_NUMBER, parse_int(val), self.line, start)
+
+  fn read_string(self, quote):
+    let start = self.pos
+    self.pos = self.pos + 1
+    let s = ""
+    let has_interp = false
+    while self.pos < len(self.source):
+      let ch = self.source[self.pos]
+      self.pos = self.pos + 1
+      self.col = self.col + 1
+      if ch == quote:
+        if has_interp:
+          let val = {"type": "interp", "src": s}
+          ret Token(TT_STRING, val, self.line, start)
+        ret Token(TT_STRING, s, self.line, start)
+      if ch == "\\" and self.pos < len(self.source):
+        let esc = self.source[self.pos]
+        self.pos = self.pos + 1
+        self.col = self.col + 1
+        s = s + resolve_escape(esc)
+      else:
+        if ch == "$" and self.peek(0) == "{":
+          has_interp = true
+          self.pos = self.pos + 1
+          self.col = self.col + 1
+          let expr = ""
+          let depth = 1
+          while self.pos < len(self.source) and depth > 0:
+            let c = self.source[self.pos]
+            if c == "{":
+              depth = depth + 1
+            if c == "}":
+              depth = depth - 1
+            if depth > 0:
+              expr = expr + c
+            self.pos = self.pos + 1
+            self.col = self.col + 1
+          s = s + "$" + "{" + expr + "}"
+        else:
+          if ch == "$" and is_alpha(self.peek(0)):
+            has_interp = true
+            let var = ""
+            while is_alnum(self.peek(0)) or self.peek(0) == "_":
+              var = var + self.advance()
+            s = s + "$" + "{" + var + "}"
+          else:
+            s = s + ch
+    self.error("unterminated string")
+
+  fn read_identifier(self):
+    let start = self.pos - 1
+    while is_alnum(self.peek(0)) or self.peek(0) == "_":
+      self.advance()
+    let word = ""
+    let p = start
+    while p < self.pos:
+      word = word + self.source[p]
+      p = p + 1
+    let tok_type = KEYWORDS[word]
+    if tok_type == none:
+      tok_type = TT_IDENT
+    ret Token(tok_type, word, self.line, start)
+
+  fn handle_indent(self, start_col):
+    let top = self.indent_stack[len(self.indent_stack) - 1]
+    if start_col > top:
+      self.indent_stack.append(start_col)
+      ret Token(TT_INDENT, start_col, self.line, start_col)
+    if start_col < top:
+      let dedents = []
+      while len(self.indent_stack) > 0 and start_col < self.indent_stack[len(self.indent_stack) - 1]:
+        self.indent_stack = self.indent_stack[:len(self.indent_stack) - 1]
+        let parent_indent = 0
+        if len(self.indent_stack) > 0:
+          parent_indent = self.indent_stack[len(self.indent_stack) - 1]
+        dedents.append(Token(TT_DEDENT, parent_indent, self.line, start_col))
+      ret dedents
+    ret none
+
+  fn error(self, msg):
+    print(self.filename + ":" + str(self.line) + ":" + str(self.col) + ": " + msg)
+    exit(1)
+
+  fn tokenize(self):
+    let i = 0
+    while i < len(self.source):
+      self.pos = i
+      let ch = self.source[i]
+
+      # Skip whitespace
+      if ch == " " or ch == "\t":
+        i = i + 1
+        continue
+
+      # Comments
+      if ch == "#":
+        while i < len(self.source) and self.source[i] != "\n":
+          i = i + 1
+        continue
+
+      # Newlines
+      if ch == "\n":
+        if self.in_brackets():
+          i = i + 1
+          self.line = self.line + 1
+          self.col = 1
+          continue
+        self.line = self.line + 1
+        self.col = 1
+        self.tokens.append(Token(TT_NEWLINE, "\n", self.line - 1, 0))
+        i = i + 1
+        let start_col = 0
+        while i < len(self.source) and self.source[i] == " ":
+          start_col = start_col + 1
+          i = i + 1
+        if i >= len(self.source):
+          break
+        if self.source[i] == "\n":
+          continue
+        if self.source[i] == "#":
+          while i < len(self.source) and self.source[i] != "\n":
+            i = i + 1
+          continue
+        let indent_result = self.handle_indent(start_col)
+        if indent_result != none:
+          if type(indent_result) == "ZpxList":
+            for tok in indent_result:
+              self.tokens.append(tok)
+          else:
+            self.tokens.append(indent_result)
+        continue
+
+      # Numbers
+      if (ch >= "0" and ch <= "9") or (ch == "." and i + 1 < len(self.source) and self.source[i + 1] >= "0" and self.source[i + 1] <= "9"):
+        let tok = self.read_number()
+        self.tokens.append(tok)
+        i = self.pos
+        continue
+
+      # Strings
+      if ch == '"' or ch == "'":
+        let tok = self.read_string(ch)
+        self.tokens.append(tok)
+        i = self.pos
+        continue
+
+      # Identifiers
+      if is_alpha(ch):
+        self.pos = i
+        self.advance()
+        let tok = self.read_identifier()
+        self.tokens.append(tok)
+        i = self.pos
+        continue
+
+      # Two-char operators via dict lookup
+      let two_char = ""
+      if i + 1 < len(self.source):
+        two_char = self.source[i] + self.source[i + 1]
+      let two_tok = TWO_CHAR_OPS[two_char]
+      if two_tok != none:
+        self.tokens.append(Token(two_tok, two_char, self.line, i))
+        i = i + 2
+        continue
+
+      # Single-char operators via dict lookup
+      let ch_str = self.source[i]
+      let single_tok = SINGLE_CHAR_OPS[ch_str]
+      if single_tok != none:
+        if ch_str == "(" or ch_str == "{" or ch_str == "[":
+          self.bracket_depth = self.bracket_depth + 1
+        if ch_str == ")" or ch_str == "}" or ch_str == "]":
+          self.bracket_depth = self.bracket_depth - 1
+        self.tokens.append(Token(single_tok, ch_str, self.line, i))
+        i = i + 1
+        continue
+
+      # Unknown char - skip
+      i = i + 1
+
+    # Close remaining indent levels
+    while len(self.indent_stack) > 1:
+      self.indent_stack = self.indent_stack[:len(self.indent_stack) - 1]
+      let parent_indent = 0
+      if len(self.indent_stack) > 0:
+        parent_indent = self.indent_stack[len(self.indent_stack) - 1]
+      self.tokens.append(Token(TT_DEDENT, parent_indent, self.line, 0))
+
+    self.tokens.append(Token(TT_EOF, none, self.line, 0))
+    ret self.tokens
+
+# ============================================================================
+# Test
+# ============================================================================
+
+fn test_lexer():
+  let code = "let x = 42\nlet y = 10"
+  let lexer = Lexer(code, "<test>")
+  let toks = lexer.tokenize()
+  print("Token count: " + str(len(toks)))
+  let i = 0
+  while i < len(toks):
+    let tok = toks[i]
+    print(tok.typ + ": " + str(tok.value))
+    i = i + 1
+  print("Lexer test passed!")
+
+# test_lexer()

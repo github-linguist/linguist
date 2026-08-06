@@ -1,0 +1,670 @@
+# ═══════════════════════════════════════════════════════════════════
+# ZpxPhysics
+# Physics & Chemistry simulation engine built in Zpx
+# ═══════════════════════════════════════════════════════════════════
+
+# ── VECTOR2D ──────────────────────────────────────────────────────
+
+class Vec2:
+  fn init(self, x, y)
+    self.x = x
+    self.y = y
+
+  fn add(self, other)
+    Vec2(self.x + other.x, self.y + other.y)
+
+  fn sub(self, other)
+    Vec2(self.x - other.x, self.y - other.y)
+
+  fn scale(self, s)
+    Vec2(self.x * s, self.y * s)
+
+  fn dot(self, other)
+    self.x * other.x + self.y * other.y
+
+  fn length(self)
+    sqrt(self.x * self.x + self.y * self.y)
+
+  fn normalize(self)
+    let mag = self.length()
+    if mag > 0:
+      self.scale(1.0 / mag)
+    el:
+      Vec2(0, 0)
+
+  fn dist(self, other)
+    self.sub(other).length()
+
+  fn repr(self)
+    "Vec2(" + str(round(self.x, 4)) + ", " + str(round(self.y, 4)) + ")"
+
+fn vec2(x, y) Vec2(x, y)
+
+# ── PARTICLE ──────────────────────────────────────────────────────
+
+class Particle:
+  fn init(self, name, mass, pos, vel)
+    self.name = name
+    self.mass = mass
+    self.pos = pos
+    self.vel = vel
+    self.force = Vec2(0, 0)
+    self.charge = 0
+    self.radius = mass * 0.5
+
+  fn apply_force(self, f)
+    self.force = self.force.add(f)
+
+  fn kinetic_energy(self)
+    0.5 * self.mass * self.vel.dot(self.vel)
+
+  fn momentum(self)
+    self.vel.scale(self.mass)
+
+  fn step(self, dt)
+    let ax = self.force.x / self.mass
+    let ay = self.force.y / self.mass
+    self.vel = self.vel.add(Vec2(ax, ay).scale(dt))
+    self.pos = self.pos.add(self.vel.scale(dt))
+    self.force = Vec2(0, 0)
+
+  fn repr(self)
+    self.name + "@(" + str(round(self.pos.x, 2)) + "," + str(round(self.pos.y, 2)) + ")"
+
+# ── FORCE LAWS ────────────────────────────────────────────────────
+
+fn gravity(a, b, g_const)
+  let diff = b.pos.sub(a.pos)
+  let dlen = diff.length()
+  let dist = dlen
+  if dlen < 0.1:
+    dist = 0.1
+  let strength = g_const * a.mass * b.mass / (dist * dist)
+  let dir = diff.normalize()
+  dir.scale(strength)
+
+fn spring_force(a, b, k, rest_len)
+  let diff = b.pos.sub(a.pos)
+  let dist = diff.length()
+  let stretch = dist - rest_len
+  let dir = diff.normalize()
+  dir.scale(k * stretch)
+
+fn drag_force(vel, coefficient)
+  vel.scale(-coefficient)
+
+# ── COLLISION ─────────────────────────────────────────────────────
+
+fn collide(a, b)
+  let diff = b.pos.sub(a.pos)
+  let dist = diff.length()
+  let min_dist = a.radius + b.radius
+  if dist < min_dist:
+    if dist > 0:
+      let normal = diff.normalize()
+      let rel_vel = a.vel.sub(b.vel)
+      let vel_along_normal = rel_vel.dot(normal)
+      if vel_along_normal > 0:
+        ret
+      let e = 0.9
+      let j = -(1 + e) * vel_along_normal
+      j = j / (1.0 / a.mass + 1.0 / b.mass)
+      let impulse = normal.scale(j)
+      a.vel = a.vel.sub(impulse.scale(1.0 / a.mass))
+      b.vel = b.vel.add(impulse.scale(1.0 / b.mass))
+      let overlap = min_dist - dist
+      let total_mass = a.mass + b.mass
+      a.pos = a.pos.sub(normal.scale(overlap * b.mass / total_mass))
+      b.pos = b.pos.add(normal.scale(overlap * a.mass / total_mass))
+
+# ── PHYSICS WORLD ─────────────────────────────────────────────────
+
+class World:
+  fn init(self)
+    self.particles = []
+    self.gx = 0
+    self.gy = -9.81
+    self.has_gravity = true
+    self.bx_min = -20
+    self.bx_max = 20
+    self.by_min = -20
+    self.by_max = 20
+    self.time = 0
+    self.steps = 0
+
+  fn add(self, p)
+    self.particles = self.particles + [p]
+
+  fn apply_global_forces(self)
+    for p in self.particles:
+      if self.has_gravity:
+        let weight = Vec2(self.gx, self.gy).scale(p.mass)
+        p.apply_force(weight)
+
+  fn resolve_collisions(self)
+    for i in range(len(self.particles)):
+      for j in range(i + 1, len(self.particles)):
+        collide(self.particles[i], self.particles[j])
+
+  fn enforce_bounds(self)
+    for p in self.particles:
+      if p.pos.x < self.bx_min:
+        p.pos.x = self.bx_min
+        p.vel.x = abs(p.vel.x) * 0.8
+      if p.pos.x > self.bx_max:
+        p.pos.x = self.bx_max
+        p.vel.x = -abs(p.vel.x) * 0.8
+      if p.pos.y < self.by_min:
+        p.pos.y = self.by_min
+        p.vel.y = abs(p.vel.y) * 0.8
+      if p.pos.y > self.by_max:
+        p.pos.y = self.by_max
+        p.vel.y = -abs(p.vel.y) * 0.8
+
+  fn step(self, dt)
+    self.apply_global_forces()
+    for p in self.particles:
+      p.step(dt)
+    self.resolve_collisions()
+    self.enforce_bounds()
+    self.time = self.time + dt
+    self.steps = self.steps + 1
+
+  fn total_energy(self)
+    let ke = 0
+    for p in self.particles:
+      ke = ke + p.kinetic_energy()
+    ke
+
+  fn center_of_mass(self)
+    let mx = 0
+    let my = 0
+    let total_m = 0
+    for p in self.particles:
+      mx = mx + p.pos.x * p.mass
+      my = my + p.pos.y * p.mass
+      total_m = total_m + p.mass
+    if total_m > 0:
+      Vec2(mx / total_m, my / total_m)
+    el:
+      Vec2(0, 0)
+
+  fn summary(self)
+    say("=== PHYSICS WORLD SUMMARY ===")
+    say("  time: " + str(round(self.time, 3)) + "s")
+    say("  steps: " + str(self.steps))
+    say("  particles: " + str(len(self.particles)))
+    say("  total energy: " + str(round(self.total_energy(), 4)))
+    let com = self.center_of_mass()
+    say("  center of mass: (" + str(round(com.x, 2)) + ", " + str(round(com.y, 2)) + ")")
+    for p in self.particles:
+      say("  " + p.name + " pos=(" + str(round(p.pos.x, 2)) + "," + str(round(p.pos.y, 2)) + ")"
+          + " vel=(" + str(round(p.vel.x, 2)) + "," + str(round(p.vel.y, 2)) + ")"
+          + " KE=" + str(round(p.kinetic_energy(), 3)))
+
+# ═══════════════════════════════════════════════════════════════════
+# CHEMISTRY ENGINE
+# ═══════════════════════════════════════════════════════════════════
+
+# ── ELEMENT / ATOM ────────────────────────────────────────────────
+
+class Element:
+  fn init(self, symbol, name, atomic_number, mass)
+    self.symbol = symbol
+    self.name = name
+    self.atomic_number = atomic_number
+    self.mass = mass
+    self.electronegativity = 2.5
+    self.valence = 1
+
+  fn repr(self)
+    self.symbol
+
+let H = Element("H", "Hydrogen", 1, 1.008)
+H.electronegativity = 2.20
+H.valence = 1
+
+let He = Element("He", "Helium", 2, 4.003)
+He.electronegativity = 0
+He.valence = 0
+
+let C = Element("C", "Carbon", 6, 12.011)
+C.electronegativity = 2.55
+C.valence = 4
+
+let N = Element("N", "Nitrogen", 7, 14.007)
+N.electronegativity = 3.04
+N.valence = 3
+
+let O = Element("O", "Oxygen", 8, 15.999)
+O.electronegativity = 3.44
+O.valence = 2
+
+let F = Element("F", "Fluorine", 9, 18.998)
+F.electronegativity = 3.98
+F.valence = 1
+
+let Na = Element("Na", "Sodium", 11, 22.990)
+Na.electronegativity = 0.93
+Na.valence = 1
+
+let Cl = Element("Cl", "Chlorine", 17, 35.45)
+Cl.electronegativity = 3.16
+Cl.valence = 1
+
+let Fe = Element("Fe", "Iron", 26, 55.845)
+Fe.electronegativity = 1.83
+Fe.valence = 3
+
+let S = Element("S", "Sulfur", 16, 32.06)
+S.electronegativity = 2.58
+S.valence = 2
+
+let Ca = Element("Ca", "Calcium", 20, 40.078)
+Ca.electronegativity = 1.00
+Ca.valence = 2
+
+# ── BOND HELPERS ──────────────────────────────────────────────────
+
+fn bond(a, b)
+  [a, b]
+
+fn bond_energy_value(bond_pair)
+  let a1 = bond_pair[0].symbol
+  let a2 = bond_pair[1].symbol
+  let key = a1 + "-" + a2
+  if key == "H-H":
+    ret 436
+  if key == "O-O":
+    ret 146
+  if key == "N-N":
+    ret 163
+  if key == "C-C":
+    ret 348
+  if key == "C-H":
+    ret 413
+  if key == "C-O":
+    ret 360
+  if key == "C-N":
+    ret 305
+  if key == "O-H":
+    ret 463
+  if key == "N-H":
+    ret 391
+  if key == "H-Cl":
+    ret 431
+  if key == "Na-Cl":
+    ret 411
+  if key == "C=O":
+    ret 799
+  if key == "O=O":
+    ret 498
+  if key == "N=O":
+    ret 630
+  if key == "Fe-O":
+    ret 409
+  ret 350
+
+# ── MOLECULE ──────────────────────────────────────────────────────
+
+class Molecule:
+  fn init(self, name, atoms, bonds)
+    self.name = name
+    self.atoms = atoms
+    self.bonds = bonds
+
+  fn molecular_mass(self)
+    let total = 0
+    for atom in self.atoms:
+      total = total + atom.mass
+    total
+
+  fn bond_energy(self)
+    let energy = 0
+    for b in self.bonds:
+      energy = energy + bond_energy_value(b)
+    energy
+
+  fn polarity(self)
+    let diff = 0
+    for b in self.bonds:
+      let e1 = b[0].electronegativity
+      let e2 = b[1].electronegativity
+      diff = diff + abs(e1 - e2)
+    diff
+
+  fn atom_count(self)
+    len(self.atoms)
+
+  fn repr(self)
+    self.name + " (mass=" + str(round(self.molecular_mass(), 3)) + " g/mol)"
+
+# ── COMMON MOLECULES ──────────────────────────────────────────────
+
+fn make_water()
+  Molecule("H2O", [H, H, O], [bond(H, O), bond(H, O)])
+
+fn make_co2()
+  Molecule("CO2", [C, O, O], [bond(C, O), bond(C, O)])
+
+fn make_methane()
+  Molecule("CH4", [C, H, H, H, H], [bond(C, H), bond(C, H), bond(C, H), bond(C, H)])
+
+fn make_nacl()
+  Molecule("NaCl", [Na, Cl], [bond(Na, Cl)])
+
+fn make_hydrogen()
+  Molecule("H2", [H, H], [bond(H, H)])
+
+fn make_oxygen()
+  Molecule("O2", [O, O], [bond(O, O)])
+
+fn make_iron_oxide()
+  Molecule("Fe2O3", [Fe, Fe, O, O, O], [bond(Fe, O), bond(Fe, O), bond(Fe, O), bond(Fe, O)])
+
+fn make_sulfuric_acid()
+  Molecule("H2SO4", [H, H, S, O, O, O, O], [bond(H, O), bond(H, O), bond(S, O), bond(S, O), bond(S, O), bond(S, O)])
+
+# ── CHEMICAL REACTIONS ────────────────────────────────────────────
+
+class Reaction:
+  fn init(self, name, reactants, products, enthalpy)
+    self.name = name
+    self.reactants = reactants
+    self.products = products
+    self.enthalpy = enthalpy
+
+  fn is_exothermic(self)
+    self.enthalpy < 0
+
+  fn is_endothermic(self)
+    self.enthalpy > 0
+
+  fn total_reactant_mass(self)
+    let m = 0
+    for mol in self.reactants:
+      m = m + mol.molecular_mass()
+    m
+
+  fn total_product_mass(self)
+    let m = 0
+    for mol in self.products:
+      m = m + mol.molecular_mass()
+    m
+
+  fn energy_per_gram(self)
+    let mass = self.total_reactant_mass()
+    if mass > 0:
+      self.enthalpy / mass
+    el:
+      0
+
+  fn repr(self)
+    let r = ""
+    let first = true
+    for mol in self.reactants:
+      if first:
+        r = mol.name
+        first = false
+      el:
+        r = r + " + " + mol.name
+    let p = ""
+    first = true
+    for mol in self.products:
+      if first:
+        p = mol.name
+        first = false
+      el:
+        p = p + " + " + mol.name
+    r + " -> " + p + "  (dH=" + str(self.enthalpy) + " kJ/mol)"
+
+# ── THERMODYNAMICS ────────────────────────────────────────────────
+
+fn celsius_to_kelvin(c) c + 273.15
+
+fn ideal_gas_pressure(n, t, v)
+  let R = 8.314
+  n * R * t / v
+
+fn entropy_change(dh, t)
+  if t > 0:
+    dh / t
+  el:
+    0
+
+fn gibbs_free_energy(dh, ds, t)
+  dh - t * ds
+
+# ═══════════════════════════════════════════════════════════════════
+# DEMO SIMULATIONS
+# ═══════════════════════════════════════════════════════════════════
+
+# ── PHYSICS DEMO: Gravitational orbit ─────────────────────────────
+
+fn demo_physics()
+  say("")
+  say("=== PHYSICS DEMO: Orbital Mechanics ===")
+
+  let world = World()
+
+  let star = Particle("Star", 1000, Vec2(0, 0), Vec2(0, 0))
+  star.radius = 2
+  let planet1 = Particle("Planet-A", 1, Vec2(10, 0), Vec2(0, 8))
+  let planet2 = Particle("Planet-B", 2, Vec2(0, -12), Vec2(6, 0))
+  let comet = Particle("Comet", 0.1, Vec2(-15, 5), Vec2(3, 2))
+
+  world.add(star)
+  world.add(planet1)
+  world.add(planet2)
+  world.add(comet)
+
+  say("")
+  say("-- Initial state --")
+  world.summary()
+
+  say("")
+  say("-- Simulating 20 steps (dt=0.02s) --")
+  for step in range(20):
+    for i in range(1, len(world.particles)):
+      let f = gravity(world.particles[0], world.particles[i], 50)
+      world.particles[i].apply_force(f)
+      world.particles[0].apply_force(f.scale(-1))
+    world.step(0.02)
+
+  say("")
+  say("-- Final state --")
+  world.summary()
+  say("Orbital mechanics verified!")
+
+# ── PHYSICS DEMO: Spring-mass system ──────────────────────────────
+
+fn demo_springs()
+  say("")
+  say("=== PHYSICS DEMO: Spring-Mass System ===")
+
+  let world = World()
+  world.has_gravity = false
+
+  let anchor = Particle("Anchor", 10000, Vec2(0, 0), Vec2(0, 0))
+  let mass1 = Particle("Mass-1", 1, Vec2(3, 0), Vec2(0, 2))
+  let mass2 = Particle("Mass-2", 1, Vec2(5, 0), Vec2(0, -1))
+
+  world.add(anchor)
+  world.add(mass1)
+  world.add(mass2)
+
+  say("")
+  say("-- Simulating spring oscillations --")
+  for step in range(30):
+    let f1 = spring_force(world.particles[0], world.particles[1], 8, 2)
+    let f2 = spring_force(world.particles[1], world.particles[2], 8, 2)
+    world.particles[1].apply_force(f1)
+    world.particles[1].apply_force(f2.scale(-1))
+    world.particles[2].apply_force(f2)
+    world.particles[1].apply_force(drag_force(world.particles[1].vel, 0.1))
+    world.particles[2].apply_force(drag_force(world.particles[2].vel, 0.1))
+    world.step(0.02)
+
+  world.summary()
+  say("Spring oscillations converge toward rest!")
+
+# ── PHYSICS DEMO: Collision ───────────────────────────────────────
+
+fn demo_collisions()
+  say("")
+  say("=== PHYSICS DEMO: Elastic Collisions ===")
+
+  let world = World()
+  world.has_gravity = false
+
+  let ball1 = Particle("Ball-1", 1, Vec2(-10, 0), Vec2(5, 0))
+  let ball2 = Particle("Ball-2", 1, Vec2(10, 0), Vec2(-5, 0))
+  let ball3 = Particle("Ball-3", 3, Vec2(0, 5), Vec2(0, -2))
+
+  world.add(ball1)
+  world.add(ball2)
+  world.add(ball3)
+
+  say("")
+  say("-- Simulating collisions --")
+  for step in range(20):
+    for i in range(1, len(world.particles)):
+      for j in range(i + 1, len(world.particles)):
+        collide(world.particles[i], world.particles[j])
+    world.step(0.05)
+
+  world.summary()
+  say("Collision dynamics verified!")
+
+# ── CHEMISTRY DEMO ────────────────────────────────────────────────
+
+fn demo_chemistry()
+  say("")
+  say("=== CHEMISTRY DEMO: Molecules & Reactions ===")
+
+  let water = make_water()
+  let co2 = make_co2()
+  let methane = make_methane()
+  let nacl = make_nacl()
+  let h2 = make_hydrogen()
+  let o2 = make_oxygen()
+  let fe2o3 = make_iron_oxide()
+  let h2so4 = make_sulfuric_acid()
+
+  say("")
+  say("-- Molecules --")
+  say("  " + str(water))
+  say("  " + str(co2))
+  say("  " + str(methane))
+  say("  " + str(nacl))
+  say("  " + str(fe2o3))
+  say("  " + str(h2so4))
+
+  say("")
+  say("-- Molecular Properties --")
+  say("  Water bond energy: " + str(water.bond_energy()) + " kJ/mol")
+  say("  Water polarity: " + str(round(water.polarity(), 2)))
+  say("  CO2 molecular mass: " + str(round(co2.molecular_mass(), 3)) + " g/mol")
+  say("  NaCl ionic bond energy: " + str(nacl.bond_energy()) + " kJ/mol")
+  say("  H2SO4 mass: " + str(round(h2so4.molecular_mass(), 3)) + " g/mol")
+
+  say("")
+  say("-- Chemical Reactions --")
+
+  let combustion = Reaction("Methane Combustion", [methane, o2], [co2, water], -890.4)
+  say("  " + str(combustion))
+  say("  exothermic? " + str(combustion.is_exothermic()))
+  say("  energy/gram: " + str(round(combustion.energy_per_gram(), 2)) + " kJ/g")
+
+  let rust = Reaction("Iron Rusting", [fe2o3], [fe2o3], -824.2)
+  say("  " + str(rust))
+
+  let neutralize = Reaction("Neutralization", [nacl], [nacl], -57.1)
+  say("  " + str(neutralize))
+
+  # thermodynamics
+  say("")
+  say("-- Thermodynamics --")
+  let T = celsius_to_kelvin(25)
+  say("  25C in Kelvin: " + str(round(T, 2)) + " K")
+
+  let P = ideal_gas_pressure(1, T, 0.0224)
+  say("  1 mol ideal gas at STP: " + str(round(P, 1)) + " Pa")
+
+  # methane combustion: dH = -890.4 kJ/mol, dS = -0.242 kJ/(mol*K)
+  let dH = -890.4
+  let dS = -0.242
+  let G = gibbs_free_energy(dH, dS, T)
+  say("  Methane combustion:")
+  say("    dH = " + str(dH) + " kJ/mol")
+  say("    dS = " + str(dS) + " kJ/(mol*K)")
+  say("    T  = " + str(round(T, 2)) + " K")
+  say("    Gibbs free energy: " + str(round(G, 2)) + " kJ/mol")
+  say("    Spontaneous at 25C? " + str(G < 0))
+
+# ── TENSOR PHYSICS: N-body with matrix ops ────────────────────────
+
+fn demo_tensor_physics()
+  say("")
+  say("=== TENSOR DEMO: N-body Force Matrix ===")
+
+  let positions = tensor([0, 0, 10, 0, 0, 10, -5, -5], [4, 2])
+  let masses = tensor([100, 1, 2, 0.5], [4, 1])
+
+  say("  positions: " + str(positions))
+  say("  masses: " + str(masses))
+
+  say("")
+  say("  Pairwise distance matrix:")
+  let n = 4
+  for i in range(n):
+    let row = ""
+    for j in range(n):
+      let dx = positions.data[i][0] - positions.data[j][0]
+      let dy = positions.data[i][1] - positions.data[j][1]
+      let dist = sqrt(dx * dx + dy * dy)
+      row = row + str(round(dist, 2)) + "  "
+    say("    " + row)
+
+  say("")
+  say("  Gravitational force matrix (G=50):")
+  let G_val = 50
+  for i in range(n):
+    let row = ""
+    for j in range(n):
+      if i == j:
+        row = row + "  0.00  "
+      el:
+        let dx = positions.data[j][0] - positions.data[i][0]
+        let dy = positions.data[j][1] - positions.data[i][1]
+        let dist = sqrt(dx * dx + dy * dy)
+        let force = G_val * masses.data[i][0] * masses.data[j][0] / max(dist * dist, 0.01)
+        row = row + str(round(force, 2)) + "  "
+    say("    " + row)
+
+  say("")
+  say("  Tensor operations enable fast N-body calculations!")
+
+# ═══════════════════════════════════════════════════════════════════
+# MAIN
+# ═══════════════════════════════════════════════════════════════════
+
+fn main()
+  say("==============================================")
+  say("  ZpxPhysics v1.0")
+  say("  Physics & Chemistry engine for Zpx")
+  say("==============================================")
+
+  demo_physics()
+  demo_springs()
+  demo_collisions()
+  demo_chemistry()
+  demo_tensor_physics()
+
+  say("")
+  say("==============================================")
+  say("  All demos complete!")
+  say("  Zpx powers physics + chemistry simulations.")
+  say("==============================================")
+
+main()
