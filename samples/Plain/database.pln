@@ -1,0 +1,22 @@
+// Plain v1.0.0 — SQLite database
+
+database "app.db"
+
+execute
+    CREATE TABLE IF NOT EXISTS users (
+        id   INTEGER PRIMARY KEY,
+        name TEXT NOT NULL
+    )
+done
+
+insert
+    INSERT INTO users (name) VALUES ('Alice')
+done
+
+insert
+    INSERT INTO users (name) VALUES ('Bob')
+done
+
+query
+    SELECT * FROM users
+done

@@ -1,0 +1,31 @@
+// Plain v1.0.0 — Standard library
+
+// JSON
+remember user as
+    name is "Ayokunle"
+    age is 17
+done
+
+remember encoded as jsonEncode(user)
+show encoded
+
+remember decoded as jsonDecode(encoded)
+show decoded
+
+// Time
+remember now as time()
+show now
+
+remember today as date()
+show today
+
+// UUID
+remember id as uuid()
+show id
+
+// String utilities
+show uppercase("hello")
+show lowercase("WORLD")
+show length("Plain")
+show round(3.7)
+show random()

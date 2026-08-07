@@ -1,0 +1,21 @@
+// Plain v1.0.0 — Functions
+
+make greet(name)
+    show "Hello, " + name + "!"
+done
+
+make add(a, b)
+    give a + b
+done
+
+make max(a, b)
+    if a is at least b
+        give a
+    otherwise
+        give b
+    done
+done
+
+greet("World")
+show add(5, 7)
+show max(10, 3)
