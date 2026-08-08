@@ -1,0 +1,28 @@
+use system
+
+frozen MAX_LIMIT: int32 = 4
+ptm square(fixed n: int32): int32 {
+  return n * n
+}
+
+ptm main() {
+  // Tunnel
+  fixed tun = tunnel string: MAX_LIMIT // The tunnel only accepts strings, but only 4 maximum
+  "Data #1" -> tun
+  "Data #2" -> tun
+  "Data #3" -> tun
+  "Data #4" -> tun
+  // "This causes a compile error" -> tun
+  fixed data = <-tun
+  system#stdout#writewn("Data received: ${i?tun}")
+  close(tun)
+  // Pool
+  pool 4 as workerPool { // Worker limit is 4
+    fixed task1 = spawn square(8)
+    fixed task2 = spawn square(16)
+    fixed result1 = join task1
+    fixed result2 = join task2
+    system#stdout#writewn("Result 1: ${i?result1}")
+    system#stdout#writewn("Result 2: ${i?result2}")
+  }
+}
