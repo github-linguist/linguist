@@ -1,0 +1,19 @@
+use system
+
+enum MathError {
+  DivBy0
+}
+
+ptm div(fixed a: float64, fixed b: float64): (float64, error?) {
+  verify b != 0.0 else return error{ message: "divide by 0", code: MathError#DivBy0 }
+  return a / b, nothing
+}
+
+ptm main() {
+  fixed result, err = div(8, 0)
+  if err != nothing {
+    system#stdout#writewn("Error occurred: ${i?err#message}")
+  } else {
+    system#stdout#writewn("Result: ${i?result}")
+  }
+}
