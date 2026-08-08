@@ -68,12 +68,13 @@ disambiguations:
     pattern:
     # An object declaration, "<kind> <id> <name>", starting a line. The anchor
     # matters: page and value are common Perl variable names, so matching these
-    # keywords anywhere in the file claims Perl AutoLoader chunks.
-    - '^\s*(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|ENUM|ENUMEXTENSION|QUERY|REPORT|REPORTEXTENSION|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|PROFILEEXTENSION|CONTROLADDIN|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b\s'
+    # keywords anywhere in the file claims Perl AutoLoader chunks. AL tooling
+    # commonly writes a UTF-8 BOM, so tolerate one before the first line.
+    - '^(?:\xEF\xBB\xBF)?\s*(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|ENUM|ENUMEXTENSION|QUERY|REPORT|REPORTEXTENSION|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|PROFILEEXTENSION|CONTROLADDIN|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b\s'
     # DotNet alias objects are a bare keyword on their own line
-    - '^\s*(?i:DOTNET)\s*$'
+    - '^(?:\xEF\xBB\xBF)?\s*(?i:DOTNET)\s*$'
     # Namespace and using declarations, always terminated with a semicolon
-    - '^\s*(?i:(NAMESPACE|USING))\s+[\w.]+\s*;'
+    - '^(?:\xEF\xBB\xBF)?\s*(?i:(NAMESPACE|USING))\s+[\w.]+\s*;'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
 - extensions: ['.alg']
