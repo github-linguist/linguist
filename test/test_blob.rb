@@ -172,6 +172,9 @@ class TestBlob < Minitest::Test
     # Deno generated deno.lock file
     assert sample_blob_memory("JSON/filenames/deno.lock").generated?
 
+    # pixi lockfile
+    assert sample_blob_memory("YAML/filenames/pixi.lock").generated?
+
     # pnpm lockfile
     assert fixture_blob_memory("YAML/pnpm-lock.yaml").generated?
 
@@ -202,7 +205,11 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("Go/embedded.go").generated?
     assert sample_blob_memory("Go/oapi-codegen.go").generated?
     assert sample_blob_memory("JavaScript/proto.js").generated?
+    assert sample_blob_memory("TypeScript/proto.ts").generated?
     assert sample_blob_memory("PHP/ProtobufGenerated.php").generated?
+
+    # Twirp Ruby generated code
+    assert sample_blob_memory("Ruby/haberdasher_twirp.rb").generated?
 
     # Apache Thrift generated code
     assert sample_blob_memory("Python/gen-py-linguist-thrift.py").generated?
