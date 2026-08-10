@@ -63,6 +63,7 @@ class TestLanguage < Minitest::Test
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
     assert_equal Language['Tree-sitter Query'], Language.find_by_alias('tsq')
+    assert_equal Language['TSX'], Language.find_by_alias('typescriptreact')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
     assert_equal Language['Vim Script'], Language.find_by_alias('vim')
     assert_equal Language['Vim Script'], Language.find_by_alias('viml')
@@ -206,6 +207,8 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_interpreter
     {
+      "bun" => ["JavaScript", "TypeScript"],
+      "deno" => ["JavaScript", "TypeScript"],
       "ruby" => "Ruby",
       "Rscript" => "R",
       "sh" => "Shell",
@@ -216,7 +219,8 @@ class TestLanguage < Minitest::Test
       "sbcl" => "Common Lisp",
       "sclang" => "SuperCollider"
     }.each do |interpreter, language|
-      assert_equal [Language[language]], Language.find_by_interpreter(interpreter)
+      languages = Array(language).map { |lang| Language[lang] }
+      assert_equal languages, Language.find_by_interpreter(interpreter)
     end
 
     assert_equal [], Language.find_by_interpreter(nil)
