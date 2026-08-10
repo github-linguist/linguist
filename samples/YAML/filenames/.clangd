@@ -1,0 +1,41 @@
+CompileFlags:
+  CompilationDatabase: "cmake-build"
+  Add: [
+    -pedantic,
+    -Wall,
+    -Wextra,
+    -Wconversion,
+    -Wshadow,
+    -Wfloat-equal,
+    -Wmisleading-indentation,
+    -Wimplicit-fallthrough,
+  ]
+Diagnostics:
+  Suppress:
+    - variadic_device_fn
+    - attributes_not_allowed
+  UnusedIncludes: Strict
+  ClangTidy:
+    Add: ['*']
+    Remove:
+      - abseil-*
+      - altera-*
+      - android-*
+      - fuchsia-*
+      - google-*
+      - llvm*
+      - modernize-use-trailing-return-type
+      - zircon-*
+      - readability-else-after-return
+      - readability-static-accessed-through-instance
+      - readability-avoid-const-params-in-decls
+      - cppcoreguidelines-non-private-member-variables-in-classes
+      - misc-non-private-member-variables-in-classes
+    CheckOptions:
+      readability-identifier-naming.VariableCase: lower_case
+      readability-identifier-naming.FunctionCase: lower_case
+      readability-identifier-naming.ClassCase: Leading_upper_snake_case
+      readability-identifier-naming.StructCase: Leading_upper_snake_case
+      cppcoreguidelines-init-variables.IncludeStyle: google
+InlayHints:
+  BlockEnd: true
