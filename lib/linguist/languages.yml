@@ -2738,7 +2738,7 @@ Glyph Bitmap Distribution Format:
   language_id: 997665271
 Gno:
   type: programming
-  color: "#530c04"
+  color: "#226c57"
   aliases:
   - gnolang
   extensions:
@@ -9432,6 +9432,18 @@ templ:
   ace_mode: text
   tm_scope: source.templ
   language_id: 795579337
+ucode:
+  type: programming
+  color: "#00b8d4"
+  extensions:
+  - ".uc"
+  interpreters:
+  - ucode
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: text/javascript
+  tm_scope: source.ucode
+  language_id: 365454253
 vCard:
   type: data
   color: "#ee2647"
