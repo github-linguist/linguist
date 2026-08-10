@@ -1,0 +1,8 @@
+with(RandomTools):
+with(LinearAlgebra):
+
+GenerateRandomMatrix := proc(rows, cols, range := 0..9)
+    return Matrix(rows, cols, () -> GenerateInteger(range));
+end proc;
+
+GenerateRandomMatrix(3, 3);

@@ -1,0 +1,7 @@
+TriangleArea := proc(a, b, c)
+    local s;
+    s := (a+b+c)/2;
+    return sqrt(s*(s-a)*(s-b)*(s-c));
+end proc;
+
+TriangleArea(3, 4, 5);

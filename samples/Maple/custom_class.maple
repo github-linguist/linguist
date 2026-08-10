@@ -1,0 +1,10 @@
+MyCounter := module()
+    export value, inc, reset;
+    value := 0;
+    inc := proc() global value; value := value + 1; end proc;
+    reset := proc() global value; value := 0; end proc;
+end module;
+
+MyCounter:-inc();
+MyCounter:-inc();
+MyCounter:-value;
