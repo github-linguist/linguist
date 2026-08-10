@@ -3,9 +3,7 @@ require 'rake/clean'
 require 'rake/testtask'
 require 'rake/extensiontask'
 require 'yaml'
-require 'yajl'
 require 'open-uri'
-require 'json'
 require 'open3'
 
 task :default => :test
@@ -23,7 +21,7 @@ task :test => [:compile, :check_samples, :fetch_ace_modes]
 
 desc "Check that we have samples.json generated"
 task :check_samples do
-  unless File.exist?('lib/linguist/samples.json')
+  unless File.exist?('lib/linguist/samples_data.rb')
     Rake::Task[:samples].invoke
   end
 end
@@ -45,8 +43,8 @@ end
 
 task :samples => :compile do
   require 'linguist/samples'
-  json = Yajl.dump(Linguist::Samples.data, :pretty => false)
-  File.write 'lib/linguist/samples.json', json
+  require 'pp'
+  File.write 'lib/linguist/samples_data.rb', "#frozen_string_literal: true\nDATA = #{PP.pp(Linguist::Samples.data, +'')}"
 end
 
 task :flex do
@@ -59,7 +57,7 @@ end
 # The error count will need to be adjusted here until such time as all grammars are 100% error free.
 desc "Check that compiling the grammars doesn't introduce any new unexpected errors"
 task :check_grammars do
-  expected_error_count = 54  # This count should only ever go down. If it goes up, there's a new issue that needs to be addressed before updating the grammar.
+  expected_error_count = 66  # This count should only ever go down. If it goes up, there's a new issue that needs to be addressed before updating the grammar.
   rm_rf "linguist-grammars"
   output, status = Open3.capture2e("script/grammar-compiler", "compile", "-o", "linguist-grammars")
   errors_found = output[/The grammar library contains ([0-9]+) errors/, 1].to_i
@@ -94,9 +92,9 @@ task :build_gem => :samples do
   rm_rf "grammars"
   sh "script/grammar-compiler compile -o grammars || true"
   languages = YAML.load_file("lib/linguist/languages.yml")
-  File.write("lib/linguist/languages.json", Yajl.dump(languages))
+  File.write("lib/linguist/languages_data.rb", "#frozen_string_literal: true\nDATA = #{PP.pp(languages, +'')}")
   `gem build github-linguist.gemspec`
-  File.delete("lib/linguist/languages.json")
+  File.delete("lib/linguist/languages_data.rb")
 end
 
 namespace :benchmark do
