@@ -581,7 +581,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SWIG:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **Sage:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Sail:** [Timmmm/sail_vscode](https://github.com/Timmmm/sail_vscode)
-- **SaltStack:** [saltstack/atom-salt](https://github.com/saltstack/atom-salt)
+- **Salt:** [saltstack-contrib/atom-salt](https://github.com/saltstack-contrib/atom-salt)
 - **Sass:** [atom/language-sass](https://github.com/atom/language-sass)
 - **Scala:** [scala/vscode-scala-syntax](https://github.com/scala/vscode-scala-syntax)
 - **Scaml:** [scalate/Scalate.tmbundle](https://github.com/scalate/Scalate.tmbundle)
