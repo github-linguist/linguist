@@ -136,4 +136,27 @@ class TestCLIIntegration < Minitest::Test
     assert_match(/src\/app\.rb \[Extension\]/, stdout, "Should show Extension strategy for Ruby file")
     assert_match(/config\.config \[.* \(overridden by \.gitattributes\)\]/, stdout, "Should show override for overridden file")
   end
+
+  def test_breakdown_excludes_git_lfs_pointer_blobs
+    File.write('.gitattributes', "*.nc filter=lfs diff=lfs merge=lfs -text\n")
+    File.write('test.rb', "puts 'Hello, World!'\n")
+    File.write('data.nc', <<~LFS)
+      version https://git-lfs.github.com/spec/v1
+      oid sha256:a9d8db4a33528bbd0ff5f88fcbd0ddf74ee5dc150b4e02e77e0ee4f4002a1eb9
+      size 14131452
+    LFS
+
+    system("git add .")
+    system("git commit -m 'Add lfs pointer blob' --quiet")
+
+    stdout, stderr, status = Open3.capture3(
+      "bundle", "exec", "github-linguist", @temp_dir, "--breakdown", "--strategies",
+      chdir: @original_dir
+    )
+
+    assert status.success?, "CLI command failed: #{stderr}"
+    assert_match(/test\.rb \[Extension\]/, stdout, "Should still report normal source files")
+    refute_match(/data\.nc/, stdout, "Should exclude Git LFS pointer blobs from breakdown output")
+    refute_match(/nesC:/, stdout, "Should not report a language section created only by an LFS pointer blob")
+  end
 end
