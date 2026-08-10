@@ -362,7 +362,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Literate CoffeeScript:** [atom/language-coffee-script](https://github.com/atom/language-coffee-script)
 - **Literate Haskell:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **LiveCode Script:** [Ferruslogic/vscode-livecodescript](https://github.com/Ferruslogic/vscode-livecodescript)
-- **LiveScript:** [paulmillr/LiveScript.tmbundle](https://github.com/paulmillr/LiveScript.tmbundle)
+- **LiveScript:** [sharktide/livescript-vscode](https://github.com/sharktide/livescript-vscode)
 - **Lobster:** [inferrna/lobster_ling](https://github.com/inferrna/lobster_ling)
 - **Logos:** [Cykey/Sublime-Logos](https://github.com/Cykey/Sublime-Logos)
 - **Logtalk:** [textmate/logtalk.tmbundle](https://github.com/textmate/logtalk.tmbundle)
