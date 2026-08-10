@@ -27,6 +27,12 @@
 # Please keep this list alphabetized.
 #
 ---
+  - extensions:
+      - .fc
+    languages:
+      - Fastcode
+    named_patterns:
+      fastcode: /\b(impl|trait|mut|enum|struct|pub|mod|elif|repeat\s+until|fn\s*\(.*?\)\s*->|async|await|yield|from\s+\w+\s+import)\b/
 disambiguations:
 - extensions: ['.1', '.2', '.3', '.4', '.5', '.6', '.7', '.8', '.9']
   rules:
