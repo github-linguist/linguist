@@ -66,15 +66,19 @@ disambiguations:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
   - language: AL
     pattern:
-    # An object declaration, "<kind> <id> <name>", starting a line. The anchor
-    # matters: page and value are common Perl variable names, so matching these
-    # keywords anywhere in the file claims Perl AutoLoader chunks. AL tooling
-    # commonly writes a UTF-8 BOM, so tolerate one before the first line.
-    - '^(?:\xEF\xBB\xBF)?\s*(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|ENUM|ENUMEXTENSION|QUERY|REPORT|REPORTEXTENSION|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|PROFILEEXTENSION|CONTROLADDIN|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b\s'
+    # An object declaration, "<kind> <id> <name>", starting a line, with the
+    # name required. The anchor matters: page and table are common Perl
+    # variable names and "Table of contents" is ordinary prose, so matching
+    # these keywords anywhere would claim Perl AutoLoader chunks.
+    # AL tooling commonly writes a UTF-8 BOM. It cannot be matched as bytes
+    # here: blob data is ASCII-8BIT, and a pattern containing the BOM bytes
+    # compiles to a UTF-8 Regexp, which raises Encoding::CompatibilityError.
+    # \A\W{0,3} skips it, the same way the B4X rule below does.
+    - '(?:\A\W{0,3}|^)\s*(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|ENUM|ENUMEXTENSION|QUERY|REPORT|REPORTEXTENSION|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|PROFILEEXTENSION|CONTROLADDIN|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b\s+(?:\d|"|[A-Z])'
     # DotNet alias objects are a bare keyword on their own line
-    - '^(?:\xEF\xBB\xBF)?\s*(?i:DOTNET)\s*$'
+    - '(?:\A\W{0,3}|^)\s*(?i:DOTNET)\s*$'
     # Namespace and using declarations, always terminated with a semicolon
-    - '^(?:\xEF\xBB\xBF)?\s*(?i:(NAMESPACE|USING))\s+[\w.]+\s*;'
+    - '(?:\A\W{0,3}|^)\s*(?i:(NAMESPACE|USING))\s+[\w.]+\s*;'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
 - extensions: ['.alg']
