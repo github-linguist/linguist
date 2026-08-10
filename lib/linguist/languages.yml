@@ -730,6 +730,16 @@ BlitzMax:
   tm_scope: source.blitzmax
   ace_mode: text
   language_id: 35
+Blueprint:
+  type: markup
+  color: "#3584E4"
+  extensions:
+  - ".blp"
+  aliases:
+  - blp
+  tm_scope: source.blueprint
+  ace_mode: text
+  language_id: 765545512
 Bluespec:
   type: programming
   color: "#12223c"
@@ -849,7 +859,7 @@ C#:
   codemirror_mode: clike
   codemirror_mime_type: text/x-csharp
   tm_scope: source.cs
-  color: "#178600"
+  color: "#7355dd"
   aliases:
   - csharp
   - cake
@@ -1128,10 +1138,8 @@ Carbon:
   color: "#222222"
   extensions:
   - ".carbon"
-  ace_mode: golang
-  codemirror_mode: go
-  codemirror_mime_type: text/x-go
-  tm_scope: source.v
+  ace_mode: text
+  tm_scope: source.carbon
   language_id: 55627273
 CartoCSS:
   type: programming
@@ -2675,6 +2683,8 @@ Git Config:
   filenames:
   - ".gitconfig"
   - ".gitmodules"
+  - ".tgitconfig"
+  - config.worktree
   ace_mode: ini
   codemirror_mode: properties
   codemirror_mime_type: text/x-properties
@@ -2737,6 +2747,18 @@ Glyph Bitmap Distribution Format:
   tm_scope: source.bdf
   ace_mode: text
   language_id: 997665271
+Gno:
+  type: programming
+  color: "#226c57"
+  aliases:
+  - gnolang
+  extensions:
+  - ".gno"
+  tm_scope: source.gno
+  ace_mode: golang
+  codemirror_mode: go
+  codemirror_mime_type: text/x-go
+  language_id: 279301301
 Gnuplot:
   type: programming
   color: "#f0a9f0"
@@ -2942,6 +2964,23 @@ Groovy Server Pages:
   codemirror_mode: htmlembedded
   codemirror_mime_type: application/x-jsp
   language_id: 143
+GtkRC:
+  type: data
+  color: "#7fe719"
+  aliases:
+  - gtk
+  - gtk 1
+  - gtk 2
+  extensions:
+  - ".gtkrc"
+  filenames:
+  - gtkrc
+  - gtkrc-2.0
+  tm_scope: source.gtkrc
+  ace_mode: ruby
+  codemirror_mode: ruby
+  codemirror_mime_type: text/x-ruby
+  language_id: 876401352
 HAProxy:
   type: data
   color: "#106da9"
@@ -3368,6 +3407,7 @@ Ignore List:
   - ".atomignore"
   - ".babelignore"
   - ".bzrignore"
+  - ".ckignore"
   - ".coffeelintignore"
   - ".cvsignore"
   - ".dockerignore"
@@ -3381,6 +3421,7 @@ Ignore List:
   - ".nodemonignore"
   - ".npmignore"
   - ".prettierignore"
+  - ".rgignore"
   - ".stylelintignore"
   - ".vercelignore"
   - ".vscodeignore"
@@ -3554,6 +3595,7 @@ JSON:
   - ".htmlhintrc"
   - ".imgbotconfig"
   - ".nycrc"
+  - ".secrets.baseline"
   - ".tern-config"
   - ".tern-project"
   - ".watchmanconfig"
@@ -5995,6 +6037,16 @@ PostScript:
   - postscr
   ace_mode: text
   language_id: 291
+Power Query:
+  type: programming
+  aliases:
+    - powerquery
+  extensions:
+    - ".pq"
+  tm_scope: source.powerquery
+  ace_mode: text
+  color: "#d38e0d"
+  language_id: 37496382
 PowerBuilder:
   type: programming
   color: "#8f0f8d"
@@ -6671,6 +6723,14 @@ Redirect Rules:
   tm_scope: source.redirects
   ace_mode: text
   language_id: 1020148948
+Redscript:
+  type: programming
+  color: "#f44336"
+  extensions:
+  - ".reds"
+  tm_scope: source.redscript
+  ace_mode: text
+  language_id: 686691365
 Regular Expression:
   type: data
   color: "#009a00"
@@ -8323,6 +8383,7 @@ Valve Data Format:
   - vdf
   extensions:
   - ".vdf"
+  - ".vmf"
   ace_mode: text
   tm_scope: source.keyvalues
   language_id: 544060961
@@ -9374,6 +9435,18 @@ templ:
   ace_mode: text
   tm_scope: source.templ
   language_id: 795579337
+ucode:
+  type: programming
+  color: "#00b8d4"
+  extensions:
+  - ".uc"
+  interpreters:
+  - ucode
+  ace_mode: javascript
+  codemirror_mode: javascript
+  codemirror_mime_type: text/javascript
+  tm_scope: source.ucode
+  language_id: 365454253
 vCard:
   type: data
   color: "#ee2647"

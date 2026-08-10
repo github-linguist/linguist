@@ -1199,6 +1199,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_uc_by_heuristics
+    assert_heuristics({
+      "ucode" => all_fixtures("ucode", "*.uc"),
+      "UnrealScript" => all_fixtures("UnrealScript", "*.uc")
+    })
+  end
+
   def test_url_by_heuristics
     assert_heuristics({
       "INI" => Dir.glob("#{fixtures_path}/Generic/url/INI/*"),
