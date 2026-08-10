@@ -1,4 +1,4 @@
-/* This program follows the license outlined, here: https://github.com/AleoNet/snarkVM/blob/mainnet/LICENSE.md */
+/* This program follows the license at https://github.com/ProvableHQ/snarkVM/blob/mainnet/LICENSE.md */
 
 program arrays_in_finalize.aleo;
 
@@ -16,7 +16,7 @@ function check_array_equality:
     and r2.left[0u32][3u32] r2.right[0u32][3u32] into r6;
     cast r3 r4 r5 r6 into r7 as [boolean; 4u32];
     cast r7 into r8 as [[boolean; 4u32]; 1u32];
-    async test_arrays r0 r1 into r9;
+    async check_array_equality r0 r1 into r9;
     output r0 as [[boolean; 4u32]; 1u32].public;
     output r1 as [[boolean; 4u32]; 1u32].public;
     output r8 as [[boolean; 4u32]; 1u32].public;
@@ -36,3 +36,6 @@ finalize check_array_equality:
     assert.eq r7[0u32][1u32] false;
     assert.eq r7[0u32][2u32] false;
     assert.eq r7[0u32][3u32] false;
+
+constructor:
+    assert.eq edition 0u16;

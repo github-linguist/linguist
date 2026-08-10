@@ -1,4 +1,4 @@
-/* This program follows the license outlined, here: https://github.com/AleoNet/snarkVM/blob/mainnet/LICENSE.md */
+/* This program follows the license at https://github.com/ProvableHQ/snarkVM/blob/mainnet/LICENSE.md */
 
 program signature_verification.aleo;
 
@@ -27,3 +27,6 @@ function literal_ops_on_signatures:
     output r3 as boolean.private;
     output r4 as boolean.private;
     output r5 as signature.private;
+
+constructor:
+    assert.eq edition 0u16;

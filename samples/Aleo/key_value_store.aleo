@@ -1,4 +1,4 @@
-/* This program follows the license outlined, here: https://github.com/AleoNet/snarkVM/blob/mainnet/LICENSE.md */
+/* This program follows the license at https://github.com/ProvableHQ/snarkVM/blob/mainnet/LICENSE.md */
 
 program key_value_store.aleo;
 
@@ -32,3 +32,11 @@ function empty_remove:
 finalize empty_remove:
     input r0 as u8.public;
     remove data[r0];
+
+view get_value:
+    input r0 as u8.public;
+    get.or_use data[r0] 0u8 into r1;
+    output r1 as u8.public;
+
+constructor:
+    assert.eq edition 0u16;
