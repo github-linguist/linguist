@@ -610,6 +610,14 @@ class TestHeuristics < Minitest::Test
     }, alt_name="foo.inc")
   end
 
+  def test_j_by_heuristics
+    assert_heuristics({
+      "JASS" => all_fixtures("JASS", "*.j"),
+      "Jasmin" => all_fixtures("Jasmin", "*.j"),
+      "Objective-J" => all_fixtures("Objective-J", "*.j")
+    })
+  end
+
   def test_json_by_heuristics
     assert_heuristics({
       "OASv2-json" => all_fixtures("OASv2-json", "*.json"),
@@ -773,7 +781,8 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.ms"),
       "Unix Assembly" => all_fixtures("Unix Assembly", "*.ms"),
-      "MAXScript" => all_fixtures("MAXScript", "*.ms")
+      "MAXScript" => all_fixtures("MAXScript", "*.ms"),
+      "MiniScript" => all_fixtures("MiniScript", "*.ms"),
     })
   end
 
