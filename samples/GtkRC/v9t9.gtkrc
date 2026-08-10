@@ -1,0 +1,14 @@
+style "debugger_text"
+    {
+	fontset = "-*-courier-medium-r-*-*-12-*-*-*-m-*-*-*"
+	fg[NORMAL] =   { 0.0, 0.0, 0.0 }
+	fg[PRELIGHT] = { 0.4, 0.4, 0.8 }
+	fg[SELECTED] = { 0.8, 0.4, 0.4 }
+	bg[NORMAL] =   { 1.0, 1.0, 1.0 }
+	bg[PRELIGHT] = { 0.8, 0.8, 1.0 }
+	bg[SELECTED] = { 1.0, 0.8, 0.8 }
+    }
+
+widget "v9t9.debugger.*GtkTable*" style "debugger_text"
+widget "v9t9.debugger.*GtkEntry*" style "debugger_text"
+widget "v9t9.debugger.*GtkText*" style "debugger_text"
