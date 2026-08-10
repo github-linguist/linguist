@@ -208,6 +208,9 @@ class TestBlob < Minitest::Test
     assert sample_blob_memory("TypeScript/proto.ts").generated?
     assert sample_blob_memory("PHP/ProtobufGenerated.php").generated?
 
+    # Twirp Ruby generated code
+    assert sample_blob_memory("Ruby/haberdasher_twirp.rb").generated?
+
     # Apache Thrift generated code
     assert sample_blob_memory("Python/gen-py-linguist-thrift.py").generated?
     assert sample_blob_memory("Go/gen-go-linguist-thrift.go").generated?
