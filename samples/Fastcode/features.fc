@@ -1,0 +1,50 @@
+/* features.fc - Comprehensive keyword showcase */
+use system
+import file_io
+
+pub trait Printable {
+    func format(self) -> string
+}
+
+pub struct Config {
+    pub mut prefix: string,
+    pub count: int
+}
+
+impl Printable for Config {
+    func format(self) -> string {
+        return self.prefix + str(self.count)
+    }
+}
+
+pub enum Status {
+    Ok(string),
+    Err(int)
+}
+
+async func fetch_data(mut path: string) {
+    let local_var = "fetching"
+    const TIMEOUT = 5000
+    
+    if path is not string {
+        return Status.Err(400)
+    }
+    
+    loop {
+        let result = await syscall(10, path)
+        match result {
+            some(data) => return Status.Ok(data),
+            none => yield
+        }
+    }
+}
+
+func main() {
+    for i in 0..4 {
+        println("Loop: " + str(i))
+    }
+    
+    let closure = fn(x) -> x * 2
+    assert(closure(2) == 4)
+}
+
