@@ -480,7 +480,7 @@ disambiguations:
 - extensions: ['.lp']
   rules:
   - language: Lambdapi
-    pattern: '(?:^|\s)symbol(?:$|\s)|(?:^|\s)rule(?:$|\s)'
+    pattern: '^\s*(?:opaque\s+symbol|symbol|rule|notation|constant|injective|require(?:\s+open)?|open|type|assert(?:not)?|compute)\b'
   - language: Linear Programming
     pattern: '(?i)^\s*(?:minimize|minimum|min|maximize|maximum|max)(?:\s+multi-objectives)?\s*$'
   - language: Answer Set Programming

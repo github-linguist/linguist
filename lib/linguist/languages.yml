@@ -1127,10 +1127,8 @@ Carbon:
   color: "#222222"
   extensions:
   - ".carbon"
-  ace_mode: golang
-  codemirror_mode: go
-  codemirror_mime_type: text/x-go
-  tm_scope: source.v
+  ace_mode: text
+  tm_scope: source.carbon
   language_id: 55627273
 CartoCSS:
   type: programming
@@ -2738,6 +2736,18 @@ Glyph Bitmap Distribution Format:
   tm_scope: source.bdf
   ace_mode: text
   language_id: 997665271
+Gno:
+  type: programming
+  color: "#226c57"
+  aliases:
+  - gnolang
+  extensions:
+  - ".gno"
+  tm_scope: source.gno
+  ace_mode: golang
+  codemirror_mode: go
+  codemirror_mime_type: text/x-go
+  language_id: 279301301
 Gnuplot:
   type: programming
   color: "#f0a9f0"
@@ -3574,6 +3584,7 @@ JSON:
   - ".htmlhintrc"
   - ".imgbotconfig"
   - ".nycrc"
+  - ".secrets.baseline"
   - ".tern-config"
   - ".tern-project"
   - ".watchmanconfig"
