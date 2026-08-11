@@ -100,6 +100,9 @@ class GrammarList
       when "vendor/grammars/oz-tmbundle/Syntaxes/Oz.tmLanguage"
         short_url = "eregon/oz-tmbundle"
         long_url  = "https://github.com/eregon/oz-tmbundle"
+      when "vendor/grammars/vespa/integration/tmgrammar/grammar"
+        short_url = "vespa-engine/vespa"
+        long_url  = "https://github.com/vespa-engine/vespa"
       else
         submodule = @submodules[(@sources[scope] || scope).chomp("/")]
         next unless submodule
