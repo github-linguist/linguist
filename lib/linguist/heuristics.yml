@@ -65,8 +65,20 @@ disambiguations:
   rules:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
   - language: AL
-    and:
-    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN|REPORTEXTENSION|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b'
+    pattern:
+    # An object declaration, "<kind> <id> <name>", starting a line, with the
+    # name required. The anchor matters: page and table are common Perl
+    # variable names and "Table of contents" is ordinary prose, so matching
+    # these keywords anywhere would claim Perl AutoLoader chunks.
+    # AL tooling commonly writes a UTF-8 BOM. It cannot be matched as bytes
+    # here: blob data is ASCII-8BIT, and a pattern containing the BOM bytes
+    # compiles to a UTF-8 Regexp, which raises Encoding::CompatibilityError.
+    # \A\W{0,3} skips it, the same way the B4X rule below does.
+    - '(?:\A\W{0,3}|^)\s*(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|ENUM|ENUMEXTENSION|QUERY|REPORT|REPORTEXTENSION|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|PROFILEEXTENSION|CONTROLADDIN|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b\s+(?:\d|"|[A-Z])'
+    # DotNet alias objects are a bare keyword on their own line
+    - '(?:\A\W{0,3}|^)\s*(?i:DOTNET)\s*$'
+    # Namespace and using declarations, always terminated with a semicolon
+    - '(?:\A\W{0,3}|^)\s*(?i:(NAMESPACE|USING))\s+[\w.]+\s*;'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
 - extensions: ['.alg']
@@ -442,6 +454,17 @@ disambiguations:
     pattern:
     - '^(?i)[^"m]*mov\s+[^\s]+,'
     - '^\s+(?i)db\s+[a-z\d]'
+- extensions: ['.j']
+  rules:
+  - language: Jasmin
+    pattern: '^\s*\.(?:class|super|method|end\s+method|limit|field|source|bytecode)\b'
+  - language: Objective-J
+    pattern: '^\s*@(?:import|implementation|protocol|interface|typedef|end)\b'
+  - language: JASS
+    pattern:
+    - '^\s*(?:constant\s+)?(?:function|native)\s+\w+\s+takes\b'
+    - '^\s*end(?:function|globals|loop)\s*$'
+    - '^\s*(?:call|set|local|exitwhen)\s+\S'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -580,6 +603,8 @@ disambiguations:
     and:
       - negative_pattern: '/\*'
       - pattern: '^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)'
+  - language: MiniScript
+    pattern: '^\s*\bend (?:function|while|if|for)\b|\s\b(?:isa)\b\s'
   - language: MAXScript
 - extensions: ['.msg']
   rules:
