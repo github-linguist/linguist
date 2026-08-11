@@ -194,6 +194,7 @@ class TestStrategies < Minitest::Test
       "#{samples_path}/XML/Robots.slnx",
       "#{samples_path}/XML/Win64.pubxml",
       "#{samples_path}/XML/Deep_Ocean.icls",
+      "#{samples_path}/XML/roblox-model.rbxmx"
     ]
     assert_all_xml all_xml_fixtures("*") - no_root_tag
 
