@@ -962,6 +962,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_releaserc_by_heuristics
+    assert_heuristics({
+      "JSON" => ["#{samples_path}/JSON/filenames/.releaserc"],
+      "YAML" => ["#{samples_path}/YAML/filenames/.releaserc"]
+    })
+  end
+
   def test_res_by_heuristics
     assert_heuristics({
       "ReScript" => all_fixtures("ReScript", "*.res"),

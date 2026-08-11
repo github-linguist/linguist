@@ -791,6 +791,11 @@ disambiguations:
     pattern:
     - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
     - '^\s*template\s*<'
+- extensions: ['.releaserc']
+  rules:
+  - language: YAML
+    pattern: '^[ \t]*(?:#|[^"\s:{}\[\]][^:]*[ \t]*:)'
+  - language: JSON
 - extensions: ['.res']
   rules:
   - language: ReScript
