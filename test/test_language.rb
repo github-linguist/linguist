@@ -58,9 +58,12 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Shell'], Language.find_by_alias('sh')
     assert_equal Language['Shell'], Language.find_by_alias('shell')
     assert_equal Language['Shell'], Language.find_by_alias('zsh')
+    assert_equal Language['SurrealQL'], Language.find_by_alias('surql')
+    assert_equal Language['SurrealQL'], Language.find_by_alias('surrealql')
     assert_equal Language['SuperCollider'], Language.find_by_alias('supercollider')
     assert_equal Language['TeX'], Language.find_by_alias('tex')
     assert_equal Language['Tree-sitter Query'], Language.find_by_alias('tsq')
+    assert_equal Language['TSX'], Language.find_by_alias('typescriptreact')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
     assert_equal Language['Vim Script'], Language.find_by_alias('vim')
     assert_equal Language['Vim Script'], Language.find_by_alias('viml')
@@ -167,7 +170,7 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_extension
     assert_equal [], Language.find_by_extension('.factor-rc')
-    assert_equal [Language['Limbo'], Language['M'], Language['MATLAB'], Language['MUF'], Language['Mathematica'], Language['Mercury'], Language['Objective-C']], Language.find_by_extension('foo.m')
+    assert_equal [Language['Limbo'], Language['M'], Language['MATLAB'], Language['MUF'], Language['Mercury'], Language['Objective-C'], Language['Wolfram Language']], Language.find_by_extension('foo.m')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('foo/bar.rb')
     assert_equal [Language['Ruby']], Language.find_by_extension('PKGBUILD.rb')
@@ -204,6 +207,8 @@ class TestLanguage < Minitest::Test
 
   def test_find_by_interpreter
     {
+      "bun" => ["JavaScript", "TypeScript"],
+      "deno" => ["JavaScript", "TypeScript"],
       "ruby" => "Ruby",
       "Rscript" => "R",
       "sh" => "Shell",
@@ -212,9 +217,12 @@ class TestLanguage < Minitest::Test
       "python2" => "Python",
       "python3" => "Python",
       "sbcl" => "Common Lisp",
-      "sclang" => "SuperCollider"
+      "sclang" => "SuperCollider",
+      "node" => ["JavaScript", "TypeScript"],
+      "nodejs" => "JavaScript",
     }.each do |interpreter, language|
-      assert_equal [Language[language]], Language.find_by_interpreter(interpreter)
+      languages = Array(language).map { |lang| Language[lang] }
+      assert_equal languages, Language.find_by_interpreter(interpreter)
     end
 
     assert_equal [], Language.find_by_interpreter(nil)
@@ -312,7 +320,7 @@ class TestLanguage < Minitest::Test
     assert_equal 'css', Language['CSS'].ace_mode
     assert_equal 'lsl', Language['LSL'].ace_mode
     assert_equal 'javascript', Language['JavaScript'].ace_mode
-    assert_equal 'text', Language['FORTRAN'].ace_mode
+    assert_equal 'fortran', Language['FORTRAN'].ace_mode
   end
 
   def test_codemirror_mode
@@ -453,7 +461,7 @@ class TestLanguage < Minitest::Test
       next unless language.codemirror_mode && language.codemirror_mime_type
       filename = File.expand_path("../../vendor/CodeMirror/mode/#{language.codemirror_mode}/#{language.codemirror_mode}.js", __FILE__)
       assert File.exist?(filename), "#{filename} does not exist"
-      assert File.read(filename).match(language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
+      assert File.read(filename).match(Regexp.escape language.codemirror_mime_type), "#{language.inspect}: #{language.codemirror_mime_type} not defined in #{filename}"
     end
   end
 

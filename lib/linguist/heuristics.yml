@@ -41,6 +41,7 @@ disambiguations:
     - named_pattern: man-heading
   - language: Roff
     pattern: '^\.(?:[A-Za-z]{2}(?:\s|$)|\\")'
+  - language: Text
 - extensions: ['.1in', '.1m', '.1x', '.3in', '.3m', '.3p', '.3pm', '.3qt', '.3x', '.man', '.mdoc']
   rules:
   - language: Roff Manpage
@@ -53,14 +54,44 @@ disambiguations:
     - named_pattern: man-title
     - named_pattern: man-heading
   - language: Roff
+- extensions: ['.action']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '(?i)^[a-z]\w*(?:\/[a-z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.al']
   rules:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
   - language: AL
-    and:
-    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN|REPORTEXTENSION|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b'
+    pattern:
+    # An object declaration, "<kind> <id> <name>", starting a line, with the
+    # name required. The anchor matters: page and table are common Perl
+    # variable names and "Table of contents" is ordinary prose, so matching
+    # these keywords anywhere would claim Perl AutoLoader chunks.
+    # AL tooling commonly writes a UTF-8 BOM. It cannot be matched as bytes
+    # here: blob data is ASCII-8BIT, and a pattern containing the BOM bytes
+    # compiles to a UTF-8 Regexp, which raises Encoding::CompatibilityError.
+    # \A\W{0,3} skips it, the same way the B4X rule below does.
+    - '(?:\A\W{0,3}|^)\s*(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|ENUM|ENUMEXTENSION|QUERY|REPORT|REPORTEXTENSION|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|PROFILEEXTENSION|CONTROLADDIN|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b\s+(?:\d|"|[A-Z])'
+    # DotNet alias objects are a bare keyword on their own line
+    - '(?:\A\W{0,3}|^)\s*(?i:DOTNET)\s*$'
+    # Namespace and using declarations, always terminated with a semicolon
+    - '(?:\A\W{0,3}|^)\s*(?i:(NAMESPACE|USING))\s+[\w.]+\s*;'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
+- extensions: ['.alg']
+  rules:
+  - language: ALGOL
+    pattern:
+    # ALGOL 60 comments
+    - '(?i)^comment\b.*(;|comment)'
+    # ALGOL 68 comments
+    - '^#[^#\r\n]+#$'
+    # ALGOL 60/68 keywords
+    - '(?i)\b(integer|real|boolean|string)\b\s+\w+\s*:=\s*'
+    - '(?i)^begin[\s\S]*^end'
 - extensions: ['.app']
   rules:
   - language: Erlang
@@ -132,6 +163,8 @@ disambiguations:
     and:
     - pattern: '(?i)^[ \t]*return '
     - negative_pattern: '(?i)[ \t]*gosub '
+  - language: QuickBASIC
+    named_pattern: quickbasic
 - extensions: ['.bs']
   rules:
   - language: Bikeshed
@@ -182,10 +215,20 @@ disambiguations:
     pattern: '^\s*\\(?:NeedsTeXFormat|ProvidesClass)\{'
   - language: ObjectScript
     pattern: '^Class\s'
+  - language: OpenEdge ABL
+    pattern: '(?i)^\s*(?:end\s+(?:class|interface)\.|(?:class|interface)\s+[a-z_][a-z0-9_#$%&-]*:)'
 - extensions: ['.cmp']
   rules:
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+- extensions: ['.container', '.mount', '.network', '.service', '.socket', '.target', '.timer']
+  rules:
+  - language: INI
+    and:
+    # e.g., "[foobar]" or "# [commented out]"
+    - pattern: '^[#\s]*\[[^\]]+\]\s*$'
+    - named_pattern: key_equals_value
+    - negative_pattern: '^[^#;=\[]+[^ \r\n=]$'
 - extensions: ['.cs']
   rules:
   - language: Smalltalk
@@ -411,6 +454,17 @@ disambiguations:
     pattern:
     - '^(?i)[^"m]*mov\s+[^\s]+,'
     - '^\s+(?i)db\s+[a-z\d]'
+- extensions: ['.j']
+  rules:
+  - language: Jasmin
+    pattern: '^\s*\.(?:class|super|method|end\s+method|limit|field|source|bytecode)\b'
+  - language: Objective-J
+    pattern: '^\s*@(?:import|implementation|protocol|interface|typedef|end)\b'
+  - language: JASS
+    pattern:
+    - '^\s*(?:constant\s+)?(?:function|native)\s+\w+\s+takes\b'
+    - '^\s*end(?:function|globals|loop)\s*$'
+    - '^\s*(?:call|set|local|exitwhen)\s+\S'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -418,6 +472,18 @@ disambiguations:
   - language: OASv3-json
     pattern: '"openapi":\s?"3.[0-9.]+"'
   - language: JSON
+- extensions: ['.k']
+  rules:
+  - language: KCL
+    pattern:
+      - '^schema [A-Za-z0-9_-]+'
+      - '^\}$'
+      - '\s*\}\s*'
+  - language: KFramework
+    pattern:
+    - '^requires\s+"[^"]+"$'
+    - '^syntax\s+\w+\s+::=.*'
+    - '^endmodule$'
 - extensions: ['.l']
   rules:
   - language: Common Lisp
@@ -436,9 +502,15 @@ disambiguations:
     pattern: '^import [A-Z]'
 - extensions: ['.lp']
   rules:
+  - language: Lambdapi
+    pattern: '^\s*(?:opaque\s+symbol|symbol|rule|notation|constant|injective|require(?:\s+open)?|open|type|assert(?:not)?|compute)\b'
   - language: Linear Programming
-    pattern: '^(?i:minimize|minimum|min|maximize|maximum|max)(?i:\s+multi-objectives)?$'
+    pattern: '(?i)^\s*(?:minimize|minimum|min|maximize|maximum|max)(?:\s+multi-objectives)?\s*$'
   - language: Answer Set Programming
+    pattern:
+    - '^\s*#(?:include|const|program|script|show|minimize|maximize|heuristic|project|edge|theory|defined)\b'
+    - '^\s*(?:[A-Za-z_]\w*(?:\([^)]*\))?\s*:-|:-)\s[^.]*\.'
+    - '^\s*[a-z_][a-zA-Z0-9_]*(?:\([^)]*\))?\s*\.\s*$'
 - extensions: ['.ls']
   rules:
   - language: LoomScript
@@ -460,7 +532,7 @@ disambiguations:
     pattern: '^: '
   - language: M
     pattern: '^\s*;'
-  - language: Mathematica
+  - language: Wolfram Language
     and:
       - pattern: '\(\*'
       - pattern: '\*\)$'
@@ -517,6 +589,12 @@ disambiguations:
     pattern: '^\s*(alias|def|from|fn|import|struct|trait)\s'
   - language: XML
     pattern: '^\s*<\?xml'
+- extensions: ['.mps']
+  rules:
+  - language: JetBrains MPS
+    pattern: '<persistence'
+  - language: Mathematical Programming System
+    pattern: '(?i)^\s*(ROWS|COLUMNS)\s*$'
 - extensions: ['.ms']
   rules:
   - language: Roff
@@ -525,11 +603,17 @@ disambiguations:
     and:
       - negative_pattern: '/\*'
       - pattern: '^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)'
+  - language: MiniScript
+    pattern: '^\s*\bend (?:function|while|if|for)\b|\s\b(?:isa)\b\s'
   - language: MAXScript
 - extensions: ['.msg']
   rules:
   - language: OMNeT++ MSG
     pattern: '^cplusplus\(?[\S]*\)?[\s]*\{?\{?|^namespace[\s]+([^.\s]*\.)*[^.\s]*;|^struct[\s]+[\S]+|^message[\s]+[\S]+(extends )?[\S]*[\s]*|^packet[\s]+[\S]+|^class[\s]+[\S]+(extends )?[\S]*[\s]*|^enum[\s]+[\S]+|^import ([^.\s]*\.)*[^.\s]*;'
+  - language: ROS Interface
+    and:
+      - pattern: '(?i)^[a-z]\w*(?:\/[a-z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.n']
   rules:
   - language: Roff
@@ -583,6 +667,18 @@ disambiguations:
     - '^s?plot\b'
     - '^set\s+(term|terminal|out|output|[xy]tics|[xy]label|[xy]range|style)\b'
   - language: OpenEdge ABL
+    pattern:
+    - '(?i)\bDEFINE\s+(?:VARIABLE|TEMP-TABLE|BUFFER|QUERY|INPUT\s+PARAMETER|OUTPUT\s+PARAMETER)\b'
+    - '(?i)\bEND(?:\s+(?:PROCEDURE|FUNCTION|DO|FOR\s+EACH))?\.'
+- extensions: ['.pc']
+  rules:
+  - language: Pro*C
+    pattern: '^\s*EXEC\s+SQL\s'
+  - language: pkg-config
+    and:
+      - pattern: '^Name:[ \t]+\S'
+      - pattern: '^Description:[ \t]+\S'
+      - pattern: '^Version:[ \t]+\S'
 - extensions: ['.php']
   rules:
   - language: Hack
@@ -797,6 +893,13 @@ disambiguations:
   rules:
   - language: SubRip Text
     pattern: '^(\d{2}:\d{2}:\d{2},\d{3})\s*(-->)\s*(\d{2}:\d{2}:\d{2},\d{3})$'
+- extensions: ['.srv']
+  rules:
+  - language: ROS Interface
+    and:
+      - pattern: '(?i)^[a-z]\w*(?:\/[a-z]\w*)?(?:<=\d+)?(?:\[(?:<=\d+)?\])?\s+\w+\b'
+      - pattern: '^---\s*$'
+      - negative_pattern: '^\s*[^\s@#\w-]'
 - extensions: ['.st']
   rules:
   - language: StringTemplate
@@ -842,6 +945,13 @@ disambiguations:
   rules:
   - language: Java Server Pages
     pattern: '<%[@!=\s]?\s*(taglib|tag|include|attribute|variable)\s'
+- extensions: ['.tl']
+  rules:
+  - language: Teal
+    and:
+    - pattern: '--.*'
+    - pattern: '\b(local|function|end|record|interface|enum)\b'
+  - language: Type Language
 - extensions: ['.tlv']
   rules:
   - language: TL-Verilog
@@ -852,6 +962,12 @@ disambiguations:
     pattern: '^## |@no-lib-strip@'
   - language: TeX
     pattern: '^\\(contentsline|defcounter|beamer|boolfalse)'
+- extensions: ['.tpl']
+  rules:
+  - language: Go Template
+    pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
+  - language: Smarty
+    pattern: '(?<!\{)\{(\*\s|\$|\/)?\w*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
@@ -935,6 +1051,11 @@ disambiguations:
   - language: Typst
     pattern: '^#(import|show|let|set)'
   - language: XML
+- extensions: ['.uc']
+  rules:
+  - language: ucode
+    named_pattern: ucode
+  - language: UnrealScript
 - extensions: ['.url']
   rules:
   - language: INI
@@ -944,7 +1065,7 @@ disambiguations:
   - language: Rocq Prover
     pattern: '(?:^|\s)(?:Proof|Qed)\.(?:$|\s)|(?:^|\s)Require[ \t]+(Import|Export)\s'
   - language: Verilog
-    pattern: '^[ \t]*module\s+[^\s()]+\s+\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale)|^[ \t]*always[ \t]+@|^[ \t]*initial[ \t]+(begin|@)'
+    pattern: '^[ \t]*module\s+[^\s()]+\s*\#?\(|^[ \t]*`(?:define|ifdef|ifndef|include|timescale|pragma)|^[ \t]*always[ \t]*@|^[ \t]*initial[ \t]*(begin|@)'
   - language: V
     pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
@@ -1053,6 +1174,13 @@ named_patterns:
   - '(?i)^[ ]*\$(CONSOLE|CHECKING):'
   - '(?i)^[ ]*\$(FULLSCREEN|RESIZE|STATIC|DYNAMIC|NOPREFIX|SCREENSHOW|SCREENHIDE|EXEICON)\b'
   raku: '^\s*(?:use\s+v6\b|\bmodule\b|\b(?:my\s+)?class\b)'
+  ucode:
+  - '^#!.*\bucode\b'
+  - '^\s*[''"]use strict[''"];'
+  - '^[ \t]*(?:export|import)\b'
+  - '\b(?:require|include)\s*\(\s*[''"]'
+  - '^\s*let\s+\w+'
+  - '\b(?:printf|sprintf)\s*\('
   vb-class: '^[ ]*VERSION [0-9]\.[0-9] CLASS'
   vb-form: '^[ ]*VERSION [0-9]\.[0-9]{2}'
   vb-module: '^[ ]*Attribute VB_Name = '
