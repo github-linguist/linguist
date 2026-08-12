@@ -115,7 +115,7 @@ disambiguations:
   - language: Brainfuck
     pattern: '(>\+>|>\+<)'
   - language: Limbo
-    pattern: '^\w+\s*:\s*module\s*\{'
+    pattern: '(?:^\w+\s*:\s*module\s*\{)|(implement \w+;)'
 - extensions: ['.bas']
   rules:
   - language: B4X
