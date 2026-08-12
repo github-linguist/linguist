@@ -1,57 +1,73 @@
-// tie:logic
-// tie:opt=2
-// Tie 编程语言语法示例：文件头指令、命名空间、函数、表、控制流。
+// tie:library
+// 真实用法示例：Tie 语言标准库风格的字符串工具模块。
+// 展示：命名空间模块、pub 导出、默认参数、动态表、码点级字符串遍历。
 
-// 顶层表全局变量（跨函数共享）
-var g_log: table<string>;
-var g_count: i64 = 0;
+// 顶层表全局变量：模块级状态（T0.4 全局表，跨函数持久）
+var cache_keys: table<string>;
+var cache_vals: table<string>;
 
-// 命名空间：模块边界，pub func 显式导出
-namespace mathx {
-// 函数定义：类型标注 + 默认值参数
-pub func clamp(v: i64, min: i64, max: i64) -> i64 {
-    if v < min {
-        return min
+namespace strutil {
+// 字符串包含判断（KMP 风格逐码点比较，非朴素 starts_with）
+pub func contains(s: string, sub: string) -> bool {
+    var n: i64 = str_len(s)
+    var m: i64 = str_len(sub)
+    if m == 0 {
+        return true
     }
-    if v > max {
-        return max
+    if m > n {
+        return false
     }
-    return v
+    var i: i64 = 0
+    while i + m <= n {
+        var j: i64 = 0
+        var ok: bool = true
+        while j < m {
+            if str_char(s, i + j) != str_char(sub, j) {
+                ok = false
+            }
+            j = j + 1
+        }
+        if ok {
+            return true
+        }
+        i = i + 1
+    }
+    return false
 }
+
+// 按分隔符拆分（返回动态表；空串返回空表）
+pub func split(s: string, sep: string) -> table<string> {
+    var parts = table_new_string()
+    var n: i64 = str_len(s)
+    var cur: string = ""
+    var i: i64 = 0
+    while i < n {
+        var c = str_char(s, i)
+        if c == sep {
+            table_push(parts, cur)
+            cur = ""
+        } else {
+            cur = cur + c
+        }
+        i = i + 1
+    }
+    if str_len(cur) > 0 {
+        table_push(parts, cur)
+    }
+    return parts
 }
 
-// 主函数（逻辑文件入口）
-func main() -> i64 {
-    // 变量：类型推断或显式标注；const 不可变
-    var x = 42
-    var name: string = "Tie"
-    const limit: i64 = 100
-
-    // 表（动态数组）
-    var nums = table_new_i64()
-    table_push(nums, 1)
-    table_push(nums, 2)
-    table_push(nums, 3)
-
-    // 循环：for 范围与 while
-    var sum: i64 = 0
-    for i in 0..3 {
-        sum = sum + nums[i]
+// 带缓存的查找：命中返回缓存值，未命中计算后写入（默认参数）
+pub func lookup(key: string, fallback: string) -> string {
+    var i: i64 = 0
+    while i < len(cache_keys) {
+        if cache_keys[i] == key {
+            return cache_vals[i]
+        }
+        i = i + 1
     }
-    var k: i64 = 0
-    while k < limit {
-        k = k + 1
-    }
-
-    // 分支与字符串拼接
-    if sum == 6 {
-        println("sum ok: " + name)
-    } else {
-        println("sum fail")
-    }
-
-    // 命名空间调用与键值表
-    var m = ["a": 1, "b": 2]
-    println(m["a"] + mathx.clamp(150, 0, 100))
-    return 0
+    table_push(cache_keys, key)
+    table_push(cache_vals, fallback)
+    return fallback
+}
 }
