@@ -1,0 +1,57 @@
+// tie:logic
+// tie:opt=2
+// Tie 编程语言语法示例：文件头指令、命名空间、函数、表、控制流。
+
+// 顶层表全局变量（跨函数共享）
+var g_log: table<string>;
+var g_count: i64 = 0;
+
+// 命名空间：模块边界，pub func 显式导出
+namespace mathx {
+// 函数定义：类型标注 + 默认值参数
+pub func clamp(v: i64, min: i64, max: i64) -> i64 {
+    if v < min {
+        return min
+    }
+    if v > max {
+        return max
+    }
+    return v
+}
+}
+
+// 主函数（逻辑文件入口）
+func main() -> i64 {
+    // 变量：类型推断或显式标注；const 不可变
+    var x = 42
+    var name: string = "Tie"
+    const limit: i64 = 100
+
+    // 表（动态数组）
+    var nums = table_new_i64()
+    table_push(nums, 1)
+    table_push(nums, 2)
+    table_push(nums, 3)
+
+    // 循环：for 范围与 while
+    var sum: i64 = 0
+    for i in 0..3 {
+        sum = sum + nums[i]
+    }
+    var k: i64 = 0
+    while k < limit {
+        k = k + 1
+    }
+
+    // 分支与字符串拼接
+    if sum == 6 {
+        println("sum ok: " + name)
+    } else {
+        println("sum fail")
+    }
+
+    // 命名空间调用与键值表
+    var m = ["a": 1, "b": 2]
+    println(m["a"] + mathx.clamp(150, 0, 100))
+    return 0
+}
