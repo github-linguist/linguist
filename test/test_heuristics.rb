@@ -288,7 +288,8 @@ class TestHeuristics < Minitest::Test
   def test_b_by_heuristics
     assert_heuristics({
       "B" => all_fixtures("B", "*.b"),
-      "Limbo" => all_fixtures("Limbo", "*.b")
+      "Limbo" => all_fixtures("Limbo", "*.b"),
+      "Brainfuck" => all_fixtures("Brainfuck", "*.b")
     })
   end
 
