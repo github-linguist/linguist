@@ -1,0 +1,71 @@
+# JSON parser and stringifier
+# Pure Nebulara implementation
+# Each parse function returns [value, new_position]
+
+FUNC! json_parse(xstr):
+    IF? LEN(xstr) == 0: RETURN NULL
+    END!
+    LET xr = parse_val(xstr, 0)
+    LET xinner = xr[0]
+    LET xpos = xr[1]
+    RETURN xinner
+END!
+
+FUNC! parse_val(ps, pp):
+    LET pnp = skip_ws(ps, pp)
+    LET pc = CHAR_AT(ps, pnp)
+    IF? pc == "\"":
+        RETURN parse_str(ps, pnp + 1)
+    ELSEIF? pc == "t" OR pc == "T":
+        RETURN [TRUE, pnp + 4]
+    ELSEIF? pc == "f" OR pc == "F":
+        RETURN [FALSE, pnp + 5]
+    ELSEIF? pc == "n" OR pc == "N":
+        RETURN [NULL, pnp + 4]
+    ELSEIF? pc == "{":
+        RETURN parse_obj(ps, pnp + 1)
+    ELSEIF? pc == "[":
+        RETURN parse_arr(ps, pnp + 1)
+    ELSEIF? (ORD(pc) >= 48 AND ORD(pc) <= 57) OR pc == "-":
+        RETURN parse_num(ps, pnp)
+    END!
+    RETURN [NULL, pnp]
+END!
+
+FUNC! skip_ws(ss, sp):
+    LET sn = LEN(ss)
+    WHILE? sp < sn:
+        LET sc = CHAR_AT(ss, sp)
+        IF? sc == " " OR sc == "\n" OR sc == "\r" OR sc == "\t":
+            sp = sp + 1
+        ELSE:
+            BREAK
+        END!
+    END!
+    RETURN sp
+END!
+
+FUNC! parse_str(ps2, pp2):
+    LET pn = LEN(ps2)
+    LET presult = ""
+    WHILE? pp2 < pn:
+        LET c2 = CHAR_AT(ps2, pp2)
+        IF? c2 == "\"":
+            RETURN [presult, pp2 + 1]
+        END!
+        IF? c2 == "\\":
+            LET nxt = CHAR_AT(ps2, pp2 + 1)
+            IF? nxt == "n": presult = presult + "\n"
+            ELSEIF? nxt == "t": presult = presult + "\t"
+            ELSEIF? nxt == "\\": presult = presult + "\\"
+            ELSEIF? nxt == "\"": presult = presult + "\""
+            ELSE: presult = presult + nxt
+            END!
+            pp2 = pp2 + 2
+        ELSE:
+            presult = presult + c2
+            pp2 = pp2 + 1
+        END!
+    END!
+    RETURN [presult, pp2]
+END!
