@@ -1033,6 +1033,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_sd_by_heuristics
+    assert_heuristics({
+      "FlexCat Source Description" => all_fixtures("FlexCat Source Description", "*.sd"),
+      "Vespa Schema Definition" => all_fixtures("Vespa Schema Definition", "*.sd")
+    })
+  end
+
   def test_service_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.service"),

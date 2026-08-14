@@ -1,0 +1,27 @@
+##rem $Id$
+##shortstrings
+##stringtype Oberon
+DEFINITION MODULE %bLocale ;
+
+(****************************************************************
+
+   This file was created automatically by '%fv'
+   from "%f0".
+
+   Do NOT edit by hand!
+
+****************************************************************)
+
+IMPORT  ld : LocaleD ;
+
+CONST
+  %i = %d ;\n  %iStr = %s ;\n
+
+PROCEDURE CloseCatalog() ;
+
+PROCEDURE OpenCatalog(loc : ld.LocalePtr ; language : ARRAY OF CHAR) ;
+
+PROCEDURE GetString(num : LONGINT) : ld.StrPtr ;
+
+END %bLocale .
+
