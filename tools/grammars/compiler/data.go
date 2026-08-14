@@ -48,7 +48,6 @@ var GrammarsInNonStdPath = map[string]bool{
 	"hy.tmLanguage":           true,
 	"abl-tmlanguage":          true,
 	"avro.tmLanguage":         true,
-	"grammar":                 true,
 }
 
 // IgnoredFiles is a list of files that look like syntax files but aren't, or are known to be broken and never likely to be fixed.
