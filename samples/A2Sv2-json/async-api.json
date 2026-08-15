@@ -1,0 +1,338 @@
+{
+    "asyncapi": "2.4.0",
+    "info": {
+        "title": "Shlink",
+        "version": "3.0.0",
+        "description": "Shlink, the self-hosted URL shortener",
+        "license": {
+            "name": "MIT",
+            "url": "https://github.com/shlinkio/shlink/blob/develop/LICENSE"
+        }
+    },
+    "defaultContentType": "application/json",
+    "channels": {
+        "https://shlink.io/new-visit": {
+            "subscribe": {
+                "summary": "Receive information about any new visit occurring on any short URL.",
+                "operationId": "newVisit",
+                "message": {
+                    "payload": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "shortUrl": {
+                                "$ref": "#/components/schemas/ShortUrl"
+                            },
+                            "visit": {
+                                "$ref": "#/components/schemas/Visit"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "https://shlink.io/new-visit/{shortCode}": {
+            "parameters": {
+                "shortCode": {
+                    "description": "The short code of the short URL",
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            },
+            "subscribe": {
+                "summary": "Receive information about any new visit occurring on a specific short URL.",
+                "operationId": "newShortUrlVisit",
+                "message": {
+                    "payload": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "shortUrl": {
+                                "$ref": "#/components/schemas/ShortUrl"
+                            },
+                            "visit": {
+                                "$ref": "#/components/schemas/Visit"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "https://shlink.io/new-orphan-visit": {
+            "subscribe": {
+                "summary": "Receive information about any new orphan visit.",
+                "operationId": "newOrphanVisit",
+                "message": {
+                    "payload": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "visit": {
+                                "$ref": "#/components/schemas/OrphanVisit"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "https://shlink.io/new-short-url": {
+            "subscribe": {
+                "summary": "Receive information about any new short URL.",
+                "operationId": "newshortUrl",
+                "message": {
+                    "payload": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "shortUrl": {
+                                "$ref": "#/components/schemas/ShortUrl"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ShortUrl": {
+                "type": "object",
+                "properties": {
+                    "shortCode": {
+                        "type": "string",
+                        "description": "The short code for this short URL."
+                    },
+                    "shortUrl": {
+                        "type": "string",
+                        "description": "The short URL."
+                    },
+                    "longUrl": {
+                        "type": "string",
+                        "description": "The original long URL."
+                    },
+                    "dateCreated": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The date in which the short URL was created in ISO format."
+                    },
+                    "visitsSummary": {
+                        "$ref": "#/components/schemas/VisitsSummary"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A list of tags applied to this short URL"
+                    },
+                    "meta": {
+                        "$ref": "#/components/schemas/ShortUrlMeta"
+                    },
+                    "domain": {
+                        "type": "string",
+                        "description": "The domain in which the short URL was created. Null if it belongs to default domain."
+                    },
+                    "title": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "A descriptive title of the short URL."
+                    },
+                    "crawlable": {
+                        "type": "boolean",
+                        "description": "Tells if this URL will be included as 'Allow' in Shlink's robots.txt."
+                    },
+                    "forwardQuery": {
+                        "type": "boolean",
+                        "description": "Tells if this URL will forward the query params to the long URL when visited, as explained in [the docs](https://shlink.io/documentation/some-features/#query-params-forwarding)."
+                    },
+                    "hasRedirectRules": {
+                        "type": "boolean",
+                        "description": "Whether this short URL has redirect rules attached to it or not. Use [this endpoint](https://api-spec.shlink.io/#/Redirect%20rules/listShortUrlRedirectRules) to get the actual list of rules."
+                    }
+                },
+                "example": {
+                    "shortCode": "12C18",
+                    "shortUrl": "https://s.test/12C18",
+                    "longUrl": "https://store.steampowered.com",
+                    "dateCreated": "2016-08-21T20:34:16+02:00",
+                    "visitsSummary": {
+                        "total": 328,
+                        "nonBots": 285,
+                        "bots": 43
+                    },
+                    "tags": [
+                        "games",
+                        "tech"
+                    ],
+                    "meta": {
+                        "validSince": "2017-01-21T00:00:00+02:00",
+                        "validUntil": null,
+                        "maxVisits": 100
+                    },
+                    "domain": "example.com",
+                    "title": "The title",
+                    "crawlable": false,
+                    "forwardQuery": false,
+                    "hasRedirectRules": true
+                }
+            },
+            "ShortUrlMeta": {
+                "type": "object",
+                "required": [
+                    "validSince",
+                    "validUntil",
+                    "maxVisits"
+                ],
+                "properties": {
+                    "validSince": {
+                        "description": "The date (in ISO-8601 format) from which this short code will be valid",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "validUntil": {
+                        "description": "The date (in ISO-8601 format) until which this short code will be valid",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "maxVisits": {
+                        "description": "The maximum number of allowed visits for this short code",
+                        "type": "number",
+                        "nullable": true
+                    }
+                }
+            },
+            "VisitsSummary": {
+                "type": "object",
+                "required": ["total", "nonBots", "bots"],
+                "properties": {
+                    "total": {
+                        "description": "The total amount of visits",
+                        "type": "number"
+                    },
+                    "nonBots": {
+                        "description": "The amount of visits which were not identified as bots",
+                        "type": "number"
+                    },
+                    "bots": {
+                        "description": "The amount of visits that were identified as potential bots",
+                        "type": "number"
+                    }
+                }
+            },
+            "Visit": {
+                "type": "object",
+                "properties": {
+                    "referer": {
+                        "type": "string",
+                        "description": "The origin from which the visit was performed"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The date in which the visit was performed"
+                    },
+                    "userAgent": {
+                        "type": "string",
+                        "description": "The user agent from which the visit was performed"
+                    },
+                    "visitLocation": {
+                        "$ref": "#/components/schemas/VisitLocation"
+                    },
+                    "potentialBot": {
+                        "type": "boolean",
+                        "description": "Tells if Shlink thinks this visit comes potentially from a bot or crawler"
+                    },
+                    "visitedUrl": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "The originally visited URL that triggered the tracking of this visit"
+                    },
+                    "redirectUrl": {
+                        "type": "string",
+                        "nullable":  true,
+                        "description": "The URL to which the visitor was redirected, or null if a redirect did not occur, like for 404 requests or pixel tracking"
+                    }
+                },
+                "example": {
+                    "referer": "https://t.co",
+                    "date": "2015-08-20T05:05:03+04:00",
+                    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
+                    "visitLocation": {
+                        "cityName": "Cupertino",
+                        "countryCode": "US",
+                        "countryName": "United States",
+                        "latitude": 37.3042,
+                        "longitude": -122.0946,
+                        "regionName": "California",
+                        "timezone": "America/Los_Angeles"
+                    },
+                    "potentialBot": false,
+                    "visitedUrl": "https://s.test"
+                }
+            },
+            "OrphanVisit": {
+                "allOf": [
+                    {"$ref": "#/components/schemas/Visit"},
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "invalid_short_url",
+                                    "base_url",
+                                    "regular_404"
+                                ],
+                                "description": "Tells the type of orphan visit"
+                            }
+                        }
+                    }
+                ],
+                "example": {
+                    "referer": "https://t.co",
+                    "date": "2015-08-20T05:05:03+04:00",
+                    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36",
+                    "visitLocation": {
+                        "cityName": "Cupertino",
+                        "countryCode": "US",
+                        "countryName": "United States",
+                        "latitude": 37.3042,
+                        "longitude": -122.0946,
+                        "regionName": "California",
+                        "timezone": "America/Los_Angeles"
+                    },
+                    "potentialBot": false,
+                    "visitedUrl": "https://s.test",
+                    "type": "base_url"
+                }
+            },
+            "VisitLocation": {
+                "type": "object",
+                "properties": {
+                    "cityName": {
+                        "type": "string"
+                    },
+                    "countryCode": {
+                        "type": "string"
+                    },
+                    "countryName": {
+                        "type": "string"
+                    },
+                    "latitude": {
+                        "type": "number"
+                    },
+                    "longitude": {
+                        "type": "number"
+                    },
+                    "regionName": {
+                        "type": "string"
+                    },
+                    "timezone": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

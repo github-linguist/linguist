@@ -1,0 +1,192 @@
+asyncapi: 2.5.0
+info:
+  title: "Verona Interfaces Specification 'Editor'"
+  version: "4.6.0"
+  description: |
+    This is one part of the [Verona Online Assessment Standards](https://verona-interfaces.github.io). All messages are sent via the postMessage function of the html page. The editor takes the page root of its parent as target (parent.window), and the application binds the function call to the iframe element of the editor.
+
+    Most important, the message body carries as first parameter the operationId of the message.
+
+    The html page MUST contain a script-tag with metadata. The syntax and structure of this data are described [here](https://verona-interfaces.github.io/intro/metadata.html).
+
+  license:
+    name: CC0-1.0
+    url: "http://creativecommons.org/publicdomain/zero/1.0/"
+  contact:
+    name: Institute for Educational Quality Improvement (IQB)
+    url: "https://www.iqb.hu-berlin.de"
+    email: iqb-tbadev@hu-berlin.de
+
+channels:
+  voeReadyNotification:
+    subscribe:
+      operationId: voeReadyNotification
+      summary: Ready Notification
+      description: The editor announces that it's code is loaded and initialized so the communication can start.
+      message:
+        name: voeReadyNotification
+        payload:
+          type: object
+          properties:
+            metadata:
+              type: string
+              description: "Via this property, the editor sends the stringified metadata object defined as json-ld in the header of the html file. See [here](https://github.com/verona-interfaces/metadata/#readme) for more information."
+          additionalProperties: false
+          required:
+            - metadata
+
+  voeStartCommand:
+    publish:
+      operationId: voeStartCommand
+      summary: Start Command
+      description: The application sends parameters for editing the unit and commands the start of user interaction.
+      message:
+        name: voeStartCommand
+        contentType: application/json
+        payload:
+          type: object
+          properties:
+            sessionId:
+              $ref: "#/components/schemas/SessionIdString"
+            unitDefinition:
+              type: string
+              format: byte
+              description: The definition of the unit (if given) to be edited.
+              example: |
+                        iqb-scripted::1.4.0
+                        title::Testscript Title2??Hilfetext2
+                        multiple-choice::mc_var1::1::Multiple Choice Feld: ::Choice1##Choice2##Choice3??Hilfetext1
+                        drop-down::dd_var1::1::Dropdown Feld: ::Choice1##Choice2##Choice3??Hilfetext1
+                        checkbox::check_var1::0::Ja klick mal!
+                        if-start::dd_var1::1
+                          input-text::java::sap oxa
+                        if-else
+                          input-text::java_22::sap oxa U
+                          text::NOT Choice1
+                        if-end
+            unitDefinitionType:
+              type: string
+              description: This lets the editor the unit definition format know. This might avoid UI mess after
+                getting old definitions.
+              example: 'iqb-scripted@1.4.0'
+            editorConfig:
+              $ref: "#/components/schemas/EditorConfig"
+              description: "This data supplies some information or instruction about this specific editing of the unit."
+          additionalProperties: false
+          required:
+            - sessionId
+
+  voeDefinitionChangedNotification:
+    subscribe:
+      operationId: voeDefinitionChangedNotification
+      summary: Definition Changed Notification
+      description: The definition of the unit has changed.
+      message:
+        name: voeDefinitionChangedNotification
+        contentType: application/json
+        payload:
+          type: object
+          properties:
+            sessionId:
+              $ref: "#/components/schemas/SessionIdString"
+            timeStamp:
+              type: string
+              format: date-time
+              description: "Ensures, that later arriving states are ignored."
+            unitDefinition:
+              type: string
+              format: byte
+              description: To be stored.
+            unitDefinitionType:
+              type: string
+              description: "In order to understand the definition outside the editor, the type of the definition should be known. This helps to select a suitable player to run the unit."
+              example: "iqb-scripted@1.4.0"
+            variables:
+              description: "Variable data help to prepare the processing of answers (coding scheme)."
+              type: array
+              items:
+                $ref: "#/components/schemas/Variable"
+            dependenciesToPlay:
+              description: Files to provide or services to keep accessible during the presentation of the unit.
+              type: array
+              items:
+                $ref: "#/components/schemas/Dependency"
+            dependenciesToEdit:
+              description: Files to provide or services to keep accessible to enable the editing of the unit.
+              type: array
+              items:
+                $ref: "#/components/schemas/Dependency"
+            sharedParameters:
+              type: array
+              items:
+                $ref: "#/components/schemas/SharedParameter"
+          additionalProperties: false
+          required:
+            - sessionId
+            - timeStamp
+
+components:
+  schemas:
+    SessionIdString:
+      description: "The session id flags all communication. If a message has no or empty session id, it's not processed. The session id is unique and was generated by the application. Any simple algorithm would work. The session id helps to link the correct unit with the data of the message. Using the id of the editor hosting html element is less reliable, because the element could be reused with another unit."
+      type: string
+      example: "idk8ur5jf9ru5jk"
+
+    SharedParameter:
+      type: object
+      description: This object structure is used to share data between instances of the module. The host may collect all shared data 
+        sent by modules and provide it to every module.
+      properties:
+        key:
+          description: Identifier to find or set the shared parameter.
+          type: string
+          minLength: 2
+        value:
+          description: Value of the parameter.
+          type: string
+      required:
+        - key
+      example:
+        {
+          "key": "KEYBOARD_USE",
+          "value": "INTERNAL_ONLY"
+        }
+
+    EditorConfig:
+      type: object
+      properties:
+        directDownloadUrl:
+          description: "After starting the editor and loading the unit definition, it might be necessary to load additional code or data from the server. This data is identified by an resource ID (usually a file name). The editor can download this resource by itself without further interaction with the host frontend. The property directDownloadUrl provides the url for download. The editor extends this url by an url separator '/' and the resource ID (uri-encoded if needed)."
+          type: string
+          example: "https://www.iqb-studio.de/download/iskeid-34e845-didmmemdkek"
+        role:
+          description: Specifies the access level of the editing person ('super' = maximal)
+          type: string
+          enum:
+            - guest
+            - commentator
+            - developer
+            - maintainer
+            - super
+        sharedParameters:
+          type: array
+          items:
+            $ref: "#/components/schemas/SharedParameter"
+      additionalProperties: false
+    Dependency:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "GeoGebra.itcr.zip"
+        type:
+          type: string
+          enum:
+            - file
+            - service
+      additionalProperties: false
+      required:
+        - id
+        - type
+    Variable:
+      $ref: https://w3id.org/iqb/spec/variable-info/1.3

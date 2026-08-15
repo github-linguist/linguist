@@ -620,6 +620,8 @@ class TestHeuristics < Minitest::Test
 
   def test_json_by_heuristics
     assert_heuristics({
+      "A2Sv2-json" => all_fixtures("A2Sv2-json", "*.json"),
+      "A2Sv3-json" => all_fixtures("A2Sv3-json", "*.json"),
       "OASv2-json" => all_fixtures("OASv2-json", "*.json"),
       "OASv3-json" => all_fixtures("OASv3-json", "*.json"),
       "JSON" => all_fixtures("JSON", "*.json"),
@@ -1263,6 +1265,8 @@ class TestHeuristics < Minitest::Test
   def test_yaml_by_heuristics
     assert_heuristics({
       "MiniYAML" => all_fixtures("MiniYAML", "*.yaml"),
+      "A2Sv2-yaml" => all_fixtures("A2Sv2-yaml", "*.yaml"),
+      "A2Sv3-yaml" => all_fixtures("A2Sv3-yaml", "*.yaml"),
       "OASv2-yaml" => all_fixtures("OASv2-yaml", "*.yaml"),
       "OASv3-yaml" => all_fixtures("OASv3-yaml", "*.yaml"),
       "YAML" => all_fixtures("YAML", "*.yaml"),
@@ -1272,6 +1276,8 @@ class TestHeuristics < Minitest::Test
   def test_yml_by_heuristics
     assert_heuristics({
       "MiniYAML" => all_fixtures("MiniYAML", "*.yml"),
+      "A2Sv2-yaml" => all_fixtures("A2Sv2-yaml", "*.yml"),
+      "A2Sv3-yaml" => all_fixtures("A2Sv3-yaml", "*.yml"),
       "OASv2-yaml" => all_fixtures("OASv2-yaml", "*.yml"),
       "OASv3-yaml" => all_fixtures("OASv3-yaml", "*.yml"),
       "YAML" => all_fixtures("YAML", "*.yml"),

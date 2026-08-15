@@ -467,6 +467,10 @@ disambiguations:
     - '^\s*(?:call|set|local|exitwhen)\s+\S'
 - extensions: ['.json']
   rules:
+  - language: A2Sv2-json
+    pattern: '"asyncapi":\s?"2.[0-9.]+"'
+  - language: A2Sv3-json
+    pattern: '"asyncapi":\s?"3.[0-9.]+"'
   - language: OASv2-json
     pattern: '"swagger":\s?"2.[0-9.]+"'
   - language: OASv3-json
@@ -1093,6 +1097,10 @@ disambiguations:
   - language: MiniYAML
     pattern: '^\t+.*?[^\s:].*?:'
     negative_pattern: '---'
+  - language: A2Sv2-yaml
+    pattern: 'asyncapi:\s?''?"?2.[0-9.]+''?"?'
+  - language: A2Sv3-yaml
+    pattern: 'asyncapi:\s?''?"?3.[0-9.]+''?"?'
   - language: OASv2-yaml
     pattern: 'swagger:\s?''?"?2.[0-9.]+''?"?'
   - language: OASv3-yaml

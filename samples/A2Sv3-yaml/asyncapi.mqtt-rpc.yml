@@ -1,0 +1,241 @@
+asyncapi: '3.0.0'
+info:
+  title: wb-mqtt-confed MQTT-RPC API
+  version: '1.0.0'
+defaultContentType: application/json
+channels:
+  confedEditorList:
+    address: '/rpc/v1/confed/Editor/List/{clientId}'
+    messages:
+      confedEditorList:
+        $ref: '#/components/messages/confedEditorList'
+    parameters:
+      clientId:
+        $ref: '#/components/parameters/clientId'
+  confedEditorListReply:
+    address: '/rpc/v1/confed/Editor/List/{clientId}/reply'
+    messages:
+      confedEditorListReply:
+        $ref: '#/components/messages/confedEditorListReply'
+    parameters:
+      clientId:
+        $ref: '#/components/parameters/clientId'
+  confedEditorLoad:
+    address: '/rpc/v1/confed/Editor/Load/{clientId}'
+    messages:
+      confedEditorLoad:
+        $ref: '#/components/messages/confedEditorLoad'
+    parameters:
+      clientId:
+        $ref: '#/components/parameters/clientId'
+  confedEditorLoadReply:
+    address: '/rpc/v1/confed/Editor/Load/{clientId}/reply'
+    messages:
+      confedEditorLoadReply:
+        $ref: '#/components/messages/confedEditorLoadReply'
+    parameters:
+      clientId:
+        $ref: '#/components/parameters/clientId'
+  confedEditorSave:
+    address: '/rpc/v1/confed/Editor/Save/{clientId}'
+    messages:
+      confedEditorSave:
+        $ref: '#/components/messages/confedEditorSave'
+    parameters:
+      clientId:
+        $ref: '#/components/parameters/clientId'
+  confedEditorSaveReply:
+    address: '/rpc/v1/confed/Editor/Save/{clientId}/reply'
+    messages:
+      confedEditorSaveReply:
+        $ref: '#/components/messages/confedEditorSaveReply'
+    parameters:
+      clientId:
+        $ref: '#/components/parameters/clientId'
+operations:
+  confedEditorList:
+    action: send
+    channel:
+      $ref: '#/channels/confedEditorList'
+    traits:
+      - $ref: '#/components/operationTraits/mqtt'
+    messages:
+      - $ref: '#/channels/confedEditorList/messages/confedEditorList'
+    reply:
+      channel:
+        $ref: '#/channels/confedEditorListReply'
+      messages:
+        - $ref: '#/channels/confedEditorListReply/messages/confedEditorListReply'
+  confedEditorLoad:
+    action: send
+    channel:
+      $ref: '#/channels/confedEditorLoad'
+    traits:
+      - $ref: '#/components/operationTraits/mqtt'
+    messages:
+      - $ref: '#/channels/confedEditorLoad/messages/confedEditorLoad'
+    reply:
+      channel:
+        $ref: '#/channels/confedEditorLoadReply'
+      messages:
+        - $ref: '#/channels/confedEditorLoadReply/messages/confedEditorLoadReply'
+  confedEditorSave:
+    action: send
+    channel:
+      $ref: '#/channels/confedEditorSave'
+    traits:
+      - $ref: '#/components/operationTraits/mqtt'
+    messages:
+      - $ref: '#/channels/confedEditorSave/messages/confedEditorSave'
+    reply:
+      channel:
+        $ref: '#/channels/confedEditorSaveReply'
+      messages:
+        - $ref: '#/channels/confedEditorSaveReply/messages/confedEditorSaveReply'
+components:
+  messages:
+    confedEditorList:
+      name: editorList
+      payload:
+        $ref: '#/components/schemas/confedEditorListPayload'
+    confedEditorListReply:
+      name: editorListReply
+      payload:
+        $ref: '#/components/schemas/confedEditorListReplyPayload'
+    confedEditorLoad:
+      name: editorLoad
+      payload:
+        $ref: '#/components/schemas/confedEditorLoadPayload'
+    confedEditorLoadReply:
+      name: editorLoadReply
+      payload:
+        $ref: '#/components/schemas/confedEditorLoadReplyPayload'
+    confedEditorSave:
+      name: editorSave
+      payload:
+        $ref: '#/components/schemas/confedEditorSavePayload'
+    confedEditorSaveReply:
+      name: editorSaveReply
+      payload:
+        $ref: '#/components/schemas/confedEditorSaveReplyPayload'
+  schemas:
+    confedEditorListPayload:
+      type: object
+      properties:
+        id:
+          type: number
+        params:
+          type: object
+      required:
+        - id
+        - params
+    confedEditorListReplyPayload:
+      type: object
+      properties:
+        id:
+          type: number
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              configPath:
+                type: string
+              description:
+                type: string
+              editor:
+                type: string
+              schemaPath:
+                type: string
+              title:
+                type: string
+              titleTranslations:
+                type: object
+            required:
+              - configPath
+              - description
+              - editor
+              - schemaPath
+              - title
+              - titleTranslations
+      required:
+        - id
+        - result
+    confedEditorLoadPayload:
+      type: object
+      properties:
+        id:
+          type: number
+        params:
+          type: object
+          properties:
+            path:
+              type: string
+          required:
+            - path
+      required:
+        - id
+        - params
+    confedEditorLoadReplyPayload:
+      type: object
+      properties:
+        id:
+          type: number
+        result:
+          type: object
+          properties:
+            configPath:
+              type: string
+            content:
+              type: object
+            editor:
+              type: string
+            schema:
+              type: object
+          required:
+            - configPath
+            - content
+            - editor
+            - schema
+      required:
+        - id
+        - result
+    confedEditorSavePayload:
+      type: object
+      properties:
+        id:
+          type: number
+        params:
+          type: object
+          properties:
+            content:
+              type: object
+            path:
+              type: string
+          required:
+            - content
+            - path
+      required:
+        - id
+        - params
+    confedEditorSaveReplyPayload:
+      type: object
+      properties:
+        id:
+          type: number
+        result:
+          type: object
+          properties:
+            path:
+              type: string
+      required:
+        - id
+        - result
+  parameters:
+    clientId:
+      description: UUID
+  operationTraits:
+    mqtt:
+      bindings:
+        mqtt:
+          qos: 1

@@ -1,0 +1,86 @@
+asyncapi: "2.2.0"
+info:
+  title: MQTT Adapter
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0.0'
+  description: |
+    MQTT adapter provides an MQTT API for sending messages through the platform. MQTT adapter uses mProxy (`pkg/mproxy`) for proxying traffic between client and MQTT broker.
+    Additionally, the MQTT adapter and the message broker are replicating the traffic between brokers.
+
+defaultContentType: application/json
+
+servers:
+  dev:
+    url: localhost:{port}
+    protocol: mqtt
+    description: Test broker
+    variables:
+      port:
+        description: Secure connection (TLS) is available through port 8883.
+        default: "1883"
+        enum:
+          - "1883"
+          - "8883"
+      username:
+        enum:
+          - "internal"
+          - "external"
+        description: Thing key type.
+      password:
+        description: Thing key.
+
+channels:
+  /messages/{subtopic}:
+    parameters:
+    publish:
+      traits:
+        - $ref: '#/components/operationTraits/mqtt'
+      message:
+        $ref: '#/components/messages/jsonMsg'
+    subscribe:
+      traits:
+        - $ref: '#/components/operationTraits/mqtt'
+      message:
+        $ref: '#/components/messages/jsonMsg'
+
+components:
+  messages:
+    jsonMsg:
+      title: JSON Message
+      summary: Arbitrary JSON array or object.
+      contentType: application/json
+      payload:
+        $ref: "#/components/schemas/jsonMsg"
+
+  schemas:
+    jsonMsg:
+      type: object
+      description: Arbitrary JSON object or array. SenML format is recommended.
+      example: |
+        ### SenML
+        ```json
+        [{"bn":"some-base-name:","bt":1641646520, "bu":"A","bver":5, "n":"voltage","u":"V","v":120.1}, {"n":"current","t":-5,"v":1.2}, {"n":"current","t":-4,"v":1.3}]
+        ```
+        ### JSON
+        ```json
+        {"field_1":"val_1", "t": 1641646525}
+        ```
+        ### JSON Array
+        ```json
+        [{"field_1":"val_1", "t": 1641646520},{"field_2":"val_2", "t": 1641646522}]
+        ```
+
+  parameters:
+    subtopic:
+      description: Arbitrary message subtopic.
+      schema:
+        type: string
+        default: ''
+
+  operationTraits:
+    mqtt:
+      bindings:
+        mqtt:
+          qos: 2

@@ -1,0 +1,128 @@
+{
+  "asyncapi": "3.0.0",
+  "channels": {
+    "sdkRpc": {
+      "address": "/ws",
+      "messages": {
+        "jobEvent": {
+          "contentType": "application/msgpack",
+          "description": "A planned ordered per-job event emitted after subscription.",
+          "name": "JobEvent",
+          "payload": {
+            "$ref": "./sdk-v1.lifecycle.schema.json#/$defs/JobEvent"
+          },
+          "x-nodetool-implementation": "planned"
+        },
+        "lifecycleRpcRequest": {
+          "contentType": "application/msgpack",
+          "description": "Capabilities and preflight are implemented behind the lifecycle feature flag; later job lifecycle commands remain planned.",
+          "name": "LifecycleRpcRequest",
+          "payload": {
+            "$ref": "./sdk-v1.lifecycle.schema.json#/$defs/LifecycleRpcRequest"
+          },
+          "x-nodetool-implementation": "partial"
+        },
+        "lifecycleRpcResponse": {
+          "contentType": "application/msgpack",
+          "description": "A correlated lifecycle response. Capabilities and preflight are implemented; later job lifecycle responses remain planned.",
+          "name": "LifecycleRpcResponse",
+          "payload": {
+            "$ref": "./sdk-v1.lifecycle.schema.json#/$defs/LifecycleRpcResponse"
+          },
+          "x-nodetool-implementation": "partial"
+        },
+        "sdkRpcRequest": {
+          "contentType": "application/msgpack",
+          "description": "A correlated read-only SDK command. request_id must be non-empty.",
+          "name": "SdkRpcRequest",
+          "payload": {
+            "$ref": "./sdk-v1.discovery.schema.json#/$defs/RpcRequest"
+          }
+        },
+        "sdkRpcResponse": {
+          "contentType": "application/msgpack",
+          "description": "Exactly one result or error response correlated by request_id.",
+          "name": "SdkRpcResponse",
+          "payload": {
+            "$ref": "./sdk-v1.discovery.schema.json#/$defs/RpcResponse"
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "description": "Draft MessagePack WebSocket contract for NodeTool SDK v1 discovery. JSON text remains diagnostic compatibility behavior.",
+    "title": "NodeTool SDK discovery WebSocket API",
+    "version": "1"
+  },
+  "operations": {
+    "receiveJobEvent": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/sdkRpc"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/sdkRpc/messages/jobEvent"
+        }
+      ],
+      "x-nodetool-implementation": "planned"
+    },
+    "receiveLifecycleRpcResponse": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/sdkRpc"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/sdkRpc/messages/lifecycleRpcResponse"
+        }
+      ],
+      "x-nodetool-implementation": "partial"
+    },
+    "receiveSdkRpcResponse": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/sdkRpc"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/sdkRpc/messages/sdkRpcResponse"
+        }
+      ]
+    },
+    "sendLifecycleRpcRequest": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/sdkRpc"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/sdkRpc/messages/lifecycleRpcRequest"
+        }
+      ],
+      "x-nodetool-implementation": "partial"
+    },
+    "sendSdkRpcRequest": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/sdkRpc"
+      },
+      "messages": [
+        {
+          "$ref": "#/channels/sdkRpc/messages/sdkRpcRequest"
+        }
+      ]
+    }
+  },
+  "servers": {
+    "local": {
+      "description": "Local trusted connections may omit credentials; remote deployments authenticate the WebSocket upgrade.",
+      "host": "127.0.0.1:7777",
+      "pathname": "/ws",
+      "protocol": "ws"
+    }
+  },
+  "x-nodetool-default-encoding": "messagepack",
+  "x-nodetool-status": "draft"
+}

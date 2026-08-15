@@ -1,0 +1,128 @@
+---
+asyncapi: 2.0.0
+info:
+  title: TSICoRE Entity API
+  description:
+    The TSICoRE Entity API allows exchange of data respresenting entities across
+    TSICoRE services.
+  termsOfService: http://asyncapi.org/terms/
+  contact:
+    name: TSICoRE Support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: "0.1"
+servers:
+  local:
+    url: "192.168.1.53"
+    description: Local broker instance
+    protocol: mqtt
+    variables:
+      port:
+        description: Secure connection (TLS) is available through port 8883.
+        enum:
+          - "1883"
+          - "8883"
+        default: "1883"
+defaultContentType: application/json
+channels:
+  homeassistant/sensor/enviroplus/3/bme280/temp/config:
+    description: This channel is used to publish BME280 temperature measurement configuration
+    publish:
+      operationId: publish_configuration_temperature
+      description: BME280 temperature measurement configuration
+      tags:
+        - name: bme280
+        - name: sensor
+        - name: configuration
+        - name: temperature
+      message:
+        description: BME280 Temperature measurement configuration
+        payload:
+          $ref: "#/components/schemas/configPayload"
+  homeassistant/sensor/enviroplus/3/bme280/humidity/config:
+    description: This channel is used to publish BME280 humidity measurement configuration
+    publish:
+      operationId: publish_configuration_humidity
+      description: BME280 humidity measurement configuration
+      tags:
+        - name: bme280
+        - name: sensor
+        - name: configuration
+        - name: humidity
+      message:
+        description: BME280 humidity measurement configuration
+        payload:
+          $ref: "#/components/schemas/configPayload"
+  homeassistant/sensor/enviroplus/3/bme280/state:
+    description: This channel is used to publish BME280 measurements
+    publish:
+      operationId: publish_bme280
+      description: BME280 measurement
+      tags:
+        - name: bme280
+        - name: sensor
+        - name: producer
+      message:
+        description: BME280 measurement
+        payload:
+          $ref: "#/components/schemas/bme280MeasurementPayload"
+components:
+  schemas:
+    configPayload:
+      type: object
+      properties:
+        device_class:
+          type: string
+          description: Class of sensor measurement
+          default: temperature
+        name:
+          type: string
+          description: Name of sensor measurement
+          default: Temperature
+        state_topic:
+          type: string
+          description: State topic
+          default: STATE_TOPIC
+        unit_of_measurement:
+          type: string
+          description: Units of sensor measurement
+          default: "°C"
+        value_template:
+          type: string
+          description: Value template for sensor measurement
+          default: "{{ value_json.temperature}}"
+    measurement:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Label for measurement
+        value:
+          type: number
+          description: Value of measurement
+        units:
+          type: string
+          description: Units of measurement
+    bme280Measurement:
+      type: object
+      properties:
+        sensor:
+          type: string
+          description: Sensor type
+          default: 'configurationhandler.config["sensors"]["WEATHER_LABEL"]'
+        measurements:
+          type: array
+          description: Measurement array
+          items: [{ $ref: "#/components/schemas/measurement" }]
+    bme280MeasurementPayload:
+      type: object
+      properties:
+        temperature:
+          type: number
+        humidity:
+          type: number
+          minimum: 0
+          maximum: 100
+        pressure:
+          type: number

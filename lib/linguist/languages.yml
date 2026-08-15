@@ -60,6 +60,52 @@
   tm_scope: source.4dm
   ace_mode: text
   language_id: 577529595
+A2Sv2-json:
+  type: data
+  color: "#875ae2"
+  extensions:
+  - ".json"
+  group: AsyncAPI Specification v2
+  tm_scope: source.json
+  ace_mode: json
+  codemirror_mode: javascript
+  codemirror_mime_type: application/json
+  language_id: 287196681
+A2Sv2-yaml:
+  type: data
+  color: "#875ae2"
+  extensions:
+  - ".yaml"
+  - ".yml"
+  group: AsyncAPI Specification v2
+  tm_scope: source.yaml
+  ace_mode: yaml
+  codemirror_mode: yaml
+  codemirror_mime_type: text/x-yaml
+  language_id: 446430588
+A2Sv3-json:
+  type: data
+  color: "#875ae2"
+  extensions:
+  - ".json"
+  group: AsyncAPI Specification v3
+  tm_scope: source.json
+  ace_mode: json
+  codemirror_mode: javascript
+  codemirror_mime_type: application/json
+  language_id: 394269344
+A2Sv3-yaml:
+  type: data
+  color: "#875ae2"
+  extensions:
+  - ".yaml"
+  - ".yml"
+  group: AsyncAPI Specification v3
+  tm_scope: source.yaml
+  ace_mode: yaml
+  codemirror_mode: yaml
+  codemirror_mime_type: text/x-yaml
+  language_id: 363551139
 ABAP:
   type: programming
   color: "#E8274B"
@@ -481,6 +527,22 @@ Asymptote:
   codemirror_mode: clike
   codemirror_mime_type: text/x-kotlin
   language_id: 591605007
+AsyncAPI Specification v2:
+  aliases:
+  - a2sv2
+  type: data
+  color: "#875ae2"
+  tm_scope: none
+  ace_mode: text
+  language_id: 143058228
+AsyncAPI Specification v3:
+  aliases:
+  - a2sv3
+  type: data
+  color: "#875ae2"
+  tm_scope: none
+  ace_mode: text
+  language_id: 19098164
 Augeas:
   type: programming
   color: "#9CC134"

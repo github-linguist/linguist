@@ -1,0 +1,172 @@
+asyncapi: "2.2.0"
+info:
+  title: WebSocket Adapter
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0.0'
+  description: |
+    WebSocket adapter provides a WebSocket API for sending messages and commands through the platform.
+
+defaultContentType: application/json
+
+servers:
+  dev:
+    url: localhost:{port}
+    protocol: ws
+    description: WebSocket adapter
+    variables:
+      port:
+        default: "8190"
+        enum:
+          - "8190"
+    security:
+      - thingKey: []
+      - bearerToken: []
+
+channels:
+  /messages:
+    publish:
+      summary: Publish a message
+      description: Sends a message without a subtopic.
+      message:
+        $ref: '#/components/messages/SenMLMessage'
+
+  /messages/{subtopic}:
+    parameters:
+      subtopic:
+        $ref: '#/components/parameters/subtopic'
+    publish:
+      summary: Publish a message to a subtopic
+      description: Sends a message to a specific subtopic. Supports nested subtopics with `/`.
+      message:
+        $ref: '#/components/messages/SenMLMessage'
+
+  /things/{thingId}/commands:
+    parameters:
+      thingId:
+        $ref: '#/components/parameters/thingId'
+    publish:
+      summary: Send a command to a thing
+      description: |
+        Each message sent over the socket is published as a command to the specified thing.
+        Authorized by thing key (M2M) or user bearer token.
+      message:
+        $ref: '#/components/messages/CommandMessage'
+
+  /things/{thingId}/commands/{subtopic}:
+    parameters:
+      thingId:
+        $ref: '#/components/parameters/thingId'
+      subtopic:
+        $ref: '#/components/parameters/subtopic'
+    publish:
+      summary: Send a command to a thing on a subtopic
+      description: |
+        Each message sent over the socket is published as a command to the specified thing on a subtopic.
+        Supports nested subtopics with `/`.
+        Authorized by thing key (M2M) or user bearer token.
+      message:
+        $ref: '#/components/messages/CommandMessage'
+
+  /groups/{groupId}/commands:
+    parameters:
+      groupId:
+        $ref: '#/components/parameters/groupId'
+    publish:
+      summary: Send a command to a group
+      description: |
+        Each message sent over the socket is published as a command to all things in the specified group.
+        Authorized by thing key (M2M) or user bearer token.
+      message:
+        $ref: '#/components/messages/CommandMessage'
+
+  /groups/{groupId}/commands/{subtopic}:
+    parameters:
+      groupId:
+        $ref: '#/components/parameters/groupId'
+      subtopic:
+        $ref: '#/components/parameters/subtopic'
+    publish:
+      summary: Send a command to a group on a subtopic
+      description: |
+        Each message sent over the socket is published as a command to all things in the group on a subtopic.
+        Supports nested subtopics with `/`.
+        Authorized by thing key (M2M) or user bearer token.
+      message:
+        $ref: '#/components/messages/CommandMessage'
+
+components:
+  messages:
+    SenMLMessage:
+      title: SenML Message
+      summary: Message payload in SenML or arbitrary JSON format.
+      contentType: application/json
+      payload: 
+        $ref: '#/components/schemas/SenMLMessage'
+
+    CommandMessage:
+      title: Command Message
+      summary: Command instruction sent to a thing or group.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/CommandPayload'
+
+  schemas:
+    SenMLMessage:
+      type: object
+      description: Arbitrary JSON object or array. SenML format is recommended.
+      example: |
+        ### SenML
+        ```json
+        [{"bn":"some-base-name:","bt":1641646520,"bu":"A","bver":5,"n":"voltage","u":"V","v":120.1},{"n":"current","t":-5,"v":1.2}]
+        ```
+        ### JSON
+        ```json
+        {"field_1":"val_1","t":1641646525}
+        ```
+
+    CommandPayload:
+      type: object
+      description: Arbitrary JSON object sent as a command to a thing or group.
+      example: |
+        ### Simple command
+        ```json
+        {"command": "reboot"}
+        ```
+        ### With parameters
+        ```json
+        {"command": "set_threshold", "params": {"value": 42}, "request_id": "abc-123"}
+        ```
+
+  parameters:
+    subtopic:
+      description: Arbitrary subtopic. Supports nested paths with `/`.
+      schema:
+        type: string
+        default: ''
+    thingId:
+      description: Unique thing identifier.
+      schema:
+        type: string
+        format: uuid
+    groupId:
+      description: Unique group identifier.
+      schema:
+        type: string
+        format: uuid
+
+  securitySchemes:
+    thingKey:
+      type: httpApiKey
+      name: Authorization
+      in: header
+      description: |
+        Thing key authentication.
+        Header value: "Thing <thing_key>" or use query params: ?key=<key>&keyType=<type>
+    bearerToken:
+      type: http
+      scheme: bearer
+      description: |
+        User bearer token authentication.
+        Header value: "Bearer <user_token>" or use query param: ?token=<user_token>
