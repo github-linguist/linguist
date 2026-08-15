@@ -1,0 +1,22 @@
+{
+  "name": "Jau",
+  "scopeName": "source.jau",
+  "patterns": [
+    {
+      "name": "keyword.control.jau",
+      "match": "\\b(func|let|return|if|else|while|import|struct|namespace)\\b"
+    },
+    {
+      "name": "string.quoted.double.jau",
+      "match": "\".*?\""
+    },
+    {
+      "name": "constant.numeric.jau",
+      "match": "\\b[0-9]+\\b"
+    },
+    {
+      "name": "comment.line.jau",
+      "match": "//.*$"
+    }
+  ]
+}
