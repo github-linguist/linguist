@@ -873,9 +873,9 @@ disambiguations:
 - extensions: ['.sd']
   rules:
   - language: FlexCat Source Description
-    pattern: '^##\s*(?i:rem|stringtype|shortstrings)\b'
+    pattern: '^##[ \t]*(?i:rem|stringtype|shortstrings)\b'
   - language: Vespa Schema Definition
-    pattern: '^\s*(?:schema|search|document)\s+[\w./-]+[^{\n]*\{'
+    pattern: '^[ \t]*(?:schema|search|document)[ \t]+[\w./-]+[ \t]*(?:inherits[ \t][^{\n]*)?\{'
   - language: FlexCat Source Description
 - extensions: ['.sol']
   rules:
