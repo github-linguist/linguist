@@ -1,0 +1,48 @@
+import std.collections
+import std.io
+import std.string
+import std.test
+
+struct Player {
+  name: String
+  score: Int
+}
+
+fun parsePlayer(line: String) -> Player! {
+  let parts = line.split(",")
+  if parts.count() < 2 {
+    raise "expected 'name,score', got '{line}'"
+  }
+  let score = Int.parse(parts[1]) or raise "bad score in '{line}'"
+  Player { name: parts[0], score: score }
+}
+
+fun report(players: List<Player>) -> String {
+  let scores = players.map(fun(p: Player) -> Int { p.score })
+  let best = collections.max(scores) or 0
+  let worst = collections.min(scores) or 0
+  let names = players.map(fun(p: Player) -> String { p.name }).join(", ")
+  "best {best}, worst {worst}, average {collections.sum(scores) / scores.count()} — {names}"
+}
+
+test "parsePlayer rejects malformed rows" {
+  expect(parsePlayer("nope")).fails()
+}
+
+test "parsePlayer parses a valid row" {
+  let result = parsePlayer("alice,42")
+  match result {
+    Ok(v) -> expect(v.name).eq("alice")
+    Err(e) -> expect("should have parsed: {e}").eq("should have parsed")
+  }
+  match result {
+    Ok(v) -> expect(v.score).eq(42)
+    Err(e) -> expect("should have parsed: {e}").eq("should have parsed")
+  }
+}
+
+export fun main(args: List<String>) -> Int {
+  let players = args.map(fun(a: String) -> Player { parsePlayer(a) or Player { name: "unknown", score: 0 } })
+  io.println(report(players))
+  0
+}

@@ -1,0 +1,44 @@
+import std.io
+import std.string
+import std.test
+
+schema Config {
+  host: String(minLen: 1)
+  port: Int(min: 1, max: 65535) = 8080
+  retries: Int(min: 0, max: 10) = 3
+  debug: Bool = false
+}
+
+fun describe(c: Config) -> String {
+  "http://{c.host}:{c.port} (retries {c.retries}, debug {c.debug})"
+}
+
+fun load(raw: String) -> Config {
+  match Config.parse(raw) {
+    Ok(c) -> c
+    Err(e) -> Config { host: "localhost", port: 8080, retries: 0, debug: false }
+  }
+}
+
+test "schema validates and applies defaults" {
+  let result = Config.parse("\{\"host\": \"localhost\", \"port\": 3000\}")
+  match result {
+    Ok(c) -> expect(describe(c)).eq("http://localhost:3000 (retries 3, debug false)")
+    Err(e) -> expect("should have parsed: {e}").eq("should have parsed")
+  }
+}
+
+test "schema rejects out-of-range values" {
+  let result = Config.parse("\{\"host\": \"x\", \"port\": 99999\}")
+  match result {
+    Ok(c) -> expect("should have rejected: {describe(c)}").eq("rejected")
+    Err(e) -> expect(true).truthy()
+  }
+}
+
+export fun main(args: List<String>) -> Int {
+  let raw = args.first() or "\{\"host\": \"example.org\", \"port\": 9090, \"debug\": true\}"
+  let config = load(raw)
+  io.println(describe(config))
+  0
+}

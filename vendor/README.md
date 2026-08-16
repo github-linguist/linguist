@@ -184,6 +184,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **EditorConfig:** [sindresorhus/atom-editorconfig](https://github.com/sindresorhus/atom-editorconfig)
 - **Edje Data Collection:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **Eiffel:** [textmate/eiffel.tmbundle](https://github.com/textmate/eiffel.tmbundle)
+- **Xan Script:** [Evvyinnit/xanscript-language](https://github.com/Evvyinnit/xanscript-language)
 - **Elixir:** [elixir-lang/tree-sitter-elixir](https://github.com/elixir-lang/tree-sitter-elixir) 🐌
 - **Elvish:** [elves/elvish](https://github.com/elves/elvish)
 - **Elvish Transcript:** [elves/elvish](https://github.com/elves/elvish)
