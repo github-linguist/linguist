@@ -803,7 +803,7 @@ disambiguations:
 - extensions: ['.releaserc']
   rules:
   - language: YAML
-    pattern: '^[ \t]*(?:#|[^"\s:{}\[\]][^:]*[ \t]*:)'
+    pattern: '^[ \t]*(?:#|[^"\s:{}\[\]][^:]*:)'
   - language: JSON
 - extensions: ['.res']
   rules:
