@@ -455,6 +455,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_eslintrc_by_heuristics
+    assert_heuristics({
+      "JSON with Comments" => ["#{samples_path}/JSON with Comments/filenames/.eslintrc"],
+      "YAML" => ["#{samples_path}/YAML/filenames/.eslintrc"]
+    })
+  end
+
   def test_ex_by_heuristics
     assert_heuristics({
       "Elixir" => all_fixtures("Elixir", "*.ex"),
