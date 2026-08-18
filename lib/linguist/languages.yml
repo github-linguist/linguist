@@ -1393,6 +1393,7 @@ CoffeeScript:
   - "._coffee"
   - ".cake"
   - ".cjsx"
+  - ".coffee.erb"
   - ".iced"
   filenames:
   - Cakefile
@@ -2699,6 +2700,7 @@ Git Commit:
   aliases:
   - commit
   filenames:
+  - ".gitmessage"
   - COMMIT_EDITMSG
   ace_mode: text
   tm_scope: text.git-commit
@@ -3381,6 +3383,7 @@ INI:
   - ".buckconfig"
   - ".coveragerc"
   - ".flake8"
+  - ".gitreview"
   - ".pylintrc"
   - HOSTS
   - buildozer.spec
@@ -3437,6 +3440,7 @@ Ignore List:
   extensions:
   - ".gitignore"
   filenames:
+  - ".agignore"
   - ".atomignore"
   - ".babelignore"
   - ".bzrignore"
@@ -3652,6 +3656,7 @@ JSON:
   - ".htmlhintrc"
   - ".imgbotconfig"
   - ".nycrc"
+  - ".releaserc"
   - ".secrets.baseline"
   - ".tern-config"
   - ".tern-project"
@@ -3698,6 +3703,7 @@ JSON with Comments:
   filenames:
   - ".babelrc"
   - ".devcontainer.json"
+  - ".eslintrc"
   - ".eslintrc.json"
   - ".jscsrc"
   - ".jshintrc"
@@ -6479,8 +6485,11 @@ R:
   extensions:
   - ".r"
   - ".rd"
+  - ".rhistory"
   - ".rsx"
   filenames:
+  - ".Rapp.history"
+  - ".Rhistory"
   - ".Rprofile"
   - expr-dist
   interpreters:
@@ -8967,6 +8976,7 @@ XML:
   - ".kml"
   - ".launch"
   - ".mdpolicy"
+  - ".meta4"
   - ".mjml"
   - ".mm"
   - ".mod"
@@ -9183,7 +9193,9 @@ YAML:
   - ".clang-format"
   - ".clang-tidy"
   - ".clangd"
+  - ".eslintrc"
   - ".gemrc"
+  - ".releaserc"
   - CITATION.cff
   - glide.lock
   - pixi.lock
