@@ -885,7 +885,7 @@ disambiguations:
   - language: FlexCat Source Description
     pattern: '^##[ \t]*(?i:rem|stringtype|shortstrings)\b'
   - language: Vespa Schema Definition
-    pattern: '^[ \t]*(?:schema|search|document)[ \t]+[\w./-]+[ \t]*(?:inherits[ \t][^{\n]*)?\{'
+    pattern: '^[ \t]*(?:schema|search|document)[ \t]+[\w.\/-]+[ \t]*(?:inherits[ \t][^{\n]*)?\{'
   - language: FlexCat Source Description
 - extensions: ['.sol']
   rules:
