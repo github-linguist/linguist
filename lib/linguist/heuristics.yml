@@ -301,6 +301,11 @@ disambiguations:
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
     pattern: '\/\/|["'']use strict["'']|export\s+default\s|\/\*(?:.|[\r\n])*?\*\/'
+- extensions: ['.eslintrc']
+  rules:
+  - language: YAML
+    named_pattern: yaml
+  - language: JSON with Comments
 - extensions: ['.ex']
   rules:
   - language: Elixir
@@ -800,6 +805,11 @@ disambiguations:
     pattern:
     - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
     - '^\s*template\s*<'
+- extensions: ['.releaserc']
+  rules:
+  - language: YAML
+    named_pattern: yaml
+  - language: JSON
 - extensions: ['.res']
   rules:
   - language: ReScript
@@ -1202,3 +1212,4 @@ named_patterns:
   # Excel objects
   - '\b(?:(?:This|Active)?Workbooks?|Worksheets?|Active(?:Sheet|Chart|Cell)|WorksheetFunction)\b'
   - '\b(?:Range\(".*|Cells\([0-9a-zA-Z_]*, (?:[0-9a-zA-Z_]*|"[a-zA-Z]{1,3}"))\)'
+  yaml: '^[ \t]*(?:#|(?:[^/"\s:{}\[\]]|\/[^/*:\n])[^:\n]*:)'

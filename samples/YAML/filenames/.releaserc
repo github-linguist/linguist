@@ -1,0 +1,67 @@
+{
+    "branches": [
+        {
+            "name": 'main',
+            prerelease: false
+        },
+        {
+            "name": 'releases\/+([0-9])?(\.\d+)(\.\d+|z|$)',
+            prerelease: false
+        },
+        {
+            "name": 'next',
+            prerelease: false
+        },
+        {
+            name: 'next-major',
+            prerelease: true
+        }
+    ],
+        plugins: [
+            [
+                "@semantic-release/commit-analyzer", 
+                { 
+                    "preset": "conventionalcommits", 
+                    "presetConfig": "conventional-changelog-conventionalcommits"
+                }
+            ],
+            "@semantic-release/release-notes-generator",
+            ["@semantic-release/exec", {
+                "prepareCmd": 'yq -i eval ".appVersion = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml;yq -i eval ".version = \"${nextRelease.version}\"" charts/splunk-connect-for-syslog/Chart.yaml'
+            }],
+            [
+                "@google/semantic-release-replace-plugin",
+                {
+                    "replacements": [
+                        {
+                            "files": ["pyproject.toml"],
+                            "from": "(version ?=.*)",
+                            "to": "version = \"${nextRelease.version}\"",
+                            "results": [
+                                {
+                                    "file": "pyproject.toml",
+                                    "hasChanged": true,
+                                    "numMatches": 1,
+                                    "numReplacements": 1
+                                }
+                            ],
+                            "countMatches": true
+                        }
+                    ]
+                }
+            ],
+            ["@semantic-release/exec", {
+                "prepareCmd": "echo ${nextRelease.version} >package/etc/VERSION"
+            }],
+            ["@semantic-release/git", {
+                "assets": [
+                    "pyproject.toml",
+                    "package/etc/VERSION",
+                    "deploy/k8s-microk8s/*",
+                    "charts/splunk-connect-for-syslog/Chart.yaml"
+                ],
+                "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
+            }],
+            ["@semantic-release/github"],
+        ]
+}
