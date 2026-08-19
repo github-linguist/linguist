@@ -1,0 +1,108 @@
+// SPDX-FileCopyrightText : © 2024 TU Wien <vadl@tuwien.ac.at>
+// SPDX-License-Identifier: Apache-2.0
+
+// RISC-V 32 I instruction set
+
+import rv3264im::RV3264I
+
+instruction set architecture RV32I extending RV3264I = {}
+
+application binary interface ABI for RV32I = {
+   size_t type = unsigned int
+   pointer align = 32
+
+   //
+   // Register alias definitions
+   //
+
+   alias register zero = X(0)
+
+   alias register ra = X(1)
+
+   alias register sp = X(2)
+
+   alias register gp = X(3)
+   alias register tp = X(4)
+
+   alias register t0 = X(5)
+   alias register t1 = X(6)
+   alias register t2 = X(7)
+
+   // [ preferred alias ]
+   alias register fp = X(8)
+
+   alias register s0 = X(8)
+   alias register s1 = X(9)
+
+   alias register a0 = X(10)
+   alias register a1 = X(11)
+   alias register a2 = X(12)
+   alias register a3 = X(13)
+   alias register a4 = X(14)
+   alias register a5 = X(15)
+   alias register a6 = X(16)
+   alias register a7 = X(17)
+
+   alias register s2 = X(18)
+   alias register s3 = X(19)
+   alias register s4 = X(20)
+   alias register s5 = X(21)
+   alias register s6 = X(22)
+   alias register s7 = X(23)
+   alias register s8 = X(24)
+   alias register s9 = X(25)
+   alias register s10 = X(26)
+   alias register s11 = X(27)
+
+   alias register t3 = X(28)
+   alias register t4 = X(29)
+   alias register t5 = X(30)
+   alias register t6 = X(31)
+
+   // [ alignment : HalfWord ]
+   stack pointer = sp
+   return address = ra
+   global pointer = gp
+   frame pointer = fp
+   thread pointer = tp
+
+   special return instruction = RET
+   special call instruction = CALL
+   special local address load instruction = LLA
+   special global address load instruction = LGA_32
+   special absolute address load instruction = LA
+
+   return value = a{0..1}
+   function argument = a{0..7}
+
+   // ra is callee saved because it is used as normal register and has to be restored.
+   caller saved = [ a{0..7}, t{0..6} ]
+   callee saved = [ ra, s{0..11} ]
+
+  constant sequence( rd : Bits<5>, val : SInt<32> ) =
+  {
+     LUI { rd = rd, imm = hi( val ) }
+     ADDI { rd = rd, rs1 = rd, imm = lo( val ) }
+  }
+
+  constant sequence( rd : Bits<5>, val : UInt<32> ) =
+  {
+        LUI { rd = rd, imm = hi( val ) }
+        ADDI { rd = rd, rs1 = rd, imm = lo( val ) }
+  }
+
+  constant sequence( rd : Bits<5>, imm : SInt<12> ) =
+  {
+     ADDI{ rd = rd, rs1 = 0, imm = imm }
+  }
+
+  register adjustment sequence( rd : Bits<5>, rs1: Bits<5>, imm : SInt<12> ) =
+  {
+     ADDI{ rd = rd, rs1 = rs1, imm = imm }
+  }
+}
+
+[ htif ]
+processor Spike implements RV32I with ABI = {
+  reset = PC := 0x1000
+}

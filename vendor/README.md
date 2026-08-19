@@ -677,6 +677,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Untyped Plutus Core:** [aiken-lang/vscode-aiken](https://github.com/aiken-lang/vscode-aiken)
 - **UrWeb:** [gwalborn/UrWeb-Language-Definition](https://github.com/gwalborn/UrWeb-Language-Definition)
 - **V:** [0x9ef/vscode-vlang](https://github.com/0x9ef/vscode-vlang)
+- **VADL:** [OpenVADL/vscode-openvadl](https://github.com/OpenVADL/vscode-openvadl)
 - **VBA:** [serkonda7/vscode-vba](https://github.com/serkonda7/vscode-vba)
 - **VBScript:** [peters-ben-0007/VBDotNetSyntax](https://github.com/peters-ben-0007/VBDotNetSyntax)
 - **VCL:** [fastly/vscode-fastly-vcl](https://github.com/fastly/vscode-fastly-vcl)
