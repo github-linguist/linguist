@@ -1,0 +1,188 @@
+; IronKernel.Amb -- nondeterministic search as a library
+; ======================================================
+;
+; Backtracking, expressed so that the code doing the searching never mentions
+; a continuation. IronKernel's `shift`/`reset` are multi-shot and re-delimit
+; when resumed, so a choice point can simply invoke its captured continuation
+; once per alternative:
+;
+;   (collect
+;     (let ((a (amb (list 1 2))))
+;       (let ((b (amb (list 10 20))))
+;         (emit (cons a b)))))
+;   ; => ((1 . 10) (1 . 20) (2 . 10) (2 . 20))
+;
+; Two ideas carry the library.
+;
+; Choice points are ordinary expressions. `amb` returns each element of a
+; list, `amb-range` each integer of a half-open interval, and `require` prunes
+; the current branch. Search code reads as if it were straight-line code that
+; happens to be run once per candidate.
+;
+; The strategy is a value. Nondeterministic code only ever calls `emit`; what
+; that means is decided by the operative wrapping it. `collect` gathers every
+; solution, `first-of` escapes with the first, `count-of` tallies without
+; retaining anything, and `search` takes an arbitrary handler so you can add
+; your own. The searcher does not change when the strategy does.
+;
+; Mutable state and backtracking
+; ------------------------------
+; A search that mutates a board, a counter or a set of used lines has to undo
+; that mutation when a branch is abandoned. Doing it at the call site does not
+; work: by the time a choice expression returns, the rest of the search has
+; already run inside the continuation. The undo belongs to the choice point,
+; which is what `amb-bracket` provides -- it enters a candidate, hands it to
+; the continuation, and leaves it only once that continuation has run to
+; exhaustion:
+;
+;   (let ((c (amb-bracket-range 0 n free? place! unplace!)))
+;     (place-rest (+ c 1)))
+;
+; State is therefore always consistent with the caller's view of it, and the
+; caller still never sees a continuation.
+;
+; Notes
+; -----
+; * `emit` outside any strategy is a no-op, so a nondeterministic procedure is
+;   safe to call anywhere.
+; * Strategies nest. Each installs its own delimiter, so an inner search runs
+;   to completion inside one branch of an outer one, and restores the previous
+;   handler when it is done.
+; * Nothing here performs host I/O.
+
+(provide! (fail require amb amb-range amb-bracket amb-bracket-range
+           emit search collect first-of count-of)
+
+  ; --- private ------------------------------------------------------------
+
+  (define list-reverse
+    (lambda (xs)
+      (letrec ((loop (lambda (l acc)
+                       (if (null? l) acc (loop (cdr l) (cons (car l) acc))))))
+        (loop xs ()))))
+
+  ; The handler in force. Held in a vector so that the strategy operatives can
+  ; swap it dynamically and put it back afterwards.
+  (define sink (make-vector 1 (lambda (s) #inert)))
+
+  ; The non-local exit in first-of has to run every active amb-bracket cleanup
+  ; before it returns. Each bracket temporarily extends this escape chain.
+  (define escape (make-vector 1 (lambda (s) #inert)))
+
+  (define with-sink
+    (lambda (handler thunk)
+      (let ((saved (vector-ref sink 0)))
+        (vector-set! sink 0 handler)
+        (reset (thunk))
+        (vector-set! sink 0 saved))))
+
+  (define with-bracket
+    (lambda (x enter! leave! continuation)
+      (let ((saved (vector-ref escape 0)))
+        (enter! x)
+        (vector-set! escape 0
+          (lambda (solution)
+            (vector-set! escape 0 saved)
+            (leave! x)
+            (saved solution)))
+        (continuation x)
+        (vector-set! escape 0 saved)
+        (leave! x))))
+
+  ; --- choice points ------------------------------------------------------
+
+  ; Abandon this branch: capture the continuation up to the delimiter and drop
+  ; it, returning control to the most recent choice point.
+  (define fail (lambda () (shift (lambda (k) #inert))))
+
+  ; Keep going only if the test holds.
+  (define require (lambda (test) (if test #inert (fail))))
+
+  ; Yield each element of xs. An empty list fails.
+  (define amb (lambda (xs) (shift (lambda (k) (for-each k xs)))))
+
+  ; Yield each integer in [lo, hi) without building the list.
+  (define amb-range
+    (lambda (lo hi)
+      (shift (lambda (k)
+        (letrec ((loop (lambda (i)
+                         (if (< i hi) (begin (k i) (loop (+ i 1))) #inert))))
+          (loop lo))))))
+
+  ; Yield each x of xs satisfying ok?, with enter! applied before the
+  ; continuation runs and leave! after it has finished exploring. Use this
+  ; whenever a candidate has to be recorded in mutable state.
+  (define amb-bracket
+    (lambda (xs ok? enter! leave!)
+      (shift (lambda (k)
+        (for-each (lambda (x)
+          (if (ok? x)
+            (with-bracket x enter! leave! k)
+            #inert)) xs)))))
+
+  ; amb-bracket over the integers in [lo, hi).
+  (define amb-bracket-range
+    (lambda (lo hi ok? enter! leave!)
+      (shift (lambda (k)
+        (letrec ((loop (lambda (i)
+                         (if (< i hi)
+                           (begin
+                             (if (ok? i)
+                               (with-bracket i enter! leave! k)
+                               #inert)
+                             (loop (+ i 1)))
+                           #inert))))
+          (loop lo))))))
+
+  ; --- reporting a solution ------------------------------------------------
+
+  (define emit (lambda (s) ((vector-ref sink 0) s)))
+
+  ; --- strategies ----------------------------------------------------------
+
+  ; Run body with an arbitrary handler applied to every solution.
+  (define search
+    (vau (handler & body) env
+      (with-sink (eval handler env)
+                 (lambda () (eval (cons sequence body) env)))
+      #inert))
+
+  ; Every solution, in the order found.
+  (define collect
+    (vau body env
+      (let ((acc (make-vector 1 ())))
+        (with-sink
+          (lambda (s) (vector-set! acc 0 (cons s (vector-ref acc 0))))
+          (lambda () (eval (cons sequence body) env)))
+        (list-reverse (vector-ref acc 0)))))
+
+  ; How many solutions, retaining none of them.
+  (define count-of
+    (vau body env
+      (let ((n (make-vector 1 0)))
+        (with-sink
+          (lambda (s) (vector-set! n 0 (+ (vector-ref n 0) 1)))
+          (lambda () (eval (cons sequence body) env)))
+        (vector-ref n 0))))
+
+  ; The first solution, or () if there is none. Escapes through call/cc, so
+  ; the rest of the search tree is never explored. The handler is restored on
+  ; both paths.
+  (define first-of
+    (vau body env
+      (let ((saved-sink (vector-ref sink 0))
+            (saved-escape (vector-ref escape 0)))
+        (let ((found
+                (call/cc (lambda (return)
+                           (vector-set! escape 0
+                             (lambda (solution)
+                               (vector-set! escape 0 saved-escape)
+                               (return solution)))
+                           (vector-set! sink 0
+                             (lambda (solution)
+                               ((vector-ref escape 0) solution)))
+                           (reset (eval (cons sequence body) env))
+                           ()))))
+          (vector-set! sink 0 saved-sink)
+          (vector-set! escape 0 saved-escape)
+          found)))))

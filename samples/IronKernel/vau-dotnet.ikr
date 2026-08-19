@@ -1,0 +1,119 @@
+; vau-dotnet.ikr — Kernel operatives meet the CLR
+;
+; What makes `vau` powerful (unlike `lambda`):
+;   • operands arrive *unevaluated* (you see the code itself)
+;   • the caller's environment is first-class
+;   • you choose what to `eval`, when, and where
+;
+; That is how Kernel grows new syntax without a macro expander.
+; Below we invent timing, tracing, and short-circuit logic on top of .NET.
+
+(clr-open System System.IO)
+(define writeln (lambda (x) (Console/WriteLine x)))
+(define write  (lambda (x) (Console/Write x)))
+
+; ---------------------------------------------------------------------------
+; 1. `unless` — new control syntax.
+;    A lambda would evaluate every operand before the call; `vau` does not.
+; ---------------------------------------------------------------------------
+(define unless
+  (vau (test & body) env
+    (if (eval test env)
+      #inert
+      (eval (cons sequence body) env))))
+
+; ---------------------------------------------------------------------------
+; 2. `trace` — print the *source form*, then run it in the caller's env.
+;    Impossible with lambda: by the time a function sees `exp`, it is a value.
+; ---------------------------------------------------------------------------
+(define trace
+  (vau (exp) env
+    (begin
+      (write "  >> ")
+      (show exp)
+      (writeln "")
+      (eval exp env))))
+
+; ---------------------------------------------------------------------------
+; 3. `timed` — time any expression via System.DateTime, no thunks required:
+;      (timed "label" <expr>)
+; ---------------------------------------------------------------------------
+(define timed
+  (vau (label exp) env
+    (let* ((start (.get System.DateTime Now))
+           (result (eval exp env))
+           (ms (.get (- (.get System.DateTime Now) start) TotalMilliseconds)))
+      (printf "  [{0}] {1} ms\n" label ms)
+      result)))
+
+; ---------------------------------------------------------------------------
+; 4. `and*` — short-circuit AND as an operative.
+;    With lambda, `(/ 1 0)` would blow up before `and*` ever ran.
+; ---------------------------------------------------------------------------
+(define and*
+  (vau operands env
+    (if (null? operands)
+      #t
+      (if (null? (cdr operands))
+        (eval (car operands) env)
+        (if (eval (car operands) env)
+          (eval (cons and* (cdr operands)) env)
+          #f)))))
+
+; ---------------------------------------------------------------------------
+; Demo
+; ---------------------------------------------------------------------------
+
+(writeln "")
+(writeln "=== IronKernel: vau x .NET ===")
+(writeln "")
+
+(define sample "IronKernel · vau keeps code as data on the CLR")
+(writeln "Sample:")
+(writeln sample)
+(writeln "")
+
+(writeln "trace shows the form *before* .NET runs it:")
+(define stamped
+  (timed "format"
+    (trace (. System.String Format "{0}  —  ticks={1}"
+              sample
+              (.get (.get System.DateTime UtcNow) Ticks)))))
+(writeln stamped)
+
+(writeln "")
+(writeln "Guid + Path via selective eval:")
+(define id (trace (. System.Guid NewGuid)))
+(writeln (. System.String Format "  guid  = {0}" id))
+(define cwd (trace (. System.IO.Directory GetCurrentDirectory)))
+(writeln (. System.String Format "  cwd   = {0}" cwd))
+(writeln (. System.String Format "  leaf  = {0}" (. System.IO.Path GetFileName cwd)))
+
+(writeln "")
+(writeln "Short-circuit and* (the division is never evaluated):")
+(writeln (. System.String Format "  => {0}" (trace (and* #f (/ 1 0)))))
+
+(writeln "")
+(writeln "unless builds a temp file only when the prefix is non-empty:")
+(define prefix (. System.IO.Path GetTempPath))
+(unless (eqv? prefix "")
+  ; Use Guid (not DateTime.ToString) so culture-specific '/' cannot create nested paths on Linux.
+  (define demo-file
+    (. System.IO.Path Combine prefix
+       (. System.String Format "ironkernel-{0}.txt" (. System.Guid NewGuid))))
+  (writeln (. System.String Format "  temp = {0}" demo-file))
+  (. System.IO.File WriteAllText demo-file sample)
+  (writeln (. System.String Format "  read = {0}"
+              (trace (. System.IO.File ReadAllText demo-file))))
+  (. System.IO.File Delete demo-file)
+  (writeln "  (temp file deleted)"))
+
+(writeln "")
+(writeln "timed recursive Kernel work:")
+(defn (sum-to n)
+  (if (zero? n) 0 (+ n (sum-to (- n 1)))))
+(writeln (. System.String Format "  sum-to 80 = {0}" (timed "sum-to" (sum-to 80))))
+
+(writeln "")
+(writeln "Done — new syntax, zero macros: just vau, eval, and .NET.")
+(writeln "")

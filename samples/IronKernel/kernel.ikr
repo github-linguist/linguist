@@ -1,0 +1,748 @@
+﻿
+; IronKernel bootstrapping library
+;
+
+(define quote (vau (x) _ x))
+
+; (sequence . ⟨objects⟩)
+; The $sequence operative evaluates the elements of the list ⟨objects⟩ in the dynamic environment, one at a time from left to right.
+; If ⟨objects⟩ is a cyclic list, element evaluation continues indefinitely, with elements in the cycle being evaluated repeatedly.
+; If ⟨objects⟩ is a nonempty finite list, its last element is evaluated as a tail context. If ⟨objects⟩ is the empty list, the result is inert.
+; Known in other schemes as `begin` or `block`.
+
+; Primitive since ADR 0007, not derived. The report's derivation -- kept as a test
+; in StdlibTests rather than as the implementation -- costs a `null?`, two `eval`s
+; and a `cons` per element, and a dispatch census put sequencing at 84% of all
+; derived-operative dispatches. 1.3.2 permits this: "the derivation code is not
+; considered part of the definition of the feature".
+
+; (list . objects)
+; The list applicative returns objects.
+; The underlying operative of list returns its undifferentiated operand tree, regardless of whether that tree is or is not a list.
+
+(define list (wrap (vau x _ x)))
+
+(define list*
+  (wrap
+    (vau args _
+         (sequence
+           (define aux
+             (wrap
+               (vau ((head & tail)) _
+                    (if (null? tail)
+                      head
+                      (cons head (aux tail))))))
+           (aux args)))))
+
+;TODO: consider making length a native primitive		   
+; 6.3.1: the improper-list length -- "the number of consecutive cdr references
+; that can be followed starting from object". Zero for a non-pair, and positive
+; infinity for a cyclic list, which is why this asks get-list-metrics rather than
+; cdring down: cdring down a cyclic list does not finish.
+; Written with wrap/vau rather than lambda because lambda is defined further down.
+(define $length-from-metrics
+  (wrap
+    (vau (m) _
+      (if (zero? (car (cdr (cdr (cdr m))))) (car m) #e+infinity))))
+
+(define length
+  (wrap (vau (x) _ ($length-from-metrics (get-list-metrics x)))))
+		   
+; This operative generalizes primitive operative $vau , §4.10.3, so that the con-
+;structed compound operative will evaluate a sequence of expressions in its local en-
+;vironment, rather than just one.
+
+(define vau
+  ((wrap
+     (vau (vau) _
+          (vau (formals eformal & body) env
+               (eval (list vau formals eformal
+                           (if (> (length body) 1)
+                             (cons sequence body)
+                             (car body))) env))))
+   vau))		   
+			
+; lambda is built in terms of vau
+(define lambda 
+	(vau (params & body) static-env 
+		; inlined comment
+		(wrap (eval (list* vau params '_ body) static-env))))
+
+(define λ lambda)
+(define ϝ vau)
+		
+(define apply 
+	(lambda (appv arg & opt)
+		(eval 
+			(cons (unwrap appv) arg)
+			(if (null? opt)
+				(make-environment)
+				(car opt)))))
+
+(define last (lambda (xs)
+    (if (null? (cdr xs))
+        (car xs)
+        (last (cdr xs)))))
+
+(define begin (lambda xs (last xs)))
+
+(define map
+  (lambda (f xs)
+    (if (null? xs)
+      ()
+      (cons (f (car xs)) (map f (cdr xs))))))
+	  
+(define caar (lambda (((x & _) & _)) x))
+(define cdar (lambda (((_ & x) & _)) x))
+(define cadr (lambda ((_ & (x & _))) x))
+(define cddr (lambda ((_ & (_ & x))) x))	  
+
+; Primitive since ADR 0007, not derived. The derivation below built
+; ((lambda (formals) . body) . expressions) and evaluated it, so every `let`
+; constructed a fresh operative whose body was then compiled for its single
+; application -- 90,583 of 339,599 body compilations in one run of
+; constant-width-amb. Kept as a test in StdlibTests.
+;
+; (define let (vau (binds & body) env
+;     (eval (cons (list* lambda (cons (map car binds) body)) (map cadr binds)) env)))
+
+(define any?
+  (lambda (f xs)
+    (if (null? xs)
+      #f
+      (if (f (car xs))
+        #t
+        (any? f (cdr xs))))))
+
+(define zip
+  (lambda (f & xss)
+    (let ((rest (map cdr xss)))
+      (cons (apply f (map car xss))
+            (if (any? null? rest)
+              ()
+              (apply zip (cons f rest)))))))
+
+(define let*
+  (vau (bindings & body) env
+    (eval (if (null? bindings)
+            (list* let bindings body)
+            (list let (list (car bindings))
+                  (list* let* (cdr bindings) body))) env)))
+
+(define letrec
+  (vau (bindings & body) env
+    (eval (list* let ()
+                 (list define
+                   (map car bindings)
+                   (cons list (map cadr bindings)))
+                 body) env)))
+
+(define letrec*
+  (vau (bindings & body) env
+    (eval (if (null? bindings)
+            (list* letrec bindings body)
+            (list letrec (list (car bindings))
+                  (list* letrec* (cdr bindings) body))) env)))
+
+(define let-redirect
+  (vau (exp bindings & body) env
+    (eval (cons (eval (list* lambda (map car bindings) body) (eval exp env))
+                (map cadr bindings)) env)))
+
+; R-1RK 6.9.1: (for-each applicative . lists) -- the applicative comes first, as it
+; does for map (5.9.1). IronKernel used to take the list first.
+(define for-each
+  (wrap (vau (f x) env (apply map (list f x) env) #inert)))
+  
+(define get-current-environment (wrap (vau () e e)))
+
+(define remote-eval
+  (vau (o e) d
+    (eval o (eval e d))))
+
+(define bindings->environment
+  (vau bindings env
+    (eval (list let-redirect
+                (make-environment)
+                bindings
+                (list get-current-environment)) env)))
+		  
+(define provide!
+  (vau (symbols & body) env
+    (eval (list define symbols
+                (list let ()
+                      (cons sequence body)
+                      (cons list symbols))) env)))
+					  
+; The inner (list (unwrap eval) values env) builds an eval call at runtime, so its
+; operand order follows R-1RK 4.8.3 -- (eval expression environment) -- by hand.
+(define set!
+  (vau (target formals values) env
+    (eval (list define formals (list (unwrap eval) values env)) (eval target env))))					  
+
+(define import!
+  (vau (exp & symbols) env
+    (eval (list set! env symbols (cons list symbols)) (eval exp env))))		  
+
+(define defn
+  (vau (name & body) e
+    (if (pair? name)
+      (let (((n & as) name))
+        (eval (list define n
+                    (cons lambda (cons as body))) e))
+      (eval (cons define (cons name body)) e))))
+
+(defn (compose f g) (lambda (x) (f (g x))))
+
+(define let/cc
+	(vau (symbol & body) env
+		(eval (list call/cc (list* lambda (list symbol) body)) env)))
+
+; the time operative benchmarks expression evaluation
+(define time (vau (x) env 
+	(let* 
+		((start (.get System.DateTime Now)) 
+		 (result (eval x env))) 
+		 (begin 
+			(printf "Time elapsed: {0} milliseconds\n" (.get (- (.get System.DateTime Now) start) TotalMilliseconds)) result))))
+			
+(define cond 
+	(vau clauses env
+		(define aux
+			(lambda ((test & body) & clauses)
+				(if (eval test env)
+					(apply (wrap sequence) body env)
+					(apply (wrap cond) clauses env))))
+					
+		(if (null? clauses) #inert (apply aux clauses))))			
+
+(define not? (lambda (x) (if x #f #t)))
+
+; R-1RK 6.1.4 / 6.1.5: $and? and $or? are operatives. They evaluate operands left
+; to right and stop as soon as the result is decided, so ($and? #f (/ 1 0)) is #f.
+(define $and?
+   (vau x e
+      (cond ((null? x)         #t)
+             ((null? (cdr x))   (eval (car x) e))
+             ((eval (car x) e)  (apply (wrap $and?) (cdr x) e))
+             (#t                #f))))
+
+(define $or?
+	(vau x e
+		(cond ((null? x)	#f)
+			((null? (cdr x)) (eval (car x) e))
+			((eval (car x) e) #t)
+			(#t			(apply (wrap $or?) (cdr x) e)))))
+
+; R-1RK 6.1.2 / 6.1.3: and? and or? are *applicatives*. Every argument is evaluated
+; before the call, so (and? #f (/ 1 0)) is an error rather than #f -- use $and? for
+; short-circuiting. Both are predicates over already-evaluated booleans: and? returns
+; true unless some argument is false (true for no arguments), or? false unless some
+; argument is true (false for no arguments).
+(define and?
+  (lambda xs
+    (letrec ((aux (lambda (ys)
+                    (if (null? ys)
+                      #t
+                      (if (car ys) (aux (cdr ys)) #f)))))
+      (aux xs))))
+
+(define or?
+  (lambda xs
+    (letrec ((aux (lambda (ys)
+                    (if (null? ys)
+                      #f
+                      (if (car ys) #t (aux (cdr ys)))))))
+      (aux xs))))
+
+; --- R-1RK 12.5 Number features ----------------------------------------------
+; The required Numbers module. number?, integer?, finite? and zero? are runtime
+; primitives; the rest are derived here from the binary <, <= and arithmetic
+; primitives. Predicates are variadic and true for an empty argument list, per the
+; report's "every element" phrasing.
+
+; 12.5.2 / 12.5.3: chain predicates over consecutive elements. `=?` compares
+; numerically rather than structurally, so 1 and 1.0 are equal; eqv? would not be.
+(define $chain-compare?
+  (lambda (ok? xs)
+    (letrec ((aux (lambda (ys)
+                    (if (null? ys)
+                      #t
+                      (if (null? (cdr ys))
+                        #t
+                        (if (ok? (car ys) (car (cdr ys)))
+                          (aux (cdr ys))
+                          #f))))))
+      (aux xs))))
+
+(define =?  (lambda xs ($chain-compare? (lambda (a b) (if (<= a b) (<= b a) #f)) xs)))
+(define <?  (lambda xs ($chain-compare? (lambda (a b) (< a b)) xs)))
+(define <=? (lambda xs ($chain-compare? (lambda (a b) (<= a b)) xs)))
+(define >?  (lambda xs ($chain-compare? (lambda (a b) (< b a)) xs)))
+(define >=? (lambda xs ($chain-compare? (lambda (a b) (<= b a)) xs)))
+
+; 12.5.10 / 12.5.11
+(define $all-numbers?
+  (lambda (ok? xs)
+    (letrec ((aux (lambda (ys)
+                    (if (null? ys) #t (if (ok? (car ys)) (aux (cdr ys)) #f)))))
+      (aux xs))))
+
+(define positive? (lambda xs ($all-numbers? (lambda (x) (< 0 x)) xs)))
+(define negative? (lambda xs ($all-numbers? (lambda (x) (< x 0)) xs)))
+
+; 12.5.8: div and mod. The report defines n as the greatest integer with
+; real2 * n <= real1, which is only bounded for a positive divisor; its rationale
+; states the report follows the R6RS div/mod, whose defining property is
+; 0 <= mod < |real2| for either sign. That is what is implemented here.
+; div-and-mod is a primitive: it needs integer quotient semantics, and / is
+; ordinary division (R-1RK 12.8.2) rather than the truncating quotient.
+(define div (lambda (a b) (car (div-and-mod a b))))
+(define mod (lambda (a b) (car (cdr (div-and-mod a b)))))
+
+; 12.5.9: div0 and mod0 put the remainder in [-|real2|/2, |real2|/2). The test is
+; (2 * r) >= |b| rather than r >= |b|/2, because |b|/2 is computed in integer
+; arithmetic and would truncate: for b = 3 it gives 1 rather than 1.5, which moves
+; the boundary and returns the wrong remainder for r = 1.
+; div-and-mod leaves 0 <= r < |b|, so only the upper adjustment is ever needed.
+(define div0-and-mod0
+  (lambda (a b)
+    (let* ((dm (div-and-mod a b))
+           (q (car dm))
+           (r (car (cdr dm))))
+      (if (<= (abs b) (* 2 r))
+        (if (< 0 b) (list (+ q 1) (- r b)) (list (- q 1) (+ r b)))
+        (list q r)))))
+
+(define div0 (lambda (a b) (car (div0-and-mod0 a b))))
+(define mod0 (lambda (a b) (car (cdr (div0-and-mod0 a b)))))
+
+; 12.5.11
+(define even? (lambda xs ($all-numbers? (lambda (x) (zero? (mod x 2))) xs)))
+(define odd?  (lambda xs ($all-numbers? (lambda (x) (if (zero? (mod x 2)) #f #t)) xs)))
+
+; 12.5.12
+(define abs (lambda (x) (if (< x 0) (- 0 x) x)))
+
+;  R-1RK 12.2: a result with no primary value. Whether producing one signals an
+; error is the strict-arithmetic keyed dynamic variable's decision (12.6.6), and
+; subtracting equal infinities is exactly the operation that has no answer.
+(define $no-primary-value (lambda () (- #e+infinity #e+infinity)))
+
+; 12.5.13. The empty cases are the report's: (max) is exact negative infinity and
+; (min) is exact positive infinity, which preserve (max h . t) = (max h (max . t)).
+; Seeding the fold with them makes that identity hold rather than being asserted.
+(define $fold-reals
+  (lambda (pick seed xs)
+    (letrec ((aux (lambda (best ys)
+                    (if (null? ys) best (aux (pick best (car ys)) (cdr ys))))))
+      (aux seed xs))))
+
+(define max (lambda xs ($fold-reals (lambda (a b) (if (< a b) b a)) #e-infinity xs)))
+(define min (lambda xs ($fold-reals (lambda (a b) (if (< b a) b a)) #e+infinity xs)))
+
+; 12.5.14: lcm and gcd over *improper* integers -- reals that are each an integer
+; or an infinity. The report states both in terms of the whole argument list rather
+; than pairwise, and they cannot be folded pairwise: the gcd of zero with an
+; infinity has no primary value, yet (gcd 0 5) is 5, because "if gcd is called with
+; at least one finite non-zero argument, its result is the same as if all zero and
+; infinite arguments were deleted". So the list is sorted out first and the fold
+; only ever sees finite non-zero arguments.
+(define $any?
+  (lambda (ok? xs)
+    (letrec ((aux (lambda (ys) (if (null? ys) #f (if (ok? (car ys)) #t (aux (cdr ys)))))))
+      (aux xs))))
+
+(define $infinite? (lambda (x) (if (finite? x) #f #t)))
+
+(define $finite-non-zero
+  (lambda (xs)
+    (letrec ((aux (lambda (ys acc)
+                    (if (null? ys)
+                      acc
+                      (let ((y (car ys)))
+                        (if (finite? y)
+                          (if (zero? y) (aux (cdr ys) acc) (aux (cdr ys) (cons y acc)))
+                          (aux (cdr ys) acc)))))))
+      (aux xs (list)))))
+
+(define $gcd2
+  (lambda (a b)
+    (letrec ((aux (lambda (x y) (if (zero? y) x (aux y (mod x y))))))
+      (aux (abs a) (abs b)))))
+
+(define gcd
+  (lambda xs
+    (let ((keep ($finite-non-zero xs)))
+      (if (null? keep)
+        ; Nothing finite and non-zero: a zero argument leaves the result
+        ; indeterminate, and otherwise -- every argument infinite, or none at all --
+        ; it is exact positive infinity.
+        (if ($any? zero? xs) ($no-primary-value) #e+infinity)
+        (letrec ((aux (lambda (acc ys)
+                        (if (null? ys) acc (aux ($gcd2 acc (car ys)) (cdr ys))))))
+          (aux (car keep) (cdr keep)))))))
+
+; A zero argument leaves no primary value -- no positive multiple of zero exists --
+; and any infinite argument makes the result positive infinity.
+(define lcm
+  (lambda xs
+    (if ($any? zero? xs)
+      ($no-primary-value)
+      (if ($any? $infinite? xs)
+        #e+infinity
+        (letrec ((aux (lambda (acc ys)
+                        (if (null? ys)
+                          acc
+                          (let ((n (abs (car ys))))
+                            (aux (div (* acc n) ($gcd2 acc n)) (cdr ys)))))))
+          (aux 1 xs))))))
+
+; --- R-1RK 12.8 Rational features --------------------------------------------
+; An optional module. rational?, /, numerator, denominator, floor, ceiling,
+; truncate and round are primitives; the two interval searches are derived here.
+;
+; IronKernel has no exact rational type, so a non-integral quotient is inexact and
+; these return the closest representable value rather than an exact ratio. The
+; divergence is recorded in the conformance matrix.
+
+; 12.8.5: the simplest rational in [lo, hi]. Zero is simpler than every other
+; rational, and within an interval that excludes zero the simplest value is found
+; by continued fractions: take the integer part, and if no integer lies inside,
+; recurse on the reciprocals of the remainders.
+(define simplest-rational
+  (lambda (lo hi)
+    (if (<? hi lo)
+      (error "simplest-rational: lower bound exceeds upper bound")
+      (letrec ((search
+                 (lambda (lo hi)
+                   (let ((whole (floor lo)))
+                     (if (=? whole lo)
+                       whole
+                       (if (<? whole (floor hi))
+                         (+ whole 1)
+                         (+ whole
+                            (/ 1 (search (/ 1 (- hi whole)) (/ 1 (- lo whole)))))))))))
+        (if (<? 0 lo)
+          (search lo hi)
+          (if (<? hi 0)
+            (- 0 (search (- 0 hi) (- 0 lo)))
+            ; The interval spans zero, and zero is the simplest rational.
+            0))))))
+
+; 12.8.5: the simplest rational within real1 plus or minus real2.
+(define rationalize
+  (lambda (x tolerance)
+    (simplest-rational (- x tolerance) (+ x tolerance))))
+
+; --- R-1RK list features (5.7, 6.3) ------------------------------------------
+; get-list-metrics is a primitive; the rest are derived from it and from the pair
+; primitives. set-cdr! can build a cycle, so the derivations that ask about a
+; list's *shape* go through get-list-metrics, which measures a cycle rather than
+; walking into one. The derivations that walk a list's elements -- list-tail,
+; filter, append and the rest -- still assume the caller passes a finite list, as
+; the report's own derivations of them do; a cyclic argument makes them diverge,
+; which is recorded as a divergence rather than papered over. `reduce` (6.3.10) is
+; the exception: the report gives it a six-argument syntax for the cyclic case, and
+; that is implemented, so it consults the metrics too.
+
+; 5.7.2
+(define list-tail
+  (lambda (ls k)
+    (letrec ((aux (lambda (rest n) (if (zero? n) rest (aux (cdr rest) (- n 1))))))
+      (aux ls k))))
+
+; 6.3.2
+(define list-ref (lambda (ls k) (car (list-tail ls k))))
+
+; 6.3.3: the last argument is referenced rather than copied, so (append) is nil and
+; (append x) is x.
+(define append
+  (lambda lists
+    (letrec ((join (lambda (a b) (if (null? a) b (cons (car a) (join (cdr a) b)))))
+             (aux (lambda (ls)
+                    (if (null? ls)
+                      ()
+                      (if (null? (cdr ls))
+                        (car ls)
+                        (join (car ls) (aux (cdr ls))))))))
+      (aux lists))))
+
+; 6.3.4: consecutive sublists of length two. Nil gives nil, and otherwise the result
+; is one shorter than the argument.
+(define list-neighbors
+  (lambda (ls)
+    (letrec ((aux (lambda (rest)
+                    (if (null? rest)
+                      ()
+                      (if (null? (cdr rest))
+                        ()
+                        (cons (list (car rest) (car (cdr rest))) (aux (cdr rest))))))))
+      (aux ls))))
+
+; 6.3.5: (filter applicative list). The result of each call must be boolean.
+(define filter
+  (lambda (accept? ls)
+    (letrec ((aux (lambda (rest)
+                    (if (null? rest)
+                      ()
+                      (let ((keep (accept? (car rest))))
+                        (if (boolean? keep)
+                          (if keep
+                            (cons (car rest) (aux (cdr rest)))
+                            (aux (cdr rest)))
+                          (error "filter: predicate returned a non-boolean")))))))
+      (aux ls))))
+
+; 6.3.6 / 6.3.7: assoc searches a list of pairs by car; member? searches for an
+; element. Both compare with equal? (structural), per the report.
+(define assoc
+  (lambda (key pairs)
+    (letrec ((aux (lambda (rest)
+                    (if (null? rest)
+                      ()
+                      (if (equal? key (car (car rest)))
+                        (car rest)
+                        (aux (cdr rest)))))))
+      (aux pairs))))
+
+(define member?
+  (lambda (object ls)
+    (letrec ((aux (lambda (rest)
+                    (if (null? rest)
+                      #f
+                      (if (equal? object (car rest)) #t (aux (cdr rest)))))))
+      (aux ls))))
+
+; --- R-1RK module Pair mutation, the entries derived here (6.4) --------------
+; set-car! and set-cdr! are primitives; encycle! and append! are further down,
+; after the shape predicates they depend on.
+
+; 6.4.3 / 6.4.4: assq and memq? are assoc and member? with eq? in place of
+; equal?. IronKernel binds eq? to the same structural comparison as eqv?
+; (recorded as a divergence at 4.2.1), so here they agree with assoc and
+; member? on more objects than the report's would.
+(define assq
+  (lambda (object alist)
+    (let ((matches (filter (lambda (record) (eq? object (car record))) alist)))
+      (if (null? matches) () (car matches)))))
+
+(define memq?
+  (lambda (object ls)
+    (apply or? (map (lambda (x) (eq? object x)) ls))))
+
+; 6.4.2: a fresh evaluation structure -- the set of pairs reachable from the
+; object without passing through a non-pair -- with non-pair referents left
+; alone. The report's derivation threads an association list to handle cycles
+; and preserve sharing; neither can arise without mutation, so the copy is a
+; plain recursion. The report also promises the result is not eq? to a pair
+; argument, which structural eq? cannot express here: see the 4.7 divergence.
+(define copy-es
+  (lambda (x)
+    (if (pair? x) (cons (copy-es (car x)) (copy-es (cdr x))) x)))
+
+(define $every?
+  (lambda (ok? xs)
+    (letrec ((aux (lambda (ys) (if (null? ys) #t (if (ok? (car ys)) (aux (cdr ys)) #f)))))
+      (aux xs))))
+
+; 6.3.8 / 6.3.9. A finite list is an acyclic one -- it ends at nil, which the
+; metrics report as n = 1. A countable list is a list at all: finite, or cyclic,
+; which is c > 0. Neither can walk the list itself now that one may be cyclic.
+(define $finite-list-one?
+  (lambda (x) (=? (car (cdr (get-list-metrics x))) 1)))
+
+(define $countable-list-one?
+  (lambda (x)
+    (let ((m (get-list-metrics x)))
+      (if (=? (car (cdr m)) 1) #t (<? 0 (car (cdr (cdr (cdr m)))))))))
+
+(define finite-list? (lambda xs ($every? $finite-list-one? xs)))
+(define countable-list? (lambda xs ($every? $countable-list-one? xs)))
+
+; 5.8.1: (encycle! object integer1 integer2). Mutates the improper list starting at
+; object to have acyclic prefix length integer1 and cycle length integer2, by
+; setting the cdr of the (integer1 + integer2)th pair to refer to the
+; (integer1 + 1)th pair. list-tail k lands on the (k + 1)th pair, hence the offsets.
+; integer2 = 0 does nothing, and the result is inert either way.
+;
+; The report requires both integers to be exact and non-negative and the list to
+; hold at least their sum in pairs. A negative count is rejected here rather than
+; left to list-tail, which would count down past zero and never stop.
+(define encycle!
+  (lambda (object prefix cycle)
+    (if (if (integer? prefix) (integer? cycle) #f)
+      (if (if (negative? prefix) #t (negative? cycle))
+        (error "encycle!: the counts must be non-negative")
+        (if (zero? cycle)
+          #inert
+          (set-cdr! (list-tail object (- (+ prefix cycle) 1))
+                    (list-tail object prefix))))
+      (error "encycle!: the counts must be exact integers"))))
+
+; 6.4.1: (append! . lists). "Sets the cdr of the last pair in each nonempty list
+; argument to refer to the next non-nil argument, except that if there is a last
+; non-nil argument, it isn't mutated." Only the *first* argument is ever the
+; mutation target, which falls out of the report's own equivalence
+;   (append! u v . w) = ($sequence (append! u v) (append! u . w))
+; because appending v to u leaves u's last pair inside v. The result is inert.
+;
+; The report also makes it an error for two arguments to share a last pair; that is
+; a condition on the caller, and appending such a pair to itself would build a cycle
+; rather than signal, which is recorded as a divergence.
+(define $last-pair
+  (lambda (p)
+    (letrec ((aux (lambda (q) (if (pair? (cdr q)) (aux (cdr q)) q))))
+      (aux p))))
+
+(define $append-onto!
+  (lambda (u v)
+    (if (null? v)
+      #inert
+      (if (finite-list? u)
+        (if (null? u)
+          (error "append!: the first argument must be a nonempty acyclic list")
+          (set-cdr! ($last-pair u) v))
+        (error "append!: every argument but the last must be an acyclic list")))))
+
+(define append!
+  (lambda lists
+    (if (null? lists)
+      (error "append!: needs at least one argument")
+      (letrec ((aux (lambda (u rest)
+                      (if (null? rest)
+                        #inert
+                        (sequence ($append-onto! u (car rest)) (aux u (cdr rest)))))))
+        (aux (car lists) (cdr lists))))))
+
+; 6.3.10: (reduce list binary identity) and the six-argument
+; (reduce list binary identity precycle incycle postcycle), which is the form that
+; reduces a *cyclic* list. The report gives reduce a cycle interface because an
+; arbitrary binary operation cannot be generalised to an infinite sequence in finite
+; time, so the caller supplies how to handle one: precycle converts each element of
+; the cycle, incycle reduces those, and postcycle converts the result back to
+; something binary accepts.
+;
+; This is the report's own derivation, wrapped so its helpers stay private, with one
+; change. The report maps precycle over (list-tail ls a), which is the cyclic part;
+; `map` walks its argument and so would not return on it, while reduce-n consumes
+; only c elements. Mapping exactly those c elements keeps the same calls in the same
+; order without needing a cycle-aware map.
+;
+; Called with a cyclic list, the three-argument form still diverges, as the report's
+; derivation does -- there the second syntax "must be used".
+;
+; The applicatives are called in reduce's own dynamic environment (as map does,
+; 5.9.1), which is why this is a wrapped vau rather than a lambda.
+(define reduce
+  ((lambda ()
+     (letrec
+       ((reduce-acyclic
+          (lambda (ls bin id)
+            (if (null? ls)
+              id
+              (if (null? (cdr ls))
+                (car ls)
+                (bin (car ls) (reduce-acyclic (cdr ls) bin id))))))
+        (reduce-n
+          (lambda (ls bin n)
+            (if (=? n 1)
+              (car ls)
+              (bin (car ls) (reduce-n (cdr ls) bin (- n 1))))))
+        (map-n
+          (lambda (f ls n)
+            (if (zero? n)
+              ()
+              (cons (f (car ls)) (map-n f (cdr ls) (- n 1)))))))
+       (wrap
+         (vau (ls bin id & opt) env
+           (let ((fixenv (lambda (appv) (lambda x (apply appv x env)))))
+             (let ((binary (fixenv bin))
+                   (metrics (get-list-metrics ls)))
+               (let ((a (car (cdr (cdr metrics))))
+                     (c (car (cdr (cdr (cdr metrics))))))
+                 (if (zero? c)
+                   (reduce-acyclic ls binary id)
+                   (let ((pre (fixenv (car opt)))
+                         (in (fixenv (car (cdr opt))))
+                         (post (fixenv (car (cdr (cdr opt))))))
+                     (let ((reduced-cycle
+                             (post (reduce-n (map-n pre (list-tail ls a) c) in c))))
+                       (if (zero? a)
+                         reduced-cycle
+                         (binary (reduce-n ls binary a) reduced-cycle))))))))))))))
+
+; --- R-1RK canonical names ---------------------------------------------------
+; The report spells operatives with a leading `$`, and the primitive definer as
+; `$define!`. IronKernel's own spelling drops the sigil; these bind the report's
+; names to the same combiners so a program written against R-1RK runs unchanged.
+;
+; This is an extension in the sense of R-1RK 1.3.2 ("Implementations are permitted
+; to add extensions, provided the extensions are consistent with the language
+; presented here"): the short names are the extension, the `$` names are the
+; report's features, and both denote one combiner, so they cannot disagree.
+
+(define $if if)
+(define $define! define)
+(define $vau vau)
+(define $lambda lambda)
+(define $sequence sequence)
+(define $cond cond)
+(define $let let)
+(define $let* let*)
+(define $letrec letrec)
+(define $letrec* letrec*)
+(define $let-redirect let-redirect)
+(define $let/cc let/cc)
+
+; 7.3.4: (exit) is an abnormal transfer of #inert to root-continuation.
+(define exit (lambda () (apply-continuation root-continuation #inert)))
+(define $set! set!)
+(define $provide! provide!)
+(define $import! import!)
+(define $remote-eval remote-eval)
+(define $bindings->environment bindings->environment)
+
+
+; --- R-1RK environment and module features -----------------------------------
+
+; 6.7.3: "a child of the ground environment with no local bindings". This is the
+; report's own derivation, and it works for the reason the report gives: library
+; derivations are evaluated in the ground environment, so a lambda defined here
+; closes over ground, and calling it makes a fresh child with only its parameters
+; bound -- of which there are none.
+;
+; Capabilities come along for free, and correctly: the ground environment of a
+; session is built with that session's profile, so a restricted program gets a
+; restricted standard environment rather than an escape from its own profile.
+(define make-kernel-standard-environment (lambda () (get-current-environment)))
+
+; 6.7.8: ($let-safe bindings . body) is ($let-redirect
+; (make-kernel-standard-environment) bindings . body) -- a $let whose body runs in a
+; fresh standard environment rather than the caller's, so that what the body can see
+; does not depend on where it was written.
+(define $let-safe
+  (vau (bindings & body) env
+    (eval (list* let-redirect (make-kernel-standard-environment) bindings body) env)))
+
+(define let-safe $let-safe)
+
+; 15.2.3: (get-module string) creates a fresh standard environment, evaluates the
+; file's expressions in it consecutively, and returns it. The two-argument form
+; binds module-parameters to the second argument first, "prior to evaluating read
+; expressions".
+;
+; load (15.2.2) evaluates in its *dynamic* environment, so evaluating the call to
+; it inside the new environment is what puts the module's definitions there. That
+; is also what makes the capability check land on the new environment rather than
+; on get-module's caller.
+(define get-module
+  (lambda (path & parameters)
+    (let ((module-environment (make-kernel-standard-environment)))
+      (sequence
+        (if (null? parameters)
+          #inert
+          (eval (list define (quote module-parameters) (car parameters))
+                module-environment))
+        (eval (list load path) module-environment)
+        module-environment))))

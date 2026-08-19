@@ -1,0 +1,304 @@
+; Figures of constant width on a chessboard
+; =========================================
+;
+; A *figure* is any set of squares on an n x n board. It has *constant width w*
+; when every row, every column and every diagonal (slope +1 and slope -1) meets
+; it in either 0 or exactly w squares. A figure of constant width w occupying
+; k*w squares is said to be of type (n, k, w); k is then also its number of
+; non-empty rows. Figures of type (n, n, 1) are exactly the solutions of the
+; n-queens problem.
+;
+;   Janko Hernandez, Leonel Robert, "Figures of Constant Width on a Chessboard",
+;   American Mathematical Monthly 112 (2005) 42-50.
+;   https://userweb.ucs.louisiana.edu/~C00254569/hernandez-robert.pdf
+;
+; This program is an IronKernel transcription of the exhaustive backtracking
+; search described in
+;
+;   https://ademar.name/blog/2009/04/finding-figures-of-constant-wi.html
+;
+; It enumerates the *connected* figures of type (n, _, w). Two squares are
+; adjacent when they share a row, a column, or a main diagonal; a figure is
+; connected when every pair of its squares is joined by a chain of such steps.
+; Constant width 1 figures (the n-queens solutions) are totally disconnected,
+; so they are never reported.
+;
+; How the search works
+; --------------------
+; For each of the 2n + 2(2n-1) lines of the board we keep the number of squares
+; that still have to be placed on it: w for an untouched line, 0 for a saturated
+; one. Committing to a square decrements the four counters running through it.
+;
+; The frontier ("buffer") holds squares that are already committed but whose
+; local constraints have not been discharged yet. Popping a square p off the
+; frontier means choosing, right there, *every* square that still has to share a
+; line with p: exactly (cap-r p) more in its row, (cap-c p) in its column, and
+; likewise on both diagonals. Those choices join the frontier, and every other
+; square on p's four lines is permanently out of play -- which is what makes the
+; search converge instead of wandering the board.
+;
+; When the frontier drains, every committed square has all four of its lines
+; saturated, so the accumulated set is a figure of constant width w. It is
+; connected, because the frontier only ever grew along lines of squares already
+; in it.
+;
+; Running it
+; ----------
+;   dotnet run --project IronKernel -- Examples/constant-width.ikr          ; 5 4 2
+;   dotnet run --project IronKernel -- Examples/constant-width.ikr 4 4 2
+;   dotnet run --project IronKernel -- Examples/constant-width.ikr 6 6 2
+;   dotnet run --project IronKernel -- Examples/constant-width.ikr 11 10 3
+;
+; The arguments are  n k w : the board size, the width, and k as a pruning
+; bound. Give all three or none. k*w is not a filter on the output but a cutoff
+; on the search: a branch is abandoned as soon as it can no longer reach k*w
+; squares, yet a branch that survives still reports whatever figure it lands on,
+; which may be a smaller one. So every figure of type (n, k', w) with k' >= k is
+; guaranteed to be found, some figures below k appear as a bonus, and raising k
+; only makes the search faster. Each figure is printed with the type it really
+; has.
+;
+; The default 5 4 2 run finds five figures in about three seconds: the paper's
+; Figure 3, of type (5,4,2), plus the four placements of its Figure 2 -- the
+; unique connected figure of type (4,4,2) -- inside the 5x5 board.
+;
+;   args      time     figures found
+;   ------    ------   -----------------------------------------------
+;   4 4 2     0.4 s    1 x (4,4,2)          the paper's Figure 2
+;   5 4 2     3 s      5 x (5,4,2)          the default run
+;   6 6 2     16 s     2 x (6,6,2)
+;   6 4 2     28 s     15 x (6,4,2), 2 x (6,6,2)
+;   7 6 2     5.6 min  24 x (7,6,2), 4 x (7,4,2)
+;
+; These counts agree with an independent exhaustive row-by-row search. Width 3
+; is a different world: the smallest figure of constant width 3 lives on an
+; 11x11 board, and the original F# program needed some 31 days to exhaust
+; (11, _, 3), so treat that last command line as a long-running job rather than
+; a demo.
+;
+; The default `unrestricted` profile is required: the program prints through the
+; host console and parses its arguments with System.Int32.Parse.
+;
+; Hot paths below use nested `if` rather than `cond`, `and?` and `or?`. Those
+; three are compound operatives from the bootstrap library and cost an `eval`
+; per clause; `if` is a primitive. Avoiding them in the innermost loops makes
+; the whole search about three times faster.
+
+; ---------------------------------------------------------------------------
+; Small list helpers (the bootstrap library deliberately stays minimal)
+; ---------------------------------------------------------------------------
+
+(defn (append xs ys)
+  (if (null? xs) ys (cons (car xs) (append (cdr xs) ys))))
+
+(defn (>=? a b) (not? (< a b)))
+
+; ---------------------------------------------------------------------------
+; The search
+;
+;   n       board size
+;   w       the constant width
+;   k       pruning bound: branches that can no longer reach k*w squares are cut
+;   report  applied to every figure found, as a list of (x . y) squares
+; ---------------------------------------------------------------------------
+
+(defn (find-figures n k w report)
+
+  ; Remaining capacity of every line. Rows and columns are indexed by
+  ; coordinate; the diagonal of slope -1 through (x, y) is indexed by x + y and
+  ; the one of slope +1 by n + (x - y) - 1, so both fit in 2n-1 slots.
+  (define rows    (make-vector n w))
+  (define columns (make-vector n w))
+  (define diag1   (make-vector (- (* 2 n) 1) w))
+  (define diag2   (make-vector (- (* 2 n) 1) w))
+
+  (defn (pdiag p) (+ (car p) (cdr p)))
+  (defn (ndiag p) (- (+ n (- (car p) (cdr p))) 1))
+
+  (defn (cap-r  p) (vector-ref rows    (car p)))
+  (defn (cap-c  p) (vector-ref columns (cdr p)))
+  (defn (cap-pd p) (vector-ref diag1   (pdiag p)))
+  (defn (cap-nd p) (vector-ref diag2   (ndiag p)))
+
+  ; Add d to each of the four counters running through p.
+  (defn (alter! p d)
+    (let ((r (car p)) (c (cdr p)) (i1 (pdiag p)) (i2 (ndiag p)))
+      (vector-set! rows    r  (+ (vector-ref rows    r)  d))
+      (vector-set! columns c  (+ (vector-ref columns c)  d))
+      (vector-set! diag1   i1 (+ (vector-ref diag1   i1) d))
+      (vector-set! diag2   i2 (+ (vector-ref diag2   i2) d))
+      #inert))
+
+  (defn (take!    p) (alter! p -1))
+  (defn (restore! p) (alter! p  1))
+
+  ; A square becomes unusable as soon as any one of its four lines is full.
+  (defn (open? p)
+    (if (zero? (cap-r  p)) #f
+      (if (zero? (cap-c  p)) #f
+        (if (zero? (cap-pd p)) #f
+          (if (zero? (cap-nd p)) #f #t)))))
+
+  ; The board minus the corner regions, whose diagonals are shorter than w and
+  ; so can never carry a full width.
+  (defn (playable-board)
+    (let ((lo (- w 1)) (hi (- (- (* 2 n) w) 1)))
+      (letrec
+        ((keep? (lambda (p)
+                  (and? (<= lo (pdiag p)) (<= (pdiag p) hi)
+                        (<= lo (ndiag p)) (<= (ndiag p) hi))))
+         ; built back to front, so the result comes out in row-major order
+         (loop (lambda (x y acc)
+                 (cond ((< x 0) acc)
+                       ((< y 0) (loop (- x 1) (- n 1) acc))
+                       (#t (let ((p (cons x y)))
+                             (loop x (- y 1)
+                                   (if (keep? p) (cons p acc) acc))))))))
+        (loop (- n 1) (- n 1) ()))))
+
+  ; Split the candidate squares by how they see q: same row, same column, same
+  ; diagonal of slope -1, same diagonal of slope +1, or unrelated. Two distinct
+  ; squares share at most one of the four lines, so the tests are disjoint.
+  ; Returns (r rws c cls d1 dg1 d2 dg2 rest), each count beside its list.
+  (defn (collect q avail)
+    (let ((qx (car q)) (qy (cdr q)) (qp (pdiag q)) (qn (- (car q) (cdr q))))
+      (letrec
+        ((loop
+           (lambda (av r rws c cls d1 dg1 d2 dg2 rest)
+             (if (null? av)
+               (list r rws c cls d1 dg1 d2 dg2 rest)
+               (let* ((p (car av)) (tail (cdr av))
+                      (x (car p)) (y (cdr p)))
+                 (if (eq? x qx)
+                   (loop tail (+ r 1) (cons p rws) c cls d1 dg1 d2 dg2 rest)
+                 (if (eq? y qy)
+                   (loop tail r rws (+ c 1) (cons p cls) d1 dg1 d2 dg2 rest)
+                 (if (eq? (+ x y) qp)
+                   (loop tail r rws c cls (+ d1 1) (cons p dg1) d2 dg2 rest)
+                 (if (eq? (- x y) qn)
+                   (loop tail r rws c cls d1 dg1 (+ d2 1) (cons p dg2) rest)
+                   (loop tail r rws c cls d1 dg1 d2 dg2 (cons p rest)))))))))))
+        (loop avail 0 () 0 () 0 () 0 () ()))))
+
+  ; Drop the squares that have gone dead, and count what is left.
+  (defn (count-open avail)
+    (letrec
+      ((loop (lambda (av len kept)
+               (if (null? av)
+                 (list len kept)
+                 (if (open? (car av))
+                   (loop (cdr av) (+ len 1) (cons (car av) kept))
+                   (loop (cdr av) len kept))))))
+      (loop avail 0 ())))
+
+  ; Commit to exactly m of the still-open squares of `avail`, in every possible
+  ; way, appending each choice to the frontier before invoking k*. Every square
+  ; is restored on the way out, so the counters are unchanged on return.
+  (defn (choose avail m bufflen buff k*)
+    (letrec
+      ((loop (lambda (av chosen j)
+               (if (zero? j)
+                 (k* (+ bufflen m) (append buff chosen))
+                 (if (null? av)
+                   #inert
+                   (let ((p (car av)) (tail (cdr av)))
+                     (if (open? p)
+                       (begin (take! p)
+                              (loop tail (cons p chosen) (- j 1))
+                              (restore! p))
+                       #inert)
+                     (loop tail chosen j)))))))
+      (loop avail () m)))
+
+  ;   sol     squares whose constraints are already discharged
+  ;   len     how many more squares this branch still has to reach
+  ;   avail   candidate squares, avlen of them
+  ;   buff    committed squares awaiting their turn, bufflen of them
+  (defn (search sol len avlen avail bufflen buff)
+    (if (< (+ avlen bufflen) len)
+      #inert                                      ; too few squares left
+      (if (null? buff)
+        (report sol)                              ; frontier drained: a figure
+        (let* ((p (car buff)) (tail (cdr buff)))
+          (let (((r rws c cls d1 dg1 d2 dg2 rest) (collect p avail))
+                ; The capacities are read before any of the four groups is
+                ; touched. No square lies on two of p's lines, so choosing
+                ; within one group cannot disturb the other three counters.
+                (need-r  (cap-r  p)) (need-c  (cap-c  p))
+                (need-pd (cap-pd p)) (need-nd (cap-nd p)))
+            ; not enough candidates left on one of p's lines to fill it
+            (if (if (< r need-r) #t
+                  (if (< c need-c) #t
+                    (if (< d1 need-pd) #t (< d2 need-nd))))
+              #inert
+              (choose rws need-r (- bufflen 1) tail
+                (lambda (b1 buf1)
+                  (choose cls need-c b1 buf1
+                    (lambda (b2 buf2)
+                      (choose dg1 need-pd b2 buf2
+                        (lambda (b3 buf3)
+                          (choose dg2 need-nd b3 buf3
+                            (lambda (b4 buf4)
+                              (let (((avlen* avail*) (count-open rest)))
+                                (search (cons p sol) (- len 1)
+                                        avlen* avail* b4 buf4))))))))))))))))
+
+  ; Seed the search at every square in turn. Each figure is found exactly once,
+  ; from its first square in row-major order: a seed only ever sees the squares
+  ; that follow it.
+  (letrec
+    ((loop (lambda (l avlen)
+             (if (null? l)
+               #inert
+               (let ((p (car l)) (tail (cdr l)))
+                 (take! p)
+                 (search () (* k w) (- avlen 1) tail 1 (list p))
+                 (restore! p)
+                 (loop tail (- avlen 1)))))))
+    (let (((len board) (count-open (playable-board))))
+      (loop board len))))
+
+; ---------------------------------------------------------------------------
+; Reporting
+; ---------------------------------------------------------------------------
+
+(defn (occupied? p sol)
+  (cond ((null? sol) #f)
+        ((and? (eq? (car p) (car (car sol)))
+               (eq? (cdr p) (cdr (car sol)))) #t)
+        (#t (occupied? p (cdr sol)))))
+
+(defn (draw n sol)
+  (letrec ((loop (lambda (x y)
+                   (cond ((>=? x n) #inert)
+                         ((>=? y n) (print "\n") (loop (+ x 1) 0))
+                         (#t (print (if (occupied? (cons x y) sol) "Q " ". "))
+                             (loop x (+ y 1)))))))
+    (loop 0 0)))
+
+(defn (report-figures n k w)
+  (let ((found (make-vector 1 0)))
+    (printf "connected figures of constant width {0} on a {1}x{1} board\n" w n)
+    (printf "(pruning branches that cannot reach {0} squares)\n\n" (* k w))
+    (find-figures n k w
+      (lambda (sol)
+        (vector-set! found 0 (+ (vector-ref found 0) 1))
+        (printf "#{0}: type ({1}, {2}, {3})\n"
+                (vector-ref found 0) n (div (length sol) w) w)
+        (draw n sol)
+        (print "\n")))
+    (printf "{0} figure(s)\n" (vector-ref found 0))))
+
+; ---------------------------------------------------------------------------
+; Entry point
+; ---------------------------------------------------------------------------
+
+(defn (arg i default)
+  (letrec ((nth (lambda (xs j)
+                  (cond ((null? xs) default)
+                        ((zero? j) (. System.Int32 Parse (car xs)))
+                        (#t (nth (cdr xs) (- j 1)))))))
+    (nth args i)))
+
+(let ((n (arg 0 5)) (k (arg 1 4)) (w (arg 2 2)))
+  (time (report-figures n k w)))

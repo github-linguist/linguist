@@ -297,6 +297,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Inno Setup:** [idleberg/atom-language-innosetup](https://github.com/idleberg/atom-language-innosetup)
 - **Io:** [textmate/io.tmbundle](https://github.com/textmate/io.tmbundle)
 - **Ioke:** [vic/ioke-outdated](https://github.com/vic/ioke-outdated)
+- **IronKernel:** [ironkernel-lang/IronKernel](https://github.com/ironkernel-lang/IronKernel)
 - **Isabelle:** [lsf37/Isabelle.tmbundle](https://github.com/lsf37/Isabelle.tmbundle)
 - **Isabelle ROOT:** [lsf37/Isabelle.tmbundle](https://github.com/lsf37/Isabelle.tmbundle)
 - **J:** [tikkanz/JSyntax](https://github.com/tikkanz/JSyntax)
