@@ -1,0 +1,14 @@
+integer procedure Accumulate(seed, amount);
+value amount;
+integer seed, amount;
+begin
+    seed := seed + amount;
+    Accumulate := seed
+end;
+
+program ProcedureParameterModes;
+begin
+    integer total;
+    total := 40;
+    total := Accumulate(total, 2)
+end;

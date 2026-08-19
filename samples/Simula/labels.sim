@@ -1,0 +1,11 @@
+label Start, Finished;
+switch Dispatch := Start, Finished;
+
+program ClassicLabels;
+begin
+    integer value;
+    value := 0;
+    go to Start;
+    Finished: value := value + 1;
+    Start: if value = 0 then go to Finished
+end;

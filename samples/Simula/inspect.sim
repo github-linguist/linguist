@@ -1,0 +1,19 @@
+Class Animal;
+begin
+    integer age;
+end;
+
+Animal Class Dog;
+begin
+    integer barkCount;
+end;
+
+program ClassicInspect;
+begin
+    Ref(Animal) subject;
+    subject :- new Dog();
+    inspect subject
+        when Dog do begin outtext("dog") end
+        when Animal do begin outtext("animal") end
+        otherwise begin outtext("none") end
+end;

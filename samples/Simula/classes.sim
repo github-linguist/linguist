@@ -1,0 +1,29 @@
+Class Animal;
+Virtual: Procedure Speak Is Procedure Speak;;
+begin
+    Protected:
+    integer age;
+    Public:
+    Procedure Speak;
+    begin
+        outtext("animal")
+    end;
+end;
+
+Animal Class Dog;
+begin
+    Public:
+    Procedure Speak;
+    begin
+        outtext("dog")
+    end;
+end;
+
+program Classes;
+begin
+    Ref(Animal) subject;
+    subject :- new Dog();
+    subject.Speak();
+    outimage;
+    exit(0)
+end;

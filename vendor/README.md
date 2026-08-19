@@ -602,6 +602,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Shen:** [rkoeninger/sublime-shen](https://github.com/rkoeninger/sublime-shen)
 - **Sieve:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Simple File Verification:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **Simula:** [RobertFlexx/simula-tmlanguage](https://github.com/RobertFlexx/simula-tmlanguage)
 - **Singularity:** [onnovalkering/vscode-singularity](https://github.com/onnovalkering/vscode-singularity)
 - **Slang:** [shader-slang/slang-vscode-extension](https://github.com/shader-slang/slang-vscode-extension)
 - **Slash:** [slash-lang/Slash.tmbundle](https://github.com/slash-lang/Slash.tmbundle)
