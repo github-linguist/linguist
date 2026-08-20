@@ -118,6 +118,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ChucK:** [textmate/java.tmbundle](https://github.com/textmate/java.tmbundle)
 - **Circom:** [iden3/circom-highlighting-vscode](https://github.com/iden3/circom-highlighting-vscode)
 - **Cirru:** [Cirru/sublime-cirru](https://github.com/Cirru/sublime-cirru)
+- **Civet:** [DanielXMoore/Civet](https://github.com/DanielXMoore/Civet)
 - **Clarion:** [fushnisoft/SublimeClarion](https://github.com/fushnisoft/SublimeClarion)
 - **Clarity:** [hirosystems/clarity.tmbundle](https://github.com/hirosystems/clarity.tmbundle)
 - **Classic ASP:** [textmate/asp.tmbundle](https://github.com/textmate/asp.tmbundle)
