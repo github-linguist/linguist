@@ -1,0 +1,242 @@
+//Taken from https://github.com/alephium/wormhole-fork/tree/master/alephium/contracts
+
+Abstract Contract Math() {
+    @using(updateFields = false)
+    pub fn normalizeAmount(amount: U256, decimals: U256) -> (U256) {
+        if (decimals > 8) {
+            return amount / (10 ** (decimals - 8))
+        }
+        return amount
+    }
+
+    @using(updateFields = false)
+    pub fn deNormalizeAmount(amount: U256, decimals: U256) -> (U256) {
+        if (decimals > 8) {
+            return amount * (10 ** (decimals - 8))
+        }
+        let x = 8 - decimals
+        return amount
+    }
+}
+
+Abstract Contract Constants() {
+  enum ErrorCodes {
+    InvalidEmitChainId                      = 0
+    InvalidEmitAddress                      = 1
+    InvalidMessageSize                      = 2
+    InvalidSequence                         = 3
+    InvalidModule                           = 4
+    InvalidActionId                         = 5
+    InvalidVersion                          = 6
+    InvalidGuardianSetIndex                 = 7
+    InvalidGuardianSetSize                  = 8
+    InvalidSignatureSize                    = 9
+    InvalidSignatureGuardianIndex           = 10
+    InvalidSignature                        = 11
+    GuardianSetExpired                      = 12
+    InvalidTargetChainId                    = 13
+    ContractStateMismatch                   = 14
+    InvalidRegisterChainMessage             = 15
+    InvalidTokenId                          = 16
+    InvalidNonceSize                        = 17
+    TokenNotExist                           = 18
+    InvalidTransferTargetChain              = 19
+    InvalidDestroyUnexecutedSequenceMessage = 20
+    InvalidCaller                           = 21
+    ArbiterFeeLessThanAmount                = 22
+    InvalidAttestTokenMessage               = 23
+    InvalidPayloadId                        = 24
+    InvalidTransferMessage                  = 25
+    ExpectRemoteToken                       = 26
+    InvalidConsistencyLevel                 = 27
+    InvalidUpdateRefundAddressMessage       = 28
+    TransferAmountLessThanMessageFee        = 29
+    InvalidAttestTokenArg                   = 30
+    InvalidAttestTokenHandler               = 31
+    NotSupported                            = 32
+  }
+}
+
+Contract Governance(
+    chainId: U256,
+    governanceChainId: U256,
+    governanceEmitterAddress: ByteVec,
+    tokenBridgeFactory: TokenBridgeFactory,
+    mut receivedSequence: U256,
+    mut messageFee: U256,
+    mut guardianSets: [ByteVec; 2], // keep previous and current guardian set
+    mut guardianSetIndexes: [U256; 2],
+    mut previousGuardianSetExpirationTimeMS: U256
+) extends Constants() {
+    event WormholeMessage(sender: ByteVec, targetChainId: U256, sequence: U256, nonce: ByteVec, payload: ByteVec, consistencyLevel: U256)
+
+    const Version = #01
+    const GuardianSetExpireDuration = 86400000 // one day in ms
+    const CoreModule = 0x436f7265 // module identifier: "Core"
+
+    enum ActionId {
+        ContractUpgrade = #01
+        NewGuardianSet  = #02
+        NewMessageFee   = #03
+        TransferFee     = #04
+    }
+
+    pub fn getMessageFee() -> (U256) {
+        return messageFee
+    }
+
+    @using(preapprovedAssets = true, assetsInContract = true, checkExternalCaller = false)
+    pub fn publishWormholeMessage(
+        payer: Address,
+        targetChainId: U256,
+        sequence: U256,
+        nonce: ByteVec,
+        payload: ByteVec,
+        consistencyLevel: U256
+    ) -> () {
+        transferTokenToSelf!(payer, ALPH, messageFee)
+        emit WormholeMessage(callerContractId!(), targetChainId, sequence, nonce, payload, consistencyLevel)
+    }
+
+    // parse VAA and verify signatures
+    @using(checkExternalCaller = false)
+    pub fn parseAndVerifyVAA(data: ByteVec, isGovernanceVAA: Bool) -> (U256, U256, ByteVec, U256, ByteVec) {
+        assert!(byteVecSlice!(data, 0, 1) == Version, ErrorCodes.InvalidVersion)
+        let guardianSetIndex = u256From4Byte!(byteVecSlice!(data, 1, 5))
+        if (isGovernanceVAA) {
+            assert!(guardianSetIndex == guardianSetIndexes[1], ErrorCodes.InvalidGuardianSetIndex)
+        }
+
+        let signatureSize = u256From1Byte!(byteVecSlice!(data, 5, 6))
+        let guardians = getGuardiansInfo(guardianSetIndex)
+        let guardianSize = u256From1Byte!(byteVecSlice!(guardians, 0, 1))
+
+        // - check signature quorum size
+        assert!(guardianSize != 0, ErrorCodes.InvalidGuardianSetSize) // this is guaranteed, but let's double check
+        let quorumSize = ((guardianSize * 2) / 3) + 1
+        assert!(quorumSize <= signatureSize, ErrorCodes.InvalidSignatureSize)
+
+        let body = byteVecSlice!(data, 6 + signatureSize * 66, size!(data))
+        let hash = keccak256!(keccak256!(body))
+
+        let mut offset = 6
+        let mut lastGuardianIndex = -1
+        for (let mut sigIndex = 0; sigIndex < signatureSize; sigIndex = sigIndex + 1) {
+            // 1 byte `guardianIndex` and 65 bytes signature
+            let guardianIndex = u256From1Byte!(byteVecSlice!(data, offset, offset + 1))
+
+            let guardianIndexI256 = toI256!(guardianIndex)
+            assert!(guardianIndexI256 > lastGuardianIndex, ErrorCodes.InvalidSignatureGuardianIndex)
+            lastGuardianIndex = guardianIndexI256
+
+            let signature = byteVecSlice!(data, offset + 1, offset + 66)
+            let recId = u256From1Byte!(byteVecSlice!(signature, 64, 65)) + 27
+            let newSignature = byteVecSlice!(signature, 0, 64) ++ u256To1Byte!(recId)
+            let guardianKeyIndex = 1 + guardianIndex * 20
+            let guardianKey = byteVecSlice!(guardians, guardianKeyIndex, guardianKeyIndex + 20)
+            assert!(guardianKey == ethEcRecover!(hash, newSignature), ErrorCodes.InvalidSignature)
+
+            offset = offset + 66
+        }
+
+        // Parse the body
+        // - skip the first 8 bytes(timestamp and nonce)
+        let emitterChainId = u256From2Byte!(byteVecSlice!(body, 8, 10))
+        let targetChainId = u256From2Byte!(byteVecSlice!(body, 10, 12))
+        let emitterAddress = byteVecSlice!(body, 12, 44)
+        let sequence = u256From8Byte!(byteVecSlice!(body, 44, 52))
+        // - skip 1 byte of consistencyLevel
+        let payload = byteVecSlice!(body, 53, size!(body))
+        return emitterChainId, targetChainId, emitterAddress, sequence, payload
+    }
+
+    @using(checkExternalCaller = false)
+    pub fn parseAndVerifyGovernanceVAAGeneric(vaa: ByteVec, targetSequence: U256, coreModule: U256, action: ByteVec) -> (U256, U256, ByteVec) {
+        let (emitterChainId, targetChainId, emitterAddress, msgSequence, payload) = parseAndVerifyVAA(vaa, true)
+        assert!(emitterChainId == governanceChainId, ErrorCodes.InvalidEmitChainId)
+        assert!(emitterAddress == governanceEmitterAddress, ErrorCodes.InvalidEmitAddress)
+        assert!(msgSequence >= targetSequence, ErrorCodes.InvalidSequence)
+
+        // check module and governance action
+        assert!(u256From32Byte!(byteVecSlice!(payload, 0, 32)) == coreModule, ErrorCodes.InvalidModule)
+        assert!(byteVecSlice!(payload, 32, 33) == action, ErrorCodes.InvalidActionId)
+
+        return msgSequence, targetChainId, payload
+    }
+
+    @using(updateFields = true)
+    fn parseAndVerifyGovernanceVAA(vaa: ByteVec, action: ByteVec) -> (U256, ByteVec) {
+        let (msgSequence, targetChainId, payload) = parseAndVerifyGovernanceVAAGeneric(vaa, receivedSequence, CoreModule, action)
+        receivedSequence = msgSequence + 1
+        return targetChainId, payload
+    }
+
+    fn getGuardiansInfo(guardianSetIndex: U256) -> ByteVec {
+        if (guardianSetIndex == guardianSetIndexes[1]) {
+            return guardianSets[1]
+        }
+        if (guardianSetIndex == guardianSetIndexes[0]) {
+            assert!(blockTimeStamp!() <= previousGuardianSetExpirationTimeMS, ErrorCodes.GuardianSetExpired)
+            return guardianSets[0]
+        }
+        panic!(ErrorCodes.InvalidGuardianSetIndex)
+    }
+
+    @using(updateFields = true, checkExternalCaller = false)
+    pub fn submitContractUpgrade(vaa: ByteVec) -> () {
+        let (targetChainId, payload) = parseAndVerifyGovernanceVAA(vaa, ActionId.ContractUpgrade)
+        assert!(targetChainId == chainId, ErrorCodes.InvalidTargetChainId)
+        let (newCode, prevStateHash, newEncodedImmutableFields, newEncodedMutableFields) = tokenBridgeFactory.parseContractUpgrade(payload)
+        if (prevStateHash == #) {
+            migrate!(newCode)
+        } else {
+            let currentEncodedFields = u256To32Byte!(receivedSequence)
+                ++ u256To32Byte!(messageFee)
+                ++ u256To32Byte!(guardianSetIndexes[0])
+                ++ u256To32Byte!(guardianSetIndexes[1])
+            assert!(prevStateHash == blake2b!(currentEncodedFields), ErrorCodes.ContractStateMismatch)
+            migrateWithFields!(newCode, newEncodedImmutableFields, newEncodedMutableFields)
+        }
+    }
+
+    @using(updateFields = true)
+    fn updatePreviousGuardianSet() -> () {
+        guardianSets[0] = guardianSets[1]
+        guardianSetIndexes[0] = guardianSetIndexes[1]
+        previousGuardianSetExpirationTimeMS = blockTimeStamp!() + GuardianSetExpireDuration
+    }
+
+    @using(updateFields = true, checkExternalCaller = false)
+    pub fn submitNewGuardianSet(vaa: ByteVec) -> () {
+        updatePreviousGuardianSet()
+        let (targetChainId, payload) = parseAndVerifyGovernanceVAA(vaa, ActionId.NewGuardianSet)
+        assert!(targetChainId == chainId || targetChainId == 0, ErrorCodes.InvalidTargetChainId)
+        let newGuardianSetIndex = u256From4Byte!(byteVecSlice!(payload, 33, 37))
+        assert!(newGuardianSetIndex == guardianSetIndexes[1] + 1, ErrorCodes.InvalidGuardianSetIndex)
+        let newGuardianSetSize = u256From1Byte!(byteVecSlice!(payload, 37, 38))
+        assert!(newGuardianSetSize > 0, ErrorCodes.InvalidGuardianSetSize)
+        let payloadSize = 38 + newGuardianSetSize * 20
+        assert!(size!(payload) == payloadSize, ErrorCodes.InvalidMessageSize)
+        guardianSetIndexes[1] = newGuardianSetIndex
+        guardianSets[1] = byteVecSlice!(payload, 37, payloadSize)
+    }
+
+    @using(updateFields = true, checkExternalCaller = false)
+    pub fn submitSetMessageFee(vaa: ByteVec) -> () {
+        let (targetChainId, payload) = parseAndVerifyGovernanceVAA(vaa, ActionId.NewMessageFee)
+        assert!(targetChainId == chainId, ErrorCodes.InvalidTargetChainId)
+        let fee = u256From32Byte!(byteVecSlice!(payload, 33, 65))
+        assert!(size!(payload) == 65, ErrorCodes.InvalidMessageSize)
+        messageFee = fee
+    }
+
+    @using(assetsInContract = true, checkExternalCaller = false)
+    pub fn submitTransferFees(vaa: ByteVec) -> () {
+        let (targetChainId, payload) = parseAndVerifyGovernanceVAA(vaa, ActionId.TransferFee)
+        assert!(targetChainId == chainId || targetChainId == 0, ErrorCodes.InvalidTargetChainId)
+        let amount = u256From32Byte!(byteVecSlice!(payload, 33, 65))
+        let recipient = byteVecSlice!(payload, 65, 97)
+        assert!(size!(payload) == 97, ErrorCodes.InvalidMessageSize)
+        transferTokenFromSelf!(byteVecToAddress!(#00 ++ recipient), ALPH, amount)
+    }
+}
