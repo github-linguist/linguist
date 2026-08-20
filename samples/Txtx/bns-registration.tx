@@ -1,0 +1,54 @@
+addon "stacks" {
+  network_id = input.stacks_network_id
+  rpc_api_url = input.stacks_api_url
+}
+
+signer "alice" "stacks::web_wallet" {
+  expected_address = "ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC"
+}
+
+action "get_name_price" "stacks::call_readonly_fn" {
+  description = "Preorder name"
+  contract_id = "ST000000000000000000002AMW42H.bns"
+  function_name = "get-name-price"
+  function_args = [
+      stacks::cv_buff(encode_hex(variable.namespace)),
+      stacks::cv_buff(encode_hex(variable.name))
+  ]
+  sender = "ST2JHG361ZXG51QTKY2NQCVBPPRRE2KZB1HR05NNC"
+}
+
+action "send_name_preorder" "stacks::call_contract" {
+  description = "Send Preorder ${variable.name}.${variable.namespace} transaction"
+  contract_id = "ST000000000000000000002AMW42H.bns"
+  function_name = "name-preorder"
+  function_args = [
+      stacks::cv_buff(
+        ripemd160(sha256(
+          [
+            encode_hex("${variable.name}.${variable.namespace}"),
+            encode_hex(variable.salt)
+          ]
+        ))
+      ),
+      stacks::cv_uint(action.get_name_price.value),
+  ]
+  post_condition_mode = "allow"
+  signer = signer.alice
+  confirmations = 1
+}
+
+action "send_name_register" "stacks::call_contract" {
+  description = "Register name"
+  contract_id = "ST000000000000000000002AMW42H.bns"
+  function_name = "name-register"
+  function_args = [
+      stacks::cv_buff(encode_hex(variable.namespace)),
+      stacks::cv_buff(encode_hex(variable.name)),
+      stacks::cv_buff(encode_hex(variable.salt)),
+      stacks::cv_buff(encode_hex(variable.zonefile)),
+  ]
+  signer = signer.alice
+  confirmations = 1
+  depends_on = [action.send_name_preorder]
+}

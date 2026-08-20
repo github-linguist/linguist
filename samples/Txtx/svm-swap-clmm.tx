@@ -1,0 +1,163 @@
+################################################################
+# Swap on Raydium CLMM (v3) - Concentrated Liquidity
+#
+# This runbook executes a swap on a Raydium CLMM pool.
+# CLMM uses concentrated liquidity similar to Uniswap v3.
+################################################################
+
+addon "svm" {
+    rpc_api_url = input.rpc_api_url
+    network_id = input.network_id
+}
+
+signer "user" "svm::secret_key" {
+    description = "The account executing the swap"
+    keypair_json = "~/.config/solana/id.json"
+}
+
+variable "program" {
+    description = "The raydium_arbitrage program"
+    value = svm::get_program_from_anchor_project("raydium_arbitrage")
+}
+
+# Token configuration
+variable "input_mint" {
+    description = "Input token mint address"
+    editable = true
+}
+
+variable "output_mint" {
+    description = "Output token mint address"
+    editable = true
+}
+
+# CLMM Pool configuration
+variable "pool_state" {
+    description = "CLMM pool state account"
+    editable = true
+}
+
+variable "amm_config" {
+    description = "CLMM AMM config account"
+    editable = true
+}
+
+variable "input_vault" {
+    description = "CLMM input token vault"
+    editable = true
+}
+
+variable "output_vault" {
+    description = "CLMM output token vault"
+    editable = true
+}
+
+variable "observation_state" {
+    description = "CLMM oracle observation state"
+    editable = true
+}
+
+# Swap parameters
+variable "amount" {
+    description = "Amount to swap (in smallest units)"
+    value = 1000000000
+    editable = true
+}
+
+variable "other_amount_threshold" {
+    description = "Minimum output or maximum input (depending on is_base_input)"
+    value = 0
+    editable = true
+}
+
+variable "sqrt_price_limit_x64" {
+    description = "Price limit for the swap (0 for no limit)"
+    value = 0
+    editable = true
+}
+
+variable "is_base_input" {
+    description = "True for exact input swap, false for exact output"
+    value = true
+    editable = true
+}
+
+# Programs
+variable "token_program" {
+    value = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+}
+
+variable "token_program_2022" {
+    value = "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+}
+
+variable "memo_program" {
+    value = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+}
+
+variable "clmm_program" {
+    value = "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"
+}
+
+action "swap_clmm" "svm::process_instructions" {
+    description = "Execute CLMM swap"
+    signers = [signer.user]
+
+    instruction {
+        program_idl = variable.program.idl
+        instruction_name = "swap_clmm"
+        instruction_args = [
+            variable.amount,
+            variable.other_amount_threshold,
+            variable.sqrt_price_limit_x64,
+            variable.is_base_input
+        ]
+
+        payer {
+            public_key = signer.user.public_key
+        }
+        amm_config {
+            public_key = variable.amm_config
+        }
+        pool_state {
+            public_key = variable.pool_state
+        }
+        input_token_account {
+            public_key = svm::get_associated_token_address(signer.user.public_key, variable.input_mint)
+        }
+        output_token_account {
+            public_key = svm::get_associated_token_address(signer.user.public_key, variable.output_mint)
+        }
+        input_vault {
+            public_key = variable.input_vault
+        }
+        output_vault {
+            public_key = variable.output_vault
+        }
+        observation_state {
+            public_key = variable.observation_state
+        }
+        token_program {
+            public_key = variable.token_program
+        }
+        token_program_2022 {
+            public_key = variable.token_program_2022
+        }
+        memo_program {
+            public_key = variable.memo_program
+        }
+        input_vault_mint {
+            public_key = variable.input_mint
+        }
+        output_vault_mint {
+            public_key = variable.output_mint
+        }
+        clmm_program {
+            public_key = variable.clmm_program
+        }
+    }
+}
+
+output "signature" {
+    value = action.swap_clmm.signature
+}
