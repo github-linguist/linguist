@@ -1,0 +1,70 @@
+! Ferry queue, a classic Simula 67 simulation;
+! Modeled on the toll-bridge examples of the Simula 67
+! Common Base Language report and of Simula Begin;
+Simulation Begin
+  Ref(Head) Waiting;
+  Integer NArrivals, NServed;
+
+  Process Class Vehicle;
+  Begin
+    Boolean TollPaid;
+    Procedure Pay;
+    Begin
+      TollPaid := True
+    End;
+    Hold(10);
+    Inner;
+    Passivate
+  End;
+
+  Vehicle Class Car;
+  Begin
+    Integer Passengers
+  End;
+
+  Vehicle Class Lorry;
+  Begin
+    Integer CargoTons
+  End;
+
+  Process Class Arrivals;
+  Begin
+    Ref(Vehicle) V;
+  NewArrival:
+    If NArrivals < 6 Then
+    Begin
+      If Mod(NArrivals, 3) = 0 Then V:-New Lorry
+      Else V:-New Car;
+      V.Into(Waiting);
+      NArrivals := NArrivals + 1;
+      Hold(12);
+      Goto NewArrival
+    End;
+    Passivate
+  End;
+
+  Process Class Ferryman;
+  Begin
+    Ref(Vehicle) V;
+    While Not Waiting.Empty Do
+    Begin
+      V:-Waiting.First;
+      V.Out;
+      V.Pay;
+      Inspect V
+        When Car Do OutText("car")
+        Otherwise OutText("lorry");
+      OutImage;
+      NServed := NServed + 1;
+      Hold(5)
+    End;
+    Passivate
+  End;
+
+  comment Initially the queue is empty, so only the
+         generator process is active when the
+         simulation run starts.;
+  Waiting:-New Head;
+  Activate New Arrivals At Time + 1;
+  Activate New Ferryman Delay 1
+End
