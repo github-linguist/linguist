@@ -1,0 +1,101 @@
+// Tweetable Mathematical Art
+// http://codegolf.stackexchange.com/questions/35569/tweetable-mathematical-art
+//
+// Ray Tracing
+// http://www.cnblogs.com/daishuo/p/3954422.html
+//
+// online: https://wa-lang.org/examples/magnifying-glass/
+
+import (
+	"image"
+	"js"
+	"js/canvas"
+	"math"
+	"strconv"
+	"strings"
+	"unsafe"
+)
+
+func main {
+	println("hello, wa-lang!")
+
+	c, _ := canvas.QueryCanvas("canvas")
+	c.SetWidthHeight(i32(width), i32(height))
+
+	h := js.QuerySelector("output")
+	outoutObj = js.WrapExtObj(h)
+
+	ctx, _ := c.GetContext2D()
+	ctxCanvas = ctx
+}
+
+global (
+	width    :int = 400
+	height   :int = 400
+	center_x :int = 200
+	center_y :int = 200
+
+	cellsRGBA :*image.RGBA = nil
+	ctxCanvas :canvas.Context2D
+	outoutObj :js.ExtObj
+)
+
+func _sq(x: f32) => f32 {
+	return x * x
+}
+func _sqrt(x: f32) => f32 {
+	return f32(math.Sqrt(f64(x)))
+}
+
+func genColorGray(i, j, center_x, center_y: int) => int {
+	DIM := int(width)
+
+	n := 3
+	r := _sqrt(_sq(f32(i)-f32(center_x)) + _sq(f32(j)-f32(center_y)))
+	s := r / f32((DIM/2)/2)
+
+	if s < 1 {
+		i -= center_x
+		j -= center_y
+
+		k := (_sqrt(1-_sq(s))*_sqrt(1-_sq(s/f32(n))) + _sq(s)/f32(n)) * f32(n)
+
+		i = int(f32(i)/k + f32(center_x))
+		j = int(f32(j)/k + f32(center_y))
+	}
+	return (i/((DIM/2)/8) + j/((DIM/2)/8)) % 2 * 255
+}
+
+func OnMouseMove(x, y: int) {
+	sb: strings.Builder
+	sb.WriteString("X:")
+	sb.WriteString(strconv.Itoa(x))
+	sb.WriteString("Y:")
+	sb.WriteString(strconv.Itoa(y))
+	outoutObj.SetMember_string("innerHTML", sb.String())
+
+	println("OnMouseMove:", x, y)
+	center_x = x
+	center_y = y
+}
+
+func StepGame {
+	if cellsRGBA == nil {
+		cellsRGBA = image.NewRGBA(width, height)
+	}
+
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			if genColorGray(x, y, center_x, center_y) != 0 {
+				cellsRGBA.SetRGBA(x, y, 0xFF000000)
+			} else {
+				cellsRGBA.SetRGBA(x, y, 0xFFFFFFFF)
+			}
+		}
+	}
+
+	ctxCanvas.PutImageData(
+		unsafe.Raw(cellsRGBA.Pix), 0, 0, 0, 0,
+		f32(width), f32(height),
+	)
+}
