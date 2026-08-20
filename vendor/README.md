@@ -500,6 +500,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PogoScript:** [featurist/PogoScript.tmbundle](https://github.com/featurist/PogoScript.tmbundle)
 - **Polar:** [osohq/polar-grammar](https://github.com/osohq/polar-grammar)
 - **Pony:** [CausalityLtd/sublime-pony](https://github.com/CausalityLtd/sublime-pony)
+- **Pop-11:** [IoTone/tree-sitter-pop11](https://github.com/IoTone/tree-sitter-pop11)
 - **Portugol:** [luisgbr1el/portugol-grammar](https://github.com/luisgbr1el/portugol-grammar)
 - **PostCSS:** [hudochenkov/Syntax-highlighting-for-PostCSS](https://github.com/hudochenkov/Syntax-highlighting-for-PostCSS)
 - **PostScript:** [Alhadis/Atom-PostScript](https://github.com/Alhadis/Atom-PostScript)

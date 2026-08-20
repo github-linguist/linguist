@@ -693,6 +693,11 @@ disambiguations:
     pattern:
     - '(?i)\bDEFINE\s+(?:VARIABLE|TEMP-TABLE|BUFFER|QUERY|INPUT\s+PARAMETER|OUTPUT\s+PARAMETER)\b'
     - '(?i)\bEND(?:\s+(?:PROCEDURE|FUNCTION|DO|FOR\s+EACH))?\.'
+  - language: Pop-11
+    pattern:
+    - '\benddefine\b'
+    - '^\s*;;;'
+    - '^\s*(?:section|uses|compile_mode)\b[^\n]*;'
 - extensions: ['.pc']
   rules:
   - language: Pro*C
