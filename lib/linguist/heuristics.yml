@@ -329,6 +329,15 @@ disambiguations:
     pattern: '^: '
   - language: Fortran
     named_pattern: fortran
+- extensions: ['.fpp']
+  rules:
+  - language: FPP
+    pattern:
+    - '^\s*(active|passive|queued)\s+component\s'
+    - '^\s*(module|topology|struct|enum|port|interface)\s+[A-Za-z_$][A-Za-z0-9_]*\s*\{'
+    - '^\s*instance\s+[A-Za-z_$][A-Za-z0-9_]*\s*:'
+  - language: Fortran
+    named_pattern: fortran
 - extensions: ['.fr']
   rules:
   - language: Forth
