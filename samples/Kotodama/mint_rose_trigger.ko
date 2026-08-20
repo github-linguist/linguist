@@ -1,0 +1,8 @@
+// Mint `62Fk4FPcMuLvW5QjDGNF2a4jAmjM` (canonical asset-definition address below) for the trigger authority.
+// Amount is taken from trigger args (MintRoseArgs.val) when available.
+seiyaku MintRoseTrigger {
+  kotoage fn run() permission(Admin) {
+    // Mint using typed arguments: authority and explicit asset; amount from trigger args when 0
+    mint_asset(authority(), asset_definition!("66owaQmAQMuHxPzxUN3bqZ6FJfDa"), 0);
+  }
+}
