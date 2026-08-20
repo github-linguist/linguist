@@ -1,0 +1,214 @@
+// MIT License
+// 
+// Copyright (c) 2017 Ola Eldøy, Data Access Europe (Bram Nijenkamp)
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+Use VDFBase.pkg
+
+Use DFUnit\Testing\Test.pkg
+Use DFUnit\Fixturing\Fixture.pkg
+Use DFUnit\Reporting\ReporterManager.pkg
+Use DFUnit\Results\StatisticsCollector.pkg
+
+Use DFUnit\Utils\Debugger.pkg
+Use DFUnit\Utils\ErrorTracker.pkg
+
+#IFNDEF C_NewLine
+Define C_NewLine for (Character(13) + Character(10))
+#ENDIF
+
+Class cDFUnitTestRunner_Mixin is a Mixin
+    
+    { Visibility=Private }
+    Procedure Define_cDFUnitTestRunner_Mixin
+        { Visibility=Private }
+        Property UBigInt pulCurrentTest_AssertsSucceeded 0
+        { Visibility=Private }
+        Property UBigInt pulCurrentTest_AssertsFailed 0
+        { Visibility=Private }
+        Property UBigInt pulCurrentTest_Errors 0
+        
+        { Visibility=Private }
+        Property Handle phCurrentTest 0
+        
+        Send AttachToTrackerEvents of ghoErrorTracker Self
+    End_Procedure 
+    
+    { Visibility=Private }
+    Procedure RunTestInFixture Handle hFixture Handle hTest
+        Set phCurrentTest to hTest
+        
+        Send IncreaseTotalTests
+        Send Reporters_StartTest Self
+        Send EnableErrorTracker of ghoErrorTracker
+        
+        #IFDEF DFUNIT_ENABLE_MESSAGE_CALL_TESTING
+        Send DFUnit_ClearRecordedMessages
+        #ENDIF
+        
+        Send SetupFixture of hFixture
+        
+        #IFDEF DFUNIT_ENABLE_MESSAGE_CALL_TESTING
+        Send DFUnit_ClearRecordedMessages
+        #ENDIF
+        
+        Handle hTestProcedure
+        Get phTestInFixtureProcedure of hTest to hTestProcedure
+        If (hTestProcedure <> 0) ;
+            Send hTestProcedure of hTest
+        Else ;
+            Send Test of hTest
+        
+        #IFDEF DFUNIT_ENABLE_MESSAGE_CALL_TESTING
+        Send DFUnit_ClearRecordedMessages
+        #ENDIF
+        
+        Send TearDownFixture of hFixture
+        If (CheckExpectedErrorsAndClean(ghoErrorTracker) = False) Begin
+            Send DFUnit_ThrowErrorNormalIfDebugger DFERR_PROGRAM (SFormat("The expected errors should be empty; the test '%1' in fixture '%2', is faultive.", TestName(phCurrentTest(Self)), FixtureName(hFixture)))
+        End
+        Send DisableErrorTracker of ghoErrorTracker
+        Send Reporters_EndTest Self
+        
+        Boolean bSucceeded
+        Get Current_Test_Succeeded to bSucceeded
+        If bSucceeded Begin
+            Send IncreaseTotalSucceededTests
+        End
+        
+        // Update assert and error status.
+        Set pulAssertsFailed to (pulAssertsFailed(Self) + pulCurrentTest_AssertsFailed(Self))
+        Set pulAssertsSucceeded to (pulAssertsSucceeded(Self) + pulCurrentTest_AssertsSucceeded(Self))
+        Set pulErrors to (pulErrors(Self) + pulCurrentTest_Errors(Self))
+        
+        Send ClearCurrentTestStatistics
+        Send SaveErrorStackToTotal of ghoErrorTracker
+    End_Procedure
+    
+    { Visibility=Private }
+    Procedure ClearCurrentTestStatistics
+        Set phCurrentTest to 0
+        Set pulCurrentTest_AssertsFailed to 0
+        Set pulCurrentTest_AssertsSucceeded to 0
+    End_Procedure
+    
+    { Visibility=Private }
+    Function Current_Test Returns Handle
+        Function_Return (phCurrentTest(Self))
+    End_Function
+    
+    { Visibility=Private }
+    Function Current_Test_Succeeded Returns Boolean
+        UBigInt ulTemp
+        Get pulCurrentTest_AssertsFailed to ulTemp
+        If (ulTemp > 0) ;
+            Function_Return False
+        Get pulCurrentTest_Errors to ulTemp
+        If (ulTemp > 0) ;
+            Function_Return False
+        Function_Return True
+    End_Function
+    
+    { Visibility=Private }
+    Function Current_Test_Failed Returns Boolean
+        Function_Return (Current_Test_Succeeded(Self) = False)
+    End_Function
+    
+    { Visibility=Private }
+    Function CurrentTestFailedAssertions Returns UBigInt
+        Function_Return (pulCurrentTest_AssertsFailed(Self))
+    End_Function
+    
+    { Visibility=Private }
+    Function CurrentTestSucceededAssertions Returns UBigInt
+        Function_Return (pulCurrentTest_AssertsSucceeded(Self))
+    End_Function
+    
+    { Visibility=Private }
+    Function CurrentTestAssertions Returns UBigInt
+        Function_Return (CurrentTestFailedAssertions(Self) + CurrentTestSucceededAssertions(Self))
+    End_Function
+    
+    { Visibility=Private }
+    Function CurrentTestErrors Returns UBigInt
+        Function_Return (pulCurrentTest_Errors(Self))
+    End_Function
+    
+    { Visibility=Private }
+    Procedure Fail_Assert String[] asMessages String sOptAssertMessage
+        String sAssertMessage sFullMessage
+        If (num_arguments > 1) ;
+            Move sOptAssertMessage to sAssertMessage
+        Else ;
+            Move "[NO MESSAGE]" to sAssertMessage
+        
+        UBigInt ulAssertsFailed
+        Get pulCurrentTest_AssertsFailed to ulAssertsFailed
+        Increment ulAssertsFailed
+        Set pulCurrentTest_AssertsFailed to ulAssertsFailed
+        
+        Send Reporters_Fail_Assert Self sAssertMessage asMessages
+        
+        // Throw an error if we are currently debugging.
+        If (IsDebuggerPresent()) Begin
+            Move ('Assert "' + sAssertMessage + '" Failed.' + Character(10) + Character(13)) to sAssertMessage
+            Integer iIterator
+            For iIterator from 0 to (SizeOfArray(asMessages) - 1)
+                Move (sAssertMessage + asMessages[iIterator]) to sAssertMessage
+                If (iIterator <> SizeOfArray(asMessages) - 1) ;
+                    Move (sAssertMessage + Character(10) + Character(13)) to sAssertMessage
+            Loop
+            
+            If (Enabled(ghoErrorTracker)) Begin
+                Send DisableErrorTracker of ghoErrorTracker
+                Error DFERR_PROGRAM sAssertMessage
+                Send EnableErrorTracker of ghoErrorTracker
+            End
+            Else Begin
+                Error DFERR_PROGRAM sAssertMessage
+            End
+        End
+    End_Procedure
+    
+    { Visibility=Private }
+    Procedure Succeed_Assert
+        UBigInt ulAssertsSucceeded
+        Get pulCurrentTest_AssertsSucceeded to ulAssertsSucceeded
+        Increment ulAssertsSucceeded
+        Set pulCurrentTest_AssertsSucceeded to ulAssertsSucceeded
+        
+        Send Reporters_Succeed_Assert Self
+    End_Procedure
+    
+    { Visibility=Private }
+    Procedure Tracker_ExpectedError_Occured tDFUnitErrorInfo oError
+    End_Procedure
+    
+    { Visibility=Private }
+    Procedure Tracker_UnExpectedError_Occured tDFUnitErrorInfo oError
+        UBigInt ulErrors
+        Get pulCurrentTest_Errors to ulErrors
+        Increment ulErrors
+        Set pulCurrentTest_Errors to ulErrors
+        
+        Send Reporters_Error_Occured Self oError
+    End_Procedure
+
+End_Class

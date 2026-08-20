@@ -1,0 +1,124 @@
+// BSD 3-Clause License
+//
+// Copyright (c) 2025, Data Access Europe B.V.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// 1. Redistributions of source code must retain the above copyright notice, this
+//    list of conditions and the following disclaimer.
+//
+// 2. Redistributions in binary form must reproduce the above copyright notice,
+//    this list of conditions and the following disclaimer in the documentation
+//    and/or other materials provided with the distribution.
+//
+// 3. Neither the name of the copyright holder nor the names of its
+//    contributors may be used to endorse or promote products derived from
+//    this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+// FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Use UI
+
+#IFNDEF gVoid
+Global_Variable Void_Type gVoid
+#ENDIF
+
+#IFNDEF _struct_tFileTime
+Struct tFileTime
+    UInteger dwLowDateTime
+    UInteger dwHighDateTime
+End_Struct
+#ENDIF
+
+#IFNDEF _struct_tSystemTime
+Struct tSystemTime
+    UShort wYear
+    UShort wMonth
+    UShort wDayOfWeek
+    UShort wDay
+    UShort wHour
+    UShort wMinute
+    UShort wSecond
+    UShort wMilliseconds
+End_Struct
+#ENDIF
+
+#IFNDEF Get_WinAPI_GetSystemTime
+External_Function WinAPI_GetSystemTime "GetSystemTime" Kernel32.Dll ;
+    Address lpSystemTime ;
+    Returns Void_Type
+#ENDIF
+
+#IFNDEF Get_WinAPI_SystemTimeToFileTime
+External_Function WinAPI_SystemTimeToFileTime "SystemTimeToFileTime" Kernel32.dll ;
+    Pointer lpSystemTime ;
+    Pointer lpFileTime ;
+    Returns Boolean
+#ENDIF
+
+Function CurrentUnixTime Global Returns UBigInt
+    UBigInt     iTime
+    UBigInt     iUnixTime
+    tSystemTime systime
+    tFileTime   filetime
+
+    Move (WinAPI_GetSystemTime(AddressOf(systime))) to gVoid
+    Move (WinAPI_SystemTimeToFileTime(AddressOf(systime), AddressOf(filetime))) to gVoid
+    Move 0 to iTime
+    Move (MemCopy(AddressOf(iTime), AddressOf(filetime), SizeOfType(tFileTime))) to gVoid
+
+    Move (iTime / 10000000) to iTime        // convert to seconds
+    Move (iTime - 11644473600) to iUnixTime // convert to Unix time
+
+    Function_Return iUnixTime
+End_Function
+
+Function UnixTimeToDateTime Global UBigInt ullUnixTime Returns TimeSpan
+    DateTime dDT
+    TimeSpan tsTimeSpan
+    Integer iDays iHrs iMin iSec iRest
+
+    // Build TimeSpan components (nDays:nHours:nMin:nSec)
+    Move (ullUnixTime / 60 / 60 / 24) to iDays            // Number of full days since base 1970-01-01
+    Move (ullUnixTime - (iDays * 60 * 60 * 24)) to iRest  // Number of seconds left
+    Move (iRest / 60 / 60) to iHrs                      // Number of full completed hours on the last partial day
+    Move (iRest - (iHrs * 60 * 60)) to iRest            // Number of seconds left after complete hour
+    Move (iRest / 60) to iMin                           // Number os full minutes 
+    Move (iRest - (iMin * 60)) to iSec                  // Number os seconds
+    
+    Move (DateSetDay(tsTimeSpan, iDays)) to tsTimeSpan
+    Move (DateSetHour(tsTimeSpan, iHrs)) to tsTimeSpan
+    Move (DateSetMinute(tsTimeSpan, iMin)) to tsTimeSpan
+    Move (DateSetSecond(tsTimeSpan, iSec)) to tsTimeSpan 
+    
+    // Set Unix-Time base date (1970-01-01)            
+    Move (DateSetYear(dDt, 1970)) to dDT
+    Move (DateSetMonth(dDT, 1))   to dDT
+    Move (DateSetDay(dDT, 1))    to dDT
+    
+    Function_Return (dDT + tsTimeSpan)
+End_Function
+
+Function DateTimetoUnixTime DateTime dtUTCtime Returns UBigInt
+    DateTime dtEpoc
+    TimeSpan tsTimeSpan
+    UBigInt ubiUnixTime
+
+    Move (DateSetYear(dtEpoc, 1970)) to dtEpoc
+    Move (DateSetMonth(dtEpoc, 1))   to dtEpoc
+    Move (DateSetDay(dtEpoc, 1))     to dtEpoc
+
+    Move (dtUTCtime-dtEpoc) to tsTimeSpan
+    
+    Function_Return (SpanTotalSeconds(tsTimeSpan))
+End_Function
