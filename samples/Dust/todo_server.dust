@@ -1,0 +1,146 @@
+use std::net::TcpListener
+use std::net::TcpStream
+use std::io::BufReader
+use std::io::BufRead
+use std::io::Write
+use std::io::Read
+use std::sync::Arc
+use std::sync::Mutex
+
+struct Todo
+  id: usize
+  title: str
+  done: bool
+
+struct Store
+  todos: Vec<Todo>
+  next_id: usize
+
+  fn new() -> Store
+    Store
+      todos: vec![]
+      next_id: 1
+
+  fn add(self, keep title: str) -> usize
+    let id = self.next_id
+    self.todos.push(Todo { id: id, title: title, done: false })
+    self.next_id++
+    id
+
+  fn remove(self, id: usize) -> bool
+    let len_before = self.todos.len()
+    self.todos.retain(t -> t.id != id)
+    self.todos.len() < len_before
+
+  fn to_json(self) -> str
+    mut out = "[".to_string()
+    mut first = true
+    for todo in self.todos.iter()
+      if !first then out.push_str(",")
+      first = false
+      out.push_str("{\"id\":")
+      out.push_str(&todo.id.to_string())
+      out.push_str(",\"title\":\"")
+      out.push_str(&todo.title)
+      out.push_str("\",\"done\":")
+      out.push_str(&todo.done.to_string())
+      out.push_str("}")
+    out.push_str("]")
+    out
+
+fn respond(keep mut stream: TcpStream, status: str, content_type: str, body: str)
+  let body_len = body.len()
+  let response = "HTTP/1.1 {status}\r\nContent-Type: {content_type}\r\nContent-Length: {body_len}\r\nAccess-Control-Allow-Origin: *\r\nConnection: close\r\n\r\n{body}"
+  stream.write_all(response.as_bytes()).unwrap!
+
+fn respond_json(keep stream: TcpStream, status: str, body: str)
+  respond(stream, status, "application/json", body)
+
+fn respond_html(keep stream: TcpStream, body: str)
+  respond(stream, "200 OK", "text/html; charset=utf-8", body)
+
+fn parse_method(line: str) -> str
+  let parts: Vec<&str> = line.split(' ').collect()
+  if parts.len() > 0
+    then parts[0].to_string()
+    else "GET".to_string()
+
+fn parse_path(line: str) -> str
+  let parts: Vec<&str> = line.split(' ').collect()
+  if parts.len() > 1
+    then parts[1].to_string()
+    else "/".to_string()
+
+fn parse_id(path: str) -> Option<usize>
+  let trimmed = path.trim_start_matches('/')
+  let parts: Vec<&str> = trimmed.split('/').collect()
+  if parts.len() == 2
+    then parts[1].parse::<usize>().ok()
+    else None
+
+fn extract_title(body: str) -> str
+  let s = body.trim()
+  let s = s.trim_start_matches('{')
+  let s = s.trim_end_matches('}')
+  let parts: Vec<&str> = s.splitn(2, ':').collect()
+  if parts.len() == 2
+    then parts[1].trim().trim_matches('"').to_string()
+    else "untitled".to_string()
+
+fn handle(keep stream: TcpStream, keep store: Arc<Mutex<Store>>)
+  mut stream = stream
+  let reader = BufReader::with_capacity(1, &mut stream)
+  mut lines_iter = reader.lines()
+
+  let first_line = match lines_iter.next()
+    Some(Ok(l)) -> l
+    _ -> return
+
+  let method = parse_method(&first_line)
+  let path = parse_path(&first_line)
+
+  mut content_length: usize = 0
+  for line in lines_iter.by_ref()
+    let line = line.unwrap!
+    if line.is_empty()
+      break
+    if line.starts_with("Content-Length:")
+      let val = line.trim_start_matches("Content-Length:").trim()
+      content_length = val.parse::<usize>().unwrap_or(0)
+
+  if method == "GET" && path == "/"
+    let html = include_str!("frontend.html")
+    respond_html(stream, html)
+  elif method == "GET" && path == "/todos"
+    mut s = store.lock().unwrap!
+    let json = s.to_json()
+    respond_json(stream, "200 OK", &json)
+  elif method == "POST" && path == "/todos"
+    mut body = String::new()
+    if content_length > 0
+      mut buf = vec![0u8; content_length]
+      stream.read_exact(&mut buf).unwrap!
+      body = String::from_utf8_lossy(&buf).to_string()
+    let title = extract_title(&body)
+    mut s = store.lock().unwrap!
+    let id = s.add(title)
+    respond_json(stream, "201 Created", &"{\"id\":{id}}")
+  elif method == "DELETE"
+    match parse_id(&path)
+      Some(id) ->
+        mut s = store.lock().unwrap!
+        if s.remove(id)
+          then respond_json(stream, "200 OK", &"{\"deleted\":{id}}")
+          else respond_json(stream, "404 Not Found", "{\"error\":\"not found\"}")
+      None ->
+        respond_json(stream, "400 Bad Request", "{\"error\":\"bad id\"}")
+  else
+    respond_json(stream, "404 Not Found", "{\"error\":\"not found\"}")
+
+fn main()
+  let store = Arc::new(Mutex::new(Store()))
+  let listener = TcpListener::bind("127.0.0.1:3000").unwrap!
+  println!("Todo server running on http://localhost:3000")
+  for stream in listener.incoming()
+    let stream = stream.unwrap!
+    handle(stream, store.clone())
