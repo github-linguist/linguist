@@ -857,6 +857,12 @@ disambiguations:
     pattern: '(?i:mov)\s+[^\s%]{2,},'
   - language: Motorola 68K Assembly
     named_pattern: m68k
+- extensions: ['.sk']
+  rules:
+  - language: Skript
+    pattern: '\{[_a-zA-Z]\w*(?:::[\w*]+)*\}'
+  - language: Skip
+    pattern: '^(?:module|fun|native|val|var|let)\s'
 - extensions: ['.sc']
   rules:
   - language: SuperCollider
