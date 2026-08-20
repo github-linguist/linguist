@@ -1,0 +1,179 @@
+;################################################################
+;read a text file to define the landscape in term of the altitude differences.
+;this is to use the same landscape multiple times
+;to change the landscape just comment "read-landscape" function in the "Go" procedure and uncomment the "create_landscape" procedure
+to read-landscape
+  file-open "landscape.txt"
+  let i 0
+  while [i <= max-pxcor] [
+    let j 0
+    while [j <= max-pycor] [
+      let x-tmp file-read
+      let y-tmp file-read
+      ask patch x-tmp y-tmp
+      [
+        let ff file-read
+        set A ff
+      ]
+      set j j + 1
+    ]
+    set i i + 1
+  ]
+  file-close
+end
+;#############################################################################################
+to load_fixed_landscape
+  read-landscape
+  ask patches[
+    ;Define initial values
+    set Infra_flood 0                       ;presence or absence of infrastructure
+    set Infra_supply 0                      ;presence or absence of infrastructure
+
+    set c_F 1                               ;Condition of sewer infrastructure
+    set c_S 1                               ;Condition of water supply infrastructure
+
+    set infra_F_age 1                       ;age
+    set infra_S_age 1                       ;age
+    set protestas_here_F  0                 ;wheather a protest happen at a particula location and time
+    set protestas_here_S  0                 ;wheather a protest happen at a particula location and time
+    set exposure_F [0 0 0 0 0 0 0 0 0 0]    ;list of exposure and risk to calculate accumulated exposure
+    set exposure_S [0 0 0 0 0 0 0 0 0 0]
+    set total_exposure_S  0                 ;accumulated burden
+    set total_exposure_F  0                 ;accumulated burden
+    set V sum exposure_F + sum exposure_S   ;; sum of exposure to cALCULATE "TOTAL EXPOSURE"
+    set neighborhood_here? FALSE            ;;presence or absence of neighborhood here
+
+    set C1 0.01                             ;Indirect Benefit
+    set C2 0.001                            ;Social pressure
+    set C3 infra_F_age                      ;Age SS
+    set C4 0.1                              ;Lack of coverage SS
+
+    set C5 0.01                             ;Indirect Benefit
+    set C6 0.001                            ;Social pressure
+    set C7 infra_S_age                      ;Age PWS
+    set C8 0.1                              ;lack of coverage PWS
+
+    set invest_here_F 0.01                 ;investments of the water authority
+    set invest_here_S 0.01
+    set pcolor 65
+]
+
+end
+;######################################################################
+;######################################################################
+to create-Landscape
+;;;  random-seed semilla-aleatoria
+
+  if landscape-type = "closed-watershed"[
+  ask patches with [(pxcor =  50 and pycor = 50)][set A 5000] ;;define central point with max value.
+
+  repeat 600 [diffuse A  1]   ;; slightly smooth out the landscape by difusing variables A.
+  ]
+
+  if landscape-type = "many-hills"[
+    ask n-of 2 patches [set A (4500 + random 500)] ;;define central point with max value.
+  repeat 200 [diffuse A  1]
+  ]
+
+
+  let max_alt max [A] of patches   ;;define maximum altitute
+  let min_alt min [A] of patches   ;;define minimum altitute
+  ask patches [
+    if landscape-type = "closed-watershed" [
+      set A (max_alt - A) / max_alt
+    ]
+
+    if landscape-type = "many-hills" [
+      set A A / max_alt
+    ]
+
+    if landscape-type = "gradient"[
+      set A (max-pxcor - pxcor) / max-pxcor          ;;define topographic risk as a gradient with respect to pxcor
+    ]
+
+ ;Define initial values
+    set Infra_flood 0                       ;presence or absence of infrastructure
+    set Infra_supply 0                      ;presence or absence of infrastructure
+
+    set c_F 1                               ;Condition of sewer infrastructure
+    set c_S 1                               ;Condition of water supply infrastructure
+
+    set infra_F_age 1                       ;age
+    set infra_S_age 1                       ;age
+    set protestas_here_F  0                 ;wheather a protest happen at a particula location and time
+    set protestas_here_S  0                 ;wheather a protest happen at a particula location and time
+    set exposure_F [0 0 0 0 0 0 0 0 0 0]    ;list of exposure and risk to calculate accumulated exposure
+    set exposure_S [0 0 0 0 0 0 0 0 0 0]
+    set total_exposure_S  0                 ;accumulated burden
+    set total_exposure_F  0                 ;accumulated burden
+    set V sum exposure_F + sum exposure_S   ;; sum of exposure to cALCULATE "TOTAL EXPOSURE"
+    set neighborhood_here? FALSE            ;;presence or absence of neighborhood here
+
+    set C1 0.01                             ;Indirect Benefit
+    set C2 0.001                            ;Social pressure
+    set C3 infra_F_age                      ;Age SS
+    set C4 0.1                              ;Lack of coverage SS
+
+    set C5 0.01                             ;Indirect Benefit
+    set C6 0.001                            ;Social pressure
+    set C7 infra_S_age                      ;Age PWS
+    set C8 0.1                              ;lack of coverage PWS
+
+    set invest_here_F 0.01                 ;investments of the water authority
+    set invest_here_S 0.01
+    set pcolor 65
+
+  ]
+
+end
+
+;#############################################################################################
+to Create-neighborhoods-Infra
+;random-seed 3000
+  ask patches [
+    if A < random-float 1 [
+      set neighborhood_here? TRUE
+      set protestas_here_F  0.1
+      set protestas_here_S  0.1
+      set exposure_F [0 0 0 0 0 0 0 0 0 0]
+      set exposure_S [0 0 0 0 0 0 0 0 0 0]
+      if A < 0.25 * random-float 1 [
+        set Infra_flood 1              ;; 1 if infra for "drainage" is here; 0 otherwise
+        if Initial-Condition-Infrastructure ="Old"[set infra_F_age  (1 - A) * 100]
+        if Initial-Condition-Infrastructure ="New"[set infra_F_age  (1 - A) * 10]
+        set c_F exp(- infra_F_age / 100)
+      ]
+      if A < 0.25 * random-float 1 [
+        set Infra_supply 1
+        if Initial-Condition-Infrastructure ="Old"[set infra_S_age  (1 - A) * 100]             ;; 1 if infra for "water supply" is here; 0 otherwise
+        if Initial-Condition-Infrastructure ="New"[set infra_S_age  (1 - A) * 10]
+        set c_S exp(- infra_S_age / 100)
+      ]
+
+    ]
+  ]
+end
+
+;#############################################################################################
+to read_weights_from_csv
+  ;  let tot_S csv:from-file "c:/Users/abaezaca/Documents/MEGADAPT/ABM_V2/sampling_scenarios_Weights.csv"
+  ;let tot_S csv:from-file "c:/Users/abaezaca/Dropbox (ASU)/MEGADAPT/ABM_V2/sampling_scenarios_Weights_all.csv"
+  let tot_S csv:from-file "sampling_scenarios_var_W.csv" ;c:/Users/abaezaca/Dropbox (ASU)/MEGADAPT/abm2/
+  ;let tot_S csv:from-file "c:/Users/abaezaca/Documents/MEGADAPT/ABM_V2/sampling_scenarios_Weights_var_D.csv"
+  let weigh_list but-first (item scenario_number (but-first tot_S))
+
+
+  set w1 item 0 weigh_list
+  set w2 item 1 weigh_list
+  set w3  item 2 weigh_list
+
+  set w4 item 3 weigh_list
+  set w5 item 4 weigh_list
+  set w6 item 5 weigh_list
+
+  set w7 item 6 weigh_list
+  set w8 item 7 weigh_list
+  file-close
+
+end
+
