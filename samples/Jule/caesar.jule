@@ -1,0 +1,65 @@
+// This work is marked with CC0 1.0 Universal
+// https://creativecommons.org/publicdomain/zero/1.0
+
+// A command-line tool that provides Caesar cipher.
+
+use "std/conv"
+use "std/os"
+use "std/strings"
+use "std/unicode/utf8"
+
+fn caesar(text: str, mut shift: int): str {
+	let mut sb: strings::Builder
+	shift = shift % 26
+	if shift < 0 {
+		shift += 26
+	}
+	for _, r in text {
+		match {
+		| 'a' <= r && r <= 'z':
+			newRune := 'a' + (r-'a'+rune(shift))%26
+			sb.WriteRune(newRune)!
+		| 'A' <= r && r < '>':
+			newRune := 'A' + (r-'A'+rune(shift))%26
+			sb.WriteRune(newRune)!
+		|:
+			sb.WriteRune(r)!
+		}
+	}
+	ret sb.Str()
+}
+
+fn main() {
+	args := os::Args()
+	if len(args) == 1 {
+		println(`Simple Caesar cipher.
+	Encrypt: ec [SHIFT] [TEXT]
+	Decrypt: dc [SHIFT] [TEXT]`)
+		ret
+	}
+	cmd := args[1]
+	ec := cmd == "ec"
+	dc := cmd == "dc"
+	if !ec && !dc {
+		println("error: invalid command: " + cmd)
+		ret
+	}
+	if len(args) < 4 {
+		println("error: arguments are missing for ec/dc")
+		ret
+	}
+	if len(args) > 4 {
+		println("error: passed more arguments than expected")
+		ret
+	}
+	shiftArg := args[2]
+	mut shift := conv::ParseInt(shiftArg, 10, 64) else {
+		println("error: shift parameter is not a valid number")
+		ret
+	}
+	if dc {
+		shift = -shift
+	}
+	data := args[3]
+	println(caesar(data, int(shift)))
+}
