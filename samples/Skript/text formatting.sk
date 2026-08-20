@@ -1,0 +1,38 @@
+#
+# This example is for colours and formatting in Skript.
+# Skript allows the old-style Minecraft codes using `&`, like &0 for black and &l for bold.
+# You can also use <> for colours and formats, like `<red>` for red and `<bold>` for bold
+#
+# In Minecraft 1.16, support was added for 6-digit hexadecimal colors to specify custom colors other than the 16 default color codes.
+# The tag for these colors looks like this: <#hex code> e.g. `<#123456>`
+#
+
+command /color:
+	permission: skript.example.color
+	trigger:
+		send "&6This message is golden."
+		send "<light red><bold>This message is light red and bold."
+		send "<#FF0000>This message is red."
+
+#
+# Other formatting options are also available.
+# You can create clickable text, which opens a website or execute a command, or even show a tool tip when hovering over the text.
+#
+
+command /forum:
+	permission: skript.example.link
+	trigger:
+		send "To visit the website, [<link:https://google.com><tooltip:click here>click here<reset>]"
+
+command /copy <text>:
+	permission: skript.example.copy
+	trigger:
+		# Insertion: when the player shift clicks on the message, it will add the text to their text box.
+		# To use variables and other expressions with these tags, you have to send the text as `formatted`.
+		send formatted "<insertion:%arg-1%>%arg-1%"
+
+command /suggest:
+	permission: skript.example.suggest
+	trigger:
+		send "<cmd:/say hi>Click here to run the command /say hi"
+		send "<sgt:/say hi>Click here to suggest the command /say hi"
