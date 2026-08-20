@@ -899,7 +899,7 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS\s+\$\$|LANGUAGE\s+''?plpgsql''?|BEGIN(\s+WORK)?\s*;)'
+    pattern: '(?i:^\\i\b|^\s*DO\s+\$|LANGUAGE\s+''?plpgsql''?|BEGIN(\s+WORK)?\s*;)'
   # IBM db2
   - language: SQLPL
     pattern: '(?i:ALTER\s+MODULE|MODE\s+DB2SQL|\bSYS(CAT|PROC)\.|ASSOCIATE\s+RESULT\s+SET|\bEND!\s*$)'

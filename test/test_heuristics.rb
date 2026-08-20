@@ -1076,7 +1076,8 @@ class TestHeuristics < Minitest::Test
 
   def test_sql_by_heuristics
     assert_heuristics({
-      "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql"],
+      "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql",
+                "SQL/create_function_sql.sql"],
       "PLpgSQL" => all_fixtures("PLpgSQL", "*.sql"),
       "SQLPL" => ["SQLPL/trigger.sql"],
       "PLSQL" => all_fixtures("PLSQL", "*.sql")
