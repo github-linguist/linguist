@@ -1,0 +1,71 @@
+#!/usr/bin/env bpftrace
+/*
+ * syscount.bt	Count system calls.
+ *		For Linux, uses bpftrace, eBPF.
+ * 
+ * Example of usage:
+ * 
+ * # ./syscount.bt
+ * Attaching 3 probes...
+ * Counting syscalls... Hit Ctrl-C to end.
+ * ^C
+ * Top 10 syscalls IDs:
+ * @syscall[6]: 36862
+ * @syscall[21]: 42189
+ * @syscall[13]: 44532
+ * @syscall[12]: 58456
+ * @syscall[9]: 82113
+ * @syscall[8]: 95575
+ * @syscall[5]: 147658
+ * @syscall[3]: 163269
+ * @syscall[2]: 270801
+ * @syscall[4]: 326333
+ * 
+ * Top 10 processes:
+ * @process[rm]: 14360
+ * @process[tail]: 16011
+ * @process[objtool]: 20767
+ * @process[fixdep]: 28489
+ * @process[as]: 48982
+ * @process[gcc]: 90652
+ * @process[command-not-fou]: 172874
+ * @process[sh]: 270515
+ * @process[cc1]: 482888
+ * @process[make]: 1404065
+ * 
+ * The above output was traced during a Linux kernel build, and the process name
+ * with the most syscalls was "make" with 1,404,065 syscalls while tracing. The
+ * highest syscall ID was 4, which is stat().
+ *
+ * This is a bpftrace version of the bcc tool of the same name.
+ * The bcc versions translates syscall IDs to their names, and this version
+ * currently does not. Syscall IDs can be listed by "ausyscall --dump".
+ * The bcc version provides different command line options.
+ *
+ * Copyright 2018 Netflix, Inc.
+ *
+ * 13-Sep-2018	Brendan Gregg	Created this.
+ */
+
+BEGIN
+{
+	printf("Counting syscalls... Hit Ctrl-C to end.\n");
+	// ausyscall --dump | awk 'NR > 1 { printf("\t@sysname[%d] = \"%s\";\n", $1, $2); }'
+}
+
+tracepoint:raw_syscalls:sys_enter
+{
+	@syscall[args.id] = count();
+	@process[comm] = count();
+}
+
+END
+{
+	printf("\nTop 10 syscalls IDs:\n");
+	print(@syscall, 10);
+	clear(@syscall);
+
+	printf("\nTop 10 processes:\n");
+	print(@process, 10);
+	clear(@process);
+}
