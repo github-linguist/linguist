@@ -1,0 +1,92 @@
+module default {
+    global currentActorId: uuid;
+    global currentActor := (
+        select Actor filter .id = global currentActorId
+    );
+
+    scalar type Role extending enum<
+        Administrator,
+        BetaTester,
+        Consultant,
+        Manager,
+        Marketing,
+        Mentor,
+        StaffMember,
+    >;
+    scalar type Status extending enum<Active, Disabled>;
+
+    scalar type LocationType extending enum<
+        Country,
+        State,
+        Province,
+        County,
+        Region,
+        City,
+    >;
+
+    abstract type Named {
+        required name: str {
+            rewrite insert, update using (str_trim(string, " \t\r\n"));
+        };
+    }
+
+    abstract type Actor {
+        multi roles: Role;
+        required status: Status {
+            default := Status.Active;
+        };
+    }
+
+    abstract type Auditable extending Timestamped {
+        required createdBy: Actor {
+            readonly := true;
+            default := global currentActor;
+        };
+        required modifiedBy: Actor {
+            default := global currentActor;
+            rewrite update using (global currentActor);
+        };
+
+        required isCreator := .createdBy ?= global currentActor;
+    }
+
+    abstract type Timestamped {
+        required createdAt: datetime {
+            default := datetime_of_transaction();
+            readonly := true;
+        };
+        required modifiedAt: datetime {
+            default := datetime_of_transaction(); # default here helps editor know it's not required.
+            rewrite update using (datetime_of_transaction());
+        };
+    }
+
+    type User extending Auditable, Actor {
+        required realFirstName: str;
+        required realLastName: str;
+        required displayFirstName: str {
+            default := .realFirstName;
+        };
+        required displayLastName: str {
+            default := .realLastName;
+        };
+        required email: str {
+            constraint exclusive;
+        };
+        phone: str;
+        about: str;
+        title: str;
+        multi locations: Location;
+    }
+
+    type SystemUser extending Actor, Named {
+        overloaded name { constraint exclusive };
+    }
+
+    type Location extending Named {
+        overloaded name {
+            constraint exclusive;
+        }
+        required type: LocationType;
+    }
+}
