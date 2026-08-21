@@ -1,0 +1,64 @@
+##rem $Id$
+##stringtype None
+
+/****************************************************************
+   Locale support in ARexx 
+
+   This file was created automatically by `%fv'
+   from "%f0".
+
+   Do NOT edit by hand!
+
+   ARexx.sd by Kai Norhausen <kn@tribal.line.org>
+****************************************************************/
+
+TRUE = 1 ; FALSE = 0
+
+locale = TRUE ; DEF_LOC = FALSE
+
+IF ~Show('L',"locale.library") THEN
+   IF ~AddLib("locale.library",0,-30) THEN DO
+      SAY "Locale support not available"
+      locale = FALSE
+   END
+
+CALL DefineLocaleStrings   /* Set defaults */
+
+cat = OpenCatalog("%b.catalog","%l",%v)
+
+IF cat = 0 THEN
+   SAY "Error: Could not use localized strings. Using defaults instead."
+
+/* INSERT AREXX PROGRAM HERE
+   Example: Write all strings to stdout */
+
+SAY GetLocStr(%i)
+
+
+
+/* End */
+
+CALL CloseCatalog(cat)
+EXIT
+
+
+/* ##### Subroutines ###### */
+
+GetLocStr:
+   ARG id .
+   locstr = GetCatalogStr(cat,id,defstr.id)
+RETURN locstr
+
+DefineLocaleStrings:
+   IF DEF_LOC = TRUE THEN RETURN
+
+   /* Define ID numbers  */
+   %i = %e
+
+   /* Define default strings */
+   defstr.anz = %n
+   defstr.%i = "%s"
+
+   DEF_LOC = TRUE
+
+RETURN

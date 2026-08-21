@@ -688,6 +688,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Vento:** [ventojs/vscode-vento](https://github.com/ventojs/vscode-vento)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
 - **Verse:** [simnJS/verse-grammar](https://github.com/simnJS/verse-grammar)
+- **Vespa Schema Definition:** [vespa-engine/vespa](https://github.com/vespa-engine/vespa)
 - **Vim Help File:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim Snippet:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)
 - **Vim script:** [Alhadis/language-viml](https://github.com/Alhadis/language-viml)

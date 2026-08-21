@@ -1,0 +1,45 @@
+##rem $Id$
+##stringtype C
+##shortstrings
+
+/****************************************************************
+
+   This file was created automatically by `%fv'
+   from "%f0".
+
+   Do NOT edit by hand!
+
+****************************************************************/
+
+#ifndef %b_CAT_H
+#define %b_CAT_H
+
+
+#ifndef EXEC_TYPES_H
+#include <exec/types.h>
+#endif
+
+
+/*
+**  Prototypes
+*/
+#if !defined(__GNUC__)  && !defined(__SASC)  &&  !defined(_DCC)
+extern VOID Open%bCatalog(VOID);
+extern VOID Close%bCatalog(VOID);
+#endif
+#ifdef LOCALIZE_V20
+extern void Init%bCatalog(STRPTR);
+#endif
+
+
+
+struct FC_String {
+    const UBYTE *msg;
+    LONG id;
+};
+
+extern struct FC_String %b_Strings[%n];
+
+#define %i (%b_Strings[%e].msg)\n#define _%i (%b_Strings+%e)
+
+#endif

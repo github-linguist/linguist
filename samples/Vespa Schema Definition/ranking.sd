@@ -1,0 +1,64 @@
+# Copyright Vespa.ai. Licensed under the terms of the Apache 2.0 license. See LICENSE in the project root.
+
+schema test {
+    document test {
+        field title type string {
+            indexing: index | summary
+        }
+        field tokens type tensor(d0[128]) {
+            indexing: attribute
+        }
+        field outputidx type double {
+            indexing: attribute
+        }
+    }
+    fieldset default {
+        fields: title
+    }
+
+    onnx-model my_ranking_model {
+        file: files/ranking_model.onnx
+        input input_ids: input_ids
+        input attention_mask: attention_mask
+        input token_type_ids: token_type_ids
+    }
+
+    rank-profile using_model {
+        inputs {
+            query(input) tensor(d0[32])
+        }
+        function input_ids() {
+            expression: tokenInputIds(128, query(input), attribute(tokens))
+        }
+        function token_type_ids() {
+            expression: tokenTypeIds(128, query(input), attribute(tokens))
+        }
+        function attention_mask() {
+            expression: tokenAttentionMask(128, query(input), attribute(tokens))
+        }
+        global-phase {
+            rerank-count: 1000
+            expression: onnx(my_ranking_model).score{d0:attribute(outputidx)}
+        }
+    }
+
+    rank-profile with-fun {
+        function use_model() {
+            expression: attribute(outputidx) + 1.0
+        }
+        global-phase {
+            expression: use_model
+        }
+    }
+    rank-profile with-fun-mf inherits with-fun {
+        first-phase {
+            expression: nativeRank
+        }
+        match-features: use_model
+    }
+    rank-profile fun-mf-child inherits with-fun-mf {
+        first-phase {
+            expression: 42 * attribute(outputidx)
+        }
+    }
+}
