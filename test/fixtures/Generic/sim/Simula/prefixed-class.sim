@@ -1,0 +1,22 @@
+BEGIN
+   CLASS Vehicle(wheels);
+   INTEGER wheels;
+   BEGIN
+      PROCEDURE Describe;
+      BEGIN
+         OutText("Vehicle with ");
+         OutInt(wheels, 2);
+         OutText(" wheels");
+         OutImage;
+      END;
+   END;
+
+   Vehicle CLASS Motorbike;
+   BEGIN
+      BOOLEAN hasSidecar;
+   END;
+
+   REF(Vehicle) v;
+   v :- NEW Motorbike(2);
+   INSPECT v DO v.Describe;
+END;

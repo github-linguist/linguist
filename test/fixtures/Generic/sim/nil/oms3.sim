@@ -1,0 +1,12 @@
+import static oms3.SimBuilder.instance as OMS3
+
+OMS3.sim {
+    model {
+        parameter {
+            'c.message' "Hello"
+        }
+        components {
+            'c' 'ex00.Component'
+        }
+    }
+}

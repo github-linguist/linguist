@@ -1,7 +1,27 @@
-! simset.sim from GNU CIM 5.1, lib/simset.sim;
-! Copyright (C) 1994 Sverre Hvammen Johansen,
-! Department of Informatics, University of Oslo;
-! Licensed under the GNU General Public License version 2;
+% $Id: simset.sim,v 1.3 1997/02/14 16:33:02 cim Exp $
+
+% Copyright (C) 1994 Sverre Hvammen Johansen,
+% Department of Informatics, University of Oslo.
+%
+% This program is free software; you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation; version 2.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program; if not, write to the Free Software
+% Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+
+%ifdef included
+%else
+%timestamp simset
+%endif
+%nonetest off
+%casesensitive on
 CLASS SIMSET;
 BEGIN
 
@@ -66,6 +86,11 @@ BEGIN
     INTEGER PROCEDURE CARDINAL;
     BEGIN INTEGER I;
       REF(LINKAGE) PTR;
+%      PTR:-FIRST;
+%      WHILE PTR =/= NONE DO BEGIN
+%        I:=I+1;
+%        PTR:-PTR.SUC;
+%      END WHILE;
       PTR:-zzsuc;
       WHILE PTR =/= THIS LINKAGE DO BEGIN
         I:=I+1;
@@ -75,6 +100,7 @@ BEGIN
       CARDINAL:=I
     END CARDINAL;
 
+%    PROCEDURE CLEAR; WHILE FIRST=/= NONE DO FIRST.OUT;
     PROCEDURE CLEAR;
     BEGIN
       REF(LINKAGE) PTR,PTRSUC;
@@ -92,3 +118,6 @@ BEGIN
   END HEAD;
 
 END SIMSET;
+
+%CASESENSITIVE OFF
+%eof

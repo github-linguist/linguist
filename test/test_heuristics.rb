@@ -1053,6 +1053,23 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_sim_by_heuristics
+    simula = all_fixtures("Simula", "*.sim") + Dir.glob("#{fixtures_path}/Generic/sim/Simula/*")
+    non_simula = Dir.glob("#{fixtures_path}/Generic/sim/nil/*")
+
+    assert Strategy::Extension.generic?("example.sim")
+    assert_heuristics({
+      "Simula" => simula,
+      nil => non_simula
+    })
+    simula.each do |blob|
+      assert_equal Language["Simula"], Linguist.detect(file_blob(blob)), "Failed full detection for #{blob}"
+    end
+    non_simula.each do |blob|
+      refute_equal Language["Simula"], Linguist.detect(file_blob(blob)), "False positive for #{blob}"
+    end
+  end
+
   def test_socket_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.socket"),

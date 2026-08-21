@@ -1,0 +1,89 @@
+! QUESIM M/M/c Example;
+
+external class quesim;
+
+quesim  begin
+
+!====================== Global variables =========================;
+
+	real expduration;    ! experiment duration;
+	integer seedg,seeds; ! seeds of random generators;
+	real meaninterval;   ! mean exponential interval between arrivals;
+	integer channels;    ! number of channels;
+	real meanservice;	 ! mean exponential service duration;
+
+	ref(station) ggc;    ! the service station;
+
+    ref(outfile) fres;   ! output file - results;
+    ref(infile) fin;     ! input file - model parameters;
+
+!=========================== Processes ===========================;
+
+	g_customer class customer;
+	begin
+	  ggc.service(current,exponential(meanservice,seeds)); ! customer life;
+	end of customer;
+
+	process class generator;
+	begin
+	  while true do begin
+	    activate new customer(0,2); ! priority = 0, unit waiting cost = 2;
+	    hold(exponential(meaninterval,seedg));
+	  end while;
+	end of generator;
+
+!=========================== Routines ============================;
+
+        procedure readdata; ! reads model and experiment parameters;
+        begin
+         fin :- new infile("simexMMc.inp");
+         if fin.open(blanks(50)) then begin
+	      seedg := fin.inint;          ! seed for generator intervals;
+          fin.inimage;
+          seeds := fin.inint;          ! seed for service duration;
+          fin.inimage;
+          meaninterval := fin.inreal;  ! mean interval;
+          fin.inimage;
+          meanservice := fin.inreal;   ! mean service;
+          fin.inimage;
+	      expduration := fin.inreal;   ! experiment duration;
+          fin.inimage;
+	      channels := fin.inint;	   ! number of servers;
+          fin.close
+         end else begin
+          outtext("File 'simexMMc.inp' can not be open");
+          outimage;
+          terminate_program;
+         end;
+        end;
+
+        procedure writedata;  ! saves the results;
+        begin
+         fres :- new outfile("simexMMc.res");
+         if fres.open(blanks(80)) then begin
+          evaluation_heading(fres,"QUESIM M/M/c example");
+          fres.outimage;
+          ggc.fileout(fres,"M/M/c",2,10);
+          fres.outimage;
+          fres.close;
+         end else begin
+          outtext("Warning: file 'simexMMc.res' can not be open");
+          outimage;
+         end;
+        end;
+
+!========================= Program body ==========================;
+
+        readdata;
+        ggc :- new station("M/M/c station",        ! creating the service station;
+	                new fifo_h("Queue",maxint,0,5,20),                ! the queue;
+	                                          ! waiting time range [0,5], 20 bins;
+	                new multichannel("Servers",channels,0.02,0.05), ! the service;
+                                 ! service cost per 1 server per unit time = 0.02;
+                                            ! cost per 1 completed service = 0.05;
+	                new histotally(0,10,20)); ! station time range [0,10],20 bins;
+	    activate new generator;
+	    hold(expduration);
+        writedata;
+
+end of program simexMMc;

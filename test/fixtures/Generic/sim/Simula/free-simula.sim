@@ -1,0 +1,15 @@
+integer function Square(integer value);
+begin
+    return value * value
+end;
+
+Task Class Worker;
+begin
+    integer value;
+end;
+
+program Functions;
+begin
+    integer answer;
+    answer := Square(9)
+end;

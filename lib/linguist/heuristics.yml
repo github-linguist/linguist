@@ -880,6 +880,35 @@ disambiguations:
     - '\(#[\w-]+[!\?]'
     - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
     - '@[\w.-]+(?:\)\s|$)'
+- extensions: ['.sim']
+  rules:
+  - language: Simula
+    pattern: '(?i)\b(?:simulation[ \t]+begin|(?:process|task)\s+class)\b'
+  - language: Simula
+    and:
+    - pattern: '(?i)\bprogram\s+[A-Za-z]\w*\s*;\s*begin\b'
+    - pattern: '(?i)\b(?:switch\s+[A-Za-z]\w*\s*:=|go\s+to\b|ref\s*\(|qua\b|outtext\b|outint\b|outimage\b|outchar\b|inint\b|inimage\b|inchar\b|intext\b|inspect\b|detach\b|passivate\b|reactivate\b|activate\b|virtual\s*:|:-|(?:integer|real|boolean|character|text)\s+(?:procedure|function)\b|array\s*\[[^\]\r\n]*:|for\s+[A-Za-z]\w*\s*:=[^\r\n;]{0,120}\bstep\b)'
+  - language: Simula
+    pattern: '(?i)\bclass\s+[A-Za-z]\w*(?:\s*\([^\)\r\n]*\))?\s*;[\s\S]{0,500}\bbegin\b'
+  - language: Simula
+    and:
+    - pattern: '(?i)\bref\s*\(\s*[A-Za-z]\w*\s*\)'
+    - pattern: '(?i)(?::-|\bqua\b|\bnew\s+[A-Za-z])'
+  - language: Simula
+    and:
+    - pattern: '(?i)\binspect\b'
+    - pattern: '(?i)\bwhen\b'
+    - pattern: '(?i)\botherwise\b'
+  - language: Simula
+    and:
+    - pattern: '(?i)\bactivate\b'
+    - pattern: '(?i)\b(?:hold\s*\(|passivate\b)'
+    - pattern: '(?i)\bnew\s+[A-Za-z]\w*'
+  - language: Simula
+    and:
+    - pattern: '(?i)\bbegin\b'
+    - pattern: '(?i)\bfor\s+[A-Za-z]\w*\s*:=[\s\S]{0,120}\bstep\b[\s\S]{0,120}\buntil\b[\s\S]{0,120}\bdo\b'
+    - pattern: '(?i)\bend\b\s*[.;]'
 - extensions: ['.sol']
   rules:
   - language: Solidity

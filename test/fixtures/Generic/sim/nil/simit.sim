@@ -1,0 +1,10 @@
+element Vert
+  x : tensor[3](float);
+  m : float;
+end
+
+extern verts : set{Vert};
+
+func compute(v : Vert) -> (M : tensor[verts](float))
+  M(v) = v.m;
+end

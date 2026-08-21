@@ -1,0 +1,4 @@
+FROM osrf/ros:humble-desktop-full
+RUN apt-get update && apt-get install -y ros-humble-rviz2
+COPY src /ros2_ws/src
+ENTRYPOINT ["/entrypoint.sim.sh"]
