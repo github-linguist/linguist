@@ -1,0 +1,143 @@
+pub module fifo #(
+    param WIDTH            : u32  = 8                       ,
+    param TYPE             : type = logic<WIDTH>            ,
+    param DEPTH            : u32  = 8                       ,
+    param THRESHOLD        : u32  = DEPTH                   ,
+    param FLAG_FF_OUT      : bool = true                    ,
+    param DATA_FF_OUT      : bool = true                    ,
+    param RESET_RAM        : bool = false                   ,
+    param RESET_DATA_FF    : bool = true                    ,
+    param CLEAR_DATA       : bool = false                   ,
+    param PUSH_ON_CLEAR    : bool = false                   ,
+    param MATCH_COUNT_WIDTH: u32  = 0                       ,
+    const COUNTER          : type = logic<$clog2(DEPTH + 1)>,
+) (
+    i_clk        : input  clock  ,
+    i_rst        : input  reset  ,
+    i_clear      : input  logic  ,
+    o_empty      : output logic  ,
+    o_almost_full: output logic  ,
+    o_full       : output logic  ,
+    o_word_count : output COUNTER,
+    i_push       : input  logic  ,
+    i_data       : input  TYPE   ,
+    i_pop        : input  logic  ,
+    o_data       : output TYPE   ,
+) {
+    const RAM_WORDS: u32 = if DATA_FF_OUT ? DEPTH - 1 : DEPTH;
+
+    var clear_data: logic;
+
+    always_comb {
+        clear_data = CLEAR_DATA && i_clear;
+    }
+
+    //--------------------------------------------------------------
+    //  controller
+    //--------------------------------------------------------------
+    const RAM_POINTER_WIDTH: u32 = if RAM_WORDS >= 2 ? $clog2(RAM_WORDS) : 1;
+
+    var write_pointer: logic<RAM_POINTER_WIDTH>;
+    var write_to_ff  : logic                   ;
+    var write_to_ram : logic                   ;
+    var read_pointer : logic<RAM_POINTER_WIDTH>;
+    var read_from_ram: logic                   ;
+
+    inst u_controller: fifo_controller #(
+        TYPE               ,
+        DEPTH              ,
+        THRESHOLD          ,
+        FLAG_FF_OUT        ,
+        DATA_FF_OUT        ,
+        PUSH_ON_CLEAR      ,
+        RAM_WORDS          ,
+        RAM_POINTER_WIDTH  ,
+        MATCH_COUNT_WIDTH  ,
+    ) (
+        i_clk                         ,
+        i_rst                         ,
+        i_clear                       ,
+        o_empty                       ,
+        o_almost_full                 ,
+        o_full                        ,
+        i_push                        ,
+        i_data                        ,
+        i_pop                         ,
+        o_word_count                  ,
+        o_write_pointer: write_pointer,
+        o_write_to_ff  : write_to_ff  ,
+        o_write_to_ram : write_to_ram ,
+        o_read_pointer : read_pointer ,
+        o_read_from_ram: read_from_ram,
+
+    );
+
+    //--------------------------------------------------------------
+    //  RAM
+    //--------------------------------------------------------------
+    var ram_read_data: TYPE;
+
+    if RAM_WORDS >= 1 :g_ram {
+        inst u_ram: ram #(
+            WORD_SIZE    : RAM_WORDS        ,
+            ADDRESS_WIDTH: RAM_POINTER_WIDTH,
+            DATA_TYPE    : TYPE             ,
+            BUFFER_OUT   : 0                ,
+            USE_RESET    : RESET_RAM        ,
+        ) (
+            i_clk                ,
+            i_rst                ,
+            i_clr : clear_data   ,
+            i_mea : '1           ,
+            i_wea : write_to_ram ,
+            i_adra: write_pointer,
+            i_da  : i_data       ,
+            i_meb : '1           ,
+            i_adrb: read_pointer ,
+            o_qb  : ram_read_data,
+        );
+    } else :g_no_ram {
+        always_comb {
+            ram_read_data = 0 as TYPE;
+        }
+    }
+
+    //--------------------------------------------------------------
+    //  output control
+    //--------------------------------------------------------------
+    if DATA_FF_OUT :g_data_out {
+        var data_out: TYPE;
+
+        always_comb {
+            o_data = data_out;
+        }
+
+        if RESET_DATA_FF :g {
+            always_ff {
+                if_reset {
+                    data_out = 0 as TYPE;
+                } else if clear_data {
+                    data_out = 0 as TYPE;
+                } else if write_to_ff {
+                    data_out = i_data;
+                } else if read_from_ram {
+                    data_out = ram_read_data;
+                }
+            }
+        } else {
+            always_ff {
+                if clear_data {
+                    data_out = 0 as TYPE;
+                } else if write_to_ff {
+                    data_out = i_data;
+                } else if read_from_ram {
+                    data_out = ram_read_data;
+                }
+            }
+        }
+    } else {
+        always_comb {
+            o_data = ram_read_data;
+        }
+    }
+}
