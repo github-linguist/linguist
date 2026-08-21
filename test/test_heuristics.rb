@@ -484,6 +484,13 @@ class TestHeuristics < Minitest::Test
     }, alt_name="main.for")
   end
 
+  def test_fpp_by_heuristics
+    assert_heuristics({
+      "FPP" => all_fixtures("FPP", "*.fpp"),
+      "Fortran" => all_fixtures("Fortran", "*.fpp")
+    })
+  end
+
   def test_fr_by_heuristics
     assert_heuristics({
       "Frege" => all_fixtures("Frege", "*.fr"),
@@ -1262,7 +1269,7 @@ class TestHeuristics < Minitest::Test
   def test_vba_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.vba"),
-      "Vim Script" => all_fixtures("Vim Script", "*.vba")
+      "Vim script" => all_fixtures("Vim script", "*.vba")
     })
   end
 
