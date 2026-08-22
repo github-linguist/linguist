@@ -1,0 +1,50 @@
+#version 1.0
+
+.extendContentIntoTitleBar;
+.darkTitlebar;
+.backdrop(mica);
+.titlebar("WinUI Counter Demo 🚀");
+
+export view CounterCard {
+    @state var count: int = 0;
+    @binding var headerText: string;
+    @published var isBusy: bool = false;
+    @computed var statusText: string;
+
+    callback onCountChanged(newVal: int);
+
+    body {
+        Card {
+            Column(spacing: 12, padding: 16) {
+                Label(headerText)
+                    .fontSize(22)
+                    .bold()
+                    .textColor(.accent);
+
+                Label("Current value: \(count)")
+                    .fontSize(16)
+                    .opacity(0.85);
+
+                Row(spacing: 8) {
+                    Button("Decrement")
+                        .onClick {
+                            if count > 0 {
+                                count -= 1;
+                                onCountChanged(count);
+                            }
+                        }
+
+                    Button("Increment")
+                        .primary()
+                        .onClick {
+                            count += 1;
+                            onCountChanged(count);
+                        }
+                }
+
+                Toggle(label: "Lock interaction", isOn: $isBusy);
+            }
+        }
+        .cornerRadius(10);
+    }
+}

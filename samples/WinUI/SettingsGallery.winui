@@ -1,0 +1,34 @@
+#version 1.0
+
+import HeaderCard from "Controls\Header";
+
+export view SettingsGallery {
+    @state var appTheme: string = "Dark";
+    @state var notificationsEnabled: bool = true;
+    @state var volume: double = 75.0;
+    @state var options: string[] = ["Default", "Compact", "Expanded"];
+
+    body {
+        Scroll {
+            Column(spacing: 16, padding: 20) {
+                Label("App Settings")
+                    .fontSize(28)
+                    .bold()
+
+                Divider()
+
+                Toggle(label: "Push Notifications", isOn: $notificationsEnabled)
+
+                Slider(value: volume, minimum: 0.0, maximum: 100.0, step: 1.0)
+                    .onChanged(val) {
+                        volume = val;
+                    }
+
+                ForEach(options) { item in
+                    Label(item)
+                        .padding(8)
+                }
+            }
+        }
+    }
+}
