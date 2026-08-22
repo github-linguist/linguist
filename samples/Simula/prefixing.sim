@@ -1,0 +1,19 @@
+Class PrefixPart;
+begin
+    outtext("A");
+    inner;
+    outtext("C")
+end;
+
+PrefixPart Class CompletePart;
+begin
+    outtext("B")
+end;
+
+program PrefixInner;
+begin
+    Ref(CompletePart) item;
+    item :- new CompletePart();
+    outimage;
+    exit(0)
+end;

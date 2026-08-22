@@ -1,0 +1,6 @@
+MAIN
+  OPEN "input.txt" AS FILE 1 FOR READING
+  READ data FROM FILE 1
+  WRITE "Hello, SIMSCRIPT!" TO SCREEN
+  LET count = 42
+END MAIN

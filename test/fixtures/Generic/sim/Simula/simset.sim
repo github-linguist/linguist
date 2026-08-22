@@ -1,0 +1,123 @@
+% $Id: simset.sim,v 1.3 1997/02/14 16:33:02 cim Exp $
+
+% Copyright (C) 1994 Sverre Hvammen Johansen,
+% Department of Informatics, University of Oslo.
+%
+% This program is free software; you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation; version 2.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program; if not, write to the Free Software
+% Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
+
+%ifdef included
+%else
+%timestamp simset
+%endif
+%nonetest off
+%casesensitive on
+CLASS SIMSET;
+BEGIN
+
+  CLASS LINKAGE;
+  BEGIN REF(LINKAGE)zzsuc,zzpred;
+
+    REF(LINK) PROCEDURE SUC;
+      SUC:- IF zzsuc IN LINK THEN zzsuc ELSE NONE;
+
+    REF(LINK) PROCEDURE PRED;
+      PRED:- IF zzpred IN LINK THEN zzpred ELSE NONE;
+
+    REF(LINKAGE) PROCEDURE PREV; PREV:-zzpred;
+
+  END LINKAGE;
+
+
+  LINKAGE CLASS LINK;
+  BEGIN
+
+    PROCEDURE OUT;
+    IF zzsuc=/=NONE THEN BEGIN
+      zzsuc.zzpred:-zzpred;
+      zzpred.zzsuc:-zzsuc;
+      zzsuc:-zzpred:-NONE;
+    END OUT;
+
+    PROCEDURE FOLLOW(PTR); REF(LINKAGE)PTR;
+    BEGIN OUT;
+      IF PTR=/=NONE AND THEN PTR.zzsuc=/=NONE THEN BEGIN
+        zzpred:-PTR;
+        zzsuc:-PTR.zzsuc;
+        zzsuc.zzpred:-PTR.zzsuc:-THIS LINKAGE END
+    END FOLLOW;
+
+    PROCEDURE PRECEDE(PTR); REF(LINKAGE)PTR;
+    BEGIN OUT;
+      IF PTR=/=NONE AND THEN PTR.zzpred=/=NONE THEN BEGIN
+        zzsuc:-PTR;
+        zzpred:-PTR.zzpred;
+        zzpred.zzsuc:-PTR.zzpred:-THIS LINKAGE END
+    END PRECEDE;
+
+    PROCEDURE INTO(S); REF(HEAD)S; PRECEDE(S);
+
+  END LINK;
+
+
+  LINKAGE CLASS HEAD;
+  BEGIN
+
+    REF(LINK) PROCEDURE FIRST;
+      !FIRST:-SUC;
+      FIRST:- IF zzsuc IN LINK THEN zzsuc ELSE NONE;
+
+    REF(LINK) PROCEDURE LAST;
+      !LAST:-PRED;
+      LAST:- IF zzpred IN LINK THEN zzpred ELSE NONE;
+
+    BOOLEAN PROCEDURE EMPTY; EMPTY:= zzsuc==THIS LINKAGE;
+
+    INTEGER PROCEDURE CARDINAL;
+    BEGIN INTEGER I;
+      REF(LINKAGE) PTR;
+%      PTR:-FIRST;
+%      WHILE PTR =/= NONE DO BEGIN
+%        I:=I+1;
+%        PTR:-PTR.SUC;
+%      END WHILE;
+      PTR:-zzsuc;
+      WHILE PTR =/= THIS LINKAGE DO BEGIN
+        I:=I+1;
+        PTR:-PTR.zzsuc;
+      END WHILE;
+
+      CARDINAL:=I
+    END CARDINAL;
+
+%    PROCEDURE CLEAR; WHILE FIRST=/= NONE DO FIRST.OUT;
+    PROCEDURE CLEAR;
+    BEGIN
+      REF(LINKAGE) PTR,PTRSUC;
+      PTR:-zzsuc;
+      WHILE PTR =/= THIS LINKAGE DO
+      BEGIN
+        PTRSUC:-PTR.zzsuc;
+        PTR.zzsuc:-PTR.zzpred:-NONE;
+        PTR:-PTRSUC;
+      END;
+      zzsuc:-zzpred:-THIS LINKAGE
+    END;
+
+    zzsuc:-zzpred:-THIS LINKAGE
+  END HEAD;
+
+END SIMSET;
+
+%CASESENSITIVE OFF
+%eof

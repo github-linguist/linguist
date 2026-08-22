@@ -1,0 +1,24 @@
+Task Class PipelineStage;
+Virtual: Procedure Run Is Procedure Run;;
+begin
+    Public:
+    channel(integer) input_values;
+    channel(integer) output_values;
+    Procedure Run;
+    begin
+        integer value;
+        value := receive(input_values);
+        send(output_values, value + 1)
+    end;
+end;
+
+program TaskPipeline;
+begin
+    Ref(PipelineStage) stage;
+    integer result;
+    stage :- new PipelineStage();
+    send(stage.input_values, 41);
+    join spawn stage.Run();
+    result := receive(stage.output_values);
+    assert(result = 42)
+end;

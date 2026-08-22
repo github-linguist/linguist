@@ -1,0 +1,10 @@
+Simulation Begin
+   Process Class Worker;
+   Begin
+      Hold(1.0);
+      Passivate;
+      Inner
+   End;
+
+   Activate New Worker;
+End;

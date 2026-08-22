@@ -1,0 +1,14 @@
+PROGRAM LoopDemo;
+
+VAR
+   i, limit: INTEGER;
+   total, count: INTEGER;
+
+BEGIN
+   WHILE i <= limit DO
+   BEGIN
+      total := total + i;
+      count := count + 1;
+      WRITELN('done')
+   END
+END.

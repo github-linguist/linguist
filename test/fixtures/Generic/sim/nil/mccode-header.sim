@@ -1,0 +1,32 @@
+McStas simulation description file for Demo_instrument.
+Date:    Mon Jan 6 09:14:03 2020
+Program: McStas 2.5 - Dec. 12, 2018
+
+begin instrument: Demo_instrument
+  File: scan/1/mccode
+  Source: Demo_instrument.instr
+  Parameters:  amin(double) amax(double) t(double) p(double)
+  Trace_enabled: yes
+  Default_main: yes
+end instrument
+
+begin simulation: scan/1
+  Format: McCode with text headers
+  URL: http://www.mccode.org
+  Creator: McStas 2.5 - Dec. 12, 2018
+  Instrument: Demo_instrument.instr
+  Ncount: 1000000
+  Seed: 1704530043
+  Directory: scan/1
+end simulation
+
+begin data
+  Date: Mon Jan 6 09:14:10 2020 (1578293650)
+  type: array_2d(40, 40)
+  Source: Demo_instrument (Demo_instrument.instr)
+  component: monitor
+  position: 0 0 0.01
+  title: Monitor
+  filename: monitor.dat
+  data:
+end data

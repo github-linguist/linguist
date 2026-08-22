@@ -1,0 +1,6 @@
+variable timestep equal 1e-5
+atom_style granular
+atom_modify map array
+boundary f f f
+region domain block -1 1 -1 1 0 1 units box
+create_box 3 domain

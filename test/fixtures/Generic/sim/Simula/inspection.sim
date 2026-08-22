@@ -1,0 +1,9 @@
+BEGIN
+   CLASS Block(ch); CHARACTER ch;;
+   REF(Block) item;
+
+   item :- NEW Block('A');
+   INSPECT item
+      WHEN Block DO OutChar((item QUA Block).ch)
+      OTHERWISE OutText("none");
+END;

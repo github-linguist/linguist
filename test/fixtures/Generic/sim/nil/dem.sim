@@ -1,0 +1,6 @@
+# Plane strain material-point simulation
+oneStepType modifiedLagrangian
+gravity 0.0 -9.81
+nstep 400000
+model MohrCoulomb MC 80.0e7 0.42 0.5
+set_grid 200 180 0.025 0.025

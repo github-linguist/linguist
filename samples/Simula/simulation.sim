@@ -1,0 +1,21 @@
+Process Class Customer;
+begin
+    Ref(Customer) nextCustomer;
+    Procedure Life;
+    begin
+        detach;
+        hold 1.0;
+        passivate
+    end;
+end;
+
+program ClassicSimulation;
+begin
+    Ref(Customer) first;
+    Ref(Customer) second;
+    first :- new Customer();
+    second :- new Customer();
+    activate first at 1.0 prior;
+    activate second after first;
+    reactivate first delay 2.0
+end;

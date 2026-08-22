@@ -1,0 +1,10 @@
+BEGIN
+   INTEGER nmax, i;
+   BOOLEAN ARRAY prime(1:5000000);
+
+   nmax := InInt;
+   FOR i := 1 STEP 1 UNTIL nmax DO prime(i) := TRUE;
+   IF nmax < 10 THEN GOTO done;
+done:
+   OutImage;
+END;

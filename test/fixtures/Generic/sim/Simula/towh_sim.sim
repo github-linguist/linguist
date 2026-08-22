@@ -1,0 +1,84 @@
+COMMENT
+* SPDX-License-Identifier: GPL-3.0-or-later
+* Copyright 2017-2019 by Walter F.J. Mueller <W.F.J.Mueller@gsi.de>
+*
+*  Revision History:
+* Date         Rev Version  Comment
+* 2017-09-08   950   1.0    Initial version
+*;
+
+BEGIN
+   INTEGER ncall,nmove;
+   INTEGER curstk,maxstk;
+   INTEGER maxdsk,trace;
+   INTEGER ndsk;
+   INTEGER ARRAY tow(1:4);
+
+   PROCEDURE trc(txt,n,f,t);
+      VALUE txt;
+      TEXT txt;
+      INTEGER n,f,t;
+   BEGIN
+      OutText(txt);
+      OutInt(curstk,2);
+      OutText(" :");
+      OutInt(n,3);
+      OutInt(f,3);
+      OutInt(t,3);
+      OutText(" :");
+      OutInt(tow(1),3);
+      OutInt(tow(2),3);
+      OutInt(tow(3),3);
+      OutImage;
+   END;
+
+   PROCEDURE mov(n,f,t);
+      INTEGER n,f,t;
+   BEGIN
+      INTEGER o;
+      o := 6-(f+t);
+      curstk := curstk + 1;
+      ncall  := ncall  + 1;
+      IF maxstk < curstk THEN maxstk := curstk;
+      IF n = 1 THEN BEGIN
+         nmove  := nmove + 1;
+         tow(f) := tow(f) - 1;
+         tow(t) := tow(t) + 1;
+         IF trace > 0 THEN trc("mov-do: ",n,f,t);
+      END ELSE BEGIN;
+         IF trace > 0 THEN trc("mov-go: ",n,f,t);
+         mov(n-1,f,o);
+         mov(1,f,t);
+         mov(n-1,o,t);
+      END;
+      curstk := curstk - 1;
+   END;
+
+   maxdsk := InInt;
+   trace  := InInt;
+
+   FOR ndsk := 2 STEP 1 UNTIL maxdsk DO BEGIN
+      ncall  := 0;
+      nmove  := 0;
+      maxstk := 0;
+      curstk := 0;
+      tow(1) := ndsk;
+      tow(2) := 0;
+      tow(3) := 0;
+      IF trace > 0 THEN BEGIN
+         OutText("STRT ndsk=");
+         OutInt(ndsk,2);
+         OutImage;
+      END;
+      mov(ndsk,1,3);
+      OutText("DONE ndsk=");
+      OutInt(ndsk,2);
+      OutText(": maxstk=");
+      OutInt(ndsk,2);
+      OutText("  ncall=");
+      OutInt(ncall,10);
+      OutText("  nmove=");
+      OutInt(nmove,10);
+      OutImage;
+   END;
+END;
