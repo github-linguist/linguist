@@ -1,0 +1,22 @@
+//@version=5
+indicator("Bollinger Bands", overlay=true)
+
+// Input parameters
+length = input(20, title="Length")
+stdDev = input(2.0, title="Standard Deviation")
+
+// Calculate SMA and standard deviation
+sma = ta.sma(close, length)
+stdDeviation = ta.stdev(close, length)
+
+// Calculate bands
+upper_band = sma + (stdDeviation * stdDev)
+lower_band = sma - (stdDeviation * stdDev)
+
+// Plot bands
+plot(sma, color=color.blue, linewidth=2, title="Middle Band")
+plot(upper_band, color=color.red, linewidth=1, title="Upper Band")
+plot(lower_band, color=color.green, linewidth=1, title="Lower Band")
+
+// Fill between bands
+fill(plot(upper_band), plot(lower_band), color=color.new(color.gray, 85), title="Bands Fill")

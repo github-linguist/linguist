@@ -1,0 +1,23 @@
+//@version=5
+strategy("Simple Moving Average Strategy", overlay=true)
+
+// Input parameters
+ma_length = input(20, title="MA Length")
+profit_target = input(2.0, title="Profit Target %")
+stop_loss = input(1.0, title="Stop Loss %")
+
+// Calculate moving average
+ma = ta.sma(close, ma_length)
+
+// Plot moving average
+plot(ma, color=color.blue, linewidth=2, title="Moving Average")
+
+// Trading logic
+if close > ma and close[1] <= ma[1]
+    strategy.entry("BUY", strategy.long)
+
+if close < ma and close[1] >= ma[1]
+    strategy.entry("SELL", strategy.short)
+
+// Exit conditions
+strategy.exit("CLOSE", profit_target=profit_target, loss=stop_loss)
