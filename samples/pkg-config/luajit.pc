@@ -1,0 +1,25 @@
+# Package information for LuaJIT to be used by pkg-config.
+majver=2
+minver=1
+relver=0
+version=${majver}.${minver}.${relver}
+abiver=5.1
+
+prefix=~/torch/install
+multilib=lib
+exec_prefix=${prefix}
+libdir=${exec_prefix}/${multilib}
+libname=luajit
+includedir=${prefix}/include -I${prefix}/include/TH
+
+INSTALL_LMOD=${prefix}/share/lua/${abiver}
+INSTALL_CMOD=${prefix}/${multilib}/lua/${abiver}
+
+Name: LuaJIT
+Description: Just-in-time compiler for Lua
+URL: http://luajit.org
+Version: ${version}
+Requires:
+Libs: -L${libdir} -l${libname}
+Libs.private: -Wl,-E -lm -ldl
+Cflags: -I${includedir}

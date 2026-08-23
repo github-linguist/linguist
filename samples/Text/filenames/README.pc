@@ -1,0 +1,121 @@
+This is the README for GNU awk 4 under Windows32, OS/2, and DOS.
+
+    Gawk has been compiled and tested under OS/2, DOS, and Windows32 using
+the GNU development tools from DJ Delorie (DJGPP; DOS with special
+support for long filenames on Windows), Eberhard Mattes (EMX; OS/2,
+DOS, and Windows32 with rsxnt), and Jan-Jaap van der Heijden and Mumit Khan
+(Mingw32; Windows32).
+
+    The Cygwin environment (http://cygwin.com) may also be used
+to compile and run gawk under Windows.  For Cygwin, building and
+installation is the same as under Unix:
+
+	tar -xvpzf gawk-4.1.x.tar.gz
+	cd gawk-4.1.x
+	./configure && make
+
+The `configure' step takes a long time, but works otherwise.
+
+******************************** N O T E **********************************
+* The `|&' operator only works when gawk is compiled for Cygwin.  Neither *
+* socket support nor two-way pipes work in any other Windows environment! *
+***************************************************************************
+
+Building gawk
+-------------
+
+Copy the files in the `pc' directory (EXCEPT for `ChangeLog') to the
+directory with the rest of the gawk sources.  (The subdirectories of 
+`pc' need not be copied.)  The Makefile contains a configuration 
+section with comments, and may need to be edited in order to work
+with your make utility.
+
+The "prefix" line in the Makefile is used during the install of gawk
+(and in building igawk.bat and igawk.cmd). Since the libraries for
+gawk will be installed under $(prefix)/lib/awk (e.g., /gnu/lib/awk),
+it is convenient to have this directory in DEFPATH of config.h. 
+
+The makefile contains a number of targets for building various DOS and
+OS/2 versions.  A list of targets will be printed if the make command is
+given without a target.  As an example, to build gawk using the djgpp
+tools, enter "make djgpp".
+
+
+Testing and installing gawk
+---------------------------
+
+The command "make test" (and possibly "make install") requires several 
+Unix-like tools, including an sh-like shell, sed, cp, and cmp.  Only 
+dmake and GNU make are known to work on "make test".
+
+There are two methods for the install: Method 1 uses a typical Unix-like 
+approach and requires cat, cp, mkdir, sed, and sh; method 2 uses gawk 
+and batch files. See the configuration section of the makefile.
+
+The file test/Makefile will need some editing (especially for DOS). A
+sample makefile with comments appears in pc/Makefile.tst, and can be
+used to modify test/Makefile for your platform.  In addition, some
+files in the test directory may need to have their end-of-line markers
+converted, as described in Makefile.tst.
+
+As with building gawk, the OS, shell, and long filename issues come into
+play when testing, too.  If you are testing gawk on a LFN aware system with
+some LFN aware tools, you may have problems if the shell that you specify in
+test/Makefile is not LFN aware.  This problem will apply whether or not
+you are building a LFN aware gawk.  See the comments in pc/Makefile.tst
+for more information on this.
+
+It is routine to install by hand, but note that the install target also
+builds igawk.bat and igawk.cmd, which are used to add an include
+facility to gawk (and which require sh).
+
+
+Gawk thanks
+-----------
+
+The DOS maintainers wish to express their thanks to Eli Zaretskii
+<eliz@gnu.org> for his work and for the many conversations concerning
+gawk, make, and djgpp.  His FAQ for djgpp is essential reading, and he
+was always willing to answer our questions (even when we didn't read
+the relevant portions of the FAQ :).
+
+We are indebted to Juan Grigera <juan@biophnet.unlp.edu.ar> for
+additional help on changes for Windows32.
+
+
+----
+If you have any problems with the DOS or OS/2 versions of Gawk, 
+please send bug reports (along with the version and compiler used) to 
+
+   Scott Deifik, scottd.mail@sbcglobal.net (DOS versions)
+or
+   andreas.buening@nexgo.de (OS/2 version)
+
+Support for Windows32 started in gawk-3.0.3.
+
+----
+From: Eric Pement <eric.pement@gmail.com>
+Newsgroups: comp.lang.awk
+Subject: djgpp Gawk ver. 4.0 available
+Date: Tue, 26 Jul 2011 06:42:00 -0700 (PDT)
+MS Windows users:
+
+The DJGPP compilation of GNU awk v4.0.0 is now available here:
+
+   ftp://ftp.delorie.com/pub/djgpp/current/v2gnu/gwk400b.zip
+
+For those who don't know the difference between the DGJPP compile and
+other versions compiled for Windows, the most noticeable to me is that
+it supports Unix-style use of 'single' and "double" quoting. Example:
+
+ [c:\tmp]> :: normal Windows awk requires complex quoting
+ [c:\tmp]> gawk "BEGIN{ print \"hello, world\" }"
+ hello, world
+ [c:\tmp]> :: DJGPP compile of awk permits Unix quoting in CMD
+ [c:\tmp]> djgawk 'BEGIN{ print "hello, world" }'
+ hello, world
+
+Syntactic sugar? Sure. But it makes life easier in a Windows
+environment, and without installing Cygwin ...
+
+Eric P.

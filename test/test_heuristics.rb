@@ -384,6 +384,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_container_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.container"),
+    })
+  end
+
   def test_cs_by_heuristics
     assert_heuristics({
       "C#" => all_fixtures("C#", "*.cs"),
@@ -750,6 +756,12 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_mount_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.mount"),
+    })
+  end
+
   def test_mps_by_heuristics
     assert_heuristics({
       "JetBrains MPS" => all_fixtures("JetBrains MPS", "*.mps"),
@@ -789,6 +801,12 @@ class TestHeuristics < Minitest::Test
     }, alt_name="test.ncl")
   end
 
+  def test_network_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.network"),
+    })
+  end
+
   def test_nl_by_heuristics
     assert_heuristics({
       "NewLisp" => all_fixtures("NewLisp", "*.nl"),
@@ -822,6 +840,13 @@ class TestHeuristics < Minitest::Test
       "Gnuplot" => all_fixtures("Gnuplot"),
       "OpenEdge ABL" => all_fixtures("OpenEdge ABL", "*.p"),
     }, alt_name="test.p")
+  end
+
+  def test_pc_by_heuristics
+    assert_heuristics({
+      "pkg-config" => all_fixtures("pkg-config", "*.pc"),
+      "Pro*C" => all_fixtures("ProC", "*.pc"),
+    })
   end
 
   def test_php_by_heuristics
@@ -991,6 +1016,18 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_service_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.service"),
+    })
+  end
+
+  def test_socket_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.socket"),
+    })
+  end
+
   def test_sol_by_heuristics
     assert_heuristics({
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
@@ -1077,6 +1114,18 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Java Server Pages" => Dir.glob("#{fixtures_path}/Generic/tag/Java Server Pages/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/tag/nil/*")
+    })
+  end
+
+  def test_target_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.target"),
+    })
+  end
+
+  def test_timer_by_heuristics
+    assert_heuristics({
+      "INI" => all_fixtures("INI", "*.timer"),
     })
   end
 

@@ -1,0 +1,312 @@
+gtk-menu-images = 1
+gtk-fallback-icon-theme="gnome"
+
+style "qtcurve-default"
+{
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::default_outside_border = { 0, 0, 0, 0 }
+  GtkMenuItem::selected_shadow_type = out
+  GtkWidget::interior_focus = 1
+  GtkButton::child_displacement_x   = 1
+  GtkButton::child_displacement_y   = 1
+  GtkMessageDialog::use-separator = 1
+  GtkDialog::content-area-border = 2
+  GtkDialog::action-area-border = 2
+
+  GtkWidget::focus-line-width = 1
+  GtkRange::trough_border = 0
+  GtkWidget::focus-padding = 1
+  GtkButton::focus-padding = 2
+  GtkOptionMenu::focus-padding = 1
+  GtkCheckButton::focus-padding = 1
+  GtkRadioButton::focus-padding = 1
+  GtkSpinButton::focus-padding = 1
+  GtkPaned::handle_size = 6
+  GtkPaned::handle_width = 6
+  GtkRange::slider_width = 15
+  GtkRange::slider_length = 24
+  GtkRange::stepper_size = 15
+  GtkScale::slider_length = 21
+  GtkScale::slider_width = 13
+  GtkScrollbar::min_slider_length = 16
+  GtkCheckButton::indicator_size = 15
+  GtkMenuBar::internal-padding = 0
+  GtkToolbar::internal-padding = 2
+  GtkNotebook::tab-overlap = 2
+  GtkNotebook::tab-curvature = 4
+  GtkStatusbar::shadow-type = 0
+  GtkComboBoxEntry::appears-as-list = 1
+  GtkComboBoxText::appears-as-list = 1
+  GtkTreeView::allow-rules = 1
+  GtkTreeView::row-ending-details = 1
+  GtkTreeView::expander-size = 15
+  GtkMenu::vertical-padding = 0
+  GtkMenu::horizontal-offset = -2
+  GtkMenu::vertical-offset = 1
+  GtkCheckMenuItem::indicator-size=17
+  GtkEntry::honors-transparent-bg-hint = 1
+  GtkScrolledWindow::scrollbar-spacing = 3
+  xthickness = 1
+  ythickness = 1
+
+  # This is gone in gtk3
+  GtkRange::stepper-position-details = 1
+
+  engine "qtcurve" {
+  }
+}
+
+style "qtcurve-dlgsep" = "qtcurve-default"
+{
+  GtkSeparator::separator-height = 0
+  xthickness = 0
+  ythickness = 0
+}
+
+style "qtcurve-pathbutton" = "qtcurve-default"
+{
+  GtkButton::child_displacement_x = 0
+  GtkButton::child_displacement_y = 0
+  GtkButton::inner-border = { 4, 12, 0, 0 }
+}
+
+style "qtcurve-toolbar" = "qtcurve-default"
+{
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::default_outside_border = { 0, 0, 0, 0 }
+  GtkWidget::interior_focus = 1
+  GtkButton::child_displacement_x   = 1
+  GtkButton::child_displacement_y   = 1
+  GtkOptionMenu::focus-padding = 0
+  GtkWidget::focus-padding = 1
+  xthickness = 1
+  ythickness = 1
+  GtkToolbar::internal-padding = 1
+}
+
+style "qtcurve-toolbarbutton" = "qtcurve-toolbar"
+{
+  xthickness = 2
+  ythickness = 2
+}
+
+style "qtcurve-swt-toolbarbutton" = "qtcurve-toolbar"
+{
+  xthickness = 1
+  ythickness = 1
+}
+
+style "qtcurve-sptoolbar" = "qtcurve-default"
+{
+  GtkButton::default_border = { 0, 0, 0, 0 }
+  GtkButton::default_outside_border = { 0, 0, 0, 0 }
+  GtkWidget::interior_focus = 1
+  GtkButton::child_displacement_x   = 1
+  GtkButton::child_displacement_y   = 1
+  GtkOptionMenu::focus-padding = 0
+  GtkWidget::focus-padding = 1
+  xthickness = 2
+  ythickness = 3
+}
+
+style "qtcurve-sptoolbarbutton" = "qtcurve-sptoolbar"
+{
+  xthickness = 4
+  ythickness = 5
+}
+
+style "qtcurve-h2" = "qtcurve-default"
+{
+  xthickness = 1
+  ythickness = 2
+}
+
+style "qtcurve-w2" = "qtcurve-default"
+{
+  xthickness = 2
+  ythickness = 2
+}
+
+style "qtcurve-entry" = "qtcurve-default"
+{
+  xthickness = 4
+  ythickness = 4
+  GtkWidget::interior-focus = 0
+  GtkWidget::focus-line-width = 0
+  GtkEntry::inner-border = { 0, 0, 0, 0}
+}
+
+style "qtcurve-range" = "qtcurve-default"
+{
+  xthickness = 4
+  ythickness = 4
+  GtkWidget::interior-focus = 0
+  GtkWidget::focus-line-width = 0
+  GtkEntry::inner-border = { 0, 0, 0, 0}
+}
+
+style "qtcurve-tasklist" = "qtcurve-default"
+{
+  xthickness = 5
+  ythickness = 3
+}
+
+style "qtcurve-menuitem" = "qtcurve-default"
+{
+  xthickness = 1
+  ythickness = 3
+
+  GtkMenuItem::horizontal-padding = 1
+  # We are setting the desired height by using wide-separators
+  # There is no other way to get the odd height ...
+  GtkMenuItem::wide-separators = 1
+  GtkMenuItem::separator-width = 1
+  GtkMenuItem::separator-height = 1
+}
+
+style "qtcurve-menubar" = "qtcurve-default"
+{
+    GtkMenuBar::shadow_type = GTK_SHADOW_ETCHED_IN
+    GtkToolbar::shadow_type = GTK_SHADOW_ETCHED_IN
+
+  xthickness = 2
+  ythickness = 2
+}
+
+style "qtcurve-menubaritem" = "qtcurve-default"
+{
+  GtkMenuItem::horizontal-padding = 5
+  xthickness = 2
+  ythickness = 2
+}
+
+style "qtcurve-swt-combo" = "qtcurve-default"
+{
+  xthickness = 2
+  ythickness = 2
+}
+
+style "qtcurve-combo" = "qtcurve-default"
+{
+  xthickness = 4
+  ythickness = 4
+}
+
+style "qtcurve-combo-button" = "qtcurve-default"
+{
+  xthickness = 1
+  ythickness = 1
+}
+
+style "qtcurve-separator" = "qtcurve-menuitem"
+{
+  ythickness = 1
+  GtkMenuItem::wide-separators = 1
+  GtkMenuItem::separator-width = 1
+  GtkMenuItem::separator-height = 4
+}
+
+style "qtcurve-w0" = "qtcurve-default"
+{
+  xthickness = 0
+  ythickness = 0
+}
+
+style "qtcurve-header" = "qtcurve-default"
+{
+  xthickness = 2
+  ythickness = 0
+  GtkButton::focus-padding = 1
+}
+
+style "qtcurve-tabbutton" = "qtcurve-default"
+{
+  GtkButton::child_displacement_x = 0
+  GtkButton::child_displacement_y = 0
+  GtkButton::focus-padding = 0
+}
+
+style "qtcurve-notebook_bg"
+{
+}
+
+class "*GtkWidget" style "qtcurve-default"
+class "*GtkNotebook" style "qtcurve-w2"
+class "*Button" style "qtcurve-h2"
+class "*GtkOptionMenu" style "qtcurve-h2"
+class "*GtkRange" style "qtcurve-w2"
+class "*GtkMenu" style "qtcurve-w2"
+class "*GtkScrolledWindow" style "qtcurve-w2"
+class "*GtkViewport" style "qtcurve-w2"
+class "*MenuBar" style "qtcurve-menubar"
+class "*MenuItem" style "qtcurve-menuitem"
+class "*GtkFrame" style "qtcurve-w2"
+class "*GtkStatusbar" style "qtcurve-default"
+class "*GtkRadioButton" style "qtcurve-default"
+class "*GtkCheckButton" style "qtcurve-default"
+class "*GtkSpinButton" style "qtcurve-range"
+
+widget_class "*<GtkNotebook>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkEventBox>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkDrawingArea>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkLayout>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkViewport>" style "qtcurve-notebook_bg"
+widget_class "*<GtkNotebook>*<GtkScrolledWindow>" style "qtcurve-notebook_bg"
+
+widget_class "*.GtkMenuItem.*" style "qtcurve-default"
+widget_class "*.GtkAccelMenuItem.*" style "qtcurve-default"
+widget_class "*.GtkRadioMenuItem.*" style "qtcurve-default"
+widget_class "*.GtkCheckMenuItem.*" style "qtcurve-default"
+widget_class "*.GtkImageMenuItem.*" style "qtcurve-default"
+class "*GtkEntry" style "qtcurve-entry"
+widget_class "*.tooltips.*.GtkToggleButton" style "qtcurve-tasklist"
+widget_class "*Tree*GtkButton" style "qtcurve-header"
+widget_class "*List*GtkButton" style "qtcurve-header"
+widget_class "*GimpThumbBox*GtkEventBox*GtkVBox*GtkButton" style "qtcurve-header"
+widget_class "BasePWidget.GtkEventBox.GtkTable.GtkFrame" style "qtcurve-w2"
+widget_class "*<GtkToolbar>"  style "qtcurve-toolbar"
+widget_class "*Toolbar*Button" style "qtcurve-toolbarbutton"
+widget_class "*.SwtFixed.*Toolbar*Button" style "qtcurve-swt-toolbarbutton"
+widget_class "*HandleBox*HBox*SPDesktopWidget" style "qtcurve-sptoolbar"
+widget_class "*HandleBox*SPButton" style "qtcurve-sptoolbarbutton"
+widget_class "*.GtkCombo.GtkEntry" style "qtcurve-combo"
+widget_class "*.GtkCombo.GtkButton" style "qtcurve-combo-button"
+widget_class "*.SwtFixed.GtkCombo.GtkButton" style "qtcurve-swt-combo"
+widget_class "*.SwtFixed.GtkCombo.GtkEntry" style "qtcurve-entry"
+widget_class "*Toolbar*Entry" style "qtcurve-entry"
+class "GtkComboBoxEntry" style "qtcurve-w0"
+widget_class "*.GtkComboBoxEntry.*Button" style "qtcurve-w0"
+widget_class "*PathBar.*Button" style "qtcurve-pathbutton"
+class "*SeparatorMenuItem" style "qtcurve-separator"
+widget_class "*.GtkSeparatorMenuItem.*" style "qtcurve-separator"
+widget_class "*.GeditNotebook.GtkHBox.GtkButton" style "qtcurve-tabbutton"
+widget_class "*MenuBar*MenuItem" style "qtcurve-menubaritem"
+widget_class "*Dialog.*Separator" style "qtcurve-dlgsep"
+
+# This seems to crash Gimp 2.7 (well with oxygen anyway), so remove...
+#style "qtcurve-gimp-scale"
+#{
+#    # this ensures that toolpanels fonts in gimp is identical
+#    # to default font (which otherwise is ugly
+#    GimpDock::font-scale = 1.01
+#}
+#
+#class "*" style "qtcurve-gimp-scale"
+
+# Disable Ubuntu resize grips. See: http://www.omgubuntu.co.uk/2011/05/disable-the-resize-grip-in-ubuntu-11-04/
+style "qtcurve-resizegrip" = "qtcurve-default"
+{
+    GtkWindow::resize-grip-height = 0
+    GtkWindow::resize-grip-width = 0
+}
+class "GtkWidget" style "qtcurve-resizegrip"
+
+# Seems to fix issues with pidgin where some buttons have icons, and others not.
+# Messes other widgets up :-(
+#style "qtcurve-box" = "qtcurve-default"
+#{
+#  xthickness = 2
+#  ythickness = 2
+#}
+#
+#widget_class "*.*Box.*" style "qtcurve-box"

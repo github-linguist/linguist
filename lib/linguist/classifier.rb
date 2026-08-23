@@ -136,7 +136,8 @@ module Linguist
 
       scores = {}
       languages.each do |language|
-        centroid = @centroids[language]
+        fs_name = Language.find_by_name(language).fs_name
+        centroid = @centroids[fs_name || language]
         score = Classifier.similarity(vec, centroid)
         if score > 0.0
           scores[language] = score

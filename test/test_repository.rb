@@ -230,3 +230,60 @@ class EmptyRepository < Linguist::Source::Repository
     Diff.new
   end
 end
+
+################################################################################
+
+class TestGetTreeSize < Minitest::Test
+  def test_get_tree_size_normal_repo
+    rugged = Rugged::Repository.new(File.expand_path("../../.git", __FILE__))
+    source = Linguist::Repository.new(rugged, rugged.head.target_id)
+
+    # With a high limit, should return the actual blob count
+    size = source.repository.get_tree_size(rugged.head.target_id, 100_000)
+    assert size > 0
+    assert size < 100_000
+
+    # With a low limit, should return the limit
+    assert_equal 10, source.repository.get_tree_size(rugged.head.target_id, 10)
+  end
+
+  def test_get_tree_size_pathological_repo
+    # Create a minimal git bomb in a temp directory
+    Dir.mktmpdir("git-bomb-test") do |dir|
+      # Initialize repo
+      system("git", "-C", dir, "init", "-q", out: File::NULL, err: File::NULL)
+      system("git", "-C", dir, "config", "user.email", "test@test.com")
+      system("git", "-C", dir, "config", "user.name", "Test")
+
+      # Create git bomb, 2^32-1 directories, no files
+      current_sha = nil
+      mode = "40000"  # tree mode
+      32.times do |i|
+        current_sha = IO.popen(["git", "-C", dir, "hash-object", "-t", "tree", "-w", "--stdin"], "r+b") do |io|
+          if current_sha then
+            # Tree entry format: "<mode> <name>\0<20-byte SHA>"
+            sha = [current_sha].pack('H*')
+            entry0 = "#{mode} entry0\0#{sha}"
+            entry1 = "#{mode} entry1\0#{sha}"
+            io.write(entry0 + entry1)
+          end
+          io.close_write
+          io.read.strip
+        end
+      end
+
+      # Create commit
+      commit_content = "tree #{current_sha}\nauthor Test <test@test.com> 0 +0000\ncommitter Test <test@test.com> 0 +0000\n\ntest"
+      commit_sha = IO.popen(["git", "-C", dir, "hash-object", "-t", "commit", "-w", "--stdin"], "r+") do |io|
+        io.write(commit_content)
+        io.close_write
+        io.read.strip
+      end
+
+      # Should hit tree limit quickly (2^32 trees > 500)
+      rugged = Rugged::Repository.new(dir)
+      source = Linguist::Repository.new(rugged, commit_sha)
+      assert_equal 500, source.repository.get_tree_size(commit_sha, 500)
+    end
+  end
+end
