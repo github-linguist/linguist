@@ -615,20 +615,16 @@ disambiguations:
   rules:
   - language: NetLogo
     pattern: >-
-      (?x) ^ \s*
-      ( to(-report)?                  \s+ \w[\w-]*
-      | (extension|global|__include)s \s* \[
-      | (turtles|patches|links)-own   \s* \[
-      | ((un)?directed-link-)?breed   \s* \[
-      )
+    - '^\s*to(-report)?\s+\w[\w-]*'
+    - '^\s*(extension|global|__include)s\s*\['
+    - '^\s*(turtles|patches|links)-own\s*\['
+    - '^\s*((un)?directed-link-)?breed\s*\['
   - language: TeX
-    pattern: >-
-      (?x) ^ \s*
-      ( \\begin    \{
-      | \\end      \{
-      | \\nomgroup \{
-      | \\item
-      )
+    pattern:
+    - '^\s*\\begin\{'
+    - '^\s*\\end\{'
+    - '^\s*\\nomgroup\{'
+    - '^\s*\\item'
 - extensions: ['.nr']
   rules:
   - language: Roff
