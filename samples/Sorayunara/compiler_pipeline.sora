@@ -1,0 +1,82 @@
+// compiler_pipeline.sora — End-to-End Compiler Pass Example in Sorayunara (.sora)
+// Organization: Sorayunara
+
+import std.io
+import std.collections
+
+enum TokenKind {
+    Identifier,
+    Keyword,
+    IntegerLiteral,
+    Operator,
+    EndOfFile
+}
+
+struct SourceToken {
+    kind: TokenKind,
+    text: String,
+    line: Int,
+    column: Int
+}
+
+struct ASTNode {
+    id: Int,
+    name: String,
+    children: Array<ASTNode>
+}
+
+impl ASTNode {
+    pub fn new(node_id: Int, node_name: String) -> ASTNode {
+        return ASTNode {
+            id: node_id,
+            name: node_name,
+            children: []
+        }
+    }
+
+    pub fn add_child(mut &self, child: ASTNode) {
+        self.children.push(child)
+    }
+}
+
+fn analyze_syntax(tokens: Array<SourceToken>) -> Option<ASTNode> {
+    if tokens.is_empty() {
+        return Option::None
+    }
+
+    let mut root: ASTNode = ASTNode::new(0, "ProgramRoot")
+    let mut index: Int = 0
+
+    while index < tokens.len() {
+        let token = &tokens[index]
+        match token.kind {
+            TokenKind::Identifier => {
+                let node: ASTNode = ASTNode::new(index + 1, token.text)
+                root.add_child(node)
+            },
+            TokenKind::Keyword => {
+                print("Processing keyword declaration: " + token.text)
+            },
+            _ => {
+                // Pass-through other token variants
+            }
+        }
+        index = index + 1
+    }
+
+    return Option::Some(root)
+}
+
+fn main() -> Int {
+    let mut tokens: Array<SourceToken> = []
+    tokens.push(SourceToken { kind: TokenKind::Keyword, text: "fn", line: 1, column: 1 })
+    tokens.push(SourceToken { kind: TokenKind::Identifier, text: "calculate", line: 1, column: 4 })
+
+    let parsed_tree = analyze_syntax(tokens)
+    match parsed_tree {
+        Option::Some(tree) => print("AST generated with root: " + tree.name),
+        Option::None => print("Failed to parse token stream.")
+    }
+
+    return 0
+}

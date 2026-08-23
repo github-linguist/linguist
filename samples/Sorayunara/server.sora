@@ -1,0 +1,88 @@
+// server.sora — High Performance Concurrent Web Service in Sorayunara (.sora)
+// Organization: Sorayunara
+
+import std.io
+import std.net
+import std.sync
+import std.json
+
+enum HttpMethod {
+    Get,
+    Post,
+    Put,
+    Delete
+}
+
+struct HttpRequest {
+    method: HttpMethod,
+    path: String,
+    headers: Map<String, String>,
+    body: String
+}
+
+struct HttpResponse {
+    status_code: Int,
+    content_type: String,
+    payload: String
+}
+
+impl HttpResponse {
+    pub fn ok(json_body: String) -> HttpResponse {
+        return HttpResponse {
+            status_code: 200,
+            content_type: "application/json",
+            payload: json_body
+        }
+    }
+
+    pub fn not_found() -> HttpResponse {
+        return HttpResponse {
+            status_code: 404,
+            content_type: "text/plain",
+            payload: "Route Not Found"
+        }
+    }
+}
+
+async fn handle_client(req: HttpRequest) -> HttpResponse {
+    match req.method {
+        HttpMethod::Get => {
+            if req.path == "/api/status" {
+                let status_data: String = "{\"status\": \"operational\", \"lang\": \"Sorayunara\"}"
+                return HttpResponse::ok(status_data)
+            } else {
+                return HttpResponse::not_found()
+            }
+        },
+        HttpMethod::Post => {
+            print("Received payload: " + req.body)
+            return HttpResponse::ok("{\"received\": true}")
+        },
+        _ => {
+            return HttpResponse::not_found()
+        }
+    }
+}
+
+async fn start_server(port: Int) -> Result<Bool, String> {
+    print("🌌 Sorayunara HTTP Server listening on port: " + port.to_string())
+    let channel: Channel<HttpRequest> = channel::new(1024)
+
+    spawn async {
+        while true {
+            let request: HttpRequest = channel.receive()
+            let response: HttpResponse = await handle_client(request)
+            print("Response dispatched with status: " + response.status_code.to_string())
+        }
+    }
+
+    return Result::Ok(true)
+}
+
+fn main() -> Int {
+    print("Initializing Sorayunara runtime environment...")
+    let server_task = spawn async {
+        await start_server(8080)
+    }
+    return 0
+}
