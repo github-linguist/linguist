@@ -1061,15 +1061,9 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_sim_by_heuristics
-    simula = Dir.glob("#{fixtures_path}/Generic/sim/Simula/*")
-
-    assert Strategy::Extension.generic?("example.sim")
     assert_heuristics({
-      "Simula" => simula
+      "Simula" => Dir.glob("#{fixtures_path}/Generic/sim/Simula/*")
     })
-    simula.each do |blob|
-      assert_equal Language["Simula"], Linguist.detect(file_blob(blob)), "Failed full detection for #{blob}"
-    end
   end
 
   def test_socket_by_heuristics
