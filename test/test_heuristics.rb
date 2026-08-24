@@ -1056,8 +1056,8 @@ class TestHeuristics < Minitest::Test
 
   def test_sd_by_heuristics
     assert_heuristics({
-      "FlexCat Source Description" => all_fixtures("FlexCat Source Description", "*.sd"),
-      "Vespa Schema Definition" => all_fixtures("Vespa Schema Definition", "*.sd")
+      "Vespa Schema Definition" => all_fixtures("Vespa Schema Definition", "*.sd"),
+      nil => Dir.glob("#{fixtures_path}/Generic/sd/nil/*")
     })
   end
 
