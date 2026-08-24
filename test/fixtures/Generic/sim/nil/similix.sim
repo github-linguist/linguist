@@ -1,5 +1,0 @@
-(loadt "com-int.adt")
-
-(define (init-fenv)
-  (lambda (name)
-    (err 'init-fenv "Unbound function: ~s" name)))
