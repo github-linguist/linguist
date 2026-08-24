@@ -300,7 +300,6 @@ vendor/grammars/berry-grammar:
 - source.berry
 - source.berry.bytecode
 vendor/grammars/bicep:
-- markdown.bicep.codeblock
 - source.bicep
 vendor/grammars/bikeshed:
 - source.csswg
@@ -632,8 +631,10 @@ vendor/grammars/language-etc:
 - source.odin-ehr
 - source.openbsd-pkg.contents
 - source.opts
+- source.paperspecs
 - source.pkgconf
 - source.psl
+- source.rarlist
 - source.record-jar
 - source.sexp
 - source.sfv
@@ -659,6 +660,7 @@ vendor/grammars/language-etc:
 - text.lesshst
 - text.mac-tts
 - text.openbsd-pkg.desc
+- text.recfile
 - text.savane
 - text.xml.svg
 - text.youtube
@@ -1034,8 +1036,10 @@ vendor/grammars/python-django.tmbundle:
 - source.python.django
 - text.html.django
 vendor/grammars/qsharp:
+- source.deq
 - source.openqasm
 - source.qsharp
+- source.stim
 vendor/grammars/quake:
 - source.quake
 vendor/grammars/quakec-syntax:
@@ -1218,7 +1222,6 @@ vendor/grammars/templ-vscode:
 - source.templ
 vendor/grammars/textMate-baml:
 - source.baml
-- source.baml-jinja
 vendor/grammars/textmate:
 - source.flix
 vendor/grammars/textmate.tmbundle:
@@ -1249,6 +1252,7 @@ vendor/grammars/typst-grammar:
 - source.typst
 vendor/grammars/ucode-lsp:
 - source.ucode
+- source.ucode-template
 vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/verse-grammar:
