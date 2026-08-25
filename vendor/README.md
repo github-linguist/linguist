@@ -575,6 +575,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **SAS:** [rpardee/sas.tmbundle](https://github.com/rpardee/sas.tmbundle)
 - **SCSS:** [atom/language-sass](https://github.com/atom/language-sass)
 - **SELinux Policy:** [google/selinux-policy-languages](https://github.com/google/selinux-policy-languages)
+- **SIP:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **SMT:** [SRI-CSL/SMT.tmbundle](https://github.com/SRI-CSL/SMT.tmbundle)
 - **SPARQL:** [peta/turtle.tmbundle](https://github.com/peta/turtle.tmbundle)
 - **SQF:** [JonBons/Sublime-SQF-Language](https://github.com/JonBons/Sublime-SQF-Language)
