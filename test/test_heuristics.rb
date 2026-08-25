@@ -1067,6 +1067,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_sip_by_heuristics
+    assert_heuristics({
+      "Quartus Simulation IP" => all_fixtures("Quartus Simulation IP", "*.sip"),
+      "SIP" => all_fixtures("SIP", "*.sip")
+    })
+  end
+
   def test_socket_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.socket"),
