@@ -893,6 +893,11 @@ disambiguations:
   rules:
   - language: Vespa Schema Definition
     pattern: '^[ \t]*(?:schema|search|document)[ \t]+[\w.\/-]+[ \t]*(?:inherits[ \t][^{\n]*)?\{'
+- extensions: ['.sip']
+  rules:
+  - language: Quartus Simulation IP
+    pattern: '^[ \t]*set_global_assignment\b'
+  - language: SIP
 - extensions: ['.sol']
   rules:
   - language: Solidity
