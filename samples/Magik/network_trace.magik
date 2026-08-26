@@ -1,0 +1,272 @@
+#% text_encoding = iso8859_1
+_package sw
+
+## Tracing over a utility network.
+##
+## A trace walks connected objects outwards from a start object, honouring a
+## direction and a maximum depth, and records both the visited objects and the
+## total traced length.
+
+_pragma(classify_level=basic, topic={network_trace})
+def_mixin(:traceable_mixin)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_abstract _method traceable_mixin.neighbours(direction)
+	## Objects directly connected to _self in DIRECTION, which is one of
+	## :upstream, :downstream or :both.  Returns a simple_vector, empty when
+	## _self is isolated.
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method traceable_mixin.traceable?()
+	## Whether a trace is allowed to pass through _self.  Subclasses modelling
+	## an open switch or a disconnected joint should return _false.
+	>> _true
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method traceable_mixin.trace_length()
+	## Length contributed by _self, in metres.  Point objects such as joints
+	## contribute nothing and inherit this default.
+	>> 0.0
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+def_enumeration(:trace_direction, :upstream, :downstream, :both)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+def_enumeration_from(:trace_state, :pending, :running, :complete, :failed)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+## One step of a trace: the object reached and the depth it was reached at.
+def_indexed_exemplar(:trace_step,
+	{
+		{:depth, 0}
+	},
+	{})
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+trace_step.define_slot_externally_readable(:depth)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method trace_step.new(object, depth)
+	#  Initial Author  : user.name, Date : 2019-04-08
+	## Parameters      : OBJECT - object reached by the trace
+	##                 : DEPTH - hops from the start of the trace
+	## Returns         : a new trace_step
+	## Pre             : DEPTH is a non-negative integer
+	## Function        : Builds one step record for a trace result.
+	## Post            : -
+	>> _clone.init(object, depth)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_private _method trace_step.init(object, depth)
+	#  Initial Author  : user.name, Date : 2019-04-08
+	## Parameters      : OBJECT - object reached by the trace
+	##                 : DEPTH - hops from the start of the trace
+	## Returns         : _self
+	## Pre             : -
+	## Function        : Stores OBJECT in the indexed part and records DEPTH.
+	## Post            : _self is fully initialised and safe to share.
+	_self[1] << object
+	.depth << depth
+	>> _self
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+## Result of a single trace run.
+##
+## @slot {sw:symbol} direction One of :upstream, :downstream or :both.
+## @slot {sw:symbol} state Current state, one of the trace_state values.
+## @slot {sw:rope<sw:trace_step>} visited Steps, in the order they were reached.
+## @slot {sw:float} total_length Accumulated length, in metres.
+## @generic {sw:trace_step} E Element type yielded by steps().
+def_slotted_exemplar(:trace_result,
+	{
+		{:direction, :both, :readable},
+		{:state, :pending},
+		{:visited, _unset},
+		{:total_length, 0.0}
+	},
+	{})
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+trace_result.define_slot_access(:state, :readable, :public)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+trace_result.define_slot_externally_readable(:total_length)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+trace_result.define_slot_externally_writable(:visited)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+trace_result.define_shared_constant(
+	:default_max_depth,
+	32,
+	:public)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+trace_result.define_shared_variable(
+	:traces_run,
+	0,
+	:public)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method trace_result.new(direction)
+	## Constructor.
+	## @param {sw:symbol} direction
+	## @return {_self}
+	>> _clone.init(direction)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_private _method trace_result.init(direction)
+	## Initialiser.
+	## @return {_self}
+	.direction << direction
+	.state << :pending
+	.visited << sw:rope.new()
+	.total_length << 0.0
+	trace_result.traces_run +<< 1
+	>> _self
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method trace_result[index]
+	## Step at INDEX.
+	## @param {sw:integer} index
+	## @return {sw:trace_step}
+	>> .visited[index]
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method trace_result[index]<< step
+	## Replace the step at INDEX.
+	## @param {sw:integer} index
+	## @param {sw:trace_step} step
+	.visited[index] << step
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method trace_result.state << new_state
+	## Move the trace into NEW_STATE.
+	## @param {sw:symbol} new_state
+	_if new_state _isnt :pending _andif
+	    new_state _isnt :running _andif
+	    new_state _isnt :complete _andif
+	    new_state _isnt :failed
+	_then
+		condition.raise(:error, :string, "Unknown trace state")
+	_endif
+
+	.state << new_state
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method trace_result.size
+	## Number of steps recorded.
+	## @return {sw:integer}
+	>> .visited.size
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method trace_result.add(object, depth)
+	## Record OBJECT as reached at DEPTH.
+	## @param {sw:object} object
+	## @param {sw:integer} depth
+	## @return {sw:trace_step}
+	_local step << trace_step.new(object, depth)
+	.visited.add_last(step)
+	.total_length +<< object.trace_length()
+	>> step
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_iter _method trace_result.steps(_optional max_depth)
+	## Iterate over the recorded steps, shallowest first.
+	## @param {sw:integer|sw:unset} max_depth
+	## @loop {sw:trace_step}
+	## @invokes_method {sw:rope.fast_elements()}
+	_local limit << max_depth _default trace_result.default_max_depth
+
+	_for step _over .visited.fast_elements()
+	_loop @over_steps
+		_if step.depth > limit
+		_then
+			_continue @over_steps
+		_endif
+
+		_loopbody(step)
+	_endloop
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method trace_result.longest_branch()
+	## Deepest step recorded, or _unset when the trace is empty.
+	## @return {sw:trace_step|sw:unset}
+	_local best << _unset
+	_local index << 1
+
+	_while index <= .visited.size
+	_loop
+		_local step << .visited[index]
+		_if best _is _unset _orif step.depth > best.depth
+		_then
+			best << step
+		_endif
+
+		index +<< 1
+	_endloop
+
+	>> best
+_endmethod
+$
+
+_pragma(classify_level=advanced, topic={network_trace}, usage={redefinable})
+_method trace_result.report(stream)
+	## Write a human readable summary to STREAM.
+	## @param {sw:external_text_output_stream} stream
+	_dynamic !print_float_precision!
+
+	!print_float_precision! << 2
+	_protect
+		stream.write("Trace ", .direction, " -> ", .state, character.newline)
+		stream.write("  steps  : ", _self.size, character.newline)
+		stream.write("  length : ", .total_length, " m", character.newline)
+
+		_for step _over _self.steps()
+		_loop
+			stream.write("  ", step.depth, character.tab, step[1], character.newline)
+		_finally
+			stream.write("  --", character.newline)
+		_endloop
+	_protection
+		stream.flush()
+	_endprotect
+_endmethod
+$

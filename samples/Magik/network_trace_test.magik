@@ -1,0 +1,249 @@
+#% text_encoding = iso8859_1
+_package sw
+
+_pragma(classify_level=basic, topic={network_trace})
+## Tests for the network trace.
+def_slotted_exemplar(
+	:network_trace_test,
+	{
+		{:network, _unset}
+	},
+	{@sw:test_case})
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+network_trace_test.define_shared_constant(
+	:fixture_name,
+	'simple_ladder_network',
+	:private)
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.set_up()
+	## Build a small in-memory network before each test.
+	_super.set_up()
+	.network << _self.build_fixture(network_trace_test.fixture_name)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.tear_down()
+	## Discard the fixture.
+	.network << _unset
+	_super.tear_down()
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_private _method network_trace_test.build_fixture(name)
+	## Load the fixture called NAME from the test data directory and return
+	## it as a property_list keyed by node number.
+	_local nodes << property_list.new()
+	_local index << 1
+
+	_while index <= 6
+	_loop
+		nodes[index] << fake_network_node.new(index, index * 12.5)
+		index +<< 1
+	_endloop
+
+	_for index _over 1.upto(5)
+	_loop
+		nodes[index].link_to(nodes[index + 1])
+	_endloop
+
+	>> nodes
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_walk_visits_every_node()
+	## A trace with a generous depth reaches the whole ladder.
+	_local result << trace_walk(.network[1], :both, 32)
+
+	_self.assert_equals(:complete, result.state)
+	_self.assert_equals(6, result.size)
+	_self.assert(result.total_length > 0.0)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_walk_honours_max_depth()
+	## Limiting the depth truncates the trace.
+	_local shallow << trace_walk(.network[1], :downstream, 2)
+	_local deep << trace_walk(.network[1], :downstream, 32)
+
+	_self.assert(shallow.size <= deep.size)
+	_self.assert(shallow.size >= 1)
+	_self.assert(shallow.size ~= deep.size)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_bucket_split()
+	## Buckets and remainders add back up to the original length.
+	_local (whole, remainder) << trace_bucket(97, 10)
+
+	_self.assert_equals(9, whole)
+	_self.assert_equals(7, remainder)
+	_self.assert_equals(97, whole * 10 + remainder)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_bucket_rejects_zero()
+	## A zero bucket size is an error rather than a division by zero.
+	_local raised? << _false
+
+	_try
+		trace_bucket(10, 0)
+	_when error
+		raised? << _true
+	_endtry
+
+	_self.assert(raised?)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_cost_decays()
+	## Cost falls off with depth and eventually reaches zero.
+	_local near << trace_cost(100.0, 1)
+	_local far << trace_cost(100.0, 4)
+	_local vanished << trace_cost(.5, 64)
+
+	_self.assert(near > far)
+	_self.assert_equals(0.0, vanished)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_longest_branch()
+	## The deepest recorded step is reported as the longest branch.
+	_local result << trace_walk(.network[1], :downstream, 32)
+	_local branch << result.longest_branch()
+
+	_self.assert(branch _isnt _unset)
+	_self.assert(branch.depth >= 0)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_summary_string()
+	## The summary mentions both the step count and the length.
+	_local result << trace_walk(.network[1], :both, 32)
+	_local text << trace_summary(result, _true, :run_by, "regression suite")
+
+	_self.assert(text.index_of_seq("steps=") _isnt _unset)
+	_self.assert(text.index_of_seq("length=") _isnt _unset)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_interesting_heuristic()
+	## Big-and-long is deliberately not interesting; either alone is.
+	_local big << fake_result.new(20, 10.0, :complete)
+	_local long << fake_result.new(2, 900.0, :complete)
+	_local both << fake_result.new(20, 900.0, :complete)
+
+	_self.assert(trace_is_interesting?(big))
+	_self.assert(trace_is_interesting?(long))
+	_self.deny(trace_is_interesting?(both))
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_report_is_written()
+	## Reporting writes something for every step.
+	_local result << trace_walk(.network[1], :both, 32)
+	_local stream << internal_text_output_stream.new()
+
+	result.report(stream)
+
+	_local written << stream.string
+	_self.assert(written.size > 0)
+	_self.assert(written.index_of_seq("Trace") _isnt _unset)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_thread_local_debug_flag()
+	## The debug flag is per-thread and restored afterwards.
+	_local original << !trace_debug?!
+	_local worker << _thisthread
+
+	_protect
+		!trace_debug?! << _true
+		_self.assert(worker _isnt _unset)
+		_self.assert_equals(_true, !trace_debug?!)
+	_protection
+		!trace_debug?! << original
+	_endprotect
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_all_results_of_bucket()
+	## FIXME _allresults should be exercised against a real iterator once the
+	## fixture grows a multi-valued accessor.
+	_local values << _allresults trace_bucket(23, 5)
+
+	_self.assert_equals(2, values.size)
+	_self.assert_equals(4, values[1])
+	_self.assert_equals(3, values[2])
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_traceable_defaults()
+	## The mixin defaults are permissive; a node may opt out with _maybe.
+	_local node << .network[1]
+	_local answer << node.traceable?()
+
+	_if answer _is _true
+	_then
+		_self.assert(_true)
+	_elif answer _is _maybe
+	_then
+		_self.assert(_true)
+	_else
+		_self.deny(_true)
+	_endif
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_scaling_helpers()
+	## Compound assignment operators scale a running total in place.
+	_local total << 120.0
+
+	total *<< 2
+	_self.assert_equals(240.0, total)
+
+	total /<< 4
+	_self.assert_equals(60.0, total)
+
+	total -<< 10
+	_self.assert_equals(50.0, total)
+_endmethod
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_method network_trace_test.test_quotes_and_characters()
+	## Strings have no escape mechanism: a literal ends at the very next quote
+	## of the same kind.  To embed one, switch to the other quoting style.
+	## Character literals are separate syntax and appear outside strings.
+	_local quoted << 'a "quoted" label'
+	_local apostrophe << "it's the other way round"
+	_local tabbed << write_string("left", %tab, "right")
+	_local spaced << write_string("left", %space, "right", %newline)
+
+	## A character literal names one character, whether that character is
+	## punctuation the reader can see or a control code that it cannot.
+	_self.assert(quoted.index_of(%") _isnt _unset)
+	_self.assert(apostrophe.index_of(%') _isnt _unset)
+	_self.assert(tabbed.index_of(%tab) _isnt _unset)
+	_self.assert(spaced.index_of(%space) _isnt _unset)
+	_self.assert(spaced.last_character _is %newline)
+_endmethod
+$

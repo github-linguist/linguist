@@ -1,0 +1,303 @@
+#% text_encoding = iso8859_1
+_package sw
+
+## Procedural helpers supporting the network trace.
+##
+## Everything here is deliberately free of exemplar state so that it can be
+## called from the session prompt as well as from compiled code:
+##
+# Magik> trace_summary(result, :verbose?, _true)
+# Magik> $
+
+_pragma(classify_level=basic, topic={network_trace})
+_global !trace_debug?! << _false
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global !trace_default_units! << :|metres per second|
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_constant !trace_epsilon! << 0.000001
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_summary <<
+_proc@trace_summary(result, _optional verbose?, _gather extras)
+	## Summarise RESULT as a string.
+	## @param {sw:trace_result} result
+	## @param {sw:false|sw:unset} verbose?
+	## @param {sw:simple_vector} extras Extra key/value pairs to append.
+	## @return {sw:char16_vector}
+	_local wordy? << verbose? _default _false
+	_local parts << rope.new()
+
+	parts.add_last(write_string("steps=", result.size))
+	parts.add_last(write_string("length=", result.total_length))
+
+	_if wordy? _is _true
+	_then
+		parts.add_last(write_string("state=", result.state))
+		parts.add_last(write_string("units=", !trace_default_units!))
+	_endif
+
+	_if extras.size > 0
+	_then
+		parts.add_last(write_string(_scatter extras))
+	_endif
+
+	>> parts.join_as_strings(%,)
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_bucket <<
+_proc@trace_bucket(length, bucket_size)
+	## Split LENGTH into whole buckets plus a remainder.
+	## @param {sw:integer} length
+	## @param {sw:integer} bucket_size
+	## @return {sw:integer} Whole buckets.
+	## @return {sw:integer} Remainder.
+	_if bucket_size = 0
+	_then
+		sw:condition.raise(:error, :string, "Bucket size must not be zero")
+	_endif
+
+	_local (whole, remainder) << length _divmod bucket_size
+	_if remainder <> 0 _and !trace_debug?!
+	_then
+		write("Uneven bucket: ", length _div bucket_size, " rem ", length _mod bucket_size)
+	_endif
+
+	>> whole, remainder
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_cost <<
+_proc@trace_cost(base, depth, _optional decay)
+	## Cost of reaching an object at DEPTH.
+	## @param {sw:float} base
+	## @param {sw:integer} depth
+	## @param {sw:float|sw:unset} decay
+	## @return {sw:float}
+	_local factor << decay _default 0.5
+	_local cost << base * factor ** depth
+
+	_if cost < !trace_epsilon!
+	_then
+		cost << 0.0
+	_endif
+
+	>> cost
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_walk <<
+_proc@trace_walk(start, direction, max_depth)
+	## Walk the network from START, returning a populated trace result.
+	## @param {sw:traceable_mixin} start
+	## @param {sw:symbol} direction
+	## @param {sw:integer} max_depth
+	## @return {sw:trace_result}
+	_local result << trace_result.new(direction)
+	_local seen << equality_set.new()
+	_local queue << rope.new_with(trace_step.new(start, 0))
+
+	result.state << :running
+
+	_catch@trace_aborted
+		_loop @over_queue
+			_if queue.empty?
+			_then
+				_leave@over_queue
+			_endif
+
+			_local step << queue.pop_first()
+			_local object << step[1]
+
+			_if seen.includes?(object) _orif ~object.traceable?()
+			_then
+				_continue@over_queue
+			_endif
+
+			seen.add(object)
+			result.add(object, step.depth)
+
+			_if step.depth >= max_depth
+			_then
+				_continue@over_queue
+			_endif
+
+			_local neighbours <<
+				_try
+					object.neighbours(direction)
+				_when error
+					_throw@trace_aborted _with :neighbour_lookup_failed
+				_endtry
+
+			_for neighbour _over neighbours.fast_elements()
+			_loop
+				_if _not seen.includes?(neighbour)
+				_then
+					queue.add_last(trace_step.new(neighbour, step.depth + 1))
+				_endif
+			_endloop
+		_endloop
+
+		result.state << :complete
+		>> result
+	_endcatch
+
+	result.state << :failed
+	>> result
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_compare <<
+_proc@trace_compare(left, right)
+	## Order two results by length, then by size.
+	## @param {sw:trace_result} left
+	## @param {sw:trace_result} right
+	## @return {sw:integer}
+	_local by_length << left.total_length _cf right.total_length
+	_if by_length <> 0
+	_then
+		>> by_length
+	_endif
+
+	>> left.size _cf right.size
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_is_interesting? <<
+_proc@trace_is_interesting?(result)
+	## Rough heuristic for results worth reporting.
+	## @param {sw:trace_result} result
+	## @return {sw:false}
+	_local big? << result.size >= 10
+	_local long? << result.total_length >= 250.0
+	_local failed? << result.state _is :failed
+
+	## Exactly one of big?/long? is the interesting case; both together is
+	## just a large trace and neither is noise.
+	_local interesting? << big? _xor long?
+
+	## A failed trace is always worth reporting, however small.
+	interesting? _orif<< failed?
+
+	>> interesting?
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_retry <<
+_proc@trace_retry(start, direction, _optional attempts)
+	## Walk the network, retrying on transient failures.
+	## @param {sw:traceable_mixin} start
+	## @param {sw:symbol} direction
+	## @param {sw:integer|sw:unset} attempts
+	## @return {sw:trace_result|sw:unset}
+	_local remaining << attempts _default 3
+	_local result << _unset
+
+	_while remaining > 0
+	_loop
+		_handling error _with _proc@swallow(cond)
+			_import remaining
+			## DEBUG log every failure while we chase the intermittent one.
+			write("trace attempt failed: ", cond.report_contents_string)
+			remaining -<< 1
+		_endproc
+
+		result << trace_walk(start, direction, trace_result.default_max_depth)
+		_if result.state _is :complete
+		_then
+			_return result
+		_endif
+
+		remaining -<< 1
+	_endloop
+
+	>> result
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_field_value <<
+_proc@trace_field_value(record, field_name)
+	## Read a field from a network RECORD.
+	##
+	## Dataset columns are frequently exported with spaces in their names, so
+	## the piped identifier form is required to reach them directly.
+	## @param {sw:record} record
+	## @param {sw:symbol} field_name
+	## @return {sw:object|sw:unset}
+	_if field_name _is :|conductor size|
+	_then
+		>> record.|conductor size|
+	_elif field_name _is :|installed on|
+	_then
+		>> record.|installed on|
+	_endif
+
+	>> record.perform(field_name)
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_is_test_case? <<
+_proc@trace_is_test_case?(object)
+	## Whether OBJECT is a munit test case.
+	##
+	## Compares against the exemplar by global reference rather than by name,
+	## so the check keeps working if the package is not on the search path.
+	## @param {sw:object} object
+	## @return {sw:false}
+	>> object.is_kind_of?(@sw:test_case)
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_global trace_register <<
+_proc@trace_register(name, a_proc)
+	## Register the walker procedure A_PROC under NAME, so a trace can be
+	## driven by configuration rather than by a hard coded call.
+	## @param {sw:symbol} name
+	## @param {sw:procedure} a_proc
+	## @return {sw:procedure}
+	_local walk_proc_registry << !trace_registry! _default property_list.new()
+
+	walk_proc_registry[name] << a_proc
+	!trace_registry! << walk_proc_registry
+
+	>> a_proc
+_endproc
+$
+
+_pragma(classify_level=basic, topic={network_trace})
+_block@register_units
+	## Register the trace units understood by the reporting code.
+	_local units << property_list.new()
+
+	units[:metres] << 1.0
+	units[:kilometres] << 1000.0
+	units[:feet] << 0.3048
+
+	_lock units
+		_for name _over units.keys.fast_elements()
+		_loop
+			_if !trace_debug?! _is _true
+			_then
+				sw:write("unit ", name, " = ", units[name])
+			_endif
+		_endloop
+	_endlock
+
+	## TODO Drive this from the coordinate system rather than hard coding it.
+	!trace_default_units! << :metres
+_endblock
+$
