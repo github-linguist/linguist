@@ -1,0 +1,97 @@
+//------------------------------------------------
+//--- 010 Editor v14.0 Binary Template
+//
+//      File: msgdata.bt
+//   Authors: Moonling, Sloth, bqio
+//   Version: 1.2
+//   Purpose: Parsing msgdata type files
+//  Category: Text
+// File Mask: 0.bin, 1.bin, 2.bin, 3.bin, 4.bin
+//  ID Bytes: 0C 00 00 00
+//   History: 
+//------------------------------------------------
+
+local uint i;
+
+ubyte text_flags_count(ubyte flags[], uint flag_size)
+{
+    local ubyte count;
+    for (i = 0; i < flag_size; i++) {
+        if (flags[i] == 0) {
+            count++;    
+        }
+    }
+    return count;
+}
+
+void FAlign(uint alignment)
+{
+    FSeek((FTell() + (alignment - 1)) & ~(alignment - 1));
+}
+
+LittleEndian();
+
+typedef struct POINTERTABLE {
+    uint offset<name="Offset">;
+    uint size<name="Size">;
+} PointerTable;
+
+typedef struct TABLEPOINTER {
+    uint pointer[flag_size]<name="Pointer">;
+} TablePointer;
+
+typedef struct TABLEHEADER {
+    uint magic<name="Magic">;
+    ushort table_size<name="Table size">;
+    ushort flag_size<name="Flag size">;
+    ushort number_of_entries<name="Number of entries">;
+    ushort pointer_size<name="Pointer size">;
+    uint header_size<name="Header size">;
+    ubyte flags[flag_size]<name="Flags">;
+    FAlign(4);
+    TablePointer pointers[number_of_entries]<optimize=false, name="Pointers", fgcolor=cYellow>;
+} TableHeader;
+
+typedef struct LINE {
+    char value[ReadStringLength(FTell())]<name="Value">;
+} Line;
+
+typedef struct ENTRY {
+    Line lines[flag_count]<optimize=false, name="Line", read=to_value>;
+} Entry;
+
+typedef struct TABLE {
+    TableHeader header<name="Header", fgcolor=cGreen>;
+    local ubyte flag_count;
+    flag_count = text_flags_count(header.flags, header.flag_size);
+    if (flag_count) {
+        Entry entries[header.number_of_entries]<optimize=false, fgcolor=cRed, name="Entries">;
+    }
+    FAlign(4);
+} Table;
+
+typedef struct LANGUAGEEADER {
+    uint number_of_tables<name="Number of tables", fgcolor=cRed>;
+    PointerTable pointers[number_of_tables]<name="Pointers", fgcolor=cYellow>;
+} LanguageHeader;
+
+typedef struct LANGUAGE {
+    LanguageHeader header<name="Header">;
+    Table tables[header.number_of_tables]<name="Tables", optimize=false>;
+} Language;
+
+typedef struct FILEHEADER {
+    uint number_of_languages<name="Number of languages", fgcolor=cRed>;
+    PointerTable pointers[number_of_languages]<name="Pointers", fgcolor=cYellow>;
+} FileHeader;
+
+struct FILE {
+    FileHeader header<name="Header">;
+    Language languages[header.number_of_languages]<name="Language", optimize=false>;
+} File;
+
+
+string to_value(LINE &l)
+{
+    return WStringToString(l.value, CHARSET_UTF8);
+}
