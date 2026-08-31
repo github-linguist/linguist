@@ -314,9 +314,9 @@ class TestHeuristics < Minitest::Test
   def test_bf_by_heuristics
     assert_heuristics({
       "Beef" => all_fixtures("Beef", "*.bf"),
+      "Befunge" => all_fixtures("Befunge", "*.bf"),
       "Brainfuck" => all_fixtures("Brainfuck", "*.bf"),
       "HyPhy" => all_fixtures("HyPhy", "*.bf"),
-      nil => all_fixtures("Befunge", "*.bf"),
     })
   end
 
@@ -624,11 +624,11 @@ class TestHeuristics < Minitest::Test
       "PHP" => all_fixtures("PHP", "*.inc"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc"),
       "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
+      "HTML" => all_fixtures("HTML", "*.inc"),
+      "Pawn" => all_fixtures("Pawn", "*.inc"),
+      "SQL" => all_fixtures("SQL", "*.inc"),
       "Assembly" => all_fixtures("Assembly", "*.inc"),
-      nil => all_fixtures("C++", "*.inc") +
-        all_fixtures("HTML", "*.inc") +
-        all_fixtures("Pawn", "*.inc") +
-        all_fixtures("SQL", "*.inc")
+      nil => all_fixtures("C++", "*.inc")
     }, alt_name="foo.inc")
   end
 
@@ -713,9 +713,9 @@ class TestHeuristics < Minitest::Test
       "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
-      "M" => all_fixtures("M", "MDB.m"),
+      "M" => all_fixtures("M", "*.m"),
       "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
-      "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
+      "MATLAB" => all_fixtures("MATLAB", "*.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous
     })
@@ -1025,6 +1025,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_rsc_by_heuristics
+    assert_heuristics({
+      "RouterOS Script" => all_fixtures("RouterOS Script", "*.rsc"),
+      nil => all_fixtures("Rascal", "*.rsc")
+    })
+  end
+
   def test_s_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),
@@ -1045,6 +1052,15 @@ class TestHeuristics < Minitest::Test
       "SuperCollider" => all_fixtures("SuperCollider", "*"),
       "Markdown" => all_fixtures("Markdown", "*.scd")
     }, alt_name="test.scd")
+  end
+
+  def test_sch_by_heuristics
+    assert_heuristics({
+      "KiCad Schematic" => all_fixtures("KiCad Schematic", "*.sch"),
+      "Scheme" => all_fixtures("Scheme", "*.sch"),
+      "XML" => all_fixtures("XML", "*.sch"),
+      nil => all_fixtures("Eagle", "*.sch")
+    })
   end
 
   def test_scm_by_heuristics
@@ -1085,6 +1101,14 @@ class TestHeuristics < Minitest::Test
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
       "Solidity" => Dir.glob("#{fixtures_path}/Generic/sol/Solidity/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/sol/nil/*")
+    })
+  end
+
+  def test_spec_by_heuristics
+    assert_heuristics({
+      "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
+      "Ruby" => all_fixtures("Ruby", "*.spec"),
+      nil => all_fixtures("Python", "*.spec")
     })
   end
 
