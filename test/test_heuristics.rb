@@ -617,26 +617,28 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_inc_by_heuristics
+    html_fragment = all_fixtures("HTML", "tailDel.inc")
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
       "NASL" => all_fixtures("NASL", "*.inc"),
       "Pascal" => all_fixtures("Pascal", "*.inc"),
-      "PHP" => all_fixtures("PHP", "*.inc"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc"),
       "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
-      "HTML" => all_fixtures("HTML", "*.inc"),
-      "Pawn" => all_fixtures("Pawn", "*.inc"),
+      "HTML" => all_fixtures("HTML", "*.inc") - html_fragment,
       "Assembly" => all_fixtures("Assembly", "*.inc"),
       nil => all_fixtures("C++", "*.inc") +
         all_fixtures("BitBake", "*.inc") +
+        all_fixtures("PHP", "*.inc") +
+        all_fixtures("Pawn", "*.inc") +
         all_fixtures("SQL", "*.inc") +
+        html_fragment +
         Dir.glob("#{fixtures_path}/Generic/inc/nil/*")
     }, alt_name="foo.inc")
 
     assert_heuristics({
       "HTML" => Dir.glob("#{fixtures_path}/Generic/inc/HTML/*"),
-      "PHP" => Dir.glob("#{fixtures_path}/Generic/inc/PHP/*"),
-      "SourcePawn" => Dir.glob("#{fixtures_path}/Generic/inc/SourcePawn/*")
+      nil => Dir.glob("#{fixtures_path}/Generic/inc/PHP/*") +
+        Dir.glob("#{fixtures_path}/Generic/inc/SourcePawn/*")
     })
   end
 
@@ -721,11 +723,11 @@ class TestHeuristics < Minitest::Test
       "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
-      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous +
         all_fixtures("M", "*.m") +
         all_fixtures("MATLAB", "*.m") +
+        all_fixtures("Wolfram Language", "*.m") +
         Dir.glob("#{fixtures_path}/Generic/m/nil/*")
     })
   end
@@ -1120,30 +1122,30 @@ class TestHeuristics < Minitest::Test
   def test_spec_by_heuristics
     assert_heuristics({
       "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
-      "Ruby" => all_fixtures("Ruby", "*.spec"),
       nil => all_fixtures("Python", "*.spec") +
+        all_fixtures("Ruby", "*.spec") +
         Dir.glob("#{fixtures_path}/Generic/spec/nil/*")
     })
   end
 
   def test_collision_heuristics_with_line_endings
     targets = {
-      ".inc" => ["PHP", "HTML", "Pawn"],
-      ".m" => ["Wolfram Language"],
+      ".inc" => ["HTML"],
       ".rsc" => ["Rascal"],
       ".sch" => ["KiCad Schematic", "XML", "Scheme"],
-      ".spec" => ["RPM Spec", "Ruby"]
+      ".spec" => ["RPM Spec"]
     }
 
     targets.each do |extension, languages|
       Language.find_by_extension("test#{extension}").each do |language|
         all_fixtures(language.name, "*#{extension}").each do |path|
           candidates = Language.find_by_extension(path)
+          expected = Heuristics.call(Blob.new(path, File.binread(path)), candidates)
           ["\r\n", "\r"].each do |newline|
             content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", newline)
             result = Heuristics.call(Blob.new(path, content), candidates)
             if languages.include?(language.name)
-              assert_equal [language], result, "#{language.name} failed with #{newline.inspect} for #{path}"
+              assert_equal expected, result, "#{language.name} changed with #{newline.inspect} for #{path}"
             else
               refute_includes languages, result.first&.name,
                 "#{language.name} sample #{path} was stolen with #{newline.inspect}"
@@ -1156,11 +1158,16 @@ class TestHeuristics < Minitest::Test
     adversarial = {
       "#{fixtures_path}/Generic/inc/HTML/indented-xml.inc" => "HTML",
       "#{fixtures_path}/Generic/inc/nil/cpp-raw-html.inc" => nil,
+      "#{fixtures_path}/Generic/inc/nil/cpp-raw-php.inc" => nil,
+      "#{fixtures_path}/Generic/inc/nil/cpp-raw-pawn.inc" => nil,
+      "#{fixtures_path}/Generic/inc/nil/cpp-raw-sourcepawn.inc" => nil,
       "#{fixtures_path}/Generic/inc/nil/cpp-raw-string.inc" => nil,
-      "#{fixtures_path}/Generic/inc/PHP/indented-mixed.inc" => "PHP",
-      "#{fixtures_path}/Generic/inc/PHP/multiline-short-tag.inc" => "PHP",
-      "#{fixtures_path}/Generic/inc/SourcePawn/tagged-command.inc" => "SourcePawn",
+      "#{fixtures_path}/Generic/inc/nil/markup-first-php.inc" => nil,
+      "#{fixtures_path}/Generic/inc/PHP/indented-mixed.inc" => nil,
+      "#{fixtures_path}/Generic/inc/PHP/multiline-short-tag.inc" => nil,
+      "#{fixtures_path}/Generic/inc/SourcePawn/tagged-command.inc" => nil,
       "#{fixtures_path}/Generic/m/nil/matlab-quit-function.m" => nil,
+      "#{fixtures_path}/Generic/m/nil/matlab-wolfram-comment.m" => nil,
       "#{fixtures_path}/Generic/sch/Scheme/schema-comment.sch" => "Scheme",
       "#{fixtures_path}/Generic/sch/Scheme/geda-comment.sch" => "Scheme",
       "#{fixtures_path}/Generic/sch/XML/comment-prolog.sch" => "XML",
@@ -1173,6 +1180,7 @@ class TestHeuristics < Minitest::Test
       "#{fixtures_path}/Generic/rsc/Rascal/routeros-comment.rsc" => "Rascal",
       "#{fixtures_path}/Generic/rsc/nil/leading-comment.rsc" => nil,
       "#{fixtures_path}/Generic/spec/nil/python-multiline-string.spec" => nil,
+      "#{fixtures_path}/Generic/spec/nil/python-ruby-string.spec" => nil,
       "#{fixtures_path}/Generic/spec/nil/ruby-heredoc.spec" => nil,
       "#{fixtures_path}/Generic/spec/nil/python-annotations.spec" => nil
     }
@@ -1210,11 +1218,10 @@ class TestHeuristics < Minitest::Test
     skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
 
     targets = {
-      ".inc" => ["PHP", "HTML", "SourcePawn", "Pawn"],
-      ".m" => ["Wolfram Language"],
+      ".inc" => ["HTML"],
       ".rsc" => ["Rascal"],
       ".sch" => ["KiCad Schematic", "XML", "Scheme"],
-      ".spec" => ["RPM Spec", "Ruby"]
+      ".spec" => ["RPM Spec"]
     }
     near_misses = [
       (" " * (Heuristics::HEURISTICS_CONSIDER_BYTES - 1)) + "x",

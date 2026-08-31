@@ -451,23 +451,13 @@ disambiguations:
   rules:
   - language: Motorola 68K Assembly
     named_pattern: m68k
-  - language: PHP
-    pattern: '(?:\A|[\r\n])[ \t]*<\?(?:php\b|=|[ \t]*(?:(?:\r?\n|\r)[ \t]*)?(?:echo\b|\$))'
   - language: HTML
-    pattern: '(?i)\A[ \t]*(?:</?(?:html|head|body|ul|p|div|table)\b|<!DOCTYPE[ \t]+html\b|<\?xml\b[^\r\n]*(?:\r?\n|\r)[ \t]*(?:<!DOCTYPE[ \t]+html\b[^\r\n]*(?:\r?\n|\r)[ \t]*)?<html\b)'
+    pattern: '(?i)\A[ \t]*(?:<html\b|<!DOCTYPE[ \t]+html\b|<\?xml\b[^\r\n]*(?:\r?\n|\r)[ \t]*(?:<!DOCTYPE[ \t]+html\b[^\r\n]*(?:\r?\n|\r)[ \t]*)?<html\b)'
   - language: SourcePawn
     pattern:
     - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*\{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*\{)?)'
     - '^methodmap\s+\w+\s+<\s+\w+'
     - '^\s*MarkNativeAsOptional\s*\('
-    - '(?:\A|[\r\n])[ \t]*public[ \t]+Action:\w+[ \t]*\('
-  - language: Pawn
-    pattern:
-    # Pawn ecosystem APIs and compiler features not used by SourcePawn.
-    - '(?:\A|[\r\n])[ \t]*#include[ \t]+<a_samp>'
-    - '(?:\A|[\r\n])[ \t]*#pragma[ \t]+rational\b'
-    - '\bfopen\s*\([^,\r\n]+,[ \t]*io_(?:read|write|append)\b'
-    - '(?:\A|[\r\n])[ \t]*#if[ \t]+defined[ \t]+_INC_SAMP_'
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
@@ -563,10 +553,6 @@ disambiguations:
     pattern: ':- module'
   - language: MUF
     pattern: '^: '
-  - language: Wolfram Language
-    and:
-      - pattern: '\(\*'
-      - pattern: '\*\)[ \t]*(?:\r?\n|\r|\z)'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
@@ -934,8 +920,6 @@ disambiguations:
     pattern:
     - '(?i)\A(?:(?:[ \t]*|#[^\r\n]*|%(?:define|global)[ \t]+[^\r\n]+|Summary:[ \t]+\S[^\r\n]*)\r?\n){0,30}Name:[ \t]+\S[^\r\n]*\r?\nVersion:[ \t]+\S[^\r\n]*\r?\nRelease:[ \t]+\S[^\r\n]*\r?\n(?:[^\r\n]*\r?\n){0,100}%description\b'
     - '(?i)\A(?:(?:[ \t]*|#[^\r\n]*|%(?:define|global)[ \t]+[^\r\n]+|Summary:[ \t]+\S[^\r\n]*)\r){0,30}Name:[ \t]+\S[^\r\n]*\rVersion:[ \t]+\S[^\r\n]*\rRelease:[ \t]+\S[^\r\n]*\r(?:[^\r\n]*\r){0,100}%description\b'
-  - language: Ruby
-    pattern: '(?:\A|[\r\n])[ \t]*(?:RSpec\.)?describe\b[^\r\n]*[ \t]+do[ \t]*(?:\r?\n|\r|\z)'
 - extensions: ['.sql']
   rules:
    # Postgres
