@@ -483,8 +483,6 @@ disambiguations:
     - '^\s*end[.;]\s*$'
   - language: BitBake
     pattern: '^inherit(\s+[\w.-]+)+\s*$'
-  - language: SQL
-    pattern: '(?i)^\s*(?:flush\s+\w+|select\s+@@)'
   - language: Assembly
     pattern:
     - '^(?i)[^"m]*mov\s+[^\s]+,'
@@ -566,22 +564,12 @@ disambiguations:
   - language: MUF
     pattern: '^: '
   - language: M
-    pattern:
-    - '^\s*;'
-    # Level dots, globals, expression-valued QUIT, and ! newlines are M-specific.
-    - '(?i)^[ \t]+\.[ \t]+(?:BREAK|CLOSE|DO|ELSE|FOR|GOTO|HANG|HALT|IF|JOB|KILL|LOCK|MERGE|NEW|OPEN|QUIT|READ|SET|TSTART|USE|VIEW|WRITE|XECUTE|ZWRITE)\b'
-    - '(?i)^[ \t]+SET[ \t]+\^'
-    - '(?i)^[ \t]+WRITE(?:[ \t]+!|[^\r\n]*,[ \t]*!)'
-    - '(?i)^[ \t]+QUIT[ \t]+[^\r\n]*/[^\r\n]*\r?$'
+    # A level dot before a command is independently distinctive M syntax.
+    pattern: '(?i)^[ \t]+\.[ \t]+(?:BREAK|CLOSE|DO|ELSE|FOR|GOTO|HANG|HALT|IF|JOB|KILL|LOCK|MERGE|NEW|OPEN|QUIT|READ|SET|TSTART|USE|VIEW|WRITE|XECUTE|ZWRITE)\b'
   - language: Wolfram Language
     and:
       - pattern: '\(\*'
-      - pattern: '\*\)$'
-  - language: MATLAB
-    pattern:
-    - '^\s*%'
-    - '^[ \t]*(?:classdef\b|function(?:[ \t]+\[[^\]\r\n]+\]|[ \t]+\w+)?[ \t]*=|function[ \t]+\w+[ \t]*\()'
-    - '^[ \t]*(?:figure|shading[ \t]+(?:flat|faceted|interp))[ \t]*\r?$'
+      - pattern: '\*\)[ \t]*\r?$'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
@@ -872,6 +860,10 @@ disambiguations:
     pattern: '^\s*<\?xml'
 - extensions: ['.rsc']
   rules:
+  - language: Rascal
+    pattern:
+    - '\Amodule[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*[ \t]*(?:\r?\n|\r|\z)'
+    - '\A@[A-Za-z_][A-Za-z0-9_]*(?:\([^\r\n]*\))?[ \t]*(?:\r?\n|\r)module[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*[ \t]*(?:\r?\n|\r|\z)'
   - language: RouterOS Script
     pattern: '^\s*(?::(?:global|local|put|log|if|set|foreach|for|while|delay|do|return)\b|/(?:interface|ip|ipv6|system|tool|routing|queue|user|ppp)\b)'
 - extensions: ['.s']
@@ -899,13 +891,12 @@ disambiguations:
   rules:
   - language: KiCad Schematic
     pattern:
-    - '^EESchema Schematic File Version\b'
-    - '^v \d{8} \d+[ \t]*\r?$'
+    - '\AEESchema Schematic File Version\b'
+    - '\Av \d{8} \d+[ \t]*\r?$'
   - language: XML
     and:
-    # Ruby sees a UTF-8 BOM as three bytes; Rust sees one Unicode scalar.
-    - pattern: '\A(?:[^\x00-\x7F]{3}|[^\x00-\x7F])?[ \t\r\n]*(?:<\?xml\b|<!--|<!DOCTYPE[ \t]+schema\b|<schema(?:[ \t\r\n]|>))'
-    - pattern: '(?:\A(?:[^\x00-\x7F]{3}|[^\x00-\x7F])|^)[ \t]*<schema(?:[ \t\r\n]|>)'
+    - pattern: '\A[ \t\r\n]*(?:<\?xml\b|<!--|<!DOCTYPE[ \t]+schema\b|<schema(?:[ \t\r\n]|>))'
+    - pattern: '^[ \t]*<schema(?:[ \t\r\n]|>)'
   - language: Scheme
     pattern: '^[ \t]*\((?:define\*?|import|library|lambda)\b'
 - extensions: ['.scm']
@@ -945,10 +936,7 @@ disambiguations:
 - extensions: ['.spec']
   rules:
   - language: RPM Spec
-    and:
-    - pattern: '(?i)^Name:[ \t]+\S'
-    - pattern: '(?i)^Version:[ \t]+\S'
-    - pattern: '(?i)^%(?:description|package|prep|build|install|check|files|changelog)\b'
+    pattern: '(?i)\A(?:(?:[ \t]*|#[^\r\n]*|%(?:define|global)[ \t]+[^\r\n]+|Summary:[ \t]+\S[^\r\n]*)(?:\r?\n|\r)){0,30}Name:[ \t]+\S[^\r\n]*(?:\r?\n|\r)Version:[ \t]+\S[^\r\n]*(?:\r?\n|\r)Release:[ \t]+\S[^\r\n]*(?:\r?\n|\r)(?:[^\r\n]*(?:\r?\n|\r)){0,100}%description\b'
   - language: Ruby
     pattern: '^[ \t]*(?:RSpec\.)?describe\b[^\r\n]*[ \t]+do[ \t]*\r?$'
 - extensions: ['.sql']

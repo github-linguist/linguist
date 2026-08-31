@@ -626,10 +626,11 @@ class TestHeuristics < Minitest::Test
       "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
       "HTML" => all_fixtures("HTML", "*.inc"),
       "Pawn" => all_fixtures("Pawn", "*.inc"),
-      "SQL" => all_fixtures("SQL", "*.inc"),
       "Assembly" => all_fixtures("Assembly", "*.inc"),
       nil => all_fixtures("C++", "*.inc") +
-        all_fixtures("BitBake", "*.inc")
+        all_fixtures("BitBake", "*.inc") +
+        all_fixtures("SQL", "*.inc") +
+        Dir.glob("#{fixtures_path}/Generic/inc/nil/*")
     }, alt_name="foo.inc")
 
     assert_heuristics({
@@ -716,15 +717,22 @@ class TestHeuristics < Minitest::Test
 
   def test_m_by_heuristics
     ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m")
+    m_classifier_dependent = %w[
+      Comment.m GMRGPNB0.m MDB.m PRCAAPR.m PXAI.m WVBRNOT.m ZDIOUT1.m
+      _zewdAPI.m _zewdDemo.m digest.m md5.m mileage.m mumtris.m pcre.m
+      pcreexamples.m primes.m zmwire.m helloworld.m indirectfunctions.m
+      postconditional.m
+    ].map { |name| "#{samples_path}/M/#{name}" }
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
-      "M" => all_fixtures("M", "*.m"),
+      "M" => all_fixtures("M", "*.m") - m_classifier_dependent,
       "Wolfram Language" => all_fixtures("Wolfram Language", "*.m"),
-      "MATLAB" => all_fixtures("MATLAB", "*.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous +
+        m_classifier_dependent +
+        all_fixtures("MATLAB", "*.m") +
         Dir.glob("#{fixtures_path}/Generic/m/nil/*")
     })
   end
@@ -1036,7 +1044,8 @@ class TestHeuristics < Minitest::Test
   def test_rsc_by_heuristics
     assert_heuristics({
       "RouterOS Script" => all_fixtures("RouterOS Script", "*.rsc"),
-      nil => all_fixtures("Rascal", "*.rsc")
+      "Rascal" => all_fixtures("Rascal", "*.rsc") +
+        Dir.glob("#{fixtures_path}/Generic/rsc/Rascal/*")
     })
   end
 
@@ -1124,39 +1133,36 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_collision_heuristics_with_crlf
-    targets = {
-      ".inc" => ["PHP", "HTML", "SourcePawn", "Pawn", "SQL"],
-      ".m" => ["M", "MATLAB"],
-      ".rsc" => ["RouterOS Script"],
-      ".sch" => ["KiCad Schematic", "XML", "Scheme"],
-      ".spec" => ["RPM Spec", "Ruby"]
-    }
-
-    targets.each do |extension, languages|
+    %w[.inc .m .rsc .sch .spec].each do |extension|
       Language.find_by_extension("test#{extension}").each do |language|
         all_fixtures(language.name, "*#{extension}").each do |path|
+          candidates = Language.find_by_extension(path)
+          expected = Heuristics.call(Blob.new(path, File.binread(path)), candidates)
           content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", "\r\n")
-          result = Heuristics.call(Blob.new(path, content), Language.find_by_extension(path))
-          if languages.include?(language.name)
-            assert_equal [language], result, "#{language.name} failed with CRLF for #{path}"
-          else
-            refute_includes languages, result.first&.name, "CRLF #{language.name} sample #{path} was stolen"
-          end
+          assert_equal expected, Heuristics.call(Blob.new(path, content), candidates),
+            "#{language.name} changed classification with CRLF for #{path}"
         end
       end
     end
 
     adversarial = {
       "#{fixtures_path}/Generic/inc/HTML/indented-xml.inc" => "HTML",
+      "#{fixtures_path}/Generic/inc/nil/cpp-raw-string.inc" => nil,
       "#{fixtures_path}/Generic/inc/PHP/indented-mixed.inc" => "PHP",
       "#{fixtures_path}/Generic/inc/PHP/multiline-short-tag.inc" => "PHP",
       "#{fixtures_path}/Generic/inc/SourcePawn/tagged-command.inc" => "SourcePawn",
+      "#{fixtures_path}/Generic/m/nil/matlab-quit-function.m" => nil,
       "#{fixtures_path}/Generic/sch/Scheme/schema-comment.sch" => "Scheme",
+      "#{fixtures_path}/Generic/sch/Scheme/geda-comment.sch" => "Scheme",
       "#{fixtures_path}/Generic/sch/XML/comment-prolog.sch" => "XML",
       "#{fixtures_path}/Generic/sch/XML/doctype-prolog.sch" => "XML",
       "#{fixtures_path}/Generic/sch/XML/scheme-cdata.sch" => "XML",
       "#{fixtures_path}/Generic/m/nil/matlab-command.m" => nil,
+      "#{fixtures_path}/Generic/m/nil/wolfram-figure.m" => nil,
       "#{fixtures_path}/Generic/m/nil/wolfram-q.m" => nil,
+      "#{fixtures_path}/Generic/rsc/Rascal/routeros-comment.rsc" => "Rascal",
+      "#{fixtures_path}/Generic/spec/nil/python-multiline-string.spec" => nil,
+      "#{fixtures_path}/Generic/spec/nil/ruby-heredoc.spec" => nil,
       "#{fixtures_path}/Generic/spec/nil/python-annotations.spec" => nil
     }
     adversarial.each do |path, language|
@@ -1166,9 +1172,23 @@ class TestHeuristics < Minitest::Test
       assert_equal expected, Heuristics.call(Blob.new(path, content), candidates), "Failed CRLF adversarial fixture #{path}"
     end
 
-    ["\n", "\r\n"].each do |newline|
-      content = "\xEF\xBB\xBF".b + "<schema>#{newline}</schema>#{newline}"
-      assert_equal [Language["XML"]], Heuristics.call(Blob.new("bom.sch", content), Language.find_by_extension("bom.sch"))
+  end
+
+  def test_collision_heuristics_do_not_skip_utf8_bom
+    # Ruby exposes BOM bytes while Rust and Go expose one Unicode scalar, so
+    # these content heuristics intentionally require signatures at byte zero.
+    unsupported_bom = {
+      "bom.inc" => "<?php echo 1;",
+      "bom.rsc" => ":put \"ok\"",
+      "bom.sch" => "<schema></schema>",
+      "bom.spec" => "Name: package\nVersion: 1\nRelease: 1\n%description\ntext"
+    }
+    unsupported_bom.each do |path, body|
+      [body, body.gsub("\n", "\r\n")].uniq.each do |variant|
+        content = "\xEF\xBB\xBF".b + variant
+        assert_empty Heuristics.call(Blob.new(path, content), Language.find_by_extension(path)),
+          "#{path} unexpectedly skipped a UTF-8 BOM"
+      end
     end
   end
 
@@ -1176,9 +1196,9 @@ class TestHeuristics < Minitest::Test
     skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
 
     targets = {
-      ".inc" => ["PHP", "HTML", "SourcePawn", "Pawn", "SQL"],
-      ".m" => ["M", "MATLAB"],
-      ".rsc" => ["RouterOS Script"],
+      ".inc" => ["PHP", "HTML", "SourcePawn", "Pawn"],
+      ".m" => ["M"],
+      ".rsc" => ["Rascal", "RouterOS Script"],
       ".sch" => ["KiCad Schematic", "XML", "Scheme"],
       ".spec" => ["RPM Spec", "Ruby"]
     }
