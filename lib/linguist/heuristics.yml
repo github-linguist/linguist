@@ -162,9 +162,6 @@ disambiguations:
     pattern:
     - '(?-m)^\s*#include\s+".*";\s*$'
     - '\sfprintf\s*\('
-  - language: Befunge
-    # A row in Befunge's two-dimensional instruction grid.
-    pattern: '^[0-9+*/%!`_\\:;",.#gp&$@<>^v?| \t-]*[gp@^|][0-9+*/%!`_\\:;",.#gp&$@<>^v?| \t-]*\r?$'
   - language: Brainfuck
     pattern: '(>\+>|>\+<)'
 - extensions: ['.bi']
@@ -455,20 +452,22 @@ disambiguations:
   - language: Motorola 68K Assembly
     named_pattern: m68k
   - language: PHP
-    pattern: '^<\?(?:php)?'
+    pattern: '^[ \t]*<\?(?:php\b|=|[ \t]*(?:(?:\r?\n|\r)[ \t]*)?(?:echo\b|\$))'
   - language: HTML
-    pattern: '(?i:^\s*</?(?:html|head|body|ul|p|div|table)\b|^\s*<!DOCTYPE\s+html\b)'
+    pattern: '(?i:^[ \t]*</?(?:html|head|body|ul|p|div|table)\b|^[ \t]*<!DOCTYPE[ \t]+html\b)'
   - language: SourcePawn
     pattern:
     - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*\{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*\{)?)'
     - '^methodmap\s+\w+\s+<\s+\w+'
     - '^\s*MarkNativeAsOptional\s*\('
+    - '^[ \t]*public[ \t]+Action:\w+[ \t]*\('
   - language: Pawn
     pattern:
-    # Pawn's tagged function declarations and numbered macro parameters.
-    - '^\s*(?:native|stock|public)\s+\w+:\w+\s*\('
-    - '^\s*forward\s+public\s+\w+\s*\('
-    - '^\s*#define\s+\w+\(%\d'
+    # Pawn ecosystem APIs and compiler features not used by SourcePawn.
+    - '^[ \t]*#include[ \t]+<a_samp>'
+    - '^[ \t]*#pragma[ \t]+rational\b'
+    - '\bfopen\s*\([^,\r\n]+,[ \t]*io_(?:read|write|append)\b'
+    - '^[ \t]*#if[ \t]+defined[ \t]+_INC_SAMP_'
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
@@ -569,9 +568,11 @@ disambiguations:
   - language: M
     pattern:
     - '^\s*;'
-    # Routine labels start in column one and commands are indented.
-    - '(?i:^[A-Z%][A-Z0-9]*(?:\([^)\r\n]*\))?[ \t]+;[^\r\n]*(?:\r?\n|\r)[ \t]+(?:BREAK|CLOSE|DO|ELSE|FOR|GOTO|HANG|HALT|IF|JOB|KILL|LOCK|MERGE|NEW|OPEN|QUIT|READ|SET|TSTART|USE|VIEW|WRITE|XECUTE|ZWRITE)\b)'
-    - '(?i:^[A-Z%][A-Z0-9]*\([^)\r\n]*\)[ \t]*(?:\r?\n|\r)[ \t]+QUIT\b)'
+    # Level dots, globals, expression-valued QUIT, and ! newlines are M-specific.
+    - '(?i)^[ \t]+\.[ \t]+(?:BREAK|CLOSE|DO|ELSE|FOR|GOTO|HANG|HALT|IF|JOB|KILL|LOCK|MERGE|NEW|OPEN|QUIT|READ|SET|TSTART|USE|VIEW|WRITE|XECUTE|ZWRITE)\b'
+    - '(?i)^[ \t]+SET[ \t]+\^'
+    - '(?i)^[ \t]+WRITE(?:[ \t]+!|[^\r\n]*,[ \t]*!)'
+    - '(?i)^[ \t]+QUIT[ \t]+[^\r\n]*/[^\r\n]*\r?$'
   - language: Wolfram Language
     and:
       - pattern: '\(\*'
@@ -579,8 +580,8 @@ disambiguations:
   - language: MATLAB
     pattern:
     - '^\s*%'
-    - '^\s*(?:classdef\b|function(?:\s+\[[^\]\r\n]+\]|\s+\w+)?\s*=|function\s+\w+\s*\()'
-    - '^\s*(?:figure|shading\s+(?:flat|faceted|interp))\s*$'
+    - '^[ \t]*(?:classdef\b|function(?:[ \t]+\[[^\]\r\n]+\]|[ \t]+\w+)?[ \t]*=|function[ \t]+\w+[ \t]*\()'
+    - '^[ \t]*(?:figure|shading[ \t]+(?:flat|faceted|interp))[ \t]*\r?$'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
@@ -899,11 +900,14 @@ disambiguations:
   - language: KiCad Schematic
     pattern:
     - '^EESchema Schematic File Version\b'
-    - '^v \d{8} \d+\s*$'
-  - language: Scheme
-    pattern: '^\s*\((?:define\*?|import|library|lambda)\b'
+    - '^v \d{8} \d+[ \t]*\r?$'
   - language: XML
-    pattern: '^\s*<schema(?:\s|>)'
+    and:
+    # Ruby sees a UTF-8 BOM as three bytes; Rust sees one Unicode scalar.
+    - pattern: '\A(?:[^\x00-\x7F]{3}|[^\x00-\x7F])?[ \t\r\n]*(?:<\?xml\b|<!--|<!DOCTYPE[ \t]+schema\b|<schema(?:[ \t\r\n]|>))'
+    - pattern: '(?:\A(?:[^\x00-\x7F]{3}|[^\x00-\x7F])|^)[ \t]*<schema(?:[ \t\r\n]|>)'
+  - language: Scheme
+    pattern: '^[ \t]*\((?:define\*?|import|library|lambda)\b'
 - extensions: ['.scm']
   rules:
   - language: Tree-sitter Query
@@ -944,8 +948,9 @@ disambiguations:
     and:
     - pattern: '(?i)^Name:[ \t]+\S'
     - pattern: '(?i)^Version:[ \t]+\S'
+    - pattern: '(?i)^%(?:description|package|prep|build|install|check|files|changelog)\b'
   - language: Ruby
-    pattern: '^\s*(?:RSpec\.)?describe\b[^\r\n]*\sdo\s*$'
+    pattern: '^[ \t]*(?:RSpec\.)?describe\b[^\r\n]*[ \t]+do[ \t]*\r?$'
 - extensions: ['.sql']
   rules:
    # Postgres

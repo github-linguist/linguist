@@ -314,9 +314,9 @@ class TestHeuristics < Minitest::Test
   def test_bf_by_heuristics
     assert_heuristics({
       "Beef" => all_fixtures("Beef", "*.bf"),
-      "Befunge" => all_fixtures("Befunge", "*.bf"),
       "Brainfuck" => all_fixtures("Brainfuck", "*.bf"),
       "HyPhy" => all_fixtures("HyPhy", "*.bf"),
+      nil => all_fixtures("Befunge", "*.bf"),
     })
   end
 
@@ -628,8 +628,15 @@ class TestHeuristics < Minitest::Test
       "Pawn" => all_fixtures("Pawn", "*.inc"),
       "SQL" => all_fixtures("SQL", "*.inc"),
       "Assembly" => all_fixtures("Assembly", "*.inc"),
-      nil => all_fixtures("C++", "*.inc")
+      nil => all_fixtures("C++", "*.inc") +
+        all_fixtures("BitBake", "*.inc")
     }, alt_name="foo.inc")
+
+    assert_heuristics({
+      "HTML" => Dir.glob("#{fixtures_path}/Generic/inc/HTML/*"),
+      "PHP" => Dir.glob("#{fixtures_path}/Generic/inc/PHP/*"),
+      "SourcePawn" => Dir.glob("#{fixtures_path}/Generic/inc/SourcePawn/*")
+    })
   end
 
   def test_j_by_heuristics
@@ -714,10 +721,11 @@ class TestHeuristics < Minitest::Test
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
       "M" => all_fixtures("M", "*.m"),
-      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
+      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m"),
       "MATLAB" => all_fixtures("MATLAB", "*.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
-      nil => ambiguous
+      nil => ambiguous +
+        Dir.glob("#{fixtures_path}/Generic/m/nil/*")
     })
   end
 
@@ -1057,8 +1065,10 @@ class TestHeuristics < Minitest::Test
   def test_sch_by_heuristics
     assert_heuristics({
       "KiCad Schematic" => all_fixtures("KiCad Schematic", "*.sch"),
-      "Scheme" => all_fixtures("Scheme", "*.sch"),
-      "XML" => all_fixtures("XML", "*.sch"),
+      "Scheme" => all_fixtures("Scheme", "*.sch") +
+        Dir.glob("#{fixtures_path}/Generic/sch/Scheme/*"),
+      "XML" => all_fixtures("XML", "*.sch") +
+        Dir.glob("#{fixtures_path}/Generic/sch/XML/*"),
       nil => all_fixtures("Eagle", "*.sch")
     })
   end
@@ -1108,8 +1118,90 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
       "Ruby" => all_fixtures("Ruby", "*.spec"),
-      nil => all_fixtures("Python", "*.spec")
+      nil => all_fixtures("Python", "*.spec") +
+        Dir.glob("#{fixtures_path}/Generic/spec/nil/*")
     })
+  end
+
+  def test_collision_heuristics_with_crlf
+    targets = {
+      ".inc" => ["PHP", "HTML", "SourcePawn", "Pawn", "SQL"],
+      ".m" => ["M", "MATLAB"],
+      ".rsc" => ["RouterOS Script"],
+      ".sch" => ["KiCad Schematic", "XML", "Scheme"],
+      ".spec" => ["RPM Spec", "Ruby"]
+    }
+
+    targets.each do |extension, languages|
+      Language.find_by_extension("test#{extension}").each do |language|
+        all_fixtures(language.name, "*#{extension}").each do |path|
+          content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", "\r\n")
+          result = Heuristics.call(Blob.new(path, content), Language.find_by_extension(path))
+          if languages.include?(language.name)
+            assert_equal [language], result, "#{language.name} failed with CRLF for #{path}"
+          else
+            refute_includes languages, result.first&.name, "CRLF #{language.name} sample #{path} was stolen"
+          end
+        end
+      end
+    end
+
+    adversarial = {
+      "#{fixtures_path}/Generic/inc/HTML/indented-xml.inc" => "HTML",
+      "#{fixtures_path}/Generic/inc/PHP/indented-mixed.inc" => "PHP",
+      "#{fixtures_path}/Generic/inc/PHP/multiline-short-tag.inc" => "PHP",
+      "#{fixtures_path}/Generic/inc/SourcePawn/tagged-command.inc" => "SourcePawn",
+      "#{fixtures_path}/Generic/sch/Scheme/schema-comment.sch" => "Scheme",
+      "#{fixtures_path}/Generic/sch/XML/comment-prolog.sch" => "XML",
+      "#{fixtures_path}/Generic/sch/XML/doctype-prolog.sch" => "XML",
+      "#{fixtures_path}/Generic/sch/XML/scheme-cdata.sch" => "XML",
+      "#{fixtures_path}/Generic/m/nil/matlab-command.m" => nil,
+      "#{fixtures_path}/Generic/m/nil/wolfram-q.m" => nil,
+      "#{fixtures_path}/Generic/spec/nil/python-annotations.spec" => nil
+    }
+    adversarial.each do |path, language|
+      content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", "\r\n")
+      candidates = Language.find_by_extension(path)
+      expected = language.nil? ? [] : [Language[language]]
+      assert_equal expected, Heuristics.call(Blob.new(path, content), candidates), "Failed CRLF adversarial fixture #{path}"
+    end
+
+    ["\n", "\r\n"].each do |newline|
+      content = "\xEF\xBB\xBF".b + "<schema>#{newline}</schema>#{newline}"
+      assert_equal [Language["XML"]], Heuristics.call(Blob.new("bom.sch", content), Language.find_by_extension("bom.sch"))
+    end
+  end
+
+  def test_collision_heuristics_handle_large_near_misses
+    skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
+
+    targets = {
+      ".inc" => ["PHP", "HTML", "SourcePawn", "Pawn", "SQL"],
+      ".m" => ["M", "MATLAB"],
+      ".rsc" => ["RouterOS Script"],
+      ".sch" => ["KiCad Schematic", "XML", "Scheme"],
+      ".spec" => ["RPM Spec", "Ruby"]
+    }
+    near_misses = [
+      (" " * (Heuristics::HEURISTICS_CONSIDER_BYTES - 1)) + "x",
+      (" " * (Heuristics::HEURISTICS_CONSIDER_BYTES - 2)) + "x\r\n",
+      (" \n" * ((Heuristics::HEURISTICS_CONSIDER_BYTES / 2) - 1)) + "x"
+    ]
+
+    previous_timeout = Regexp.timeout
+    Regexp.timeout = 0.1
+    targets.each do |extension, languages|
+      heuristic = Heuristics.all.find { |candidate| candidate.extensions.include?(extension) }
+      rules = heuristic.instance_variable_get(:@rules)
+      languages.each do |language|
+        pattern = rules.find { |rule| rule["language"] == language }["pattern"]
+        near_misses.each do |content|
+          refute pattern.match?(content), "#{language} matched a 50KiB near miss"
+        end
+      end
+    end
+  ensure
+    Regexp.timeout = previous_timeout if defined?(previous_timeout)
   end
 
   def test_sql_by_heuristics
