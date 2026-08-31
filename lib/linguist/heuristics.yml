@@ -452,22 +452,22 @@ disambiguations:
   - language: Motorola 68K Assembly
     named_pattern: m68k
   - language: PHP
-    pattern: '^[ \t]*<\?(?:php\b|=|[ \t]*(?:(?:\r?\n|\r)[ \t]*)?(?:echo\b|\$))'
+    pattern: '(?:\A|[\r\n])[ \t]*<\?(?:php\b|=|[ \t]*(?:(?:\r?\n|\r)[ \t]*)?(?:echo\b|\$))'
   - language: HTML
-    pattern: '(?i:^[ \t]*</?(?:html|head|body|ul|p|div|table)\b|^[ \t]*<!DOCTYPE[ \t]+html\b)'
+    pattern: '(?i)\A[ \t]*(?:</?(?:html|head|body|ul|p|div|table)\b|<!DOCTYPE[ \t]+html\b|<\?xml\b[^\r\n]*(?:\r?\n|\r)[ \t]*(?:<!DOCTYPE[ \t]+html\b[^\r\n]*(?:\r?\n|\r)[ \t]*)?<html\b)'
   - language: SourcePawn
     pattern:
     - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*\{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*\{)?)'
     - '^methodmap\s+\w+\s+<\s+\w+'
     - '^\s*MarkNativeAsOptional\s*\('
-    - '^[ \t]*public[ \t]+Action:\w+[ \t]*\('
+    - '(?:\A|[\r\n])[ \t]*public[ \t]+Action:\w+[ \t]*\('
   - language: Pawn
     pattern:
     # Pawn ecosystem APIs and compiler features not used by SourcePawn.
-    - '^[ \t]*#include[ \t]+<a_samp>'
-    - '^[ \t]*#pragma[ \t]+rational\b'
+    - '(?:\A|[\r\n])[ \t]*#include[ \t]+<a_samp>'
+    - '(?:\A|[\r\n])[ \t]*#pragma[ \t]+rational\b'
     - '\bfopen\s*\([^,\r\n]+,[ \t]*io_(?:read|write|append)\b'
-    - '^[ \t]*#if[ \t]+defined[ \t]+_INC_SAMP_'
+    - '(?:\A|[\r\n])[ \t]*#if[ \t]+defined[ \t]+_INC_SAMP_'
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
@@ -563,13 +563,10 @@ disambiguations:
     pattern: ':- module'
   - language: MUF
     pattern: '^: '
-  - language: M
-    # A level dot before a command is independently distinctive M syntax.
-    pattern: '(?i)^[ \t]+\.[ \t]+(?:BREAK|CLOSE|DO|ELSE|FOR|GOTO|HANG|HALT|IF|JOB|KILL|LOCK|MERGE|NEW|OPEN|QUIT|READ|SET|TSTART|USE|VIEW|WRITE|XECUTE|ZWRITE)\b'
   - language: Wolfram Language
     and:
       - pattern: '\(\*'
-      - pattern: '\*\)[ \t]*\r?$'
+      - pattern: '\*\)[ \t]*(?:\r?\n|\r|\z)'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
@@ -864,8 +861,6 @@ disambiguations:
     pattern:
     - '\Amodule[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*[ \t]*(?:\r?\n|\r|\z)'
     - '\A@[A-Za-z_][A-Za-z0-9_]*(?:\([^\r\n]*\))?[ \t]*(?:\r?\n|\r)module[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*[ \t]*(?:\r?\n|\r|\z)'
-  - language: RouterOS Script
-    pattern: '^\s*(?::(?:global|local|put|log|if|set|foreach|for|while|delay|do|return)\b|/(?:interface|ip|ipv6|system|tool|routing|queue|user|ppp)\b)'
 - extensions: ['.s']
   rules:
   - language: Unix Assembly
@@ -892,13 +887,13 @@ disambiguations:
   - language: KiCad Schematic
     pattern:
     - '\AEESchema Schematic File Version\b'
-    - '\Av \d{8} \d+[ \t]*\r?$'
+    - '\Av \d{8} \d+[ \t]*(?:\r?\n|\r|\z)'
   - language: XML
     and:
     - pattern: '\A[ \t\r\n]*(?:<\?xml\b|<!--|<!DOCTYPE[ \t]+schema\b|<schema(?:[ \t\r\n]|>))'
-    - pattern: '^[ \t]*<schema(?:[ \t\r\n]|>)'
+    - pattern: '(?:\A|[\r\n])[ \t]*<schema(?:[ \t\r\n]|>)'
   - language: Scheme
-    pattern: '^[ \t]*\((?:define\*?|import|library|lambda)\b'
+    pattern: '(?:\A|[\r\n])[ \t]*\((?:define\*?|import|library|lambda)\b'
 - extensions: ['.scm']
   rules:
   - language: Tree-sitter Query
@@ -936,9 +931,11 @@ disambiguations:
 - extensions: ['.spec']
   rules:
   - language: RPM Spec
-    pattern: '(?i)\A(?:(?:[ \t]*|#[^\r\n]*|%(?:define|global)[ \t]+[^\r\n]+|Summary:[ \t]+\S[^\r\n]*)(?:\r?\n|\r)){0,30}Name:[ \t]+\S[^\r\n]*(?:\r?\n|\r)Version:[ \t]+\S[^\r\n]*(?:\r?\n|\r)Release:[ \t]+\S[^\r\n]*(?:\r?\n|\r)(?:[^\r\n]*(?:\r?\n|\r)){0,100}%description\b'
+    pattern:
+    - '(?i)\A(?:(?:[ \t]*|#[^\r\n]*|%(?:define|global)[ \t]+[^\r\n]+|Summary:[ \t]+\S[^\r\n]*)\r?\n){0,30}Name:[ \t]+\S[^\r\n]*\r?\nVersion:[ \t]+\S[^\r\n]*\r?\nRelease:[ \t]+\S[^\r\n]*\r?\n(?:[^\r\n]*\r?\n){0,100}%description\b'
+    - '(?i)\A(?:(?:[ \t]*|#[^\r\n]*|%(?:define|global)[ \t]+[^\r\n]+|Summary:[ \t]+\S[^\r\n]*)\r){0,30}Name:[ \t]+\S[^\r\n]*\rVersion:[ \t]+\S[^\r\n]*\rRelease:[ \t]+\S[^\r\n]*\r(?:[^\r\n]*\r){0,100}%description\b'
   - language: Ruby
-    pattern: '^[ \t]*(?:RSpec\.)?describe\b[^\r\n]*[ \t]+do[ \t]*\r?$'
+    pattern: '(?:\A|[\r\n])[ \t]*(?:RSpec\.)?describe\b[^\r\n]*[ \t]+do[ \t]*(?:\r?\n|\r|\z)'
 - extensions: ['.sql']
   rules:
    # Postgres

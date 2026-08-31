@@ -717,21 +717,14 @@ class TestHeuristics < Minitest::Test
 
   def test_m_by_heuristics
     ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m")
-    m_classifier_dependent = %w[
-      Comment.m GMRGPNB0.m MDB.m PRCAAPR.m PXAI.m WVBRNOT.m ZDIOUT1.m
-      _zewdAPI.m _zewdDemo.m digest.m md5.m mileage.m mumtris.m pcre.m
-      pcreexamples.m primes.m zmwire.m helloworld.m indirectfunctions.m
-      postconditional.m
-    ].map { |name| "#{samples_path}/M/#{name}" }
     assert_heuristics({
       "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
-      "M" => all_fixtures("M", "*.m") - m_classifier_dependent,
       "Wolfram Language" => all_fixtures("Wolfram Language", "*.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
       nil => ambiguous +
-        m_classifier_dependent +
+        all_fixtures("M", "*.m") +
         all_fixtures("MATLAB", "*.m") +
         Dir.glob("#{fixtures_path}/Generic/m/nil/*")
     })
@@ -1043,9 +1036,10 @@ class TestHeuristics < Minitest::Test
 
   def test_rsc_by_heuristics
     assert_heuristics({
-      "RouterOS Script" => all_fixtures("RouterOS Script", "*.rsc"),
       "Rascal" => all_fixtures("Rascal", "*.rsc") +
-        Dir.glob("#{fixtures_path}/Generic/rsc/Rascal/*")
+        Dir.glob("#{fixtures_path}/Generic/rsc/Rascal/*"),
+      nil => all_fixtures("RouterOS Script", "*.rsc") +
+        Dir.glob("#{fixtures_path}/Generic/rsc/nil/*")
     })
   end
 
@@ -1132,21 +1126,36 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  def test_collision_heuristics_with_crlf
-    %w[.inc .m .rsc .sch .spec].each do |extension|
+  def test_collision_heuristics_with_line_endings
+    targets = {
+      ".inc" => ["PHP", "HTML", "Pawn"],
+      ".m" => ["Wolfram Language"],
+      ".rsc" => ["Rascal"],
+      ".sch" => ["KiCad Schematic", "XML", "Scheme"],
+      ".spec" => ["RPM Spec", "Ruby"]
+    }
+
+    targets.each do |extension, languages|
       Language.find_by_extension("test#{extension}").each do |language|
         all_fixtures(language.name, "*#{extension}").each do |path|
           candidates = Language.find_by_extension(path)
-          expected = Heuristics.call(Blob.new(path, File.binread(path)), candidates)
-          content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", "\r\n")
-          assert_equal expected, Heuristics.call(Blob.new(path, content), candidates),
-            "#{language.name} changed classification with CRLF for #{path}"
+          ["\r\n", "\r"].each do |newline|
+            content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", newline)
+            result = Heuristics.call(Blob.new(path, content), candidates)
+            if languages.include?(language.name)
+              assert_equal [language], result, "#{language.name} failed with #{newline.inspect} for #{path}"
+            else
+              refute_includes languages, result.first&.name,
+                "#{language.name} sample #{path} was stolen with #{newline.inspect}"
+            end
+          end
         end
       end
     end
 
     adversarial = {
       "#{fixtures_path}/Generic/inc/HTML/indented-xml.inc" => "HTML",
+      "#{fixtures_path}/Generic/inc/nil/cpp-raw-html.inc" => nil,
       "#{fixtures_path}/Generic/inc/nil/cpp-raw-string.inc" => nil,
       "#{fixtures_path}/Generic/inc/PHP/indented-mixed.inc" => "PHP",
       "#{fixtures_path}/Generic/inc/PHP/multiline-short-tag.inc" => "PHP",
@@ -1158,18 +1167,23 @@ class TestHeuristics < Minitest::Test
       "#{fixtures_path}/Generic/sch/XML/doctype-prolog.sch" => "XML",
       "#{fixtures_path}/Generic/sch/XML/scheme-cdata.sch" => "XML",
       "#{fixtures_path}/Generic/m/nil/matlab-command.m" => nil,
+      "#{fixtures_path}/Generic/m/nil/matlab-block-comment.m" => nil,
       "#{fixtures_path}/Generic/m/nil/wolfram-figure.m" => nil,
       "#{fixtures_path}/Generic/m/nil/wolfram-q.m" => nil,
       "#{fixtures_path}/Generic/rsc/Rascal/routeros-comment.rsc" => "Rascal",
+      "#{fixtures_path}/Generic/rsc/nil/leading-comment.rsc" => nil,
       "#{fixtures_path}/Generic/spec/nil/python-multiline-string.spec" => nil,
       "#{fixtures_path}/Generic/spec/nil/ruby-heredoc.spec" => nil,
       "#{fixtures_path}/Generic/spec/nil/python-annotations.spec" => nil
     }
     adversarial.each do |path, language|
-      content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", "\r\n")
       candidates = Language.find_by_extension(path)
       expected = language.nil? ? [] : [Language[language]]
-      assert_equal expected, Heuristics.call(Blob.new(path, content), candidates), "Failed CRLF adversarial fixture #{path}"
+      ["\n", "\r\n", "\r"].each do |newline|
+        content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", newline)
+        assert_equal expected, Heuristics.call(Blob.new(path, content), candidates),
+          "Failed #{newline.inspect} adversarial fixture #{path}"
+      end
     end
 
   end
@@ -1184,7 +1198,7 @@ class TestHeuristics < Minitest::Test
       "bom.spec" => "Name: package\nVersion: 1\nRelease: 1\n%description\ntext"
     }
     unsupported_bom.each do |path, body|
-      [body, body.gsub("\n", "\r\n")].uniq.each do |variant|
+      ["\n", "\r\n", "\r"].map { |newline| body.gsub("\n", newline) }.uniq.each do |variant|
         content = "\xEF\xBB\xBF".b + variant
         assert_empty Heuristics.call(Blob.new(path, content), Language.find_by_extension(path)),
           "#{path} unexpectedly skipped a UTF-8 BOM"
@@ -1197,15 +1211,18 @@ class TestHeuristics < Minitest::Test
 
     targets = {
       ".inc" => ["PHP", "HTML", "SourcePawn", "Pawn"],
-      ".m" => ["M"],
-      ".rsc" => ["Rascal", "RouterOS Script"],
+      ".m" => ["Wolfram Language"],
+      ".rsc" => ["Rascal"],
       ".sch" => ["KiCad Schematic", "XML", "Scheme"],
       ".spec" => ["RPM Spec", "Ruby"]
     }
     near_misses = [
       (" " * (Heuristics::HEURISTICS_CONSIDER_BYTES - 1)) + "x",
       (" " * (Heuristics::HEURISTICS_CONSIDER_BYTES - 2)) + "x\r\n",
-      (" \n" * ((Heuristics::HEURISTICS_CONSIDER_BYTES / 2) - 1)) + "x"
+      (" \n" * ((Heuristics::HEURISTICS_CONSIDER_BYTES / 2) - 1)) + "x",
+      ("\r\n" * ((Heuristics::HEURISTICS_CONSIDER_BYTES / 2) - 1)) + "x",
+      "Name: x\r\nVersion: 1\r\nRelease: 1\r\n" +
+        ((("x" * 500) + "\r\n") * 100)
     ]
 
     previous_timeout = Regexp.timeout
