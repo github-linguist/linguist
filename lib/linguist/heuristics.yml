@@ -874,8 +874,8 @@ disambiguations:
   rules:
   - language: KiCad Schematic
     pattern:
-    - '\AEESchema Schematic File Version\b'
-    - '\Av \d{8} \d+[ \t]*(?:\r?\n|\r|\z)'
+    - '\AEESchema Schematic File Version[ \t]+[0-9]+[ \t]*(?:\r?\n|\r|\z)'
+    - '\Av[ \t]+[0-9]{8}[ \t]+[0-9]+[ \t]*(?:\r?\n|\r|\z)'
 - extensions: ['.scm']
   rules:
   - language: Tree-sitter Query
