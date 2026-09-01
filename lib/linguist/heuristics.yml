@@ -1006,7 +1006,7 @@ disambiguations:
   - language: Go Template
     pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
   - language: Smarty
-    pattern: '(?<!\{)\{(\*\s|\$|\/)?\w*\b'
+    pattern: '(\A|[^{])\{(\*\s|\$|\/)?\w*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
