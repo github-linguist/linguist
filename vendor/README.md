@@ -401,6 +401,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Mermaid:** [Alhadis/language-mermaid](https://github.com/Alhadis/language-mermaid)
 - **Meson:** [TingPing/language-meson](https://github.com/TingPing/language-meson)
 - **Metal:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
+- **MicroC:** [false-info/MicroC-grammar](https://github.com/false-info/MicroC-grammar)
 - **Microsoft Visual Studio Solution:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **MiniScript:** [ayecue/miniscript-textmate-linguist](https://github.com/ayecue/miniscript-textmate-linguist)
 - **MiniYAML:** [OpenRA/atom-miniyaml](https://github.com/OpenRA/atom-miniyaml)
