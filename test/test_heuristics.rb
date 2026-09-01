@@ -637,8 +637,7 @@ class TestHeuristics < Minitest::Test
 
     assert_heuristics({
       "HTML" => Dir.glob("#{fixtures_path}/Generic/inc/HTML/*"),
-      nil => Dir.glob("#{fixtures_path}/Generic/inc/PHP/*") +
-        Dir.glob("#{fixtures_path}/Generic/inc/SourcePawn/*")
+      nil => Dir.glob("#{fixtures_path}/Generic/inc/nil/*")
     })
   end
 
@@ -1121,7 +1120,8 @@ class TestHeuristics < Minitest::Test
 
   def test_spec_by_heuristics
     assert_heuristics({
-      "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
+      "RPM Spec" => all_fixtures("RPM Spec", "*.spec") +
+        Dir.glob("#{fixtures_path}/Generic/spec/RPM Spec/*"),
       nil => all_fixtures("Python", "*.spec") +
         all_fixtures("Ruby", "*.spec") +
         Dir.glob("#{fixtures_path}/Generic/spec/nil/*")
@@ -1155,53 +1155,26 @@ class TestHeuristics < Minitest::Test
       end
     end
 
-    adversarial = {
-      "#{fixtures_path}/Generic/inc/HTML/indented-xml.inc" => "HTML",
-      "#{fixtures_path}/Generic/inc/nil/cpp-raw-html.inc" => nil,
-      "#{fixtures_path}/Generic/inc/nil/cpp-raw-php.inc" => nil,
-      "#{fixtures_path}/Generic/inc/nil/cpp-raw-pawn.inc" => nil,
-      "#{fixtures_path}/Generic/inc/nil/cpp-raw-sourcepawn.inc" => nil,
-      "#{fixtures_path}/Generic/inc/nil/cpp-raw-string.inc" => nil,
-      "#{fixtures_path}/Generic/inc/nil/markup-first-php.inc" => nil,
-      "#{fixtures_path}/Generic/inc/PHP/indented-mixed.inc" => nil,
-      "#{fixtures_path}/Generic/inc/PHP/multiline-short-tag.inc" => nil,
-      "#{fixtures_path}/Generic/inc/SourcePawn/tagged-command.inc" => nil,
-      "#{fixtures_path}/Generic/m/nil/matlab-quit-function.m" => nil,
-      "#{fixtures_path}/Generic/m/nil/matlab-wolfram-comment.m" => nil,
-      "#{fixtures_path}/Generic/sch/Scheme/schema-comment.sch" => "Scheme",
-      "#{fixtures_path}/Generic/sch/Scheme/geda-comment.sch" => "Scheme",
-      "#{fixtures_path}/Generic/sch/XML/comment-prolog.sch" => "XML",
-      "#{fixtures_path}/Generic/sch/XML/doctype-prolog.sch" => "XML",
-      "#{fixtures_path}/Generic/sch/XML/scheme-cdata.sch" => "XML",
-      "#{fixtures_path}/Generic/m/nil/matlab-command.m" => nil,
-      "#{fixtures_path}/Generic/m/nil/matlab-block-comment.m" => nil,
-      "#{fixtures_path}/Generic/m/nil/wolfram-figure.m" => nil,
-      "#{fixtures_path}/Generic/m/nil/wolfram-q.m" => nil,
-      "#{fixtures_path}/Generic/rsc/Rascal/routeros-comment.rsc" => "Rascal",
-      "#{fixtures_path}/Generic/rsc/nil/leading-comment.rsc" => nil,
-      "#{fixtures_path}/Generic/spec/nil/python-multiline-string.spec" => nil,
-      "#{fixtures_path}/Generic/spec/nil/python-ruby-string.spec" => nil,
-      "#{fixtures_path}/Generic/spec/nil/ruby-heredoc.spec" => nil,
-      "#{fixtures_path}/Generic/spec/nil/python-annotations.spec" => nil
-    }
-    adversarial.each do |path, language|
+    %w[inc rsc sch spec].flat_map { |extension|
+      Dir.glob("#{fixtures_path}/Generic/#{extension}/*/*")
+    }.each do |path|
+      language = File.basename(File.dirname(path))
       candidates = Language.find_by_extension(path)
-      expected = language.nil? ? [] : [Language[language]]
-      ["\n", "\r\n", "\r"].each do |newline|
+      expected = language == "nil" ? [] : [Language[language]]
+      ["\r\n", "\r"].each do |newline|
         content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", newline)
         assert_equal expected, Heuristics.call(Blob.new(path, content), candidates),
-          "Failed #{newline.inspect} adversarial fixture #{path}"
+          "Failed #{newline.inspect} Generic fixture #{path}"
       end
     end
-
   end
 
   def test_collision_heuristics_do_not_skip_utf8_bom
     # Ruby exposes BOM bytes while Rust and Go expose one Unicode scalar, so
     # these content heuristics intentionally require signatures at byte zero.
     unsupported_bom = {
-      "bom.inc" => "<?php echo 1;",
-      "bom.rsc" => ":put \"ok\"",
+      "bom.inc" => "<html></html>",
+      "bom.rsc" => "module Demo\n",
       "bom.sch" => "<schema></schema>",
       "bom.spec" => "Name: package\nVersion: 1\nRelease: 1\n%description\ntext"
     }
