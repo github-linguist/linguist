@@ -849,12 +849,6 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
-- extensions: ['.rsc']
-  rules:
-  - language: Rascal
-    pattern:
-    - '\Amodule[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*[ \t]*(?:\r?\n|\r|\z)'
-    - '\A@[A-Za-z_][A-Za-z0-9_]*(?:\([^\r\n]*\))?[ \t]*(?:\r?\n|\r)module[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:::[A-Za-z_][A-Za-z0-9_]*)*[ \t]*(?:\r?\n|\r|\z)'
 - extensions: ['.s']
   rules:
   - language: Unix Assembly
