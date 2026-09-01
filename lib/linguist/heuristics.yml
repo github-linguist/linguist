@@ -580,6 +580,8 @@ disambiguations:
     pattern: '(?i)^[ \t]*(\/\*\s*)?MessageId=|^\.$'
   - language: M4
     pattern: '^dnl|^divert\((?:-?\d+)?\)|^\w+\(`[^\r\n]*?''[),]'
+  - language: MicroC
+    pattern: '^\s*head\s*\([^)\r\n]*\)\s*\{'
   - language: Monkey C
     pattern: '\b(?:using|module|function|class|var)\s+\w'
 - extensions: ['.md']
