@@ -1,0 +1,17 @@
+// PlainScript 1.0.2-latest: functions, defaults, and returns.
+
+make greet(name)
+    give `Hello, ${name}!`
+done
+
+make add(a, b)
+    give a + b
+done
+
+make label(name as "guest")
+    give `User: ${name}`
+done
+
+show greet("Ada")
+show add(2, 3)
+show label()

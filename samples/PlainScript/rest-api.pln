@@ -1,0 +1,8 @@
+// PlainScript 1.0.2-latest: JSON REST route.
+web app
+route get "/api/status"
+    reply json
+        status is "ok"
+    done
+done
+start 3000

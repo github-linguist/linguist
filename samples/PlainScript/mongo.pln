@@ -1,0 +1,33 @@
+// PlainScript 1.0.2-latest: MongoDB.
+//
+// The `mongo` statement binds a connection to a MongoDB instance using the
+// official `mongodb` driver. Give it a connection string and an optional
+// database name:
+//
+//     mongo "<connection-string>" [db "<name>"]
+//
+// After connecting, the `remember ... as query` and `insert`/`update`/`delete`
+// blocks run against the bound database. MongoDB understands a light SQL-like
+// subset here:
+//
+//   - SELECT <fields|*> FROM <collection>            (query)
+//   - INSERT INTO <collection> (a, b) VALUES (?, ?)  (insert)
+//
+// Swap the connection string below for your own server to run this file.
+
+mongo "mongodb://localhost:27017" db "testdb"
+
+// Fetch every user document. The result of the query block is stored in the
+// `users` variable so it can be inspected or returned later.
+remember users as query
+    SELECT * FROM users
+done
+show users
+
+// Insert a new user document from a PlainScript variable. Field names and the
+// order they appear in VALUES must match the column list.
+remember name as "Ada"
+remember email as "ada@example.com"
+insert
+    INSERT INTO users (name, email) VALUES ({name}, {email})
+done

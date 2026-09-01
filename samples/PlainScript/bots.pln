@@ -1,0 +1,13 @@
+// PlainScript 1.0.2-latest: Telegram bot handlers.
+
+bot env("TELEGRAM_BOT_TOKEN")
+
+when someone sends "/start"
+    reply "Welcome to PlainScript"
+done
+
+when someone sends matching "/echo (.+)"
+    reply "echo"
+done
+
+start telegram bot

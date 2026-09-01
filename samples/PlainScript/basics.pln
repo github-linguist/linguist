@@ -1,0 +1,14 @@
+// PlainScript 1.0.2-latest: variables, values, and output.
+
+remember name as "Ada"
+remember visitCount as 3
+let greeting be `Hello, ${name}!`
+
+show greeting
+show visitCount + 1
+
+if visitCount is at least 3
+    show "Returning visitor"
+otherwise
+    show "First visit"
+done
