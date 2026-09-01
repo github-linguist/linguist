@@ -1,3 +1,0 @@
-<!DOCTYPE schema>
-<schema>
-</schema>

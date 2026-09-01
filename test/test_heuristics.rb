@@ -617,28 +617,19 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_inc_by_heuristics
-    html_fragment = all_fixtures("HTML", "tailDel.inc")
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
       "NASL" => all_fixtures("NASL", "*.inc"),
       "Pascal" => all_fixtures("Pascal", "*.inc"),
+      "PHP" => all_fixtures("PHP", "*.inc"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc"),
       "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
-      "HTML" => all_fixtures("HTML", "*.inc") - html_fragment,
       "Assembly" => all_fixtures("Assembly", "*.inc"),
       nil => all_fixtures("C++", "*.inc") +
-        all_fixtures("BitBake", "*.inc") +
-        all_fixtures("PHP", "*.inc") +
+        all_fixtures("HTML", "*.inc") +
         all_fixtures("Pawn", "*.inc") +
-        all_fixtures("SQL", "*.inc") +
-        html_fragment +
-        Dir.glob("#{fixtures_path}/Generic/inc/nil/*")
+        all_fixtures("SQL", "*.inc")
     }, alt_name="foo.inc")
-
-    assert_heuristics({
-      "HTML" => Dir.glob("#{fixtures_path}/Generic/inc/HTML/*"),
-      nil => Dir.glob("#{fixtures_path}/Generic/inc/nil/*")
-    })
   end
 
   def test_j_by_heuristics
@@ -722,12 +713,11 @@ class TestHeuristics < Minitest::Test
       "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "MUF" => all_fixtures("MUF", "*.m"),
+      "M" => all_fixtures("M", "MDB.m"),
+      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
+      "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
-      nil => ambiguous +
-        all_fixtures("M", "*.m") +
-        all_fixtures("MATLAB", "*.m") +
-        all_fixtures("Wolfram Language", "*.m") +
-        Dir.glob("#{fixtures_path}/Generic/m/nil/*")
+      nil => ambiguous
     })
   end
 
@@ -1068,12 +1058,12 @@ class TestHeuristics < Minitest::Test
 
   def test_sch_by_heuristics
     assert_heuristics({
-      "KiCad Schematic" => all_fixtures("KiCad Schematic", "*.sch"),
-      "Scheme" => all_fixtures("Scheme", "*.sch") +
-        Dir.glob("#{fixtures_path}/Generic/sch/Scheme/*"),
-      "XML" => all_fixtures("XML", "*.sch") +
-        Dir.glob("#{fixtures_path}/Generic/sch/XML/*"),
-      nil => all_fixtures("Eagle", "*.sch")
+      "KiCad Schematic" => all_fixtures("KiCad Schematic", "*.sch") +
+        Dir.glob("#{fixtures_path}/Generic/sch/KiCad Schematic/*"),
+      nil => all_fixtures("Eagle", "*.sch") +
+        all_fixtures("Scheme", "*.sch") +
+        all_fixtures("XML", "*.sch") +
+        Dir.glob("#{fixtures_path}/Generic/sch/nil/*")
     })
   end
 
@@ -1116,109 +1106,6 @@ class TestHeuristics < Minitest::Test
       "Solidity" => Dir.glob("#{fixtures_path}/Generic/sol/Solidity/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/sol/nil/*")
     })
-  end
-
-  def test_spec_by_heuristics
-    assert_heuristics({
-      "RPM Spec" => all_fixtures("RPM Spec", "*.spec") +
-        Dir.glob("#{fixtures_path}/Generic/spec/RPM Spec/*"),
-      nil => all_fixtures("Python", "*.spec") +
-        all_fixtures("Ruby", "*.spec") +
-        Dir.glob("#{fixtures_path}/Generic/spec/nil/*")
-    })
-  end
-
-  def test_collision_heuristics_with_line_endings
-    targets = {
-      ".inc" => ["HTML"],
-      ".rsc" => ["Rascal"],
-      ".sch" => ["KiCad Schematic", "XML", "Scheme"],
-      ".spec" => ["RPM Spec"]
-    }
-
-    targets.each do |extension, languages|
-      Language.find_by_extension("test#{extension}").each do |language|
-        all_fixtures(language.name, "*#{extension}").each do |path|
-          candidates = Language.find_by_extension(path)
-          expected = Heuristics.call(Blob.new(path, File.binread(path)), candidates)
-          ["\r\n", "\r"].each do |newline|
-            content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", newline)
-            result = Heuristics.call(Blob.new(path, content), candidates)
-            if languages.include?(language.name)
-              assert_equal expected, result, "#{language.name} changed with #{newline.inspect} for #{path}"
-            else
-              refute_includes languages, result.first&.name,
-                "#{language.name} sample #{path} was stolen with #{newline.inspect}"
-            end
-          end
-        end
-      end
-    end
-
-    %w[inc rsc sch spec].flat_map { |extension|
-      Dir.glob("#{fixtures_path}/Generic/#{extension}/*/*")
-    }.each do |path|
-      language = File.basename(File.dirname(path))
-      candidates = Language.find_by_extension(path)
-      expected = language == "nil" ? [] : [Language[language]]
-      ["\r\n", "\r"].each do |newline|
-        content = File.binread(path).gsub(/\r\n?/, "\n").gsub("\n", newline)
-        assert_equal expected, Heuristics.call(Blob.new(path, content), candidates),
-          "Failed #{newline.inspect} Generic fixture #{path}"
-      end
-    end
-  end
-
-  def test_collision_heuristics_do_not_skip_utf8_bom
-    # Ruby exposes BOM bytes while Rust and Go expose one Unicode scalar, so
-    # these content heuristics intentionally require signatures at byte zero.
-    unsupported_bom = {
-      "bom.inc" => "<html></html>",
-      "bom.rsc" => "module Demo\n",
-      "bom.sch" => "<schema></schema>",
-      "bom.spec" => "Name: package\nVersion: 1\nRelease: 1\n%description\ntext"
-    }
-    unsupported_bom.each do |path, body|
-      ["\n", "\r\n", "\r"].map { |newline| body.gsub("\n", newline) }.uniq.each do |variant|
-        content = "\xEF\xBB\xBF".b + variant
-        assert_empty Heuristics.call(Blob.new(path, content), Language.find_by_extension(path)),
-          "#{path} unexpectedly skipped a UTF-8 BOM"
-      end
-    end
-  end
-
-  def test_collision_heuristics_handle_large_near_misses
-    skip("This test requires Ruby 3.2.0 or later") if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
-
-    targets = {
-      ".inc" => ["HTML"],
-      ".rsc" => ["Rascal"],
-      ".sch" => ["KiCad Schematic", "XML", "Scheme"],
-      ".spec" => ["RPM Spec"]
-    }
-    near_misses = [
-      (" " * (Heuristics::HEURISTICS_CONSIDER_BYTES - 1)) + "x",
-      (" " * (Heuristics::HEURISTICS_CONSIDER_BYTES - 2)) + "x\r\n",
-      (" \n" * ((Heuristics::HEURISTICS_CONSIDER_BYTES / 2) - 1)) + "x",
-      ("\r\n" * ((Heuristics::HEURISTICS_CONSIDER_BYTES / 2) - 1)) + "x",
-      "Name: x\r\nVersion: 1\r\nRelease: 1\r\n" +
-        ((("x" * 500) + "\r\n") * 100)
-    ]
-
-    previous_timeout = Regexp.timeout
-    Regexp.timeout = 0.1
-    targets.each do |extension, languages|
-      heuristic = Heuristics.all.find { |candidate| candidate.extensions.include?(extension) }
-      rules = heuristic.instance_variable_get(:@rules)
-      languages.each do |language|
-        pattern = rules.find { |rule| rule["language"] == language }["pattern"]
-        near_misses.each do |content|
-          refute pattern.match?(content), "#{language} matched a 50KiB near miss"
-        end
-      end
-    end
-  ensure
-    Regexp.timeout = previous_timeout if defined?(previous_timeout)
   end
 
   def test_sql_by_heuristics

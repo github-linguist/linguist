@@ -451,10 +451,8 @@ disambiguations:
   rules:
   - language: Motorola 68K Assembly
     named_pattern: m68k
-  - language: HTML
-    and:
-    - pattern: '(?i)\A[ \t]*(?:<html\b|<!DOCTYPE[ \t]+html\b|<\?xml\b[^\r\n]*(?:\r?\n|\r)[ \t]*(?:<!DOCTYPE[ \t]+html\b[^\r\n]*(?:\r?\n|\r)[ \t]*)?<html\b)'
-    - negative_pattern: '(?i:<\?php\b)'
+  - language: PHP
+    pattern: '^<\?(?:php)?'
   - language: SourcePawn
     pattern:
     - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*\{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*\{)?)'
@@ -555,6 +553,14 @@ disambiguations:
     pattern: ':- module'
   - language: MUF
     pattern: '^: '
+  - language: M
+    pattern: '^\s*;'
+  - language: Wolfram Language
+    and:
+      - pattern: '\(\*'
+      - pattern: '\*\)$'
+  - language: MATLAB
+    pattern: '^\s*%'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
@@ -876,12 +882,6 @@ disambiguations:
     pattern:
     - '\AEESchema Schematic File Version\b'
     - '\Av \d{8} \d+[ \t]*(?:\r?\n|\r|\z)'
-  - language: XML
-    and:
-    - pattern: '\A[ \t\r\n]*(?:<\?xml\b|<!--|<!DOCTYPE[ \t]+(?:[A-Za-z_][A-Za-z0-9_.-]*:)?schema\b|<(?:[A-Za-z_][A-Za-z0-9_.-]*:)?schema(?:[ \t\r\n]|>))'
-    - pattern: '(?:\A|[\r\n])[ \t]*<(?:[A-Za-z_][A-Za-z0-9_.-]*:)?schema(?:[ \t\r\n]|>)'
-  - language: Scheme
-    pattern: '(?:\A|[\r\n])[ \t]*\((?:define\*?|import|library|lambda)\b'
 - extensions: ['.scm']
   rules:
   - language: Tree-sitter Query
@@ -916,14 +916,6 @@ disambiguations:
     pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+[a-zA-Z$_][a-zA-Z0-9$_]*(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
-- extensions: ['.spec']
-  rules:
-  - language: RPM Spec
-    and:
-    - pattern: '(?i)\A(?:[ \t]*(?:#[^\r\n]*|%[^\r\n]*|[A-Z][A-Z0-9]*(?:\([^)]+\))?:[ \t]*\S[^\r\n]*)?[\r\n]+){0,120}[ \t]*Name:[ \t]+\S'
-    - pattern: '(?i)\A(?:[ \t]*(?:#[^\r\n]*|%[^\r\n]*|[A-Z][A-Z0-9]*(?:\([^)]+\))?:[ \t]*\S[^\r\n]*)?[\r\n]+){0,120}[ \t]*Version:[ \t]+\S'
-    - pattern: '(?i)\A(?:[ \t]*(?:#[^\r\n]*|%[^\r\n]*|[A-Z][A-Z0-9]*(?:\([^)]+\))?:[ \t]*\S[^\r\n]*)?[\r\n]+){0,120}[ \t]*Release:[ \t]+\S'
-    - pattern: '(?i)\A(?:[ \t]*(?:#[^\r\n]*|%[^\r\n]*|[A-Z][A-Z0-9]*(?:\([^)]+\))?:[ \t]*\S[^\r\n]*)?[\r\n]+){0,120}[ \t]*%description\b'
 - extensions: ['.sql']
   rules:
    # Postgres
