@@ -16,6 +16,8 @@
 #                       Pattern can be a string with a single regular expression
 #                       or an array of strings that will be merged in a single
 #                       regular expression (with union).
+#                       Run `script/check-regex-compatibility
+#                       lib/linguist/heuristics.yml` after changing patterns.
 # and                 - An and block merges multiple rules and checks that all of
 #                       them must match.
 # negative_pattern    - Same as pattern, but checks for absence of matches.
@@ -65,8 +67,20 @@ disambiguations:
   rules:
   # AL pattern source from https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage - keyword.other.applicationobject.al
   - language: AL
-    and:
-    - pattern: '\b(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|DOTNET|ENUM|ENUMEXTENSION|VALUE|QUERY|REPORT|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|CONTROLADDIN|REPORTEXTENSION|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b'
+    pattern:
+    # An object declaration, "<kind> <id> <name>", starting a line, with the
+    # name required. The anchor matters: page and table are common Perl
+    # variable names and "Table of contents" is ordinary prose, so matching
+    # these keywords anywhere would claim Perl AutoLoader chunks.
+    # AL tooling commonly writes a UTF-8 BOM. It cannot be matched as bytes
+    # here: blob data is ASCII-8BIT, and a pattern containing the BOM bytes
+    # compiles to a UTF-8 Regexp, which raises Encoding::CompatibilityError.
+    # \A\W{0,3} skips it, the same way the B4X rule below does.
+    - '(?:\A\W{0,3}|^)\s*(?i:(CODEUNIT|PAGE|PAGEEXTENSION|PAGECUSTOMIZATION|ENUM|ENUMEXTENSION|QUERY|REPORT|REPORTEXTENSION|TABLE|TABLEEXTENSION|XMLPORT|PROFILE|PROFILEEXTENSION|CONTROLADDIN|INTERFACE|PERMISSIONSET|PERMISSIONSETEXTENSION|ENTITLEMENT))\b\s+(?:\d|"|[A-Z])'
+    # DotNet alias objects are a bare keyword on their own line
+    - '(?:\A\W{0,3}|^)\s*(?i:DOTNET)\s*$'
+    # Namespace and using declarations, always terminated with a semicolon
+    - '(?:\A\W{0,3}|^)\s*(?i:(NAMESPACE|USING))\s+[\w.]+\s*;'
   # Open-ended fallback to Perl AutoLoader
   - language: Perl
 - extensions: ['.alg']
@@ -107,6 +121,15 @@ disambiguations:
   - language: LTspice Symbol
     pattern: '^SymbolType[ \t]'
   - language: Asymptote
+- extensions: ['.b']
+  rules:
+  - language: B
+    pattern: '^\s*(?:extrn|auto|goto)\b'
+    negative_pattern: '^\s*(?:implement|include|load|ref)\b'
+  - language: Brainfuck
+    pattern: '(>\+>|>\+<)'
+  - language: Limbo
+    pattern: '(?:^\w+\s*:\s*module\s*\{)|(implement \w+;)'
 - extensions: ['.bas']
   rules:
   - language: B4X
@@ -280,6 +303,11 @@ disambiguations:
     pattern: '^\s*(?:%%|main\s*\(.*?\)\s*->)'
   - language: JavaScript
     pattern: '\/\/|["'']use strict["'']|export\s+default\s|\/\*(?:.|[\r\n])*?\*\/'
+- extensions: ['.eslintrc']
+  rules:
+  - language: YAML
+    named_pattern: yaml
+  - language: JSON with Comments
 - extensions: ['.ex']
   rules:
   - language: Elixir
@@ -301,6 +329,15 @@ disambiguations:
   rules:
   - language: Forth
     pattern: '^: '
+  - language: Fortran
+    named_pattern: fortran
+- extensions: ['.fpp']
+  rules:
+  - language: FPP
+    pattern:
+    - '^\s*(active|passive|queued)\s+component\s'
+    - '^\s*(module|topology|struct|enum|port|interface)\s+[A-Za-z_$][A-Za-z0-9_]*\s*\{'
+    - '^\s*instance\s+[A-Za-z_$][A-Za-z0-9_]*\s*:'
   - language: Fortran
     named_pattern: fortran
 - extensions: ['.fr']
@@ -442,6 +479,17 @@ disambiguations:
     pattern:
     - '^(?i)[^"m]*mov\s+[^\s]+,'
     - '^\s+(?i)db\s+[a-z\d]'
+- extensions: ['.j']
+  rules:
+  - language: Jasmin
+    pattern: '^\s*\.(?:class|super|method|end\s+method|limit|field|source|bytecode)\b'
+  - language: Objective-J
+    pattern: '^\s*@(?:import|implementation|protocol|interface|typedef|end)\b'
+  - language: JASS
+    pattern:
+    - '^\s*(?:constant\s+)?(?:function|native)\s+\w+\s+takes\b'
+    - '^\s*end(?:function|globals|loop)\s*$'
+    - '^\s*(?:call|set|local|exitwhen)\s+\S'
 - extensions: ['.json']
   rules:
   - language: OASv2-json
@@ -580,6 +628,8 @@ disambiguations:
     and:
       - negative_pattern: '/\*'
       - pattern: '^\s*\.(?:include\s|globa?l\s|[A-Za-z][_A-Za-z0-9]*:)'
+  - language: MiniScript
+    pattern: '^\s*\bend (?:function|while|if|for)\b|\s\b(?:isa)\b\s'
   - language: MAXScript
 - extensions: ['.msg']
   rules:
@@ -766,6 +816,11 @@ disambiguations:
     pattern:
     - '^\s*#(?:(?:if|ifdef|define|pragma)\s+\w|\s*include\s+<[^>]+>)'
     - '^\s*template\s*<'
+- extensions: ['.releaserc']
+  rules:
+  - language: YAML
+    named_pattern: yaml
+  - language: JSON
 - extensions: ['.res']
   rules:
   - language: ReScript
@@ -836,6 +891,15 @@ disambiguations:
     - '\(#[\w-]+[!\?]'
     - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
     - '@[\w.-]+(?:\)\s|$)'
+- extensions: ['.sd']
+  rules:
+  - language: Vespa Schema Definition
+    pattern: '^[ \t]*(?:schema|search|document)[ \t]+[\w.\/-]+[ \t]*(?:inherits[ \t][^{\n]*)?\{'
+- extensions: ['.sip']
+  rules:
+  - language: Quartus Simulation IP
+    pattern: '^[ \t]*set_global_assignment\b'
+  - language: SIP
 - extensions: ['.sol']
   rules:
   - language: Solidity
@@ -846,7 +910,7 @@ disambiguations:
   rules:
    # Postgres
   - language: PLpgSQL
-    pattern: '(?i:^\\i\b|AS\s+\$\$|LANGUAGE\s+''?plpgsql''?|BEGIN(\s+WORK)?\s*;)'
+    pattern: '(?i:^\\i\b|^\s*DO\s+\$|LANGUAGE\s+''?plpgsql''?|BEGIN(\s+WORK)?\s*;)'
   # IBM db2
   - language: SQLPL
     pattern: '(?i:ALTER\s+MODULE|MODE\s+DB2SQL|\bSYS(CAT|PROC)\.|ASSOCIATE\s+RESULT\s+SET|\bEND!\s*$)'
@@ -935,7 +999,7 @@ disambiguations:
   - language: Go Template
     pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
   - language: Smarty
-    pattern: '(?<!\{)\{(\*\s|\$|\/)?\w*\b'
+    pattern: '(\A|[^{])\{(\*\s|\$|\/)?\w*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
@@ -1038,7 +1102,7 @@ disambiguations:
     pattern: '\$(?:if|else)[ \t]|^[ \t]*fn\s+[^\s()]+\(.*?\).*?\{|^[ \t]*for\s*\{'
 - extensions: ['.vba']
   rules:
-  - language: Vim Script
+  - language: Vim script
     pattern: '^UseVimball'
   - language: VBA
 - extensions: ['.vcf']
@@ -1168,3 +1232,4 @@ named_patterns:
   # Excel objects
   - '\b(?:(?:This|Active)?Workbooks?|Worksheets?|Active(?:Sheet|Chart|Cell)|WorksheetFunction)\b'
   - '\b(?:Range\(".*|Cells\([0-9a-zA-Z_]*, (?:[0-9a-zA-Z_]*|"[a-zA-Z]{1,3}"))\)'
+  yaml: '^[ \t]*(?:#|(?:[^/"\s:{}\[\]]|\/[^/*:\n])[^:\n]*:)'

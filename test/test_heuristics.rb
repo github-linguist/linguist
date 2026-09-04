@@ -285,6 +285,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_b_by_heuristics
+    assert_heuristics({
+      "B" => all_fixtures("B", "*.b"),
+      "Limbo" => all_fixtures("Limbo", "*.b"),
+      "Brainfuck" => all_fixtures("Brainfuck", "*.b")
+    })
+  end
+
   def test_bas_by_heuristics
     assert_heuristics({
       "B4X" => all_fixtures("B4X", "*.bas"),
@@ -447,6 +455,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_eslintrc_by_heuristics
+    assert_heuristics({
+      "JSON with Comments" => ["#{samples_path}/JSON with Comments/filenames/.eslintrc"],
+      "YAML" => ["#{samples_path}/YAML/filenames/.eslintrc"]
+    })
+  end
+
   def test_ex_by_heuristics
     assert_heuristics({
       "Elixir" => all_fixtures("Elixir", "*.ex"),
@@ -467,6 +482,13 @@ class TestHeuristics < Minitest::Test
       "Forth" => all_fixtures("Forth", "*.f") + all_fixtures("Forth", "*.for"),
       nil => all_fixtures("Formatted", "*.for")
     }, alt_name="main.for")
+  end
+
+  def test_fpp_by_heuristics
+    assert_heuristics({
+      "FPP" => all_fixtures("FPP", "*.fpp"),
+      "Fortran" => all_fixtures("Fortran", "*.fpp")
+    })
   end
 
   def test_fr_by_heuristics
@@ -608,6 +630,14 @@ class TestHeuristics < Minitest::Test
         all_fixtures("Pawn", "*.inc") +
         all_fixtures("SQL", "*.inc")
     }, alt_name="foo.inc")
+  end
+
+  def test_j_by_heuristics
+    assert_heuristics({
+      "JASS" => all_fixtures("JASS", "*.j"),
+      "Jasmin" => all_fixtures("Jasmin", "*.j"),
+      "Objective-J" => all_fixtures("Objective-J", "*.j")
+    })
   end
 
   def test_json_by_heuristics
@@ -773,7 +803,8 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Roff" => all_fixtures("Roff", "*.ms"),
       "Unix Assembly" => all_fixtures("Unix Assembly", "*.ms"),
-      "MAXScript" => all_fixtures("MAXScript", "*.ms")
+      "MAXScript" => all_fixtures("MAXScript", "*.ms"),
+      "MiniScript" => all_fixtures("MiniScript", "*.ms"),
     })
   end
 
@@ -953,6 +984,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_releaserc_by_heuristics
+    assert_heuristics({
+      "JSON" => ["#{samples_path}/JSON/filenames/.releaserc"],
+      "YAML" => ["#{samples_path}/YAML/filenames/.releaserc"]
+    })
+  end
+
   def test_res_by_heuristics
     assert_heuristics({
       "ReScript" => all_fixtures("ReScript", "*.res"),
@@ -1016,9 +1054,23 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_sd_by_heuristics
+    assert_heuristics({
+      "Vespa Schema Definition" => all_fixtures("Vespa Schema Definition", "*.sd"),
+      nil => Dir.glob("#{fixtures_path}/Generic/sd/nil/*")
+    })
+  end
+
   def test_service_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.service"),
+    })
+  end
+
+  def test_sip_by_heuristics
+    assert_heuristics({
+      "Quartus Simulation IP" => all_fixtures("Quartus Simulation IP", "*.sip"),
+      "SIP" => all_fixtures("SIP", "*.sip")
     })
   end
 
@@ -1038,7 +1090,8 @@ class TestHeuristics < Minitest::Test
 
   def test_sql_by_heuristics
     assert_heuristics({
-      "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql"],
+      "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql",
+                "SQL/create_function_sql.sql"],
       "PLpgSQL" => all_fixtures("PLpgSQL", "*.sql"),
       "SQLPL" => ["SQLPL/trigger.sql"],
       "PLSQL" => all_fixtures("PLSQL", "*.sql")
@@ -1224,7 +1277,7 @@ class TestHeuristics < Minitest::Test
   def test_vba_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.vba"),
-      "Vim Script" => all_fixtures("Vim Script", "*.vba")
+      "Vim script" => all_fixtures("Vim script", "*.vba")
     })
   end
 
