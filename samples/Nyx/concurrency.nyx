@@ -1,0 +1,67 @@
+// std.concurrency — Structured Concurrency, Async Nurseries & Zero-Copy Isolate Region Transfer
+// Architectural Milestone: v0.24 Certified Production Standard
+
+export struct Nursery {
+    id: u64,
+    active_tasks: i32,
+    cancelled: bool,
+}
+
+export struct IsolateRegion {
+    region_id: u64,
+    bytes_allocated: usize,
+    capacity: usize,
+}
+
+export struct IsolateChannel<T> {
+    channel_id: u64,
+    closed: bool,
+}
+
+extern "C" {
+    fn nyx_nursery_open(region_ptr: *void) -> *void;
+    fn nyx_nursery_spawn(nursery: *void, task_fn: *void, arg: *void);
+    fn nyx_nursery_await_all(nursery: *void) -> bool;
+    fn nyx_nursery_cancel(nursery: *void);
+    fn nyx_nursery_close(nursery: *void);
+
+    fn nyx_isolate_region_new(capacity: usize) -> *void;
+    fn nyx_isolate_region_alloc(region: *void, size: usize) -> *void;
+    fn nyx_isolate_channel_new() -> *void;
+    fn nyx_isolate_channel_send(ch: *void, region: *void) -> bool;
+    fn nyx_isolate_channel_recv(ch: *void) -> *void;
+    fn nyx_isolate_region_free(region: *void);
+    fn nyx_isolate_channel_free(ch: *void);
+}
+
+// Opens a structured nursery bound to the caller's lexical region
+export fn open_nursery() -> *void {
+    return nyx_nursery_open(null);
+}
+
+// Spawns an async task bound deterministically to a nursery
+export fn spawn_task(nursery: *void, task_fn: fn(), arg: *void) {
+    nyx_nursery_spawn(nursery, task_fn, arg);
+}
+
+// Awaits all child tasks in the nursery to complete (deterministic lifetime join)
+export fn await_nursery(nursery: *void) -> bool {
+    let result = nyx_nursery_await_all(nursery);
+    nyx_nursery_close(nursery);
+    return result;
+}
+
+// Creates an isolated thread-local region for zero-copy lock-free transfer
+export fn create_isolate(capacity: usize) -> *void {
+    return nyx_isolate_region_new(capacity);
+}
+
+// Sends full single ownership of an entire isolate region to another thread (O(1) pointer swap)
+export fn send_isolate(ch: *void, region: *void) -> bool {
+    return nyx_isolate_channel_send(ch, region);
+}
+
+// Receives full single ownership of an isolate region in the destination thread
+export fn recv_isolate(ch: *void) -> *void {
+    return nyx_isolate_channel_recv(ch);
+}
