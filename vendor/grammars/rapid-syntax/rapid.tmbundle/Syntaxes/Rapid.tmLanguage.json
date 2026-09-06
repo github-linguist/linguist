@@ -1,0 +1,495 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Rapid!",
+  "scopeName": "source.rapid",
+  "fileTypes": ["rapid"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#directives" },
+    { "include": "#struct-def" },
+    { "include": "#enum-def" },
+    { "include": "#function-def" },
+    { "include": "#statement-keywords" },
+    { "include": "#control-keywords" },
+    { "include": "#modifier-keywords" },
+    { "include": "#types" },
+    { "include": "#strings" },
+    { "include": "#char-literal" },
+    { "include": "#numbers" },
+    { "include": "#io-namespace" },
+    { "include": "#struct-literal" },
+    { "include": "#enum-access" },
+    { "include": "#field-access" },
+    { "include": "#function-call" },
+    { "include": "#operators" },
+    { "include": "#punctuation" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.rapid",
+          "match": "//.*$"
+        }
+      ]
+    },
+
+    "directives": {
+      "comment": "use \"path\"; / use \"path\" as name; / link \"name\"; / shim \"path.c\";",
+      "patterns": [
+        {
+          "match": "\\b(use)\\s+(\"(?:[^\"\\\\]|\\\\.)*\")\\s*(?:(as)\\s+([A-Za-z_][A-Za-z0-9_]*))?\\s*(;)",
+          "captures": {
+            "1": { "name": "keyword.control.import.rapid" },
+            "2": { "name": "string.quoted.double.rapid" },
+            "3": { "name": "keyword.control.import.rapid" },
+            "4": { "name": "entity.name.namespace.rapid" },
+            "5": { "name": "punctuation.terminator.statement.rapid" }
+          }
+        },
+        {
+          "match": "\\b(link)\\s+(\"(?:[^\"\\\\]|\\\\.)*\")\\s*(;)",
+          "captures": {
+            "1": { "name": "keyword.control.import.rapid" },
+            "2": { "name": "string.quoted.double.rapid" },
+            "3": { "name": "punctuation.terminator.statement.rapid" }
+          }
+        },
+        {
+          "match": "\\b(shim)\\s+(\"(?:[^\"\\\\]|\\\\.)*\")\\s*(;)",
+          "captures": {
+            "1": { "name": "keyword.control.import.rapid" },
+            "2": { "name": "string.quoted.double.rapid" },
+            "3": { "name": "punctuation.terminator.statement.rapid" }
+          }
+        }
+      ]
+    },
+
+    "modifier-keywords": {
+      "patterns": [
+        {
+          "name": "storage.modifier.rapid",
+          "match": "\\b(private|extern)\\b"
+        }
+      ]
+    },
+
+    "control-keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.conditional.rapid",
+          "match": "\\b(if|else|switch|case|default)\\b"
+        },
+        {
+          "name": "keyword.control.loop.rapid",
+          "match": "\\b(while|for|in|break|continue)\\b"
+        },
+        {
+          "name": "keyword.control.flow.rapid",
+          "match": "\\b(return)\\b"
+        }
+      ]
+    },
+
+    "statement-keywords": {
+      "patterns": [
+        {
+          "name": "storage.type.function.rapid",
+          "match": "\\b(fn|efn)\\b"
+        },
+        {
+          "name": "storage.type.variable.rapid",
+          "match": "\\b(var|const)\\b"
+        }
+      ]
+    },
+
+    "struct-def": {
+      "comment": "struct Name { field: type; ... } / private struct Name { ... }",
+      "begin": "\\b(?:(private)\\s+)?(struct)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(\\{)",
+      "beginCaptures": {
+        "1": { "name": "storage.modifier.rapid" },
+        "2": { "name": "keyword.other.struct.rapid" },
+        "3": { "name": "entity.name.type.struct.rapid" },
+        "4": { "name": "punctuation.section.braces.begin.rapid" }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.braces.end.rapid" }
+      },
+      "patterns": [
+        { "include": "#comments" },
+        {
+          "comment": "field: type  (separator is ; or , )",
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(:)\\s*",
+          "captures": {
+            "1": { "name": "variable.other.member.rapid" },
+            "2": { "name": "punctuation.separator.colon.rapid" }
+          }
+        },
+        { "include": "#types" },
+        { "include": "#punctuation" }
+      ]
+    },
+
+    "enum-def": {
+      "comment": "enum Name { MEMBER, MEMBER = 5, ... } / private enum ...",
+      "begin": "\\b(?:(private)\\s+)?(enum)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(\\{)",
+      "beginCaptures": {
+        "1": { "name": "storage.modifier.rapid" },
+        "2": { "name": "keyword.other.enum.rapid" },
+        "3": { "name": "entity.name.type.enum.rapid" },
+        "4": { "name": "punctuation.section.braces.begin.rapid" }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": { "name": "punctuation.section.braces.end.rapid" }
+      },
+      "patterns": [
+        { "include": "#comments" },
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\b\\s*(=)?\\s*([0-9]+)?",
+          "captures": {
+            "1": { "name": "constant.other.enummember.rapid" },
+            "2": { "name": "keyword.operator.assignment.rapid" },
+            "3": { "name": "constant.numeric.integer.rapid" }
+          }
+        },
+        { "include": "#punctuation" }
+      ]
+    },
+
+    "function-def": {
+      "comment": "fn name(params): type { ... }  /  efn name(params) => expr;  /  extern fn name(params): type;  /  private variants of both",
+      "patterns": [
+        {
+          "match": "\\b(?:(private)\\s+)?(extern)\\s+(fn)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": { "name": "storage.modifier.rapid" },
+            "2": { "name": "storage.modifier.rapid" },
+            "3": { "name": "storage.type.function.rapid" },
+            "4": { "name": "entity.name.function.rapid" }
+          }
+        },
+        {
+          "match": "\\b(?:(private)\\s+)?(efn)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": { "name": "storage.modifier.rapid" },
+            "2": { "name": "storage.type.function.rapid" },
+            "3": { "name": "entity.name.function.rapid" }
+          }
+        },
+        {
+          "match": "\\b(?:(private)\\s+)?(fn)\\s+([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "captures": {
+            "1": { "name": "storage.modifier.rapid" },
+            "2": { "name": "storage.type.function.rapid" },
+            "3": { "name": "entity.name.function.rapid" }
+          }
+        },
+        {
+          "comment": "efn's `=> expr;` fat-arrow body marker",
+          "name": "keyword.operator.arrow.rapid",
+          "match": "=>"
+        },
+        {
+          "comment": "return type after ) :",
+          "match": "(\\))\\s*(:)\\s*",
+          "captures": {
+            "1": { "name": "punctuation.section.parens.end.rapid" },
+            "2": { "name": "punctuation.separator.colon.rapid" }
+          }
+        }
+      ]
+    },
+
+    "types": {
+      "comment": "Every base_type, plus pointer (T*, T**), fixed array (int[]), list<T>, and fn(...):type type-annotation forms from parser.y's `type`/`base_type` rules.",
+      "patterns": [
+        {
+          "comment": "fn(type, type, ...): type  — first-class function type annotation",
+          "begin": "\\b(fn)\\s*(\\()",
+          "beginCaptures": {
+            "1": { "name": "storage.type.function.rapid" },
+            "2": { "name": "punctuation.section.parens.begin.rapid" }
+          },
+          "end": "\\)",
+          "endCaptures": { "0": { "name": "punctuation.section.parens.end.rapid" } },
+          "patterns": [
+            { "include": "#types" },
+            { "include": "#punctuation" }
+          ]
+        },
+        {
+          "comment": "list<int> / list<byte>",
+          "match": "\\b(list)\\s*(<)\\s*(int|byte)\\s*(>)",
+          "captures": {
+            "1": { "name": "storage.type.generic.rapid" },
+            "2": { "name": "punctuation.definition.generic.begin.rapid" },
+            "3": { "name": "storage.type.primitive.rapid" },
+            "4": { "name": "punctuation.definition.generic.end.rapid" }
+          }
+        },
+        {
+          "comment": "int[]  fixed-size array type",
+          "match": "\\b(int)\\s*(\\[)\\s*(\\])",
+          "captures": {
+            "1": { "name": "storage.type.primitive.rapid" },
+            "2": { "name": "punctuation.section.brackets.begin.rapid" },
+            "3": { "name": "punctuation.section.brackets.end.rapid" }
+          }
+        },
+        {
+          "comment": "base_type ** — pointer to pointer (M32)",
+          "match": "\\b(void|int|bool|string|byte|char|int8|int16|int32|int64|uint8|uint16|uint32|uint64|float|double|[A-Z][A-Za-z0-9_]*)\\s*(\\*\\*)",
+          "captures": {
+            "1": { "name": "storage.type.primitive.rapid" },
+            "2": { "name": "keyword.operator.pointer.rapid" }
+          }
+        },
+        {
+          "comment": "base_type * — pointer (M26)",
+          "match": "\\b(void|int|bool|string|byte|char|int8|int16|int32|int64|uint8|uint16|uint32|uint64|float|double|[A-Z][A-Za-z0-9_]*)\\s*(\\*)(?!\\*)",
+          "captures": {
+            "1": { "name": "storage.type.primitive.rapid" },
+            "2": { "name": "keyword.operator.pointer.rapid" }
+          }
+        },
+        {
+          "name": "storage.type.primitive.rapid",
+          "match": "\\b(void|int|bool|string|byte|char|int8|int16|int32|int64|uint8|uint16|uint32|uint64|float|double)\\b"
+        },
+        {
+          "comment": "a Capitalized bare identifier used where a type is expected (struct/enum name) — heuristic, since the grammar resolves this via symbol lookup, not case.",
+          "match": "(?<=:\\s)\\s*([A-Z][A-Za-z0-9_]*)\\b(?!\\s*[({.])",
+          "captures": {
+            "1": { "name": "entity.name.type.rapid" }
+          }
+        }
+      ]
+    },
+
+    "strings": {
+      "name": "string.quoted.double.rapid",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.rapid",
+          "match": "\\\\(n|t|\"|\\\\)"
+        },
+        {
+          "comment": "io::out(fmt, ...) {} placeholder",
+          "name": "constant.other.placeholder.rapid",
+          "match": "\\{\\}"
+        }
+      ]
+    },
+
+    "char-literal": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.rapid",
+          "match": "'(\\\\(n|t|'|\\\\)|[^\\\\'])'"
+        }
+      ]
+    },
+
+    "numbers": {
+      "patterns": [
+        {
+          "comment": "unary-minus float literal, e.g. -5.5",
+          "match": "(-)\\s*\\b[0-9]+\\.[0-9]+\\b",
+          "captures": { "1": { "name": "keyword.operator.arithmetic.rapid" } },
+          "name": "constant.numeric.float.rapid"
+        },
+        {
+          "comment": "unary-minus int literal, e.g. -5",
+          "match": "(-)\\s*\\b[0-9]+\\b",
+          "captures": { "1": { "name": "keyword.operator.arithmetic.rapid" } },
+          "name": "constant.numeric.integer.rapid"
+        },
+        {
+          "name": "constant.numeric.float.rapid",
+          "match": "\\b[0-9]+\\.[0-9]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.rapid",
+          "match": "\\b[0-9]+\\b"
+        }
+      ]
+    },
+
+    "io-namespace": {
+      "comment": "io::out / io::in / io::open / io::read / io::write / io::close / io::errno",
+      "patterns": [
+        {
+          "match": "\\b(io)\\s*(::)\\s*(out|in|open|read|write|close|errno)\\b",
+          "captures": {
+            "1": { "name": "support.class.namespace.rapid" },
+            "2": { "name": "punctuation.accessor.double-colon.rapid" },
+            "3": { "name": "support.function.builtin.rapid" }
+          }
+        }
+      ]
+    },
+
+    "struct-literal": {
+      "comment": "Name { field: expr, field: expr }",
+      "begin": "\\b([A-Z][A-Za-z0-9_]*)\\s*(\\{)",
+      "beginCaptures": {
+        "1": { "name": "entity.name.type.struct.rapid" },
+        "2": { "name": "punctuation.section.braces.begin.rapid" }
+      },
+      "end": "\\}",
+      "endCaptures": { "0": { "name": "punctuation.section.braces.end.rapid" } },
+      "patterns": [
+        { "include": "#comments" },
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(:)(?!:)",
+          "captures": {
+            "1": { "name": "variable.other.member.rapid" },
+            "2": { "name": "punctuation.separator.colon.rapid" }
+          }
+        },
+        { "include": "#strings" },
+        { "include": "#char-literal" },
+        { "include": "#numbers" },
+        { "include": "#io-namespace" },
+        { "include": "#enum-access" },
+        { "include": "#field-access" },
+        { "include": "#function-call" },
+        { "include": "#operators" },
+        { "include": "#punctuation" },
+        { "include": "#identifiers" }
+      ]
+    },
+
+    "enum-access": {
+      "comment": "EnumName::MEMBER",
+      "patterns": [
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(::)\\s*([A-Za-z_][A-Za-z0-9_]*)\\b",
+          "captures": {
+            "1": { "name": "entity.name.type.enum.rapid" },
+            "2": { "name": "punctuation.accessor.double-colon.rapid" },
+            "3": { "name": "constant.other.enummember.rapid" }
+          }
+        }
+      ]
+    },
+
+    "field-access": {
+      "comment": "ident.field (read) and ident.field = expr (assignment) both use DOT",
+      "patterns": [
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(\\.)\\s*([A-Za-z_][A-Za-z0-9_]*)\\b(?!\\s*\\()",
+          "captures": {
+            "1": { "name": "variable.other.rapid" },
+            "2": { "name": "punctuation.accessor.dot.rapid" },
+            "3": { "name": "variable.other.member.rapid" }
+          }
+        }
+      ]
+    },
+
+    "function-call": {
+      "patterns": [
+        {
+          "match": "\\b([A-Za-z_][A-Za-z0-9_]*)\\s*(?=\\()",
+          "name": "meta.function-call.rapid",
+          "captures": {
+            "1": { "name": "entity.name.function.rapid" }
+          }
+        }
+      ]
+    },
+
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.arrow.rapid",
+          "match": "=>"
+        },
+        {
+          "name": "keyword.operator.comparison.rapid",
+          "match": "==|!=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.increment-decrement.rapid",
+          "match": "\\+\\+|--"
+        },
+        {
+          "name": "keyword.operator.ellipsis.rapid",
+          "match": "\\.\\.\\."
+        },
+        {
+          "name": "keyword.operator.assignment.rapid",
+          "match": "="
+        },
+        {
+          "comment": "pointer deref *expr (unary, e.g. `*q = 5`, `*p + 1`) — heuristic: a * at the start of an expression/statement position (preceded only by whitespace, an operator, or an opening bracket, never by an identifier/)/]) and glued to what follows. Plain binary multiplication (`x * x`) is preceded by an identifier/)/] possibly with a space, so it falls through to the arithmetic rule below instead.",
+          "name": "keyword.operator.pointer.rapid",
+          "match": "(?<=^|[=(,;{}\\[]|return|[+\\-*/]\\s)\\s*\\*(?=[A-Za-z_(])"
+        },
+        {
+          "name": "keyword.operator.address.rapid",
+          "match": "&"
+        },
+        {
+          "name": "keyword.operator.arithmetic.rapid",
+          "match": "\\+|-|\\*|/"
+        },
+        {
+          "name": "punctuation.accessor.double-colon.rapid",
+          "match": "::"
+        },
+        {
+          "name": "punctuation.accessor.dot.rapid",
+          "match": "\\."
+        }
+      ]
+    },
+
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.terminator.statement.rapid",
+          "match": ";"
+        },
+        {
+          "name": "punctuation.separator.comma.rapid",
+          "match": ","
+        },
+        {
+          "name": "punctuation.separator.colon.rapid",
+          "match": ":"
+        },
+        {
+          "name": "punctuation.section.braces.rapid",
+          "match": "[{}]"
+        },
+        {
+          "name": "punctuation.section.parens.rapid",
+          "match": "[()]"
+        },
+        {
+          "name": "punctuation.section.brackets.rapid",
+          "match": "[\\[\\]]"
+        }
+      ]
+    },
+
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.rapid",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*\\b"
+        }
+      ]
+    }
+  }
+}
