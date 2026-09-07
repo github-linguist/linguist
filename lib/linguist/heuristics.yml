@@ -669,6 +669,20 @@ disambiguations:
   - language: NL
     pattern: '^(b|g)[0-9]+ '
   - language: NewLisp
+- extensions: ['.nls']
+  rules:
+  - language: NetLogo
+    pattern:
+    - '^\s*to(-report)?\s+\w[\w-]*'
+    - '^\s*(extension|global|__include)s\s*\['
+    - '^\s*(turtles|patches|links)-own\s*\['
+    - '^\s*((un)?directed-link-)?breed\s*\['
+  - language: TeX
+    pattern:
+    - '^\s*\\begin\{'
+    - '^\s*\\end\{'
+    - '^\s*\\nomgroup\{'
+    - '^\s*\\item'
 - extensions: ['.nr']
   rules:
   - language: Roff
