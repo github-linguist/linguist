@@ -1,0 +1,42 @@
+# TokenVector Sample: Media Stream Downloader & Metrics Tracker
+# Native compilation targeting .NET CIL with unboxed scalar types
+
+__tkv_import__ = "stdlib_http"
+__tkv_extern_assembly__ = ["System.Net", "System.IO"]
+
+BUFFER_SIZE = 65536
+
+class TransferMetricsCalculator:
+    alpha: "f64"
+    smoothed_speed: "f64"
+    last_tick: "i64"
+
+    def record_transfer(self, bytes_transferred: "i64", current_tick: "i64") -> "f64":
+        elapsed_sec = (current_tick - self.last_tick) / 1000.0
+        if elapsed_sec > 0.001:
+            instant_speed = bytes_transferred / elapsed_sec
+            self.smoothed_speed = (self.alpha * instant_speed) + ((1.0 - self.alpha) * self.smoothed_speed)
+            self.last_tick = current_tick
+        return self.smoothed_speed
+
+class StreamDownloader:
+    url: "str"
+    output_path: "str"
+    total_bytes: "i64"
+
+    def execute_download(self) -> "i32":
+        calc = TransferMetricsCalculator(0.2, 0.0, 0)
+        downloaded = 0
+        while downloaded < self.total_bytes:
+            chunk = BUFFER_SIZE
+            remaining = self.total_bytes - downloaded
+            if chunk > remaining:
+                chunk = remaining
+            downloaded = downloaded + chunk
+            speed = calc.record_transfer(downloaded, 100)
+        return 1
+
+def main() -> "i32":
+    client = StreamDownloader("https://example.com/stream.bin", "stream.bin", 1048576)
+    status = client.execute_download()
+    return status
