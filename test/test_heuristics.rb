@@ -632,8 +632,7 @@ class TestHeuristics < Minitest::Test
         all_fixtures("HTML", "*.inc") +
         all_fixtures("SQL", "*.inc") +
         ["#{samples_path}/Pawn/fixes.inc"] +
-        Dir.glob("#{fixtures_path}/Generic/inc/ambiguous/*.inc") +
-        Dir.glob("#{fixtures_path}/Generic/inc/C++/*.inc")
+        Dir.glob("#{fixtures_path}/Generic/inc/nil/*.inc")
     }, alt_name="foo.inc")
   end
 
