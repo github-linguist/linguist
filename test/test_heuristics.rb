@@ -1239,6 +1239,23 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_trigger_by_heuristics
+    apex = all_fixtures("Apex", "*.trigger") +
+      Dir.glob("#{fixtures_path}/Generic/trigger/Apex/*")
+    shell = all_fixtures("Shell", "*.trigger") +
+      Dir.glob("#{fixtures_path}/Generic/trigger/Shell/*")
+    assert_heuristics({
+      "Apex" => apex,
+      nil => shell
+    })
+
+    { "Apex" => apex, "Shell" => shell }.each do |language, files|
+      files.each do |file|
+        assert_equal Language[language], Linguist.detect(file_blob(file)), "Failed for #{file}"
+      end
+    end
+  end
+
   def test_ts_by_heuristics
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
