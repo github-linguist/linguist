@@ -236,6 +236,8 @@ vendor/grammars/api-blueprint-sublime-plugin:
 - text.html.markdown.source.gfm.mson
 vendor/grammars/applescript.tmbundle:
 - source.applescript
+vendor/grammars/arkTS:
+- source.ets
 vendor/grammars/asciidoc.tmbundle:
 - text.html.asciidoc
 vendor/grammars/asp-syntax-highlight:
@@ -300,7 +302,6 @@ vendor/grammars/berry-grammar:
 - source.berry
 - source.berry.bytecode
 vendor/grammars/bicep:
-- markdown.bicep.codeblock
 - source.bicep
 vendor/grammars/bikeshed:
 - source.csswg
@@ -632,8 +633,10 @@ vendor/grammars/language-etc:
 - source.odin-ehr
 - source.openbsd-pkg.contents
 - source.opts
+- source.paperspecs
 - source.pkgconf
 - source.psl
+- source.rarlist
 - source.record-jar
 - source.sexp
 - source.sfv
@@ -659,6 +662,7 @@ vendor/grammars/language-etc:
 - text.lesshst
 - text.mac-tts
 - text.openbsd-pkg.desc
+- text.recfile
 - text.savane
 - text.xml.svg
 - text.youtube
@@ -910,6 +914,8 @@ vendor/grammars/lisp.tmbundle:
 - source.lisp
 vendor/grammars/livescript-vscode:
 - source.livescript
+vendor/grammars/llvm-tablegen-grammar:
+- source.tablegen
 vendor/grammars/llvm.tmbundle:
 - source.llvm
 vendor/grammars/lobster_ling:
@@ -1034,8 +1040,10 @@ vendor/grammars/python-django.tmbundle:
 - source.python.django
 - text.html.django
 vendor/grammars/qsharp:
+- source.deq
 - source.openqasm
 - source.qsharp
+- source.stim
 vendor/grammars/quake:
 - source.quake
 vendor/grammars/quakec-syntax:
@@ -1220,7 +1228,6 @@ vendor/grammars/templ-vscode:
 - source.templ
 vendor/grammars/textMate-baml:
 - source.baml
-- source.baml-jinja
 vendor/grammars/textmate:
 - source.flix
 vendor/grammars/textmate.tmbundle:
@@ -1251,10 +1258,13 @@ vendor/grammars/typst-grammar:
 - source.typst
 vendor/grammars/ucode-lsp:
 - source.ucode
+- source.ucode-template
 vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/verse-grammar:
 - source.verse
+vendor/grammars/vespa/integration/tmgrammar/grammars:
+- source.vespaSchema
 vendor/grammars/vsc-ember-syntax:
 - inline.hbs
 - inline.template
@@ -1420,6 +1430,8 @@ vendor/grammars/vscode-python:
 - source.pip-requirements
 vendor/grammars/vscode-rbs-syntax:
 - source.rbs
+vendor/grammars/vscode-rhai:
+- source.rhai
 vendor/grammars/vscode-ron:
 - source.ron
 vendor/grammars/vscode-ruby-slim:

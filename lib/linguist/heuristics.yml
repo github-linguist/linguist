@@ -16,6 +16,8 @@
 #                       Pattern can be a string with a single regular expression
 #                       or an array of strings that will be merged in a single
 #                       regular expression (with union).
+#                       Run `script/check-regex-compatibility
+#                       lib/linguist/heuristics.yml` after changing patterns.
 # and                 - An and block merges multiple rules and checks that all of
 #                       them must match.
 # negative_pattern    - Same as pattern, but checks for absence of matches.
@@ -711,9 +713,7 @@ disambiguations:
 - extensions: ['.pkl']
   rules:
     - language: Pkl
-      pattern:
-      - '^\s*(module|import|amends|extends|local|const|fixed|abstract|open|class|typealias|@\w+)\b'
-      - '^\s*[a-zA-Z0-9_$]+\s*(=|{|:)|^\s*`[^`]+`\s*(=|{|:)|for\s*\(|when\s*\('
+      pattern: '\A[ \t-\r]*(?:(?://[^\r\n]*(?:\r\n?|\n)|/\*(?:[^*]|\*+[^*/])*\*+/)[ \t-\r]*)*(?:(?:module|import|amends|extends|class|typealias|function|external|abstract|open|local|hidden|fixed|const)\b|@|(?:[a-z_$][A-Za-z0-9_$]*|`[^`\r\n]+`)[ \t-\r]*(?:=|\{|:))'
     - language: Pickle
 - extensions: ['.pl']
   rules:
@@ -800,7 +800,9 @@ disambiguations:
   - language: Rebol
     pattern: '(?i:\bRebol\b)'
   - language: Rez
-    pattern: '(#include\s+["<](Types\.r|Carbon\/Carbon\.r)[">])|((resource|data|type)\s+''[A-Za-z0-9]{4}''\s+((\(.*\)\s+){0,1}){)'
+    pattern:
+    - '(?:\A|[\r\n])[ \t]*(?:resource|data|type)[ \t]+''[^''\r\n]{4}''[ \t\r\n]*(?:\([^\r\n]*\)[ \t\r\n]*)?\{'
+    - '(?:\A|[\r\n])[ \t]*#[ \t]*include[ \t]+["<](?:Types\.r|Carbon/Carbon\.r)[">]'
   - language: R
     pattern: '<-|^\s*#'
 - extensions: ['.re']
@@ -895,6 +897,15 @@ disambiguations:
     pattern:
     - '(?i)\b(?:ref|inspect)\s*\([A-Za-z][A-Za-z0-9_]*\)'
     - '(?i)\b(?:integer|real|boolean|character|text)\s+array\s+[A-Za-z][A-Za-z0-9_]*\s*\('
+- extensions: ['.sd']
+  rules:
+  - language: Vespa Schema Definition
+    pattern: '^[ \t]*(?:schema|search|document)[ \t]+[\w.\/-]+[ \t]*(?:inherits[ \t][^{\n]*)?\{'
+- extensions: ['.sip']
+  rules:
+  - language: Quartus Simulation IP
+    pattern: '^[ \t]*set_global_assignment\b'
+  - language: SIP
 - extensions: ['.sol']
   rules:
   - language: Solidity
@@ -994,7 +1005,7 @@ disambiguations:
   - language: Go Template
     pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
   - language: Smarty
-    pattern: '(?<!\{)\{(\*\s|\$|\/)?\w*\b'
+    pattern: '(\A|[^{])\{(\*\s|\$|\/)?\w*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
@@ -1050,26 +1061,7 @@ disambiguations:
 
       (?:$|\s)
   - language: Adblock Filter List
-    pattern: |-
-      (?x)\A
-      \[
-      (?<version>
-        (?:
-          [Aa]d[Bb]lock
-          (?:[ \t][Pp]lus)?
-          |
-          u[Bb]lock
-          (?:[ \t][Oo]rigin)?
-          |
-          [Aa]d[Gg]uard
-        )
-        (?:[ \t] \d+(?:\.\d+)*+)?
-      )
-      (?:
-        [ \t]?;[ \t]?
-        \g<version>
-      )*+
-      \]
+    pattern: '\A\[(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?(?:[ \t]?;[ \t]?(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?)*\]'
     # HACK: This is a contrived use of heuristics needed to address
     # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
