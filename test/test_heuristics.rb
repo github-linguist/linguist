@@ -1055,6 +1055,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_rsc_by_heuristics
+    assert_heuristics({
+      "Rascal" => all_fixtures("Rascal", "*.rsc") + Dir.glob("#{fixtures_path}/Generic/rsc/Rascal/*.rsc"),
+      "RouterOS Script" => all_fixtures("RouterOS Script", "*.rsc") + Dir.glob("#{fixtures_path}/Generic/rsc/RouterOS Script/*.rsc"),
+      nil => ["#{fixtures_path}/Generic/rsc/comments.rsc"]
+    })
+  end
+
   def test_s_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),
