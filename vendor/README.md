@@ -350,6 +350,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **LLVM:** [whitequark/llvm.tmbundle](https://github.com/whitequark/llvm.tmbundle)
 - **LLVM TableGen:** [nos1dot618/llvm-tablegen-grammar](https://github.com/nos1dot618/llvm-tablegen-grammar)
 - **LOLCODE:** [KrazIvan/LOLCODE-grammar-vscode](https://github.com/KrazIvan/LOLCODE-grammar-vscode)
+- **LPC:** [jlchmura/lpc-language-server](https://github.com/jlchmura/lpc-language-server)
 - **LSL:** [textmate/secondlife-lsl.tmbundle](https://github.com/textmate/secondlife-lsl.tmbundle)
 - **LTspice Symbol:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **LabVIEW:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
