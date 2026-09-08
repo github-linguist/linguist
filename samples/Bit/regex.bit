@@ -1,0 +1,144 @@
+// std/regex: RE2-style pattern matching, matched by a Pike-VM NFA
+// simulation rather than backtracking. compile()/mustCompile() build an
+// immutable Regex; matches/find/findAll search it; split/replaceAll/
+// replaceFirst use those matches to cut or rewrite text. See
+// docs/stdlib/regex.md for the full syntax.
+
+import { compile, mustCompile } from "std/regex"
+import { join } from "std/strings"
+
+// compile() is fallible: a malformed pattern is a `regex: <reason> at
+// offset <n>` error, not a panic — the right shape when the pattern comes
+// from outside the program (a user, a config file) and cannot be trusted.
+fn showCompileError() {
+  let re = compile("[a-") catch e {
+    println("compile(\"[a-\") failed: ${e.message()}")
+    return
+  }
+  println("unexpectedly compiled: ${re.pattern()}")
+}
+
+// mustCompile() panics instead of returning an error — the right shape for
+// a pattern the author controls, known good at write time and typically
+// compiled once, then shared. matches() is an unanchored yes/no check.
+fn showMatches() {
+  let identifier = mustCompile("^[A-Za-z_][A-Za-z0-9_]*$")
+  println("matches(\"count_1\")  = ${identifier.matches("count_1")}")
+  println("matches(\"2count\")   = ${identifier.matches("2count")}")
+  println("matches(\"my-count\") = ${identifier.matches("my-count")}")
+}
+
+// find() returns Option<Match> — None when there is no match anywhere in
+// the subject. Matching over the Option is the idiom: it forces both the
+// found and not-found cases to be handled, like any other Option here.
+fn showFind() {
+  let email = mustCompile("[a-z0-9.]+@[a-z0-9.]+")
+  let withAddress = "contact: admin@example.com for support"
+  match (email.find(withAddress)) {
+    Some(m) => println("found: ${m.text(withAddress)}")
+    None => println("no match")
+  }
+  let withoutAddress = "no address in this line"
+  match (email.find(withoutAddress)) {
+    Some(m) => println("found: ${m.text(withoutAddress)}")
+    None => println("no match")
+  }
+}
+
+// findAll() scans left to right for non-overlapping matches. `limit` is NOT
+// "how many to skip first": negative means unlimited, 0 returns
+// immediately with zero matches (never "unlimited" — the guess a reader
+// used to a 0-means-default convention would make), and a positive limit
+// caps the count.
+fn showFindAll() {
+  let word = mustCompile("\\bfox\\b")
+  let s = "the quick fox jumps over the lazy fox while another fox watches"
+  let unlimited = word.findAll(s, -1)
+  println("findAll(s, -1): ${len(unlimited)} occurrence(s) of \"fox\"")
+  let zero = word.findAll(s, 0)
+  println("findAll(s, 0):  ${len(zero)} occurrence(s) (0 means none, not unlimited)")
+  let capped = word.findAll(s, 2)
+  println("findAll(s, 2):  ${len(capped)} occurrence(s) (capped)")
+}
+
+// A named capture group, (?P<name>...), is the most useful shape in
+// practice: pull a structured field out of matched text by name instead of
+// counting parentheses. Read back with Match.named(); the plain numeric
+// index still works too, via Match.group(i), 1-based (group(0) is always
+// the whole match).
+fn showNamedGroups() {
+  let iso = mustCompile("(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})")
+  println("pattern:     ${iso.pattern()}")
+  println("groupCount:  ${iso.groupCount()}")
+  println("groupNames:  [${join(iso.groupNames(), ", ")}]")
+
+  let line = "log entry from 2024-03-09: service restarted"
+  match (iso.find(line)) {
+    Some(m) => {
+      println("matched \"${m.text(line)}\" at [${m.start}, ${m.end})")
+      match (m.named("year")) {
+        Some(g) => println("year (named):    ${g.text(line)}")
+        None => println("year: not captured")
+      }
+      match (m.group(2)) {
+        Some(g) => println("month (group 2): ${g.text(line)}")
+        None => println("month: not captured")
+      }
+    }
+    None => println("no date found")
+  }
+}
+
+// replaceAll() rewrites every match; replaceFirst() only the leftmost one.
+// Both expand a `$`-template against that match's own capture groups —
+// `${name}` for a named group here; `\$` escapes the interpreted string's
+// own interpolation so the literal template text (with its real `${...}`)
+// reaches replaceAll/replaceFirst unchanged.
+fn showReplace() {
+  let iso = mustCompile("(?P<year>[0-9]{4})-(?P<month>[0-9]{2})-(?P<day>[0-9]{2})")
+  let dates = "start: 2024-03-09, end: 2024-04-01"
+  let repl = "\${month}/\${day}/\${year}"
+  println("replaceAll:   ${iso.replaceAll(dates, repl)}")
+  println("replaceFirst: ${iso.replaceFirst(dates, repl)}")
+}
+
+// split() cuts a subject at each non-overlapping match, using the same
+// limit convention as findAll: negative is unlimited, 0 returns
+// immediately with no pieces, and a positive limit caps the piece count —
+// the final piece absorbs everything left, matches included.
+fn showSplit() {
+  let ws = mustCompile("\\s+")
+  let s = "  the   quick brown  fox "
+  let all = ws.split(s, -1)
+  println("split(s, -1): ${len(all)} piece(s): [${join(all, "|")}]")
+  let zero = ws.split(s, 0)
+  println("split(s, 0):  ${len(zero)} piece(s)")
+  let two = ws.split(s, 2)
+  println("split(s, 2):  ${len(two)} piece(s): [${join(two, "|")}]")
+}
+
+// (?i) makes the whole pattern case-insensitive, using full Unicode simple
+// case folding — not just ASCII A-Z/a-z.
+fn showCaseInsensitive() {
+  let ci = mustCompile("(?i)^hello$")
+  println("matches(\"HELLO\") = ${ci.matches("HELLO")}")
+  println("matches(\"hello\") = ${ci.matches("hello")}")
+  println("matches(\"Hxllo\") = ${ci.matches("Hxllo")}")
+}
+
+fn main() {
+  showCompileError()
+  showMatches()
+  showFind()
+  showFindAll()
+  showNamedGroups()
+  showReplace()
+  showSplit()
+  showCaseInsensitive()
+}
+
+// The guarantee behind every call above: matching runs a Pike-VM NFA
+// simulation in O(len(input) x len(program)) time, never backtracking —
+// there are no backreferences and no lookaround, because both require
+// backtracking to evaluate. No pattern this module accepts can blow up on
+// adversarial input.

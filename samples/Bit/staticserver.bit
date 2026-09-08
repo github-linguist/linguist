@@ -1,0 +1,390 @@
+// A static file server - the `serve`-a-directory shape, in Bit.
+//
+// A demonstration AND a test: it creates a small site in a temp directory, serves
+// it, fetches every interesting path through the real HTTP client, checks the
+// answers, and exits non-zero if any is wrong. The examples harness runs it on
+// every change, so the serving logic below cannot rot.
+//
+// server/serve.bit in the SEPARATE repo byteink/bit-website holds its own
+// fileResponse/mimeFor and, as of #3953, its own COPY of what is now
+// std/path's safePath — this example imports the real one instead of
+// keeping a third copy. That website copy is still separate and ungated
+// from here: a fix to std/path's safePath is not mirrored there
+// automatically, and nothing mechanical will catch that divergence either.
+//
+// The serving logic is `fileResponse` plus `mimeFor` - about forty lines. The
+// rest is the harness that proves it.
+//
+// Deliberately NOT here: TLS. Traefik terminates it on the byteink cluster, so a
+// server behind it speaks plain HTTP on a container port and never touches a
+// certificate. Half the risk surface of a public server, removed by deployment
+// shape rather than by code.
+
+import { serve, get, respond, Server, Exchange, Request, Response } from "std/http"
+import { readFile, writeFile, mkdir, remove, exists, isDir, isSymlink } from "std/fs"
+import { hasSuffix, contains, indexOf } from "std/strings"
+import { safePath } from "std/path"
+
+// How many requests the demo serves before shutting down. A real deployment
+// calls the accept loop forever; an example must terminate, and the examples
+// harness kills anything that does not (_tests_/bit/examplesgate.bit's deadline).
+// One more than `main`'s `expect`/`expectBlocked` call count, or the extra
+// request dials a server that already closed.
+const demoRequests = 7
+
+// The directory served. A single value so the traversal guard and the file
+// lookup cannot disagree about what "inside" means.
+class Site { root: string }
+
+// --- #2397 regression fixture -----------------------------------------------
+//
+// A directory OUTSIDE `Site.root`, holding one file the server must never
+// serve, and a symbolic link INSIDE `Site.root` pointing at it. Fixed paths
+// alongside `Site.root`'s own, for the same reason: this is a regression
+// test for one specific escape, not a general-purpose fixture.
+const escapeOutsideDir = "/tmp/bit-staticserver-outside"
+const escapeMarker = "OUTSIDE THE SITE ROOT\n"
+
+// --- the actual server ------------------------------------------------------
+
+// The response for one request path.
+//
+// Three rules, in this order, because the order is the security property:
+//  1. Reject anything that could escape `root` BEFORE touching the filesystem.
+//  2. Map a directory-ish path to its index.html.
+//  3. Read the file, or 404.
+fn fileResponse(site: Site, path: string): Response {
+  if (!safePath(path)) {
+    // 400, not 404: the request is malformed, and answering 404 would invite a
+    // caller to keep guessing paths.
+    return respond(400, "bad request path\n")
+  }
+
+  let rel = path
+  if (rel == "/" || hasSuffix(rel, "/")) {
+    rel = "${rel}index.html"
+  }
+
+  let full = "${site.root}${rel}"
+  // A directory reached without a trailing slash would otherwise be read as a
+  // file, which fails with a confusing error instead of an honest 404.
+  if (isDir(full)) {
+    full = "${full}/index.html"
+  }
+
+  // `safePath` above is lexical and answers BEFORE any syscall (rule 1) - it
+  // cannot see a symbolic link planted INSIDE the root, and `isDir` just
+  // above and `readFile` just below both FOLLOW links. So ask the filesystem
+  // directly, now that `full` is fully composed: walk every component below
+  // `site.root` and refuse if any is a link. 404, not 400 - the request was
+  // well formed, the filesystem answered otherwise.
+  if (hasSymlinkComponent(site.root, full)) {
+    return respond(404, "not found\n")
+  }
+
+  let body = readFile(full) catch e {
+    return respond(404, "not found\n")
+  }
+  return Response{ status: 200, contentType: mimeFor(full), headers: "", body: body }
+}
+
+// Whether any path component of `full` strictly below `root` is a symbolic
+// link - walked from `root` outward, never testing only the leaf:
+// `<root>/a/b.txt` escapes just as well when `a` is the link as when the
+// file itself is. `full` always has `root` as an exact prefix here
+// (`fileResponse` composes it that way, with no trailing slash on `root`),
+// so scanning starts right after the separator between them and each `/`
+// found after that marks the end of one more component to probe.
+fn hasSymlinkComponent(root: string, full: string): bool {
+  let i = len(root) + 1
+  while (i < len(full)) {
+    if (full[i] == '/') {
+      if (isSymlink(full[0:i])) {
+        return true
+      }
+    }
+    i = i + 1
+  }
+  return isSymlink(full)
+}
+
+// Content-Type from the file extension. Only what this site actually serves,
+// plus the few a static site grows into. An unknown extension gets
+// application/octet-stream - a browser downloads it instead of guessing, which
+// is the safe default when the server does not know what it is handing over.
+fn mimeFor(path: string): string {
+  if (hasSuffix(path, ".html")) {
+    return "text/html; charset=utf-8"
+  }
+  if (hasSuffix(path, ".css")) {
+    return "text/css; charset=utf-8"
+  }
+  if (hasSuffix(path, ".js")) {
+    return "text/javascript; charset=utf-8"
+  }
+  if (hasSuffix(path, ".json")) {
+    return "application/json; charset=utf-8"
+  }
+  if (hasSuffix(path, ".svg")) {
+    return "image/svg+xml"
+  }
+  if (hasSuffix(path, ".png")) {
+    return "image/png"
+  }
+  if (hasSuffix(path, ".ico")) {
+    return "image/x-icon"
+  }
+  if (hasSuffix(path, ".txt")) {
+    return "text/plain; charset=utf-8"
+  }
+  // The installers: text/plain so a browser SHOWS the script a stranger is about
+  // to pipe into their shell, instead of downloading an opaque blob. Anyone
+  // sensible reads it first, and the content type is what lets them.
+  if (hasSuffix(path, ".sh")) {
+    return "text/plain; charset=utf-8"
+  }
+  if (hasSuffix(path, ".ps1")) {
+    return "text/plain; charset=utf-8"
+  }
+  if (hasSuffix(path, ".xml")) {
+    return "application/xml; charset=utf-8"
+  }
+  // A file with NO extension at all is text by convention - README, LICENSE,
+  // Makefile. Handing those back as octet-stream makes a browser download a text
+  // file instead of showing it.
+  //
+  // Narrower than it looks: this is the no-dot case only. An UNKNOWN extension
+  // still falls through to octet-stream below, because there the server has been
+  // told a type it does not recognise and guessing text would be a guess.
+  if (!hasExtension(path)) {
+    return "text/plain; charset=utf-8"
+  }
+  return "application/octet-stream"
+}
+
+// Does the final path segment carry a `.`? Scanned from the end so a dot in a
+// PARENT directory (`/v1.2/notes`) cannot be mistaken for this file's extension.
+fn hasExtension(path: string): bool {
+  let i = len(path)
+  while (i > 0) {
+    let c = path[i - 1]
+    if (c == '/') {
+      return false
+    }
+    if (c == '.') {
+      return true
+    }
+    i = i - 1
+  }
+  return false
+}
+
+// One exchange, on its own green thread: reads the request here, off the
+// accept loop, so a slow or stalled peer only ever blocks this one exchange.
+fn handle(ex: Exchange, site: Site) {
+  let req = ex.read() catch e {
+    ex.respond(respond(400, "bad request\n")) catch e2 {
+      return
+    }
+    return
+  }
+  ex.respond(fileResponse(site, req.path)) catch e {
+    print("respond: ${e.message()}\n")
+  }
+}
+
+// The accept loop, bounded for the demo. A deployment would drop the counter and
+// loop forever; nothing else about it would change.
+fn serveFiles(s: Server, site: Site, n: int, ready: chan<int>) {
+  ready <- 0
+  let i = 0
+  while (i < n) {
+    let ex = s.accept() catch e {
+      print("accept: ${e.message()}\n")
+      return
+    }
+    spawn handle(ex, site)
+    i = i + 1
+  }
+  s.close()
+}
+
+// --- the self-test ----------------------------------------------------------
+
+// `: int` because this returns an exit code - a failed check must fail the
+// examples harness, not just print. Returning normally would exit 0 and a broken
+// traversal guard would pass CI silently.
+fn main(): int {
+  let site = Site{ root: "/tmp/bit-staticserver-demo" }
+  setupSite(site)
+  if (!makeEscapeLink(site.root)) {
+    print("setup: could not create the #2397 symlink fixture\n")
+    cleanupSite(site)
+    return 1
+  }
+
+  let s = serve("127.0.0.1", 0) catch e {
+    print("serve: ${e.message()}\n")
+    return 1
+  }
+  let port = s.port() catch e {
+    print("port: ${e.message()}\n")
+    return 1
+  }
+
+  let ready = chan<int>(1)
+  spawn serveFiles(s, site, demoRequests, ready)
+  let started = <- ready
+
+  let base = "http://127.0.0.1:${port}"
+  let failures = 0
+
+  // A directory request serves its index.
+  failures = failures + expect(base, "/", 200, "<h1>home</h1>")
+  // An explicit file.
+  failures = failures + expect(base, "/index.html", 200, "<h1>home</h1>")
+  // A nested path, and the stylesheet's content type.
+  failures = failures + expect(base, "/style.css", 200, "body{}")
+  failures = failures + expect(base, "/docs/", 200, "<h1>docs</h1>")
+  // A missing file is 404, not a crash.
+  failures = failures + expect(base, "/nope.html", 404, "not found")
+  // Traversal is refused before the filesystem is touched. /etc/passwd exists on
+  // every host this runs on, so a server that resolved this would leak it.
+  failures = failures + expect(base, "/../../../../etc/passwd", 400, "bad request path")
+  // #2397: a symlink placed INSIDE the root, pointing outside it. `safePath`
+  // cannot see this - it is lexical and answers before any syscall - so this
+  // is the one check here that exercises the filesystem-facing half of the
+  // guard rather than the request-string half.
+  failures = failures + expectBlocked(base, "/escape/secret.txt")
+
+  cleanupEscapeLink(site.root)
+  cleanupSite(site)
+
+  if (failures > 0) {
+    print("staticserver: ${failures} check(s) FAILED\n")
+    return 1
+  }
+  print("staticserver: all checks passed\n")
+  return 0
+}
+
+// Fetches `base + path` and checks status and body. Prints one line per check
+// either way, so a failure in CI says which case broke.
+//
+// It prints `path`, never the full URL, and that is load-bearing rather than
+// cosmetic: the port is EPHEMERAL (serve(host, 0)), and
+// scripts/selfhost-diffexamples.sh compares this program's stdout, built by the
+// pinned stage0 and built by this tree, byte for byte. Printing the URL made
+// every run a DIFF - the gate reported a miscompile when the only difference was
+// a kernel-assigned port.
+fn expect(base: string, path: string, status: int, bodyHas: string): int {
+  let res = get("${base}${path}") catch e {
+    print("FAIL ${path}: ${e.message()}\n")
+    return 1
+  }
+  if (res.status != status) {
+    print("FAIL ${path}: status ${res.status}, want ${status}\n")
+    return 1
+  }
+  if (len(bodyHas) > 0 && !contains(res.body, bodyHas)) {
+    print("FAIL ${path}: body ${res.body}, want it to contain ${bodyHas}\n")
+    return 1
+  }
+  print("ok   ${path} -> ${res.status}\n")
+  return 0
+}
+
+// Fetches `base + path` and asserts the traversal guard blocked it: status
+// 404, and the response never carries `escapeMarker` (the outside file's
+// exact contents). Two checks rather than `expect`'s one, because a leaked
+// body that happens to also 404 is exactly the failure this must catch.
+fn expectBlocked(base: string, path: string): int {
+  let res = get("${base}${path}") catch e {
+    print("FAIL ${path}: ${e.message()}\n")
+    return 1
+  }
+  if (res.status != 404) {
+    print("FAIL ${path}: status ${res.status}, want 404\n")
+    return 1
+  }
+  if (contains(res.body, escapeMarker)) {
+    print("FAIL ${path}: response leaked content from outside the root\n")
+    return 1
+  }
+  print("ok   ${path} -> ${res.status} (blocked)\n")
+  return 0
+}
+
+// A tiny site on disk: a home page, a stylesheet, and a subdirectory with its own
+// index, which is what exercises the directory-to-index rule.
+fn setupSite(site: Site) {
+  mkdir(site.root) catch e {
+    print("setup: mkdir ${site.root}: ${e.message()}\n")
+  }
+  mkdir("${site.root}/docs") catch e {
+    print("setup: mkdir docs: ${e.message()}\n")
+  }
+  writeFile("${site.root}/index.html", "<h1>home</h1>\n") catch e {
+    print("setup: ${e.message()}\n")
+  }
+  writeFile("${site.root}/style.css", "body{}\n") catch e {
+    print("setup: ${e.message()}\n")
+  }
+  writeFile("${site.root}/docs/index.html", "<h1>docs</h1>\n") catch e {
+    print("setup: ${e.message()}\n")
+  }
+}
+
+// The #2397 fixture: a directory OUTSIDE `root` holding one file, and a
+// symbolic link named `escape` INSIDE `root` pointing at it. `std/fs` has no
+// `symlink` (and a link cannot be committed to the repo as a plain file), so
+// - exactly as `_tests_/cases/fs_walk_symlink.bit` does for the same reason -
+// the link comes from a shell script run with `osRun`.
+fn makeEscapeLink(root: string): bool {
+  if (!exists(escapeOutsideDir)) {
+    mkdir(escapeOutsideDir) catch _ {
+      return false
+    }
+  }
+  writeFile("${escapeOutsideDir}/secret.txt", escapeMarker) catch _ {
+    return false
+  }
+  let script = "${escapeOutsideDir}/link.sh"
+  // `-f`: idempotent against a symlink left by a prior run that crashed
+  // before `cleanupEscapeLink` ran, same as `site.root`'s own fixed path.
+  let body = "#!/bin/sh\nln -sf '${escapeOutsideDir}' '${root}/escape' || exit 1\n"
+  writeFile(script, body) catch _ {
+    return false
+  }
+  if (fsChmod(script, 448) != 0) { // 0o700: owner rwx only
+    return false
+  }
+  return osRun(script, []string(0)) == 0
+}
+
+// Best-effort: a leftover temp file is not worth failing a run over, but the
+// language will not accept an empty `catch` - and it is right not to, since that
+// is exactly how a real error gets swallowed. So each one says what it ignored.
+fn cleanupSite(site: Site) {
+  rm("${site.root}/docs/index.html")
+  rm("${site.root}/index.html")
+  rm("${site.root}/style.css")
+  rm("${site.root}/docs")
+  rm(site.root)
+}
+
+// Tears down the #2397 fixture. `rm` on `escape` unlinks the LINK, never the
+// directory behind it (the same contract `std/fs.remove` gives `fs.walk`'s
+// own symlink test), so `escapeOutsideDir` survives to be removed on its own.
+fn cleanupEscapeLink(root: string) {
+  rm("${root}/escape")
+  rm("${escapeOutsideDir}/link.sh")
+  rm("${escapeOutsideDir}/secret.txt")
+  rm(escapeOutsideDir)
+}
+
+fn rm(path: string) {
+  remove(path) catch e {
+    print("cleanup: ${path}: ${e.message()}\n")
+  }
+}

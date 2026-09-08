@@ -1,0 +1,75 @@
+// An HTTP server and client on the same runtime. The request handler is an
+// ordinary function value passed to the server loop; each request runs on its
+// own green thread. The server serves a fixed number of requests so the demo
+// exits (a real server calls `listenAndServe`, which runs forever).
+import { serve, get, ok, respond, Server, Exchange, Request, Response } from "std/http"
+import { hasPrefix } from "std/strings"
+
+// The handler - a plain function, used below as a value.
+fn route(req: Request): Response {
+  if (req.path == "/") {
+    return ok("hello from bit")
+  }
+  if (hasPrefix(req.path, "/echo/")) {
+    return ok(req.path[6:len(req.path)])
+  }
+  return respond(404, "not found")
+}
+
+// Dispatch one exchange through the handler value, on this green thread:
+// reads the request here, off the accept loop, so a slow or stalled peer only
+// ever blocks this one exchange.
+fn dispatch(ex: Exchange, handler: (Request) => Response) {
+  let req = ex.read() catch e {
+    ex.respond(respond(400, "")) catch e2 {
+      return
+    }
+    return
+  }
+  ex.respond(handler(req)) catch e {
+    print("handler error: ${e.message()}\n")
+  }
+}
+
+// Accept `n` requests and hand each to `handler` on its own green thread.
+fn serveN(s: Server, n: int, handler: (Request) => Response, ready: chan<int>) {
+  ready <- 0
+  let i = 0
+  while (i < n) {
+    let ex = s.accept() catch e {
+      print("accept error: ${e.message()}\n")
+      return
+    }
+    spawn dispatch(ex, handler)
+    i = i + 1
+  }
+  s.close()
+}
+
+fn main() {
+  let s = serve("127.0.0.1", 0) catch e {
+    print("serve: ${e.message()}\n")
+    return
+  }
+  let port = s.port() catch e {
+    print("port: ${e.message()}\n")
+    return
+  }
+
+  let ready = chan<int>(1)
+  spawn serveN(s, 2, route, ready)
+  let started = <- ready
+
+  let base = "http://127.0.0.1:${port}"
+  let home = get("${base}/") catch e {
+    print("get /: ${e.message()}\n")
+    return
+  }
+  print("GET / -> ${home.status} ${home.body}\n")
+
+  let echoed = get("${base}/echo/green-threads") catch e {
+    print("get /echo: ${e.message()}\n")
+    return
+  }
+  print("GET /echo/green-threads -> ${echoed.status} ${echoed.body}\n")
+}

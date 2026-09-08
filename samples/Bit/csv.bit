@@ -1,0 +1,210 @@
+// Bit standard library — csv module, RFC 4180 reader and writer.
+//
+// Two exports, symmetric with std/json: `csvParse` turns CSV text into
+// `[][]string`, `csvFormat` turns `[][]string` back into text. The quoting
+// rules are the whole point (RFC 4180 §2.5-2.7) and everyone gets one of
+// them wrong quietly:
+//
+//   - a field containing `,` must be quoted;
+//   - a field containing `"` must be quoted, with each `"` inside doubled;
+//   - a field containing a newline must be quoted, and the reader must not
+//     treat that newline as a record boundary — get this one wrong and an
+//     export looks fine until a note field holds a newline, after which
+//     every later row is off by one;
+//   - a record ends in `\r\n` or `\n`, and the last record may have no
+//     terminator at all.
+//
+// `csvRecord` is a real byte-by-byte scanner tracking in-quotes state, not
+// built on `split` (quadratic on a long line, #2132, and blind to quoted
+// commas/newlines regardless). `csvScanner` accumulates each field into a
+// `[]byte` — `append`'s amortised doubling — never `s = s + c`, which is
+// quadratic per field.
+//
+// Deliberately out of scope: a configurable delimiter, header-to-struct
+// mapping, `\r\n`-vs-`\n` output selection, and a streaming `io.Reader`
+// variant. `csvFormat` always terminates with `\n`.
+
+// Parses `source` as RFC 4180 CSV: every record, each a slice of field
+// values. Fails on an unterminated quoted field (an opening `"` with no
+// matching close before the end of input) — the one input this module
+// cannot make sense of. Round-trips with `csvFormat`.
+export fn csvParse(source: string): [][]string! {
+  let records = [][]string(0)
+  let n = len(source)
+  let i = 0
+  while (i < n) {
+    let (fields, next) = csvRecord(source, i)?
+    records = append(records, fields)
+    i = next
+  }
+  return records
+}
+
+// Formats `records` as RFC 4180 CSV text: comma-separated fields, one
+// record per line, each terminated with `\n`. A field is double-quoted,
+// with any `"` inside it doubled, iff it contains a comma, a quote, or a
+// newline (`\n` or `\r`); an ordinary field is written bare.
+export fn csvFormat(records: [][]string): string {
+  let out = []byte(0)
+  let r = 0
+  while (r < len(records)) {
+    out = csvAppendRecord(out, records[r])
+    out = append(out, '\n')
+    r = r + 1
+  }
+  return string(out)
+}
+
+// --- reader ------------------------------------------------------------
+
+// Per-field state for one record scan: the field bytes accumulated so far,
+// whether any byte has been consumed for the current field (so a `"` only
+// opens a quoted field as the very first byte of that field), and whether
+// the scanner currently sits inside a quoted field. A class, hence a
+// reference type (§13.3): the two step methods below mutate it in place.
+class csvScanner {
+  fields: []string
+  field: []byte
+  fieldStarted: bool
+  inQuotes: bool
+
+  put(b: u8) {
+    this.field = append(this.field, b)
+    this.fieldStarted = true
+  }
+
+  endField() {
+    this.fields = append(this.fields, string(this.field))
+    this.field = []byte(0)
+    this.fieldStarted = false
+  }
+
+  // Consumes one step inside a quoted field at `src[i]`. A doubled `""`
+  // decodes to one literal `"` and consumes 2 bytes; any other `"` closes the
+  // quoted region (consuming 1 byte, appending nothing); anything else,
+  // including a raw `,`, `\n`, or `\r`, is data and is appended verbatim —
+  // this is the rule that keeps an embedded newline out of the record
+  // boundary. Returns the number of bytes consumed.
+  stepQuoted(src: string, i: int, n: int): int {
+    let b = src[i]
+    if (b != '"') {
+      this.put(b)
+      return 1
+    }
+    if (i + 1 < n && src[i + 1] == '"') {
+      this.put('"')
+      return 2
+    }
+    this.inQuotes = false
+    return 1
+  }
+
+  // Consumes one step outside any quoted field at `src[i]`. Returns whether
+  // the record just ended and, if so, the offset of the first byte after it
+  // (past a `\r\n` or `\n` terminator); the offset is unused when the record
+  // has not ended.
+  stepUnquoted(src: string, i: int, n: int): (bool, int) {
+    let b = src[i]
+    if (b == '"' && !this.fieldStarted) {
+      this.inQuotes = true
+      this.fieldStarted = true
+      return false, 0
+    }
+    if (b == ',') {
+      this.endField()
+      return false, 0
+    }
+    if (b == '\n') {
+      this.endField()
+      return true, i + 1
+    }
+    if (b == '\r' && i + 1 < n && src[i + 1] == '\n') {
+      this.endField()
+      return true, i + 2
+    }
+    this.put(b)
+    return false, 0
+  }
+}
+
+fn newCsvScanner(): csvScanner {
+  return csvScanner{ fields: []string(0), field: []byte(0), fieldStarted: false, inQuotes: false }
+}
+
+// Scans one CSV record starting at byte `start` of `src`, returning its
+// fields and the offset of the first byte after the record — past its
+// terminator, or `len(src)` if this is the last record and it has none.
+fn csvRecord(src: string, start: int): ([]string, int)! {
+  let n = len(src)
+  let sc = newCsvScanner()
+  let i = start
+  while (i < n) {
+    if (sc.inQuotes) {
+      i = i + sc.stepQuoted(src, i, n)
+      continue
+    }
+    let (done, next) = sc.stepUnquoted(src, i, n)
+    if (done) {
+      return sc.fields, next
+    }
+    i = i + 1
+  }
+  if (sc.inQuotes) {
+    fail newError("csv: unterminated quoted field starting before byte ${start}")
+  }
+  sc.endField()
+  return sc.fields, n
+}
+
+// --- writer --------------------------------------------------------------
+
+fn csvAppendRecord(out: []byte, row: []string): []byte {
+  let c = 0
+  while (c < len(row)) {
+    if (c > 0) {
+      out = append(out, ',')
+    }
+    out = csvAppendField(out, row[c])
+    c = c + 1
+  }
+  return out
+}
+
+fn csvAppendField(out: []byte, field: string): []byte {
+  if (!csvNeedsQuoting(field)) {
+    return appendBytes(out, field)
+  }
+  out = append(out, '"')
+  let i = 0
+  while (i < len(field)) {
+    let b = field[i]
+    if (b == '"') {
+      out = append(out, '"')
+    }
+    out = append(out, b)
+    i = i + 1
+  }
+  out = append(out, '"')
+  return out
+}
+
+fn csvNeedsQuoting(field: string): bool {
+  let i = 0
+  while (i < len(field)) {
+    let b = field[i]
+    if (b == ',' || b == '"' || b == '\n' || b == '\r') {
+      return true
+    }
+    i = i + 1
+  }
+  return false
+}
+
+fn appendBytes(out: []byte, s: string): []byte {
+  let i = 0
+  while (i < len(s)) {
+    out = append(out, s[i])
+    i = i + 1
+  }
+  return out
+}

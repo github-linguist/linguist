@@ -1,0 +1,616 @@
+// Bit standard library — json module, strict-JSON recursive-descent parser.
+//
+// Consumes the flat token stream `lex` (stdlib/json/lex.bit) produces and
+// builds a `Json` tree (stdlib/json/value.bit). Strict RFC 8259 only: no
+// comments, no trailing commas — JSONC is a separate, later task layered on
+// top of this file. Every malformed shape (bad token sequence, invalid
+// escape, number that doesn't match the grammar, depth-limit token) is a
+// parse error via the fallible return, never a panic: this parser only ever
+// consumes untrusted input.
+//
+// Duplicate object keys: this parser keeps every entry, in source order,
+// rather than deduping while building `JsonObject`. `jsonGet` (value.bit)
+// already resolves duplicate keys last-wins, and it is the only sanctioned
+// way callers read a key (#1479), so keeping all entries and letting that one
+// place own the policy is simpler than enforcing it twice.
+//
+// JSONC (#1479's accepted grammar — narrow, explicit, NOT JSON5):
+//
+//   - `//` line comments: from `//` to end of line, anywhere whitespace is
+//     currently allowed.
+//   - `/* */` block comments: non-nesting, anywhere whitespace is currently
+//     allowed. An unterminated `/*` is a parse error.
+//   - Trailing commas: a single trailing `,` is allowed before `}` or `]`
+//     (`[1, 2,]` and `{"a": 1,}` are valid). More than one trailing comma, or
+//     a leading comma, is still a parse error.
+//   - Explicitly OUT OF SCOPE: unquoted object keys, single-quoted strings,
+//     hex numbers, `NaN`/`Infinity`, or any other JSON5 leniency.
+//
+// `jsoncParse` is this same grammar with comments (`Parser.allowComments`,
+// which lex.bit's scanner reads) and one trailing comma
+// (`Parser.allowTrailingComma`) switched on; `jsonParse` stays strict RFC 8259
+// so a caller that wants to reject comments still can.
+
+// Deliberately NOT importing `strings.parseInt`: it rejects i64 MIN by design
+// (its own doc comment — "the parser accumulates a positive magnitude and
+// would overflow representing it"), which would route -9223372036854775808 to
+// `JsonFloat` and silently rewrite it (#2285). `parseJsonInt` below does its
+// own digit accumulation so this module can accept the full i64 range.
+
+// Starting capacity for a `JsonObject`'s entries and a `JsonArray`'s items
+// (#2293). `append` doubles FROM 1 (runtime/root/slices.bit:185), so a
+// container built from an empty slice reallocates its backing at 1, 2 and 4 —
+// three extra `gc_alloc`s and three copies to hold four elements, and real
+// documents are overwhelmingly made of small objects and short arrays. Starting
+// at 4 holds the common case in the slice's first buffer and leaves the
+// doubling to take over unchanged above it. The cost is a 4-word buffer for an
+// empty `{}`/`[]` that would otherwise get a 0-word one; the 32-byte object
+// header (runtime/ABI.md §1) is paid either way, so that is 32 bytes, not a
+// class of waste.
+const jsonSmallCap = 4
+
+// Slots in a parser's object-key cache (#4358). Direct-mapped and
+// self-evicting: one slot per index, never scanned, never grown, so a document
+// with a million distinct keys costs the same 16 words as one with four. A
+// power of two, so the index is a mask. 16 holds a record shape's key set — a
+// real document repeats the same handful of keys across sibling objects and
+// across nesting depths.
+const jsonKeyCacheSlots = 16
+
+// A cursor over the token stream, plus the original source (decoding a string
+// or number needs to slice raw bytes back out of it).
+// `allowTrailingComma` and `allowComments` are JSONC-only (both false for
+// strict `jsonParse`): the first lets `parseObject`/`parseArray` accept one
+// trailing `,` before the closer, the second switches on lex.bit's comment
+// handling.
+//
+// STREAMING (#2293), not a materialized `[]Token`. This parser is a pure
+// forward cursor — it peeks one token and never looks back — so the whole
+// stream never needed to exist at once. It used to: `lex(source)` built one
+// `Token` per token, and a class is a heap object in Bit, so a 9 MB document
+// cost 3.6M `gc_alloc`s plus a 3.6M-word backing array, all of it LIVE for the
+// entire parse and therefore re-marked by every collection the parse triggers.
+// Driving `lexNext` directly and reading the current token off `p.lx`'s own
+// `kind`/`start`/`end` fields makes tokenization allocation-free.
+class Parser {
+  src: string,
+  lx: Lexer,
+  allowComments: bool,
+  allowTrailingComma: bool,
+  // `internKey`'s table. Empty until the first escape-free object key, so a
+  // document with no objects — or none with keys — never pays for it.
+  keyCache: []string,
+}
+
+// A parser positioned on `source`'s first token. Priming here rather than
+// lazily keeps every `p.lx.kind` read below unconditional.
+fn newParser(source: string, allowComments: bool, allowTrailingComma: bool): Parser {
+  let p = Parser{
+    src: source,
+    lx: newLexer(source),
+    allowComments: allowComments,
+    allowTrailingComma: allowTrailingComma,
+    keyCache: []string(0, 0),
+  }
+  lexNext(p.lx, allowComments, false)
+  return p
+}
+
+// Moves past the token under the cursor. At `Eof` — the stream's fixed final
+// token — it stays put, so nothing walks past the end however many times a
+// caller asks.
+fn advance(p: Parser) {
+  if (p.lx.kind != TokenKind.Eof) {
+    lexNext(p.lx, p.allowComments, false)
+  }
+}
+
+// An upper bound on the tokens `p.src` can still yield: every token consumes at
+// least one source byte, plus the one `Eof`. Replaces the old `len(p.toks) + 1`
+// now that the stream is not materialized — same purpose (a statically provable
+// loop bound, never a real limit), same guarantee.
+fn tokenBound(p: Parser): int {
+  return len(p.src) + 1
+}
+
+// One value out of `p`'s token stream, optionally surrounded by whitespace
+// (already stripped by the lexer) and nothing else. Shared by `jsonParse` and
+// `jsoncParse` — they differ only in how `p` was built (which lexer, and
+// whether a trailing comma is allowed), not in this top-level shape check.
+fn parseTopLevel(p: Parser): Json! {
+  let v = parseValue(p)?
+  if (p.lx.kind != TokenKind.Eof) {
+    fail posError(p.src, "json: trailing garbage after value", p.lx.start)
+  }
+  return v
+}
+
+// Parses `source` as strict JSON (RFC 8259): one value, optionally
+// surrounded by whitespace, and nothing else. No comments, no trailing
+// commas — see `jsoncParse` for the JSONC extension.
+export fn jsonParse(source: string): Json! {
+  return parseTopLevel(newParser(source, false, false))?
+}
+
+// Parses `source` as JSONC (this file's header comment documents the exact
+// grammar): strict JSON plus `//`/`/* */` comments and a single trailing
+// comma before `}`/`]`. Everything else — number/string decoding, depth
+// limit, error-vs-panic behavior — is identical to `jsonParse`.
+export fn jsoncParse(source: string): Json! {
+  return parseTopLevel(newParser(source, true, true))?
+}
+
+// --- error positions -------------------------------------------------
+
+// A 1-based (line, column) position, matching compiler/diagnostics.bit's own
+// `--> file:LINE:COL` rendering so a user reading a jsonParse error next to a
+// compiler diagnostic does not have to learn two numbering systems.
+class JsonPos { line: int, column: int }
+
+// Resolves byte offset `offset` in `src` to a 1-based (line, column).
+// Matches compiler/diagnostics.bit's `locate`: `column` counts BYTES, not
+// runes — cheaper (no UTF-8 decoding on the error path) and consistent with
+// the compiler's own column numbers, which are byte-based too — and only
+// `\n` advances the line, so a `\r\n` pair is one line break, not two.
+// `offset` may equal `len(src)` (an error at EOF, e.g. an unterminated
+// object): the loop below still runs to completion and reports the position
+// just past the last byte, never an out-of-range value or a silent zero.
+//
+// O(offset): a full scan from the start of `src`. Only ever called from
+// `posError`, below, while building an error — the success path never
+// touches this, so a well-formed document of any size pays nothing extra
+// (#2293 is about exactly that path).
+fn jsonLocate(src: string, offset: int): JsonPos {
+  let stop = offset
+  if (stop > len(src)) {
+    stop = len(src)
+  }
+  let line = 1
+  let lineStart = 0
+  let i = 0
+  while (i < stop) {
+    if (src[i] == '\n') {
+      line = line + 1
+      lineStart = i + 1
+    }
+    i = i + 1
+  }
+  return JsonPos{ line: line, column: stop - lineStart + 1 }
+}
+
+// Builds a parse error carrying `msg` plus its byte offset and line:column in
+// `src`, e.g. `"json: expected ',' or '}' in object at byte 410 (line 1,
+// column 411)"` (#2286). The byte offset is the load-bearing part — what a
+// program slices or seeks with; line:column is what a human reads, in the
+// same 1-based numbering compiler/diagnostics.bit uses for `--> file:L:C`.
+fn posError(src: string, msg: string, offset: int): error {
+  let loc = jsonLocate(src, offset)
+  return newError("${msg} at byte ${offset} (line ${loc.line}, column ${loc.column})")
+}
+
+// An `Invalid` token can come from four places in the lexer (scanOpen on a
+// depth-cap hit, scanString on an unterminated string, an unterminated `/*`
+// (JSONC only), everything else), and the token itself carries no reason —
+// only a span. The source byte at that span disambiguates deterministically:
+// `scanOpen` is the only path that marks a `{`/`[` byte `Invalid` (a plain
+// unexpected `{`/`[` always lexes as `LBrace`/`LBracket`), `scanString` is
+// the only path that marks a `"` byte `Invalid`, and an unterminated `/*`
+// is the only `Invalid` starting on `/` whose span is more than one byte (a
+// lone stray `/` is always a single-byte `Invalid`).
+fn describeInvalid(src: string, start: int, end: int): string {
+  let c = src[start]
+  if (c == '{' || c == '[') {
+    return "json: max nesting depth exceeded"
+  }
+  if (c == '"') {
+    return "json: unterminated string"
+  }
+  if (c == '/' && end - start > 1) {
+    return "json: unterminated block comment"
+  }
+  return "json: unexpected character in input"
+}
+
+fn parseValue(p: Parser): Json! {
+  let kind = p.lx.kind
+  // Captured before `advance` overwrites the cursor: the span belongs to the
+  // token being consumed, not to the one after it.
+  let start = p.lx.start
+  let end = p.lx.end
+  if (kind == TokenKind.LBrace) {
+    return parseObject(p)?
+  }
+  if (kind == TokenKind.LBracket) {
+    return parseArray(p)?
+  }
+  if (kind == TokenKind.StringTok) {
+    advance(p)
+    return Json.JsonString(decodeStringLiteral(p.src, start, end)?)
+  }
+  if (kind == TokenKind.NumberTok) {
+    advance(p)
+    return decodeNumber(p.src, start, end)?
+  }
+  if (kind == TokenKind.TrueTok) {
+    advance(p)
+    return Json.JsonBool(true)
+  }
+  if (kind == TokenKind.FalseTok) {
+    advance(p)
+    return Json.JsonBool(false)
+  }
+  if (kind == TokenKind.NullTok) {
+    advance(p)
+    return Json.JsonNull
+  }
+  if (kind == TokenKind.Invalid) {
+    fail posError(p.src, describeInvalid(p.src, start, end), start)
+  }
+  fail posError(p.src, "json: unexpected token, expected a value", start)
+}
+
+// `{` was already peeked by the caller. Every entry is kept, including a
+// repeated key — see this file's header comment for why.
+fn parseObject(p: Parser): Json! {
+  advance(p)
+  let entries = []JsonEntry(0, jsonSmallCap)
+  if (p.lx.kind == TokenKind.RBrace) {
+    advance(p)
+    return Json.JsonObject(entries)
+  }
+  // Bounded by the token count: each iteration consumes at least a key, a
+  // colon, a value, and a comma, so the loop cannot outrun a finite stream.
+  let guard = 0
+  let bound = tokenBound(p)
+  while (guard <= bound) {
+    if (p.lx.kind != TokenKind.StringTok) {
+      fail posError(p.src, "json: expected string key", p.lx.start)
+    }
+    let keyStart = p.lx.start
+    let keyEnd = p.lx.end
+    advance(p)
+    let key = decodeObjectKey(p, keyStart, keyEnd)?
+    if (p.lx.kind != TokenKind.Colon) {
+      fail posError(p.src, "json: expected ':' after object key", p.lx.start)
+    }
+    advance(p)
+    let val = parseValue(p)?
+    entries = append(entries, JsonEntry{ key: key, value: val })
+    if (p.lx.kind == TokenKind.RBrace) {
+      advance(p)
+      return Json.JsonObject(entries)
+    }
+    if (p.lx.kind != TokenKind.Comma) {
+      fail posError(p.src, "json: expected ',' or '}' in object", p.lx.start)
+    }
+    advance(p)
+    // JSONC: a single trailing comma closes the object right here. A second
+    // one does not — the cursor would be `Comma` again, so the loop falls
+    // through to "expected string key" on the next iteration.
+    if (p.allowTrailingComma && p.lx.kind == TokenKind.RBrace) {
+      advance(p)
+      return Json.JsonObject(entries)
+    }
+    guard = guard + 1
+  }
+  fail posError(p.src, "json: object nesting exceeds token bound", p.lx.start)
+}
+
+// `[` was already peeked by the caller.
+fn parseArray(p: Parser): Json! {
+  advance(p)
+  let items = []Json(0, jsonSmallCap)
+  if (p.lx.kind == TokenKind.RBracket) {
+    advance(p)
+    return Json.JsonArray(items)
+  }
+  let guard = 0
+  let bound = tokenBound(p)
+  while (guard <= bound) {
+    let v = parseValue(p)?
+    items = append(items, v)
+    if (p.lx.kind == TokenKind.RBracket) {
+      advance(p)
+      return Json.JsonArray(items)
+    }
+    if (p.lx.kind != TokenKind.Comma) {
+      fail posError(p.src, "json: expected ',' or ']' in array", p.lx.start)
+    }
+    advance(p)
+    // JSONC: a single trailing comma closes the array right here. A second
+    // one does not — the cursor would be `Comma` again, so `parseValue` on the
+    // next iteration rejects it ("unexpected token, expected a value").
+    if (p.allowTrailingComma && p.lx.kind == TokenKind.RBracket) {
+      advance(p)
+      return Json.JsonArray(items)
+    }
+    guard = guard + 1
+  }
+  fail posError(p.src, "json: array nesting exceeds token bound", p.lx.start)
+}
+
+// --- numbers -----------------------------------------------------------
+
+// Validates RFC 8259 §6's number grammar over `src[start:end]` and classifies
+// it in the same pass: `0` invalid, `1` an integer literal (no `.`/`e`/`E`),
+// `2` a float literal. `lex`'s own comment says it "does not reject a
+// malformed literal — that check belongs to the parser task consuming this
+// stream"; this is that check.
+//
+// Span-based (#2293) rather than taking a `string`: `decodeNumber` used to
+// materialize `src[t.start:t.end]` before validating it, then scan that same
+// substring twice more (`contains(text, ".")`, `contains(text, "e"/"E")`) to
+// decide int vs float. Every JSON number in a document takes this path, so on
+// a large document that was one throwaway allocation (`rtStringSlice` copies)
+// plus three full scans per number for information this single pass already
+// has by the time it returns. `decodeNumber` now only slices `src` when it
+// actually needs an owned `string` — the float path, where `parseFloat` takes
+// one.
+// The integer part (`'0' | [1-9][0-9]*`) at `src[i:end]`, returning the
+// position just past it, or -1 if `src[i]` does not start a valid one. Split
+// out of `classifyJsonNumber` (#2448).
+fn classifyIntPart(src: string, i: int, end: int): int {
+  if (src[i] == '0') {
+    return i + 1
+  }
+  if (src[i] >= '1' && src[i] <= '9') {
+    let j = i + 1
+    while (j < end && isDigit(src[j])) {
+      j = j + 1
+    }
+    return j
+  }
+  return -1
+}
+
+// Whether an optional `.digit+` fraction starts at `src[i]`. A predicate so
+// `classifyJsonNumber` can fold it into `isFloat` without `classifyFraction`
+// having to return a second value: a class return allocated one heap object
+// per number token (#3617).
+fn hasFraction(src: string, i: int, end: int): bool {
+  return i < end && src[i] == '.'
+}
+
+// The optional `.digit+` fraction at `src[i:end]`, returning the position
+// just past it -- `i` unchanged when there is no fraction -- or -1 for a
+// malformed one (a '.' with no digit after it). Split out of
+// `classifyJsonNumber` (#2448).
+fn classifyFraction(src: string, i: int, end: int): int {
+  if (!hasFraction(src, i, end)) {
+    return i
+  }
+  let j = i + 1
+  if (j >= end || !isDigit(src[j])) {
+    return -1
+  }
+  while (j < end && isDigit(src[j])) {
+    j = j + 1
+  }
+  return j
+}
+
+fn isExpMarker(c: u8): bool {
+  return c == 'e' || c == 'E'
+}
+
+// Whether an optional `[eE][+-]?digit+` exponent starts at `src[i]`.
+fn hasExponent(src: string, i: int, end: int): bool {
+  return i < end && isExpMarker(src[i])
+}
+
+// The optional `[eE][+-]?digit+` exponent at `src[i:end]`, same
+// position/-1 convention as `classifyFraction`. Split out of
+// `classifyJsonNumber` (#2448).
+fn classifyExponent(src: string, i: int, end: int): int {
+  if (!hasExponent(src, i, end)) {
+    return i
+  }
+  let j = i + 1
+  if (j < end && (src[j] == '+' || src[j] == '-')) {
+    j = j + 1
+  }
+  if (j >= end || !isDigit(src[j])) {
+    return -1
+  }
+  while (j < end && isDigit(src[j])) {
+    j = j + 1
+  }
+  return j
+}
+
+fn classifyJsonNumber(src: string, start: int, end: int): int {
+  let i = start
+  if (i >= end) {
+    return 0
+  }
+  if (src[i] == '-') {
+    i = i + 1
+  }
+  if (i >= end) {
+    return 0
+  }
+  i = classifyIntPart(src, i, end)
+  if (i < 0) {
+    return 0
+  }
+  let isFloat = hasFraction(src, i, end)
+  i = classifyFraction(src, i, end)
+  if (i < 0) {
+    return 0
+  }
+  isFloat = isFloat || hasExponent(src, i, end)
+  i = classifyExponent(src, i, end)
+  if (i < 0) {
+    return 0
+  }
+  if (i != end) {
+    return 0
+  }
+  if (isFloat) {
+    return 2
+  }
+  return 1
+}
+
+// True when `s` matches RFC 8259 §6's number grammar (see
+// `classifyJsonNumber`, which does the actual walk). Kept as a `string`
+// entry point for `cst_parse.bit`, which already holds a decoded raw span as
+// a `string` rather than a `(src, start, end)` triple.
+fn isValidJsonNumber(s: string): bool {
+  return classifyJsonNumber(s, 0, len(s)) != 0
+}
+
+// A literal with no `.`/`e`/`E` that fits `i64` decodes to `JsonInt`; anything
+// wider, or with a fraction/exponent, decodes to `JsonFloat` via the
+// runtime's own `parseFloat` primitive so it can never drift a ULP from the
+// canonical parse (#1479's number-handling decision).
+fn decodeNumber(src: string, start: int, end: int): Json! {
+  let kind = classifyJsonNumber(src, start, end)
+  if (kind == 0) {
+    fail posError(src, "json: invalid number literal", start)
+  }
+  if (kind == 2) {
+    return Json.JsonFloat(parseFloat(src[start:end]))
+  }
+  let iv = parseJsonIntSpan(src, start, end) catch _ {
+    return Json.JsonFloat(parseFloat(src[start:end]))
+  }
+  return Json.JsonInt(iv)
+}
+
+// The i64 that the integral literal `src[start:end]` (already validated by
+// `classifyJsonNumber` — optional `-`, then only digits) denotes, over the
+// FULL i64 range including MIN (-9223372036854775808). The literal's
+// magnitude alone has no positive i64 representation, so a positive
+// accumulator (as `strings.parseInt` uses) always overflows one past `i64`
+// MAX before the sign is applied; this accumulates negatively instead, which
+// has exactly the headroom the positive side lacks. Fails (falling back to
+// `JsonFloat` in `decodeNumber`) only when the magnitude exceeds even that.
+//
+// Span-based (#2293), not a `text: string` parameter: `decodeNumber` used to
+// materialize the literal into its own string before calling this, purely so
+// this could re-index it — a wasted allocation and copy for what is already
+// a validated slice of `src`.
+fn parseJsonIntSpan(src: string, start: int, end: int): i64! {
+  let i = start
+  let neg = false
+  if (src[i] == '-') {
+    neg = true
+    i = i + 1
+  }
+  // i64 MIN = -9223372036854775808 = -922337203685477580 * 10 - 8.
+  let minDiv10 = i64(-922337203685477580)
+  let minMod10 = i64(8)
+  let v = i64(0)
+  while (i < end) {
+    let d = i64(src[i] - '0')
+    if (v < minDiv10 || (v == minDiv10 && d > minMod10)) {
+      fail posError(src, "json: number out of i64 range", start)
+    }
+    v = v * 10 - d
+    i = i + 1
+  }
+  if (neg) {
+    return v
+  }
+  // Positive side: v accumulated as if negative, so negate back, but reject
+  // i64 MIN itself (v == i64 MIN has no positive negation).
+  if (v == minDiv10 * 10 - minMod10) {
+    fail posError(src, "json: number out of i64 range", start)
+  }
+  return 0 - v
+}
+
+// --- strings -------------------------------------------------------------
+
+// An object key's decoded text: `decodeStringLiteral` with its escape-free
+// branch routed through this parser's key cache (#4358). An escaped key still
+// goes through the Builder — it does not borrow `src`, so there is nothing to
+// share. Interning changes a key's IDENTITY, never its bytes, and nothing here
+// compares keys by identity (`jsonGet` uses `==`), so `"a\u0062"` and `"ab"`
+// stay the same key and `"a\"b"` stays a different one, exactly as before.
+fn decodeObjectKey(p: Parser, tokStart: int, tokEnd: int): string! {
+  let start = tokStart + 1
+  let end = tokEnd - 1
+  let firstEscape = scanEscape(p.src, start, end)?
+  if (firstEscape < 0) {
+    return internKey(p, start, end)
+  }
+  return decodeEscaped(p.src, start, end, firstEscape)?
+}
+
+// A string equal to `src[start:end]`, reusing the one this parser already made
+// for that key when it has seen it before.
+//
+// WHY KEYS AND NOT VALUES: the escape-free path returns `src[start:end]`, a
+// fresh 24-byte header object (#3897) even though it borrows the source bytes
+// rather than copying them. Keys are the one part of a document that repeats —
+// bench/cases/json is 150,000 records over the same four keys, so 600,000
+// headers naming one of four strings — while values do not repeat.
+//
+// The slot mixes the first byte, the last byte and the length, so keys sharing
+// a prefix (`user_id`/`user_name`) land apart. A collision costs a miss, never
+// a wrong answer: the occupant is compared byte for byte against the span
+// before it is reused, and a miss overwrites the slot. An empty slot holds the
+// zero-value string, of length 0, so it can only "match" a zero-length key —
+// and answering `""` for a `""` key is correct.
+fn internKey(p: Parser, start: int, end: int): string {
+  let n = end - start
+  if (n == 0) {
+    return ""
+  }
+  if (len(p.keyCache) == 0) {
+    p.keyCache = []string(jsonKeyCacheSlots, jsonKeyCacheSlots)
+  }
+  let mixed = int(p.src[start]) ^ (int(p.src[end - 1]) << 3) ^ n
+  let slot = mixed & (jsonKeyCacheSlots - 1)
+  let cached = p.keyCache[slot]
+  if (len(cached) == n && spanEqualsKey(p.src, start, cached, n)) {
+    return cached
+  }
+  let fresh = p.src[start:end]
+  p.keyCache[slot] = fresh
+  return fresh
+}
+
+// True when `src`'s `n` bytes from `start` are `key`'s `n` bytes. Reads the
+// span in place — the point of the cache is to answer before materializing the
+// slice, so this cannot be a string `==`. The caller has already checked
+// `len(key) == n`, which bounds both walks.
+fn spanEqualsKey(src: string, start: int, key: string, n: int): bool {
+  let i = 0
+  while (i < n) {
+    if (src[start + i] != key[i]) {
+      return false
+    }
+    i = i + 1
+  }
+  return true
+}
+
+// Decodes a `StringTok`'s raw span (quotes included, escapes raw — see
+// lex.bit) into its string value: every RFC 8259 §7 escape, including a
+// `\uXXXX` surrogate pair for an astral codepoint. An invalid escape is a
+// parse error, never a panic. `lex` only ever emits `StringTok` for a span
+// that found its closing quote, so `[start+1, end-1)` is always the content
+// between the quotes.
+//
+// Fast path (#2293): most JSON strings — object keys, plain text values —
+// carry no `\` escape at all. A single pre-scan for the first `\` (a raw
+// control byte is invalid either way and fails immediately) lets an
+// escape-free span return as a direct sub-slice of `src`, with no Builder
+// call at all. Skipping this made the escape-decoding loop below run once
+// per byte even for a string with zero escapes: `Builder.writeByte` copies
+// the whole accumulated buffer on every call (#2112), so decoding an L-byte
+// escape-free string cost O(L^2). A string that does contain an escape still
+// goes through the byte-by-byte loop from that point on, batched from one
+// Builder call per escape-free run instead of one per byte.
+fn decodeStringLiteral(src: string, tokStart: int, tokEnd: int): string! {
+  let start = tokStart + 1
+  let end = tokEnd - 1
+  let firstEscape = scanEscape(src, start, end)?
+  if (firstEscape < 0) {
+    return src[start:end]
+  }
+  return decodeEscaped(src, start, end, firstEscape)?
+}

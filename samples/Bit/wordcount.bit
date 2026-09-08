@@ -1,0 +1,77 @@
+// Concurrent word count: one green thread per file, results merged over a
+// channel. The whole program is the tutorial's capstone.
+import { writeFile, readFile, remove } from "std/fs"
+import { toLower } from "std/strings"
+
+// Split on anything that is not a letter, lowercasing as we go, and tally.
+fn countWords(text: string): map<string, int> {
+  let counts = map<string, int>()
+  let word = ""
+  let i = 0
+  while (i <= len(text)) {
+    // One past the end flushes the final word.
+    let isLetter = false
+    if (i < len(text)) {
+      let c = text[i]
+      isLetter = (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+    }
+    if (isLetter) {
+      word = word + text[i:i + 1]
+    } else if (len(word) > 0) {
+      let w = toLower(word)
+      counts[w] = counts[w] + 1 // an absent key reads as 0
+      word = ""
+    }
+    i = i + 1
+  }
+  return counts
+}
+
+// Read one file and send its tally. A read error sends an empty tally, so the
+// collector always receives exactly one message per spawned worker.
+fn worker(path: string, out: chan<map<string, int>>) {
+  let text = readFile(path) catch ""
+  out <- countWords(text)
+}
+
+// Fan out one green thread per path, then fold every tally into one.
+fn countFiles(paths: []string): map<string, int> {
+  let results = chan<map<string, int>>(len(paths))
+  for p of paths {
+    spawn worker(p, results)
+  }
+
+  let total = map<string, int>()
+  let i = 0
+  while (i < len(paths)) {
+    let part = <- results
+    for (word, n) of part {
+      total[word] = total[word] + n
+    }
+    i = i + 1
+  }
+  return total
+}
+
+fn setup(paths: []string): ()! {
+  writeFile(paths[0], "the quick brown fox")?
+  writeFile(paths[1], "the lazy dog and THE fox")?
+  writeFile(paths[2], "a fox, a dog, the end")?
+}
+
+fn main() {
+  let paths = ["/tmp/bit-wc-1.txt", "/tmp/bit-wc-2.txt", "/tmp/bit-wc-3.txt"]
+  setup(paths) catch e {
+    println("setup failed: ${e.message()}")
+    return
+  }
+
+  let counts = countFiles(paths)
+  println("distinct words: ${len(counts)}")
+  println("the=${counts["the"]} fox=${counts["fox"]} dog=${counts["dog"]}")
+  println("missing=${counts["absent"]}")
+
+  for p of paths {
+    remove(p) catch println("could not remove ${p}")
+  }
+}
