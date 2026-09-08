@@ -621,14 +621,19 @@ class TestHeuristics < Minitest::Test
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.inc"),
       "NASL" => all_fixtures("NASL", "*.inc"),
       "Pascal" => all_fixtures("Pascal", "*.inc"),
+      "Pawn" => all_fixtures("Pawn", "*.inc") - ["#{samples_path}/Pawn/fixes.inc"],
       "PHP" => all_fixtures("PHP", "*.inc"),
       "POV-Ray SDL" => all_fixtures("POV-Ray SDL", "*.inc"),
-      "SourcePawn" => all_fixtures("SourcePawn", "*.inc"),
+      "SourcePawn" => all_fixtures("SourcePawn", "*.inc") +
+        Dir.glob("#{fixtures_path}/Generic/inc/SourcePawn/*.inc"),
       "Assembly" => all_fixtures("Assembly", "*.inc"),
-      nil => all_fixtures("C++", "*.inc") +
+      nil => all_fixtures("BitBake", "*.inc") +
+        all_fixtures("C++", "*.inc") +
         all_fixtures("HTML", "*.inc") +
-        all_fixtures("Pawn", "*.inc") +
-        all_fixtures("SQL", "*.inc")
+        all_fixtures("SQL", "*.inc") +
+        ["#{samples_path}/Pawn/fixes.inc"] +
+        Dir.glob("#{fixtures_path}/Generic/inc/ambiguous/*.inc") +
+        Dir.glob("#{fixtures_path}/Generic/inc/C++/*.inc")
     }, alt_name="foo.inc")
   end
 

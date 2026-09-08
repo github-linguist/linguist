@@ -460,6 +460,14 @@ disambiguations:
     - '^public\s+(?:SharedPlugin(?:\s+|:)__pl_\w+\s*=(?:\s*\{)?|(?:void\s+)?__pl_\w+_SetNTVOptional\(\)(?:\s*\{)?)'
     - '^methodmap\s+\w+\s+<\s+\w+'
     - '^\s*MarkNativeAsOptional\s*\('
+  - language: Pawn
+    and:
+    # Tagged declarations alone are shared with older SourcePawn.
+    - pattern: '^[ \t]*(?:native|stock|forward|public|new)[ \t]+(?:const[ \t]+)?\w+:[ \t]*\w+'
+    - pattern:
+      - '^[ \t]*#[ \t]*include[ \t]+(?:<a_samp(?:\.inc)?>|"a_samp(?:\.inc)?")'
+      - '^[ \t]*#[ \t]*pragma[ \t]+rational[ \t]+\w+[ \t]*\([ \t]*[0-9]+[ \t]*\)'
+      - '^[ \t]*CallLocalFunction[ \t]*\('
   - language: NASL
     pattern:
     - '^\s*include\s*\(\s*(?:"|'')[\\/\w\-\.:\s]+\.(?:nasl|inc)\s*(?:"|'')\s*\)\s*;'
