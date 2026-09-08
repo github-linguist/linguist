@@ -1243,7 +1243,7 @@ class TestHeuristics < Minitest::Test
     apex = all_fixtures("Apex", "*.trigger") +
       Dir.glob("#{fixtures_path}/Generic/trigger/Apex/*")
     shell = all_fixtures("Shell", "*.trigger") +
-      Dir.glob("#{fixtures_path}/Generic/trigger/Shell/*")
+      Dir.glob("#{fixtures_path}/Generic/trigger/nil/*")
     assert_heuristics({
       "Apex" => apex,
       nil => shell
