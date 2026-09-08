@@ -166,6 +166,10 @@ disambiguations:
     - '\sfprintf\s*\('
   - language: Brainfuck
     pattern: '(>\+>|>\+<)'
+  - language: Befunge
+    # Direction-bounded instruction rows containing a stack or branch opcode.
+    # Quoted strings are allowed, but prose and comment prefixes are not.
+    pattern: '^[ \t]*[<>^v](?:[0-9+*/%!`<>^v?\\$.,&#pg~@ \t-]|"[^"\r\n]*")*[:|_](?:[0-9+*/%!`<>^v?\\$.,&#pg~@ \t:|_-]|"[^"\r\n]*")*[<>^v][ \t]*\r?$'
 - extensions: ['.bi']
   rules:
   - language: FreeBASIC

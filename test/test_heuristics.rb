@@ -314,9 +314,10 @@ class TestHeuristics < Minitest::Test
   def test_bf_by_heuristics
     assert_heuristics({
       "Beef" => all_fixtures("Beef", "*.bf"),
+      "Befunge" => all_fixtures("Befunge", "*.bf"),
       "Brainfuck" => all_fixtures("Brainfuck", "*.bf"),
       "HyPhy" => all_fixtures("HyPhy", "*.bf"),
-      nil => all_fixtures("Befunge", "*.bf"),
+      nil => Dir.glob("#{fixtures_path}/Generic/bf/nil/*.bf"),
     })
   end
 
