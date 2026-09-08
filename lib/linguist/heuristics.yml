@@ -561,7 +561,8 @@ disambiguations:
     # Dot-indented commands, global assignments, and WRITE newline controls.
     - '(?i)^[ \t]+(?:\.[ \t]+)+(?:d(?:o)?|f(?:or)?|i(?:f)?|n(?:ew)?|q(?:uit)?|s(?:et)?|w(?:rite)?)[ \t:]'
     - '(?i)^[ \t]+s(?:et)?[ \t]+\^[%a-z][a-z0-9]*(?:\(|=)'
-    - '(?i)^[ \t]+w(?:rite)?[ \t]+(?:!|[^;\r\n]*,!)'
+    # A formatting delimiter after ! distinguishes WRITE from w != value.
+    - '(?i)^[ \t]+w(?:rite)?[ \t]+(?:!|[^;\r\n]*,!)(?:[,!#?]|[ \t]*(?:;|\r?$))'
   - language: Wolfram Language
     and:
       - pattern: '\(\*'
