@@ -556,7 +556,12 @@ disambiguations:
   - language: MUF
     pattern: '^: '
   - language: M
-    pattern: '^\s*;'
+    pattern:
+    - '^\s*;'
+    # Dot-indented commands, global assignments, and WRITE newline controls.
+    - '(?i)^[ \t]+(?:\.[ \t]+)+(?:d(?:o)?|f(?:or)?|i(?:f)?|n(?:ew)?|q(?:uit)?|s(?:et)?|w(?:rite)?)[ \t:]'
+    - '(?i)^[ \t]+s(?:et)?[ \t]+\^[%a-z][a-z0-9]*(?:\(|=)'
+    - '(?i)^[ \t]+w(?:rite)?[ \t]+(?:!|[^;\r\n]*,!)'
   - language: Wolfram Language
     and:
       - pattern: '\(\*'
