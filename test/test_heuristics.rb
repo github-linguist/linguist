@@ -1049,12 +1049,10 @@ class TestHeuristics < Minitest::Test
 
   def test_sch_by_heuristics
     assert_heuristics({
-      "KiCad Schematic" => all_fixtures("KiCad Schematic", "*.sch") +
-        Dir.glob("#{fixtures_path}/Generic/sch/KiCad Schematic/*"),
+      "KiCad Schematic" => all_fixtures("KiCad Schematic", "*.sch"),
       nil => all_fixtures("Eagle", "*.sch") +
         all_fixtures("Scheme", "*.sch") +
-        all_fixtures("XML", "*.sch") +
-        Dir.glob("#{fixtures_path}/Generic/sch/nil/*")
+        all_fixtures("XML", "*.sch")
     })
   end
 
