@@ -6,7 +6,8 @@ module network::RouterConfig
 */
 str configureBridge(str name) =
   "
+:local bridgeName \"<name>\"
 /interface bridge
-add name=<name>
+add name=$bridgeName
 :put \"Bridge configured\"
 ";

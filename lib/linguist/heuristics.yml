@@ -856,10 +856,9 @@ disambiguations:
   # Prefer a Rascal module declaration to RouterOS code embedded in strings.
   - language: Rascal
     pattern: '^[ \t]*module[ \t]+[A-Za-z_\\][\w\\]*(?:::[A-Za-z_\\][\w\\]*)*[ \t]*\r?$'
+  # Variable declarations: :local or :global followed by an identifier.
   - language: RouterOS Script
-    pattern:
-    - '^[ \t]*:(?:local|global|set|put|log|if|foreach|for|while|do|delay|return|error|onerror)[ \t]'
-    - '^[ \t]*/(?:interface|ip|ipv6|routing|system|tool|user)(?:[ \t]+|/)[a-z]'
+    pattern: '^[ \t]*:(?:local|global)[ \t]+(?:[A-Za-z0-9]+|"[^"\r\n]+")(?:[ \t;]|\r?$)'
 - extensions: ['.s']
   rules:
   - language: Unix Assembly
