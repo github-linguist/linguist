@@ -561,9 +561,11 @@ disambiguations:
     and:
       - pattern: '\(\*'
       - pattern: '\*\)$'
+  # Keep comments separate to avoid slow Regexp.union matches on blank lines.
+  - language: MATLAB
+    pattern: '^\s*%'
   - language: MATLAB
     pattern:
-    - '^\s*%'
     - '^[ \t]*function[ \t]+(?:\[[^\]\r\n]*\][ \t]*=[ \t]*|[A-Za-z]\w*[ \t]*=[ \t]*)?[A-Za-z]\w*[ \t]*\('
     - '^[ \t]*classdef[ \t]+(?:\([^\r\n)]*\)[ \t]*)?[A-Za-z]\w*'
     - '^[ \t]*[A-Za-z]\w*[ \t]*=[ \t]*linspace[ \t]*\('
