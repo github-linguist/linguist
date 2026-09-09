@@ -410,6 +410,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **MiniZinc Data:** [Dekker1/vscode-minizinc](https://github.com/Dekker1/vscode-minizinc)
 - **Mint:** [mint-lang/mint-vscode](https://github.com/mint-lang/mint-vscode)
 - **Mirah:** [atom/language-ruby](https://github.com/atom/language-ruby)
+- **MM2:** [mieraf-tadesse/vscode-mm2](https://github.com/mieraf-tadesse/vscode-mm2)
 - **Modelica:** [BorisChumichev/modelicaSublimeTextPackage](https://github.com/BorisChumichev/modelicaSublimeTextPackage)
 - **Modula-2:** [harogaston/Sublime-Modula-2](https://github.com/harogaston/Sublime-Modula-2)
 - **Modula-3:** [newgrammars/m3](https://github.com/newgrammars/m3)
