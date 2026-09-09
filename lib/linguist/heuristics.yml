@@ -872,6 +872,12 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.sch']
+  rules:
+  - language: KiCad Schematic
+    pattern:
+    - '\AEESchema Schematic File Version[ \t]+[0-9]+[ \t]*(?:\r?\n|\r|\z)'
+    - '\Av[ \t]+[0-9]{8}[ \t]+[0-9]+[ \t]*(?:\r?\n|\r|\z)'
 - extensions: ['.scm']
   rules:
   - language: Tree-sitter Query
