@@ -1058,9 +1058,9 @@ class TestHeuristics < Minitest::Test
   def test_rsc_by_heuristics
     ambiguous = all_fixtures("RouterOS Script", "vlans.rsc")
     assert_heuristics({
-      "Rascal" => all_fixtures("Rascal", "*.rsc") + Dir.glob("#{fixtures_path}/Generic/rsc/Rascal/*.rsc"),
-      "RouterOS Script" => all_fixtures("RouterOS Script", "*.rsc") - ambiguous + Dir.glob("#{fixtures_path}/Generic/rsc/RouterOS Script/*.rsc"),
-      nil => ambiguous + Dir.glob("#{fixtures_path}/Generic/rsc/*.rsc")
+      "Rascal" => all_fixtures("Rascal", "*.rsc"),
+      "RouterOS Script" => all_fixtures("RouterOS Script", "*.rsc") - ambiguous,
+      nil => ambiguous
     })
   end
 
