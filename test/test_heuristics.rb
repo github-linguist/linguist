@@ -708,11 +708,11 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_m_by_heuristics
-    ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m")
+    ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m") + all_fixtures("MATLAB", "Check_plot.m")
     assert_heuristics({
       "Limbo" => all_fixtures("Limbo", "*.m"),
       "M" => all_fixtures("M", "MDB.m"),
-      "MATLAB" => all_fixtures("MATLAB", "*.m") + Dir.glob("#{fixtures_path}/Generic/m/MATLAB/*"),
+      "MATLAB" => all_fixtures("MATLAB", "*.m") - ambiguous + Dir.glob("#{fixtures_path}/Generic/m/MATLAB/*"),
       "MUF" => all_fixtures("MUF", "*.m"),
       "Mercury" => all_fixtures("Mercury", "*.m"),
       "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
