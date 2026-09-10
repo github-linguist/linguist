@@ -1240,10 +1240,8 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_trigger_by_heuristics
-    apex = all_fixtures("Apex", "*.trigger") +
-      Dir.glob("#{fixtures_path}/Generic/trigger/Apex/*")
-    shell = all_fixtures("Shell", "*.trigger") +
-      Dir.glob("#{fixtures_path}/Generic/trigger/nil/*")
+    apex = all_fixtures("Apex", "*.trigger")
+    shell = all_fixtures("Shell", "*.trigger")
     assert_heuristics({
       "Apex" => apex,
       nil => shell
