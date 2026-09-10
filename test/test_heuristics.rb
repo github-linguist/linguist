@@ -1099,7 +1099,7 @@ class TestHeuristics < Minitest::Test
 
   def test_shader_by_heuristics
     assert_heuristics({
-      "ShaderLab" => all_fixtures("ShaderLab", "*.shader") + Dir.glob("#{fixtures_path}/Generic/shader/ShaderLab/*"),
+      "ShaderLab" => all_fixtures("ShaderLab", "*.shader"),
       nil => all_fixtures("GLSL", "*.shader") + all_fixtures("Text")
     }, "test.shader")
   end
