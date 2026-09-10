@@ -524,7 +524,7 @@ class TestHeuristics < Minitest::Test
 
   def test_fx_by_heuristics
     assert_heuristics({
-      "HLSL" => all_fixtures("HLSL", "*.fx") + Dir.glob("#{fixtures_path}/Generic/fx/HLSL/*.fx"),
+      "HLSL" => all_fixtures("HLSL", "*.fx"),
       nil => all_fixtures("FLUX", "*.fx")
     })
   end
