@@ -1119,10 +1119,11 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_spec_by_heuristics
+    ambiguous = all_fixtures("Python", "*.spec") + all_fixtures("Ruby", "*.spec") +
+                all_fixtures("INI", "filenames/*.spec")
     assert_heuristics({
-      "RPM Spec" => all_fixtures("RPM Spec", "*.spec") + Dir.glob("#{fixtures_path}/Generic/spec/RPM Spec/*"),
-      nil => all_fixtures("Python", "*.spec") + all_fixtures("Ruby", "*.spec") +
-             all_fixtures("INI", "filenames/*.spec") + Dir.glob("#{fixtures_path}/Generic/spec/nil/*")
+      "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
+      nil => ambiguous
     })
   end
 
