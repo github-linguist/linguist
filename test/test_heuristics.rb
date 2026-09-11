@@ -522,6 +522,13 @@ class TestHeuristics < Minitest::Test
     }, alt_name="main.ftl")
   end
 
+  def test_fx_by_heuristics
+    assert_heuristics({
+      "HLSL" => all_fixtures("HLSL", "*.fx"),
+      "FLUX" => all_fixtures("FLUX", "*.fx")
+    })
+  end
+
   def test_g_by_heuristics
     assert_heuristics({
       "GAP" => all_fixtures("GAP", "*.g*"),
