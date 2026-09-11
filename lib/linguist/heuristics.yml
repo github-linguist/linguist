@@ -381,6 +381,9 @@ disambiguations:
     pattern:
     - '^[ \t]*technique(?:10|11)?[ \t]+\w+[ \t\r\n]*\{'
     - '^[ \t]*(?:float|half|int|uint|bool)(?:[1-4](?:x[1-4])?)?[ \t]+\w+[ \t]*:[ \t]*(?i:POSITION|NORMAL|TEXCOORD|COLOR|SV_[a-z_]+)[0-9]*\b'
+  - language: FLUX
+    # Identifier characters follow FLUX's shared lexer token, including '*'.
+    pattern: '^[ \t]*source[ \t]+[A-Za-z_*][A-Za-z0-9_*]*[ \t]*=>[ \t]*[A-Za-z_*][A-Za-z0-9_*]*[ \t]*;'
 - extensions: ['.g']
   rules:
   - language: GAP

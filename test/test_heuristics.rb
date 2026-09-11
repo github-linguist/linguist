@@ -525,7 +525,7 @@ class TestHeuristics < Minitest::Test
   def test_fx_by_heuristics
     assert_heuristics({
       "HLSL" => all_fixtures("HLSL", "*.fx"),
-      nil => all_fixtures("FLUX", "*.fx")
+      "FLUX" => all_fixtures("FLUX", "*.fx")
     })
   end
 
