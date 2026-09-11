@@ -708,15 +708,17 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_m_by_heuristics
-    ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m")
+    ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m") +
+                all_fixtures("M", "mileage.m") +
+                all_fixtures("MATLAB", "Check_plot.m")
     assert_heuristics({
-      "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
-      "Mercury" => all_fixtures("Mercury", "*.m"),
-      "MUF" => all_fixtures("MUF", "*.m"),
-      "M" => all_fixtures("M", "MDB.m"),
-      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
-      "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
+      "M" => all_fixtures("M", "*.m") - ambiguous,
+      "MATLAB" => all_fixtures("MATLAB", "*.m") - ambiguous,
+      "MUF" => all_fixtures("MUF", "*.m"),
+      "Mercury" => all_fixtures("Mercury", "*.m"),
+      "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
+      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
       nil => ambiguous
     })
   end

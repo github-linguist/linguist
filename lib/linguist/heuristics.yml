@@ -556,13 +556,24 @@ disambiguations:
   - language: MUF
     pattern: '^: '
   - language: M
-    pattern: '^\s*;'
+    pattern:
+    - '^\s*;'
+    # Dot-indented commands, global assignments, and WRITE newline controls.
+    - '(?i)^[ \t]+(?:\.[ \t]+)+(?:d(?:o)?|f(?:or)?|i(?:f)?|n(?:ew)?|q(?:uit)?|s(?:et)?|w(?:rite)?)[ \t:]'
+    - '(?i)^[ \t]+s(?:et)?[ \t]+\^[%a-z][a-z0-9]*(?:\(|=)'
+    # A formatting delimiter after ! distinguishes WRITE from w != value.
+    - '(?i)^[ \t]+w(?:rite)?[ \t]+(?:!|[^;\r\n]*,!)(?:[,!#?]|[ \t]*(?:;|\r?$))'
   - language: Wolfram Language
     and:
       - pattern: '\(\*'
       - pattern: '\*\)$'
+  # Keep comments separate to avoid slow Regexp.union matches on blank lines.
   - language: MATLAB
     pattern: '^\s*%'
+  - language: MATLAB
+    pattern:
+    - '^[ \t]*function[ \t]+(?:\[[^\]\r\n]*\][ \t]*=[ \t]*|[A-Za-z]\w*[ \t]*=[ \t]*)?[A-Za-z]\w*[ \t]*\('
+    - '^[ \t]*classdef[ \t]+(?:\([^\r\n)]*\)[ \t]*)?[A-Za-z]\w*'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
