@@ -1055,6 +1055,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_rsc_by_heuristics
+    ambiguous = all_fixtures("RouterOS Script", "vlans.rsc")
+    assert_heuristics({
+      "Rascal" => all_fixtures("Rascal", "*.rsc"),
+      "RouterOS Script" => all_fixtures("RouterOS Script", "*.rsc") - ambiguous,
+      nil => ambiguous
+    })
+  end
+
   def test_s_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),

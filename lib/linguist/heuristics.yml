@@ -851,6 +851,12 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
+- extensions: ['.rsc']
+  rules:
+  - language: Rascal
+    pattern: '^[ \t]*module[ \t]+\w+(?:::\w+)*[ \t]*\r?$'
+  - language: RouterOS Script
+    pattern: '^[ \t]*:(?:local|global)[ \t]+[A-Za-z0-9]+(?:[ \t;]|\r?$)'
 - extensions: ['.s']
   rules:
   - language: Unix Assembly
