@@ -1,0 +1,6 @@
+uniform float2 resolution;
+uniform shader image;
+
+half4 main(float2 fragCoord) {
+    return image.eval(fragCoord);
+}
