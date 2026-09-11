@@ -918,6 +918,11 @@ disambiguations:
   rules:
   - language: Vespa Schema Definition
     pattern: '^[ \t]*(?:schema|search|document)[ \t]+[\w.\/-]+[ \t]*(?:inherits[ \t][^{\n]*)?\{'
+- extensions: ['.shader']
+  rules:
+  - language: ShaderLab
+    # Match the ShaderLab wrapper, not the shader code embedded inside it.
+    pattern: '(?i)^[ \t]*(?:Shader[ \t]+"[^"\r\n]+"|SubShader)[ \t\r\n]*\{'
 - extensions: ['.sip']
   rules:
   - language: Quartus Simulation IP
