@@ -929,6 +929,14 @@ disambiguations:
     pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+[a-zA-Z$_][a-zA-Z0-9$_]*(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+- extensions: ['.spec']
+  rules:
+  - language: RPM Spec
+    and:
+    # Headers may be reordered or separated by macros and conditionals.
+    - pattern: '^[ \t]*(?i:Name):[ \t]*[^ \t\r\n]'
+    - pattern: '^[ \t]*(?i:Version|Release):[ \t]*[^ \t\r\n]'
+    - pattern: '^[ \t]*%(?:description|prep|build|install|files|changelog)(?:[ \t]|\r?$)'
 - extensions: ['.sql']
   rules:
    # Postgres

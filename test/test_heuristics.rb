@@ -1138,6 +1138,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_spec_by_heuristics
+    ambiguous = all_fixtures("Python", "*.spec") + all_fixtures("Ruby", "*.spec") +
+                all_fixtures("INI", "filenames/*.spec")
+    assert_heuristics({
+      "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
+      nil => ambiguous
+    })
+  end
+
   def test_sql_by_heuristics
     assert_heuristics({
       "SQL" => ["SQL/create_stuff.sql", "SQL/db.sql", "SQL/dual.sql",
