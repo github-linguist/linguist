@@ -1,0 +1,20 @@
+// Datara Language Sample: Post-OOP Data Class with Inherent Methods
+class User {
+    name: Str
+    age: Int
+    role: Str
+
+    display() -> Str => fmt"User({name}, age: {age}, role: {role})"
+
+    is_adult() -> Bool {
+        return age >= 18
+    }
+}
+
+fn main() {
+    let user = User { name: "Alice", age: 24, role: "Engineer" }
+    println(user.display())
+    if user.is_adult() {
+        println("Access granted: adult privileges enabled.")
+    }
+}

@@ -1,0 +1,25 @@
+// Datara Language Sample: Algebraic Data Types (ADT) and Pattern Matching
+enum Shape {
+    Circle(Float),
+    Rect(Float, Float),
+    Point,
+}
+
+fn area(s: Shape) -> Float {
+    match s {
+        Shape.Circle(r) => 3.14159265 * r * r,
+        Shape.Rect(w, h) => w * h,
+        Shape.Point => 0.0,
+        _ => 0.0,
+    }
+}
+
+fn main() {
+    let c = Shape.Circle(5.0)
+    let r = Shape.Rect(10.0, 4.0)
+    let p = Shape.Point
+
+    println(fmt"Circle area: {area(c)}")
+    println(fmt"Rect area: {area(r)}")
+    println(fmt"Point area: {area(p)}")
+}

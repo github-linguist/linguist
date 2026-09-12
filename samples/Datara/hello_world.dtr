@@ -1,0 +1,10 @@
+// Datara Language Sample: Hello World & Basic Functions
+fn greet(name: Str) -> Str {
+    return fmt"Hello, {name}! Welcome to Datara."
+}
+
+fn main() {
+    let msg = greet("World")
+    println(msg)
+    println("Datara is a high-performance post-OOP systems language.")
+}

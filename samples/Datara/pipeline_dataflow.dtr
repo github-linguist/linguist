@@ -1,0 +1,10 @@
+// Datara Language Sample: Pipeline Operator and Functional Transformations
+fn square(x: Int) -> Int => x * x
+fn increment(x: Int) -> Int => x + 1
+fn double_val(x: Int) -> Int => x * 2
+
+fn main() {
+    let initial = 5
+    let result = initial |> square() |> increment() |> double_val()
+    println(fmt"Pipeline computation result: {result}")
+}

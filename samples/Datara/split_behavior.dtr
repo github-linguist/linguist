@@ -1,0 +1,15 @@
+// Datara Language Sample: Data-Oriented Separation of State and Behavior
+class User {
+    name: Str
+    age: Int
+    role: Str
+}
+
+behavior User {
+    greet() -> Str => fmt"Hello, {name} (age: {age}, role: {role})!"
+}
+
+fn main() {
+    let user = User { name: "Maria", age: 25, role: "Systems Architect" }
+    println(user.greet())
+}
