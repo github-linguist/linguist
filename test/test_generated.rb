@@ -164,6 +164,11 @@ class TestGenerated < Minitest::Test
     # Pipenv
     generated_sample_without_loading_data("Dummy/Pipfile.lock")
 
+    # Rails error pages
+    generated_fixture_loading_data("Generated/Rails/public/404.html")
+    generated_fixture_loading_data("Generated/Rails/public/406-unsupported-browser.html")
+    generated_fixture_loading_data("Generated/Rails-custom/public/404.html", true)
+
     # HTML
     generated_fixture_loading_data("HTML/attr-swapped.html")
     generated_fixture_loading_data("HTML/extra-attr.html")
