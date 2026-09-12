@@ -1,0 +1,20 @@
+// License: MIT — source: https://github.com/mradkov/vscode-sophia (examples/Example.aes)
+
+namespace Nsp =
+  function f() = ()
+
+contract interface I =
+  entrypoint f : () => int
+
+contract C =
+  using Nsp
+  using Nsp as N
+  using Nsp for [f]
+  using Nsp hiding [f]
+  using Nsp as N for [f]
+  using Nsp as N hiding [f]
+
+  entrypoint init() = ()
+
+main contract Main =
+  entrypoint init() = ()
