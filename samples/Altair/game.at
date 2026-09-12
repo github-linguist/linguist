@@ -1,0 +1,120 @@
+altair.doc;
+    name = "Altair RPG"
+    version = "1.6"
+    author = "Victor"
+create altair.doc
+
+class Player;
+    text name = "" disk
+    numeric health = 100 ram
+    numeric score = 0 ram
+
+    fun takeDamage numeric amount;
+        health -= amount
+        if health < 0;
+            health = 0
+        break
+    break
+
+    fun heal numeric amount;
+        health += amount
+        if health > 100;
+            health = 100
+        break
+    break
+
+    fun isAlive -> bool;
+        return health > 0
+    break
+
+    fun addScore numeric points;
+        score += points
+    break
+create class
+
+fun calculateDamage -> numeric numeric base, numeric multiplier;
+    return base * multiplier
+break
+
+numeric sessionScore = 0 orbit;
+    1 = create temp
+    2 = active ram
+    3 = inactive cache
+    4 = finish disk
+break
+
+object hero = Player() ram weight 900
+text playerName = user input "Como te llamas?" auto
+hero.name = playerName
+
+log "Bienvenido, " + hero.name + "!"
+
+sessionScore migrate 2
+
+snapshot create "inicio"
+
+numeric turns = 0 ram
+while turns < 3;
+    turns += 1
+    log ""
+    log "-- Turno " + turns + " --"
+
+    choose enemyAction;
+        50% = ataca
+        30% = descansa
+        20% = huye
+    define
+
+    log "Enemigo: " + enemyAction
+
+    if enemyAction == "ataca";
+        numeric dmg = calculateDamage(15, 1) ram
+        hero.takeDamage(dmg)
+        log hero.name + " recibe " + dmg + " de danio. Salud: " + hero.health
+    elif enemyAction == "descansa";
+        log "El enemigo descansa..."
+    else;
+        log "El enemigo huye!"
+        exit
+    break
+
+    choose loot;
+        60% = nada
+        30% = pocion
+        10% = espada
+    define
+
+    if loot == "pocion";
+        hero.heal(20)
+        hero.addScore(10)
+        sessionScore += 10
+        log hero.name + " usa una pocion. Salud: " + hero.health
+    elif loot == "espada";
+        hero.addScore(50)
+        sessionScore += 50
+        log hero.name + " encuentra una espada! +50 puntos"
+    break
+
+    if hero.isAlive();
+        log hero.name + " sigue en pie con " + hero.health + " de salud"
+    else;
+        log hero.name + " ha muerto!"
+        exit
+    break
+break
+
+sessionScore migrate 4
+
+log ""
+log "==============================="
+log "Fin del juego"
+log "Jugador: " + hero.name
+log "Salud final: " + hero.health
+log "Score del personaje: " + hero.score
+log "Score de sesion: " + sessionScore
+log "==============================="
+
+snapshot create "final"
+log "Partida guardada en snapshot: final"
+
+release turns

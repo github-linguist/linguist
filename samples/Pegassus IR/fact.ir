@@ -1,0 +1,20 @@
+push 1
+store 0
+push 5
+store 1
+lab f
+load 0
+load 1
+mul
+store 0
+load 1
+push 1
+sub
+store 1
+load 1
+push 0
+gt
+jnz f
+load 0
+print
+end

@@ -1,0 +1,108 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Altair",
+  "scopeName": "source.altair",
+  "fileTypes": ["at", "atc"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#types" },
+    { "include": "#storage" },
+    { "include": "#constants" },
+    { "include": "#functions" },
+    { "include": "#operators" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.semicolon.altair",
+          "match": ";.*$"
+        },
+        {
+          "name": "comment.block.altair",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.altair",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.altair",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.altair",
+          "match": "\\b0x[0-9a-fA-F]+\\b"
+        },
+        {
+          "name": "constant.numeric.float.altair",
+          "match": "\\b\\d+\\.\\d+([eE][+-]?\\d+)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.altair",
+          "match": "\\b\\d+\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.altair",
+          "match": "\\b(if|elif|else|while|foreach|for|try|catch|fun|class|return|exit|break|create|define|choose|include|snapshot|migrate|weight|auto)\\b"
+        },
+        {
+          "name": "keyword.other.altair",
+          "match": "\\b(log|print|input|user)\\b"
+        }
+      ]
+    },
+    "types": {
+      "name": "storage.type.altair",
+      "match": "\\b(numeric|text|bool|list|object|token|void)\\b"
+    },
+    "storage": {
+      "name": "storage.modifier.altair",
+      "match": "\\b(ram|orbit|cache|disk|temp|active|inactive|finish)\\b"
+    },
+    "constants": {
+      "name": "constant.language.altair",
+      "match": "\\b(true|false|null|nil)\\b"
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.altair",
+          "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.altair",
+          "match": "(==|!=|<=|>=|<|>|\\+|\\-|\\*|/|%|=|\\+=|\\-=|\\*=|/=|&&|\\|\\||!)"
+        },
+        {
+          "name": "keyword.operator.pointer.altair",
+          "match": "(p#|lba%)"
+        }
+      ]
+    },
+    "identifiers": {
+      "name": "variable.other.altair",
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+    }
+  }
+}

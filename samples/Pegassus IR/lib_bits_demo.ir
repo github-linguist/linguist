@@ -1,0 +1,14 @@
+jmp main
+include pegbits.ir
+lab main
+push 255
+store 240
+call bit_popcnt
+print
+push 8
+store 240
+push 1
+store 241
+call bit_shl
+print
+end

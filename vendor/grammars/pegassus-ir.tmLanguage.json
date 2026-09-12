@@ -1,0 +1,64 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Pegassus IR",
+  "scopeName": "source.pegassus-ir",
+  "fileTypes": ["ir"],
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#directives" },
+    { "include": "#labels" },
+    { "include": "#opcodes" },
+    { "include": "#numbers" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "name": "comment.line.semicolon.pegassus-ir",
+      "match": ";.*$"
+    },
+    "strings": {
+      "name": "string.quoted.double.pegassus-ir",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.pegassus-ir",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "directives": {
+      "patterns": [
+        {
+          "name": "keyword.control.directive.pegassus-ir",
+          "match": "^\\s*(const|lab|include)\\b"
+        }
+      ]
+    },
+    "labels": {
+      "name": "entity.name.label.pegassus-ir",
+      "match": "^\\s*lab\\s+([a-zA-Z_][a-zA-Z0-9_]*)"
+    },
+    "opcodes": {
+      "name": "keyword.opcode.pegassus-ir",
+      "match": "\\b(push|pushs|pop|load|store|add|sub|mul|div|mod|neg|and|or|xor|not|shl|shr|eq|ne|lt|le|gt|ge|jmp|jnz|jz|call|ret|print|prints|halt|end|itoa|atoi)\\b"
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.pegassus-ir",
+          "match": "\\b0x[0-9a-fA-F]+\\b"
+        },
+        {
+          "name": "constant.numeric.integer.pegassus-ir",
+          "match": "\\b\\d+\\b"
+        }
+      ]
+    },
+    "identifiers": {
+      "name": "variable.other.pegassus-ir",
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+altair.doc;
+    name = "Hello"
+    version = "1.0"
+    author = "Altair"
+create altair.doc
+
+log "Hola desde Altair v1.6!"
+
+numeric x = 42 ram
+log "El valor de x es: " + x
+
+text msg = "Altair Language" ram
+log "Lenguaje: " + msg
+
+bool activo = true ram
+if activo;
+    log "Sistema activo"
+else;
+    log "Sistema inactivo"
+break

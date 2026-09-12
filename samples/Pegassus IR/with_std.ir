@@ -1,0 +1,8 @@
+jmp main
+include pegstd.ir
+lab main
+push -42
+store 240
+call std_abs
+print
+end
