@@ -1,0 +1,35 @@
+addon "evm" {
+    chain_id = 11155111
+    rpc_api_url = "http://localhost:8545"
+}
+
+signer "alice" "evm::web_wallet" {
+    expected_address = "0xCe246168E59dd8e28e367BB49b38Dc621768F425"
+}
+
+variable "contract" {
+    value = evm::get_contract_from_foundry_project("SimpleStorage")
+}
+
+action "deploy_simple_storage" "evm::deploy_contract_create2" {
+    description = "Deploy SimpleStorage"
+    contract = evm::get_contract_from_foundry_project("SimpleStorage")
+    constructor_args = [14]
+    salt = "0x0000000000000000000000000000000000000000177317f7617d575e615800c7"
+    confirmations = 4
+    signer = signer.alice
+    expected_contract_address = "0x26eA4F95a9D93EB5B97b2cFE6D9D6Dee6DA09E9b"
+}
+
+action "call_simple_storage" "evm::call_contract" {
+    contract_abi = variable.contract.abi
+    contract_address = action.deploy_simple_storage.contract_address
+    function_name = "retrieve"
+    function_args = []
+    confirmations = 4
+    signer = signer.alice
+}
+
+output "contract_address" {
+    value = action.deploy_simple_storage.contract_address
+}
