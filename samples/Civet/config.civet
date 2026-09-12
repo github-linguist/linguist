@@ -1,0 +1,114 @@
+path from path
+fs from fs/promises
+{ decode, compile } from ./main.civet
+
+// TODO: Once the types are exported within the Civet source code,
+// we should import them directly here, instead of looking at an old release.
+type { CompileOptions } from "@danielx/civet"
+
+configNames := [
+  "🐈"
+  "civetconfig"
+  "civet.config"
+  "package"
+]
+configExtensions := [
+  ".civet"
+  ".js"
+  ".yaml"
+  ".yml"
+  ".json"
+]
+configDir := ".config"
+
+export function findInDir(dirPath: string): Promise<string | undefined>
+  entries := new Set await fs.readdir dirPath
+  pathFor := (name: string) => path.join dirPath, name
+
+  // Check for config file in .config directory
+  if entries.has(configDir) and try fs.stat pathFor configDir |> await |> .isDirectory()
+    found := await findInDir pathFor configDir
+    return found if found
+
+  // Check for config files in order
+  for each configName of configNames
+    for each extension of configExtensions
+      // Avoid checking package.civet and package.js
+      // In particular, Meteor uses package.js for something else
+      continue if configName is "package" and extension is like ".civet", ".js"
+      // Allow both .civetconfig.civet and civetconfig.civet
+      for each entry of ["." + configName + extension, configName + extension]
+        if entries.has(entry) and try fs.stat pathFor entry |> await |> .isFile()
+          return pathFor entry
+
+  return
+
+export function findConfig(startDir: string): Promise<string | undefined>
+  curr .= startDir
+  parent .= path.dirname curr
+
+  while curr !== parent
+    // root directory (/, C:, etc.)
+    configPath := await findInDir curr
+    return configPath if configPath
+
+    curr = parent
+    parent = path.dirname curr
+
+  return
+
+export function loadConfig(pathname: string): Promise<CompileOptions>
+  config := decode await fs.readFile pathname
+
+  let data: CompileOptions = {}
+  if pathname.endsWith ".json"
+    let json: CompileOptions | { civetConfig: CompileOptions }
+    try
+      json = JSON.parse config
+    catch e
+      throw new Error `Error parsing JSON config file ${pathname}: ${e}`
+    // Allow civetConfig in package.json, but ignore rest of package.json
+    if 'civetConfig' in json
+      data = json.civetConfig
+    else if path.basename(pathname).startsWith 'package'
+      return {}
+    else
+      data = json
+
+  else if /\.ya?ml$/.test pathname
+    try
+      { default: YAML } := await import "yaml"
+      yaml := YAML.parse config
+      data = yaml.civetConfig ?? yaml
+    catch e
+      throw new Error `Error parsing YAML config file ${pathname}: ${e}`
+
+  else  // code
+    let js
+    if pathname.endsWith ".civet"
+      try
+        js = await compile config,
+          js: true
+      catch e
+        throw new Error `Error compiling Civet config file ${pathname}: ${e}`
+    else
+      js = config
+
+    try
+      exports := await import `data:text/javascript,${ encodeURIComponent js }`
+      data = exports?.default
+    catch e
+      throw new Error `Error running Civet config file ${pathname}: ${e}`
+
+  unless data? <? "object" and not Array.isArray data
+    throw new Error `Civet config file must export an object, not ${Array.isArray(data) ? 'array' : data? ? typeof data : 'null'}`
+
+  // Forbid enabling comptime in the config file
+  delete data?.parseOptions?.comptime
+  data
+
+export default {
+  findConfig
+  findInDir
+  loadConfig
+}
