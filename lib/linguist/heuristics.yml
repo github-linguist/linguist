@@ -1023,6 +1023,12 @@ disambiguations:
     pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
   - language: Smarty
     pattern: '(\A|[^{])\{(\*\s|\$|\/)?\w*\b'
+- extensions: ['.trigger']
+  rules:
+  - language: Apex
+    pattern:
+    - '(?i)^[ \t]*trigger\s+[a-z_][a-z0-9_]*\s+on\s+[a-z_][a-z0-9_]*\s*\(\s*(?:before|after)\s+(?:insert|update|delete|undelete)\b'
+    - '(?i)^[ \t]*(?:public|global)\s+(?:with|without|inherited)\s+sharing\s+class\s+[a-z_][a-z0-9_]*\b'
 - extensions: ['.ts']
   rules:
   - language: XML

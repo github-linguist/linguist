@@ -1259,6 +1259,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_trigger_by_heuristics
+    assert_heuristics({
+      "Apex" => all_fixtures("Apex", "*.trigger"),
+      nil => all_fixtures("Shell", "*.trigger")
+    })
+  end
+
   def test_ts_by_heuristics
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
