@@ -1,0 +1,25 @@
+// Fetch published blog posts with resolved author references
+*[_type == "post" && !(_id in path("drafts.**"))] | order(publishedAt desc) [0...10] {
+  _id,
+  title,
+  "slug": slug.current,
+  publishedAt,
+  "excerpt": pt::text(body[0..2]),
+  mainImage {
+    asset-> {
+      url,
+      "dimensions": metadata.dimensions
+    },
+    alt
+  },
+  author-> {
+    name,
+    image {
+      asset-> { url }
+    }
+  },
+  categories[]-> {
+    title,
+    "slug": slug.current
+  }
+}

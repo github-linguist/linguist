@@ -1,0 +1,26 @@
+// Product listing with faceted filtering and pagination
+*[
+  _type == "product"
+  && category->slug.current == $category
+  && price >= $minPrice
+  && price <= $maxPrice
+  && ($brand == null || brand == $brand)
+  && count(variants[inStock == true]) > 0
+] | order(
+  select(
+    $sort == "price-asc" => price asc,
+    $sort == "price-desc" => price desc,
+    $sort == "newest" => _createdAt desc,
+    _createdAt desc
+  )
+) [$offset...$offset + $limit] {
+  _id,
+  title,
+  "slug": slug.current,
+  price,
+  "compareAtPrice": math::max(variants[].compareAtPrice),
+  "thumbnail": images[0].asset->url,
+  "inStockCount": count(variants[inStock == true]),
+  brand,
+  category-> { title, "slug": slug.current }
+}
