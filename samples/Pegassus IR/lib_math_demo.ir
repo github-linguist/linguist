@@ -1,0 +1,16 @@
+jmp main
+include pegmath.ir
+lab main
+push 2
+store 240
+push 10
+store 241
+call math_pow
+print
+push 12
+store 240
+push 18
+store 241
+call math_gcd
+print
+end

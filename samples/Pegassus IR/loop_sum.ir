@@ -1,0 +1,20 @@
+push 0
+store 0
+push 1
+store 1
+lab loop
+load 0
+load 1
+add
+store 0
+load 1
+push 1
+add
+store 1
+load 1
+push 10
+le
+jnz loop
+load 0
+print
+halt

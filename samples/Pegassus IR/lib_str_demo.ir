@@ -1,0 +1,8 @@
+jmp main
+include pegstr.ir
+lab main
+push 12345
+store 240
+call str_from_int
+prints
+end
