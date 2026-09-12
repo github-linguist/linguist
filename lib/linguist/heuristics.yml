@@ -914,6 +914,12 @@ disambiguations:
     - '\(#[\w-]+[!\?]'
     - '(?:[\)\]]\s*[\*\+\?](?:\s|$))'
     - '@[\w.-]+(?:\)\s|$)'
+- extensions: ['.sim']
+  rules:
+  - language: Simula
+    pattern:
+    - '(?i)\b(?:ref|inspect)\s*\([A-Za-z][A-Za-z0-9_]*\)'
+    - '(?i)\b(?:integer|real|boolean|character|text)\s+array\s+[A-Za-z][A-Za-z0-9_]*\s*\('
 - extensions: ['.sd']
   rules:
   - language: Vespa Schema Definition
