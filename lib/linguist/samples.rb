@@ -15,7 +15,7 @@ module Linguist
     ROOT = File.expand_path("../../../samples", __FILE__)
 
     # Path for serialized samples db
-    PATH = File.expand_path('../samples.json', __FILE__)
+    PATH = File.expand_path('../samples_data.rb', __FILE__)
 
     # Hash of serialized samples object, cached in memory
     def self.cache
@@ -24,15 +24,9 @@ module Linguist
 
     # Hash of serialized samples object, uncached
     def self.load_samples
-      serializer = defined?(Yajl) ? Yajl : JSON
-      data = serializer.load(File.read(PATH, encoding: 'utf-8'))
-      # JSON serialization does not allow integer keys, we fix them here
-      for lang in data['centroids'].keys
-        fixed = data['centroids'][lang].to_a.map { |k,v| [k.to_i, v] }
-        data['centroids'][lang] = Hash[fixed]
-      end
-
-      data
+      mod = Module.new
+      load(PATH, mod)
+      mod::DATA
     end
 
     # Public: Iterate over each sample.

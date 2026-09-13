@@ -1,0 +1,8 @@
+style "tab-close-button-style"
+{
+  GtkWidget::focus-padding = 0
+  GtkWidget::focus-line-width = 0
+  xthickness = 0
+  ythickness = 0
+}
+widget "*.tab-close-button" style "tab-close-button-style"

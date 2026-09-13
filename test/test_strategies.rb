@@ -187,6 +187,7 @@ class TestStrategies < Minitest::Test
       "#{samples_path}/XML/Default.props",
       "#{samples_path}/XML/racoon.mjml",
       "#{samples_path}/XML/route-gas-works-lake-union-loop.gpx",
+      "#{samples_path}/XML/script_22621_x64.meta4",
       "#{samples_path}/XML/some-ideas.mm",
       "#{samples_path}/XML/GMOculus.project.gmx",
       "#{samples_path}/XML/obj_control.object.gmx",
@@ -194,6 +195,7 @@ class TestStrategies < Minitest::Test
       "#{samples_path}/XML/Robots.slnx",
       "#{samples_path}/XML/Win64.pubxml",
       "#{samples_path}/XML/Deep_Ocean.icls",
+      "#{samples_path}/XML/roblox-model.rbxmx"
     ]
     assert_all_xml all_xml_fixtures("*") - no_root_tag
 

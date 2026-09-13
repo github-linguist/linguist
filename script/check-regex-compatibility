@@ -1,0 +1,362 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "digest"
+require "open3"
+require "optparse"
+require "tempfile"
+require "yaml"
+
+ROOT = File.expand_path("..", __dir__)
+DEFAULT_DATA_FILES = %w[
+  lib/linguist/heuristics.yml
+  lib/linguist/vendor.yml
+  lib/linguist/documentation.yml
+].map { |path| File.join(ROOT, path) }.freeze
+DEFAULT_ALLOWLIST = File.join(ROOT, "script", "regex-compatibility", "allowlist.yml")
+EXTERNAL_ENGINE_COMMANDS = {
+  "go" => lambda { |patterns_file|
+    ["go", "run", File.join(ROOT, "script", "regex-compatibility", "go", "main.go"), patterns_file]
+  },
+  "rust" => lambda { |patterns_file|
+    [
+      "cargo", "run", "--quiet", "--locked",
+      "--manifest-path", File.join(ROOT, "script", "regex-compatibility", "rust", "Cargo.toml"),
+      "--", patterns_file
+    ]
+  }
+}.freeze
+ENGINES = %w[ruby go rust].freeze
+
+Pattern = Struct.new(:location, :source, :digest, keyword_init: true)
+RubyPattern = Struct.new(:location, :sources, :composition, :digest, keyword_init: true)
+Failure = Struct.new(:engine, :pattern, :message, keyword_init: true) do
+  def key
+    [engine, pattern.location, pattern.digest]
+  end
+end
+
+def data_file_label(path)
+  path.start_with?("#{ROOT}/") ? path.delete_prefix("#{ROOT}/") : path
+end
+
+DEFAULT_DATA_LABELS = DEFAULT_DATA_FILES.map { |path| data_file_label(path) }.freeze
+
+class PatternExtractor
+  attr_reader :ruby_patterns
+
+  def initialize(path)
+    @path = path
+    @label = data_file_label(path)
+    @ruby_patterns = []
+  end
+
+  def extract
+    config = YAML.load_file(@path)
+    patterns = case config
+    when Array
+      extract_pattern_list(config)
+    when Hash
+      extract_heuristics(config)
+    else
+      raise "unsupported regex data in #{@path}"
+    end
+
+    duplicate = patterns.group_by(&:location).find { |_location, records| records.length > 1 }
+    raise "duplicate regex location: #{duplicate.first}" if duplicate
+    duplicate = ruby_patterns.group_by(&:location).find { |_location, records| records.length > 1 }
+    raise "duplicate Ruby regex location: #{duplicate.first}" if duplicate
+
+    patterns
+  end
+
+  private
+
+  def extract_pattern_list(patterns)
+    records = patterns.each_with_index.map do |source, index|
+      pattern_record(source, "#{@label}[#{index}]")
+    end
+    @ruby_patterns << ruby_pattern(@label, patterns, :joined)
+    records
+  end
+
+  def extract_heuristics(config)
+    unless config.key?("disambiguations")
+      raise "unsupported regex mapping in #{@path}"
+    end
+
+    patterns = extract_named_patterns(config.fetch("named_patterns", {}))
+
+    config.fetch("disambiguations").each do |disambiguation|
+      patterns.concat(extract_disambiguation(disambiguation))
+    end
+
+    patterns
+  end
+
+  def extract_named_patterns(named_patterns)
+    named_patterns.flat_map do |name, value|
+      pattern_records(value, "named_patterns[#{name}]")
+    end
+  end
+
+  def extract_disambiguation(disambiguation)
+    extensions = Array(disambiguation.fetch("extensions")).join(",")
+    rules = disambiguation.fetch("rules")
+    language_counts = rules.each_with_object(Hash.new(0)) do |rule, counts|
+      counts[language_label(rule)] += 1
+    end
+    language_occurrences = Hash.new(0)
+
+    rules.flat_map do |rule|
+      language = language_label(rule)
+      language_occurrences[language] += 1
+      occurrence = if language_counts[language] > 1
+        ",occurrence=#{language_occurrences[language]}"
+      else
+        ""
+      end
+      location = "disambiguations[extensions=#{extensions}]/rules[language=#{language}#{occurrence}]"
+      extract_rule(rule, location)
+    end
+  end
+
+  def language_label(rule)
+    Array(rule.fetch("language")).join("|")
+  end
+
+  def extract_rule(rule, location)
+    patterns = %w[pattern negative_pattern].flat_map do |field|
+      rule.key?(field) ? pattern_records(rule.fetch(field), "#{location}/#{field}") : []
+    end
+
+    Array(rule["and"]).each_with_index do |nested_rule, index|
+      patterns.concat(extract_rule(nested_rule, "#{location}/and[#{index}]"))
+    end
+
+    patterns
+  end
+
+  def pattern_records(value, location)
+    sources = value.is_a?(Array) ? value : [value]
+    records = sources.each_with_index.map do |source, index|
+      item_location = sources.length > 1 ? "#{location}[#{index}]" : location
+      pattern_record(source, "#{@label}/#{item_location}")
+    end
+    composition = value.is_a?(Array) ? :union : :single
+    @ruby_patterns << ruby_pattern("#{@label}/#{location}", sources, composition)
+    records
+  end
+
+  def pattern_record(source, location)
+    raise "#{location} is not a string" unless source.is_a?(String)
+    raise "#{location} contains a NUL byte" if source.include?("\0")
+
+    Pattern.new(
+      location: location,
+      source: source,
+      digest: Digest::SHA256.hexdigest(source)
+    )
+  end
+
+  def ruby_pattern(location, sources, composition)
+    digest = Digest::SHA256.new
+    [composition.to_s, *sources].each do |part|
+      digest << [part.bytesize].pack("Q>") << part
+    end
+    RubyPattern.new(
+      location: location,
+      sources: sources,
+      composition: composition,
+      digest: digest.hexdigest
+    )
+  end
+end
+
+class Allowlist
+  attr_reader :entries
+
+  def initialize(path, engines, data_file_labels)
+    config = YAML.load_file(path)
+    raise "unsupported allowlist version: #{config["version"].inspect}" unless config["version"] == 1
+
+    all_entries = Array(config["exceptions"]).map do |entry|
+      engine = entry.fetch("engine")
+      raise "unknown allowlist engine: #{engine.inspect}" unless ENGINES.include?(engine)
+
+      digest = entry.fetch("digest")
+      raise "invalid allowlist digest: #{digest.inspect}" unless digest.match?(/\A[0-9a-f]{64}\z/)
+
+      [engine, entry.fetch("location"), digest]
+    end
+
+    duplicate = all_entries.group_by { |entry| entry }.find { |_entry, matches| matches.length > 1 }
+    raise "duplicate allowlist entry: #{duplicate.first.join(" ")}" if duplicate
+
+    known_labels = (DEFAULT_DATA_LABELS + data_file_labels).uniq
+    @entries = all_entries.select do |engine, location, _digest|
+      label = known_labels.find do |candidate|
+        location.start_with?("#{candidate}/") || location.start_with?("#{candidate}[")
+      end
+      raise "unknown allowlist data file: #{location.inspect}" unless label
+
+      engines.include?(engine) && data_file_labels.include?(label)
+    end
+  end
+end
+
+def engine_failures(engine, patterns, patterns_file)
+  command = EXTERNAL_ENGINE_COMMANDS.fetch(engine).call(patterns_file)
+  stdout, stderr, status = Open3.capture3(*command)
+  unless status.success?
+    details = stderr.empty? ? stdout : stderr
+    raise "#{engine} regex checker failed:\n#{details}"
+  end
+
+  fields = stdout.b.split("\0", -1)
+  fields.pop if fields.last == ""
+  raise "#{engine} regex checker returned malformed output" unless fields.length.even?
+
+  fields.each_slice(2).map do |index_text, message|
+    index = Integer(index_text, 10)
+    pattern = patterns.fetch(index)
+    Failure.new(engine: engine, pattern: pattern, message: message)
+  rescue ArgumentError, IndexError
+    raise "#{engine} regex checker returned invalid pattern index: #{index_text.inspect}"
+  end
+rescue Errno::ENOENT
+  raise "#{command.first} is required to check #{engine} regex compatibility"
+end
+
+def ruby_failures(patterns)
+  unless Regexp.respond_to?(:linear_time?)
+    raise "Ruby 3.2 or later is required to check linear-time regex matching"
+  end
+
+  patterns.each_with_object([]) do |pattern, failures|
+    regexp = case pattern.composition
+    when :single
+      Regexp.new(pattern.sources.first)
+    when :union
+      Regexp.union(pattern.sources.map { |source| Regexp.new(source) })
+    when :joined
+      Regexp.new(pattern.sources.join("|"))
+    else
+      raise "unknown Ruby regex composition: #{pattern.composition.inspect}"
+    end
+    next if Regexp.linear_time?(regexp)
+
+    failures << Failure.new(
+      engine: "ruby",
+      pattern: pattern,
+      message: "Ruby #{RUBY_VERSION} cannot guarantee linear-time matching"
+    )
+  rescue RegexpError => error
+    raise "Ruby could not compile #{pattern.location}: #{error.message}"
+  end
+end
+
+def print_failure(label, failure)
+  warn "#{label}: #{failure.engine} check failed for #{failure.pattern.location}" \
+       " (sha256: #{failure.pattern.digest})"
+  failure.message.each_line { |line| warn "  #{line}" }
+end
+
+def plural(count, singular, plural)
+  count == 1 ? singular : plural
+end
+
+def sentence_list(items)
+  return items.first if items.length == 1
+  return items.join(" and ") if items.length == 2
+
+  "#{items[0...-1].join(", ")}, and #{items.last}"
+end
+
+options = {
+  engines: ENGINES,
+  allowlist: DEFAULT_ALLOWLIST,
+  verbose: false
+}
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename($PROGRAM_NAME)} [options] [regex-data.yml ...]"
+  opts.separator ""
+  opts.separator "By default, checks heuristics.yml, vendor.yml, and documentation.yml."
+  opts.separator "Requires Ruby 3.2+, Go, and Cargo; use --engine to run one checker."
+  opts.separator ""
+  opts.on("--engine ENGINE", ["all", *ENGINES], "Engine to check (default: all)") do |engine|
+    options[:engines] = engine == "all" ? ENGINES : [engine]
+  end
+  opts.on("--allowlist FILE", "Compatibility exception allowlist") do |path|
+    options[:allowlist] = File.expand_path(path)
+  end
+  opts.on("-v", "--verbose", "Show allowlisted compiler failures") do
+    options[:verbose] = true
+  end
+  opts.on("-h", "--help", "Show this help") do
+    puts opts
+    exit
+  end
+end
+
+def run(parser, options, arguments)
+  parser.parse!(arguments)
+  data_files = arguments.empty? ? DEFAULT_DATA_FILES : arguments.map { |path| File.expand_path(path) }
+  patterns = []
+  ruby_patterns = []
+  data_files.each do |path|
+    extractor = PatternExtractor.new(path)
+    patterns.concat(extractor.extract)
+    ruby_patterns.concat(extractor.ruby_patterns)
+  end
+  labels = data_files.map { |path| data_file_label(path) }
+  allowlist = Allowlist.new(options[:allowlist], options[:engines], labels).entries
+
+  Tempfile.create("linguist-regex-patterns") do |file|
+    file.binmode
+    file.write(patterns.map(&:source).join("\0"))
+    file.write("\0") unless patterns.empty?
+    file.flush
+
+    failures = options[:engines].flat_map do |engine|
+      if engine == "ruby"
+        ruby_failures(ruby_patterns)
+      else
+        engine_failures(engine, patterns, file.path)
+      end
+    end
+    failure_keys = failures.map(&:key)
+    unexpected = failures.reject { |failure| allowlist.include?(failure.key) }
+    stale = allowlist.reject { |entry| failure_keys.include?(entry) }
+    allowed = failures.reject { |failure| unexpected.include?(failure) }
+
+    allowed.each { |failure| print_failure("ALLOWLISTED", failure) } if options[:verbose]
+    unexpected.each { |failure| print_failure("UNEXPECTED", failure) }
+    stale.each do |engine, location, digest|
+      warn "STALE: #{engine} now accepts #{location} (digest #{digest})"
+    end
+
+    engines = sentence_list(options[:engines].map(&:capitalize))
+    if unexpected.empty? && stale.empty?
+      puts "Checked #{patterns.length} regexes from #{data_files.length} data " \
+           "#{plural(data_files.length, "file", "files")} with #{engines}" \
+           " (#{allowed.length} allowlisted #{plural(allowed.length, "failure", "failures")})."
+    else
+      warn "#{unexpected.length} unexpected #{plural(unexpected.length, "failure", "failures")}; " \
+           "#{stale.length} stale allowlist #{plural(stale.length, "entry", "entries")}."
+      exit 1
+    end
+  end
+end
+
+begin
+  run(parser, options, ARGV)
+rescue OptionParser::ParseError => error
+  warn error.message
+  warn parser
+  exit 2
+rescue KeyError, Psych::Exception, RuntimeError, SystemCallError => error
+  warn error.message
+  exit 2
+end
