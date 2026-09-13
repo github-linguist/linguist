@@ -1,0 +1,31 @@
+// Microservice Route Handler in NilLang
+// Demonstrates hash maps, null checks, function dispatching, and string formatting
+
+let usersDB = {
+    "101": {"id": "101", "name": "Joysriram Sarkar", "role": "Architect"},
+    "102": {"id": "102", "name": "Nilang Core Dev", "role": "Compiler Engineer"}
+};
+
+let handleGetUser = fn(userId) {
+    if (userId == "101") {
+        return usersDB["101"];
+    }
+    if (userId == "102") {
+        return usersDB["102"];
+    }
+    return null;
+};
+
+let user1 = handleGetUser("101");
+if (user1 != null) {
+    puts("Found user: " + user1["name"] + " (" + user1["role"] + ")");
+} else {
+    puts("User not found");
+}
+
+let userUnknown = handleGetUser("999");
+if (userUnknown != null) {
+    puts("Found user: " + userUnknown["name"]);
+} else {
+    puts("User 999 not found");
+}

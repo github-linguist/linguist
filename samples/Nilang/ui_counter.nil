@@ -1,0 +1,37 @@
+// Alap UI Counter Component in NilLang
+// Demonstrates declarative component architecture, state, render, and events
+
+component Counter {
+    state count: i32 = 0;
+
+    render {
+        return {
+            "type": "Page",
+            "title": "Alap UI Counter",
+            "content": [
+                {
+                    "type": "Card",
+                    "title": "Current Count",
+                    "body": "\(count)"
+                },
+                {
+                    "type": "Button",
+                    "id": "increment-count",
+                    "label": "Increment",
+                    "event": "increment",
+                    "payload": {"step": 1}
+                }
+            ],
+            "footer": "NilLang declarative component"
+        };
+    }
+
+    on increment(payload) {
+        let step = 1;
+        if (payload != null) {
+            step = payload["step"];
+        }
+        count = count + step;
+        emit("changed", count);
+    }
+}

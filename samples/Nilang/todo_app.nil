@@ -1,0 +1,43 @@
+// Todo Application in NilLang + Alap Framework
+// Demonstrates data structures, records, closures, and reactive state
+
+let createTodo = fn(id, title, completed) {
+    return {
+        "id": id,
+        "title": title,
+        "completed": completed
+    };
+};
+
+let toggleTodo = fn(todo) {
+    return {
+        "id": todo["id"],
+        "title": todo["title"],
+        "completed": !todo["completed"]
+    };
+};
+
+let todos = [
+    createTodo(1, "Complete NilLang & Alap refactoring", true),
+    createTodo(2, "Test capability security matrix on Web profile", true),
+    createTodo(3, "Deploy unified Onuron OS microservice", false)
+];
+
+let i = 0;
+while (i < len(todos)) {
+    let item = todos[i];
+    let status = if (item["completed"]) { "[x]" } else { "[ ]" };
+    puts("  " + status + " " + item["title"]);
+    let i = i + 1;
+}
+
+let updatedTodo3 = toggleTodo(todos[2]);
+let updatedTodos = [todos[0], todos[1], updatedTodo3];
+
+let j = 0;
+while (j < len(updatedTodos)) {
+    let item = updatedTodos[j];
+    let status = if (item["completed"]) { "[x]" } else { "[ ]" };
+    puts("  " + status + " " + item["title"]);
+    let j = j + 1;
+}
