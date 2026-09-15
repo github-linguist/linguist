@@ -1297,9 +1297,9 @@ class TestHeuristics < Minitest::Test
   def test_txt_by_heuristics
     assert_heuristics({
       "Adblock Filter List" => all_fixtures("Adblock Filter List", "*.txt"),
-      "Hosts File" => all_fixtures("Hosts File", "filenames/*.txt") + Dir.glob("#{fixtures_path}/Generic/txt/Hosts File/*"),
+      "Hosts File" => all_fixtures("Hosts File", "filenames/*.txt") + all_fixtures("Hosts File", "*.txt"),
       "Vim Help File" => all_fixtures("Vim Help File", "*.txt"),
-      "Text" => all_fixtures("Text", "*.txt") + Dir.glob("#{fixtures_path}/Generic/txt/Text/*")
+      "Text" => all_fixtures("Text", "*.txt")
     })
   end
 
