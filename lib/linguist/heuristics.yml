@@ -1053,10 +1053,9 @@ disambiguations:
   - language: TSX
 - extensions: ['.txt']
   rules:
-    # The following RegExp is simply a collapsed and simplified form of the
-    # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
+    # Match the conventional colon-delimited subset of VIM_MODELINE.
   - language: Vim Help File
-    pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
+    pattern: '(?:^|[ \t])(?:vi|Vim|vim(?:[<=>]?[0-9]+)?|ex):[ \t]*(?:[A-Za-z0-9]+(?:=[^ \t:\r\n]*)?:[ \t]*)*(?:filetype|ft|syntax)[ \t]*=help(?:[ \t:]|$)'
   - language: Hosts File
     pattern: |-
       (?xi) ^
