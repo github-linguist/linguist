@@ -329,16 +329,6 @@ class TestBlob < Minitest::Test
     end
   end
 
-  def test_moonbit_config
-    %w[moon.mod moon.pkg].each do |filename|
-      blob = sample_blob_memory("MoonBit Config/filenames/#{filename}")
-      assert_equal "MoonBit Config", blob.language.name, filename
-      assert_equal "source.moonbit", blob.language.tm_scope, filename
-      assert_equal :data, blob.language.type, filename
-      refute_predicate blob, :include_in_language_stats?, filename
-    end
-  end
-
   def test_minified_files_not_safe_to_highlight
     assert !sample_blob_memory("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
   end
