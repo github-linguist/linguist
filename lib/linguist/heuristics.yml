@@ -1058,31 +1058,7 @@ disambiguations:
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
   - language: Hosts File
-    pattern: |-
-      (?xi) ^
-
-      # IPv4 address
-      (?<ipv4>
-        (?!\.)
-        (?:\.?
-          (?: 25[0-5]  # 250-255
-          |   2[0-4]\d # 200-249
-          |   1\d\d    # 100-199
-          |   [1-9]?\d # 0-99
-          )\b
-      ){4})
-
-      # CIDR notation: /[0-32]
-      (?<cidr>/(3[0-2]|[12]?\d)\b)?
-
-      # Domains list
-      (?<domains>
-        [ \t]+
-        \w[-\w]* (?:\.\w[-\w]*)*
-        (?<!-)\b
-      )*+
-
-      (?:$|\s)
+    pattern: '^(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(?:\.(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}(?:/(?:3[0-2]|[12]?[0-9]))?(?:[ \t]+[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?(?:\.[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?)*)+(?:[ \t]|$)'
   - language: Adblock Filter List
     pattern: '\A\[(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?(?:[ \t]?;[ \t]?(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?)*\]'
     # HACK: This is a contrived use of heuristics needed to address
