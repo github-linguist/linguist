@@ -49,81 +49,25 @@ module Linguist
         -\*-
       ]xi
 
-      # NOTE: When changing this regex, review the portable Vim Help heuristic too (#5347)
-      VIM_MODELINE = %r[
-        (?-m)
+      VIM_MODELINE_START = '(?:(?:^|[ \t])(?:vi|(?:vim|Vim)(?:[<=>]?[0-9]+)?):|[ \t]ex:)'
+      VIM_MODELINE_VALUE = '(?:[^\\\\\s]|\\\\.)*'
+      VIM_MODELINE_OPTION = "[A-Za-z0-9_]*(?:[ \\t]*=#{VIM_MODELINE_VALUE})?"
+      VIM_MODELINE_SEPARATOR = '(?:[ \t]*:[ \t]*|[ \t])'
 
-        # Start of modeline (syntax documented in E520)
-        (?:
-          # `vi:`, `vim:` or `Vim:`
-          (?:^|[ \t]) (?:vi|Vi(?=m))
+      # The ordinary form must not begin with `se` or `set`, which select the
+      # alternative form whose whitespace-delimited option list ends in a colon.
+      VIM_MODELINE_NON_SET_NAME = '(?:[A-RT-Za-rt-z0-9_][A-Za-z0-9_]*|s(?:[A-Za-df-z0-9_][A-Za-z0-9_]*|e(?:[A-SU-Za-su-z0-9_][A-Za-z0-9_]*|t[A-Za-z0-9_]+))?)'
+      VIM_MODELINE_NON_SET_OPTION = "#{VIM_MODELINE_NON_SET_NAME}(?:[ \\t]*=#{VIM_MODELINE_VALUE})?"
+      VIM_MODELINE_LANGUAGE = 'VIM_MODELINE_LANGUAGE'
+      VIM_MODELINE_TARGET = "(?:filetype|ft|syntax)[ \\t]*=#{VIM_MODELINE_LANGUAGE}"
+      VIM_MODELINE_TAIL = "(?:#{VIM_MODELINE_OPTION}#{VIM_MODELINE_SEPARATOR})*#{VIM_MODELINE_TARGET}"
+      VIM_MODELINE_NORMAL = "#{VIM_MODELINE_START}[ \\t]*(?:#{VIM_MODELINE_TARGET}|#{VIM_MODELINE_NON_SET_OPTION}#{VIM_MODELINE_SEPARATOR}#{VIM_MODELINE_TAIL}|:[ \\t]*#{VIM_MODELINE_TAIL})(?:$|[\\s:])"
+      VIM_MODELINE_SET = "#{VIM_MODELINE_START}[ \\t]*set?[ \\t]+(?:#{VIM_MODELINE_OPTION}[ \\t]+)*#{VIM_MODELINE_TARGET}(?:[ \\t][^\\r\\n:]*:|:)"
 
-          # Check if specific Vim version(s) are requested (won't work in vi/ex)
-          (?:
-            # Versioned modeline. `vim<700:` targets Vim versions older than 7.0
-            m
-            [<=>]?    # If comparison operator is omitted, *only* this version is targeted
-            [0-9]+    # Version argument = (MINOR_VERSION_NUMBER * 100) + MINOR_VERSION_NUMBER
-            |
-
-            # Unversioned modeline. `vim:` targets any version of Vim.
-            m
-          )?
-          |
-
-          # `ex:`, which requires leading whitespace to avoid matching stuff like "lex:"
-          [ \t] ex
-        )
-
-        # If the option-list begins with `set ` or `se `, it indicates an alternative
-        # modeline syntax partly-compatible with older versions of Vi. Here, the colon
-        # serves as a terminator for an option sequence, delimited by whitespace.
-        (?=
-          # So we have to ensure the modeline ends with a colon
-          : (?=[ \t]* set? [ \t] [^\r\n:]+ :) |
-
-          # Otherwise, it isn't valid syntax and should be ignored
-          : (?![ \t]* set? [ \t])
-        )
-
-        # Possible (unrelated) `option=value` pairs to skip past
-        (?:
-          # Option separator, either
-          (?:
-            # 1. A colon (possibly surrounded by whitespace)
-            [ \t]* : [ \t]*     # vim: noai :  ft=sh:noexpandtab
-            |
-
-            # 2. At least one (horizontal) whitespace character
-            [ \t]               # vim: noai ft=sh noexpandtab
-          )
-
-          # Option's name. All recognised Vim options have an alphanumeric form.
-          \w*
-
-          # Possible value. Not every option takes an argument.
-          (?:
-            # Whitespace between name and value is allowed: `vim: ft   =sh`
-            [ \t]*=
-
-            # Option's value. Might be blank; `vim: ft= ` means "use no filetype".
-            (?:
-              [^\\\s]    # Beware of escaped characters: titlestring=\ ft=sh
-              |          # will be read by Vim as { titlestring: " ft=sh" }.
-              \\.
-            )*
-          )?
-        )*
-
-        # The actual filetype declaration
-        [ \t:] (?:filetype|ft|syntax) [ \t]*=
-
-        # Language's name
-        (\w+)
-
-        # Ensure it's followed by a legal separator (including EOL)
-        (?=$|\s|:)
-      ]x
+      # The Vim Help heuristic specializes this portable grammar by replacing
+      # VIM_MODELINE_LANGUAGE with `help`.
+      VIM_MODELINE_PATTERN = "(?:#{VIM_MODELINE_NORMAL}|#{VIM_MODELINE_SET})"
+      VIM_MODELINE = Regexp.new(VIM_MODELINE_PATTERN.gsub(VIM_MODELINE_LANGUAGE, '([A-Za-z0-9_]+)'))
 
       MODELINES = [EMACS_MODELINE, VIM_MODELINE]
 
@@ -157,7 +101,7 @@ module Linguist
       # Returns a String or nil
       def self.modeline(data)
         match = MODELINES.map { |regex| data.match(regex) }.reject(&:nil?).first
-        match[1] if match
+        match&.captures&.compact&.first
       end
     end
   end

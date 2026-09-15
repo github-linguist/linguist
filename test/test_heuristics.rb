@@ -1302,6 +1302,18 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_vim_help_modeline_forms
+    candidates = [Language["Text"], Language["Vim Help File"]]
+    vim_help = Language["Vim Help File"]
+    text = Language["Text"]
+
+    assert_equal [vim_help], Heuristics.call(Blob.new("test.txt", "Vim: set ts=8 ft=help:"), candidates)
+    assert_equal [vim_help], Heuristics.call(Blob.new("test.txt", "vim600: titlestring=foo\\ bar syntax=help"), candidates)
+    assert_equal [vim_help], Heuristics.call(Blob.new("test.txt", " ex: noexpandtab: filetype=help"), candidates)
+    assert_equal [text], Heuristics.call(Blob.new("test.txt", "vim: set ts=8 ft=help"), candidates)
+    assert_equal [text], Heuristics.call(Blob.new("test.txt", "vim: set ts=8 ft=ruby:"), candidates)
+  end
+
   def test_typ_by_heuristics
     assert_heuristics({
       "Typst" => all_fixtures("Typst", "*.typ"),

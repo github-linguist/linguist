@@ -1053,9 +1053,9 @@ disambiguations:
   - language: TSX
 - extensions: ['.txt']
   rules:
-    # Match a portable, colon-delimited subset of Vim modeline syntax.
+    # VIM_MODELINE_PATTERN with VIM_MODELINE_LANGUAGE specialized to `help`.
   - language: Vim Help File
-    pattern: '(?:(?:^|[ \t])(?:vi|Vim|vim(?:[<=>]?[0-9]+)?):|[ \t]ex:)[ \t]*(?:[A-Za-z0-9]+(?:=[^ \t:\r\n]*)?:[ \t]*)*(?:filetype|ft|syntax)[ \t]*=help(?:[ \t:]|$)'
+    pattern: '(?:(?:(?:^|[ \t])(?:vi|(?:vim|Vim)(?:[<=>]?[0-9]+)?):|[ \t]ex:)[ \t]*(?:(?:filetype|ft|syntax)[ \t]*=help|(?:[A-RT-Za-rt-z0-9_][A-Za-z0-9_]*|s(?:[A-Za-df-z0-9_][A-Za-z0-9_]*|e(?:[A-SU-Za-su-z0-9_][A-Za-z0-9_]*|t[A-Za-z0-9_]+))?)(?:[ \t]*=(?:[^\\\s]|\\.)*)?(?:[ \t]*:[ \t]*|[ \t])(?:[A-Za-z0-9_]*(?:[ \t]*=(?:[^\\\s]|\\.)*)?(?:[ \t]*:[ \t]*|[ \t]))*(?:filetype|ft|syntax)[ \t]*=help|:[ \t]*(?:[A-Za-z0-9_]*(?:[ \t]*=(?:[^\\\s]|\\.)*)?(?:[ \t]*:[ \t]*|[ \t]))*(?:filetype|ft|syntax)[ \t]*=help)(?:$|[\s:])|(?:(?:^|[ \t])(?:vi|(?:vim|Vim)(?:[<=>]?[0-9]+)?):|[ \t]ex:)[ \t]*set?[ \t]+(?:[A-Za-z0-9_]*(?:[ \t]*=(?:[^\\\s]|\\.)*)?[ \t]+)*(?:filetype|ft|syntax)[ \t]*=help(?:[ \t][^\r\n:]*:|:))'
   - language: Hosts File
     pattern: |-
       (?xi) ^

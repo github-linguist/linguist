@@ -126,6 +126,22 @@ class TestStrategies < Minitest::Test
     assert_equal Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc").language
   end
 
+  def test_vim_help_heuristic_uses_modeline_grammar
+    txt_rules = Heuristics.load_config["disambiguations"].find { |item| item["extensions"] == [".txt"] }
+    vim_help_rule = txt_rules["rules"].find { |rule| rule["language"] == "Vim Help File" }
+    expected = Strategy::Modeline::VIM_MODELINE_PATTERN.gsub(
+      Strategy::Modeline::VIM_MODELINE_LANGUAGE,
+      "help"
+    )
+
+    assert_equal expected, vim_help_rule["pattern"]
+  end
+
+  def test_vim_set_modeline_requires_terminating_colon
+    assert_equal "ruby", Strategy::Modeline.modeline("vim: set ts=8 ft=ruby:")
+    assert_nil Strategy::Modeline.modeline("vim: set ts=8 ft=ruby")
+  end
+
   def test_shebangs
     assert_interpreter nil, ""
     assert_interpreter nil, "foo"
