@@ -599,6 +599,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Scala:** [scala/vscode-scala-syntax](https://github.com/scala/vscode-scala-syntax)
 - **Scaml:** [scalate/Scalate.tmbundle](https://github.com/scalate/Scalate.tmbundle)
 - **Scenic:** [UCSCFormalMethods/Scenic-tmLanguage](https://github.com/UCSCFormalMethods/Scenic-tmLanguage)
+- **Semantic:** [SemanticProgrammingLanguage/Semantic-TextMate-Grammar](https://github.com/SemanticProgrammingLanguage/Semantic-TextMate-Grammar)
 - **Scheme:** [sicp-lang/scheme.tmbundle](https://github.com/sicp-lang/scheme.tmbundle)
 - **Scilab:** [textmate/scilab.tmbundle](https://github.com/textmate/scilab.tmbundle)
 - **ShaderLab:** [tgjones/shaders-tmLanguage](https://github.com/tgjones/shaders-tmLanguage)
