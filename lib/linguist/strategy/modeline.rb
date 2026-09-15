@@ -49,7 +49,7 @@ module Linguist
         -\*-
       ]xi
 
-      # NOTE: When changing this regex, be sure to keep the Vim Help heuristic updated too (#5347)
+      # NOTE: When changing this regex, review the portable Vim Help heuristic too (#5347)
       VIM_MODELINE = %r[
         (?-m)
 
