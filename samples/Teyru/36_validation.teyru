@@ -1,0 +1,180 @@
+package teyru
+
+// Bean validation: the constraints a class declares on its fields, and the one
+// call that checks them.
+//
+// Spring has bean validation and reports every violation at once; this is the
+// part of it a web layer needs -- @NotNull, @Size, @Min and @Max read off the
+// fields of an object the binding just built -- and it reports the first
+// violation rather than all of them, because a handler that wants to know about
+// the rest can ask again.
+//
+// A violated constraint throws, which is what Spring says a constraint is for:
+// the object is not in a state its own class allows, and whoever built it -- a
+// request, a message, a test -- is the one that has to be told. The web layer
+// turns the exception into a 400 (lib/18_web.teyru), because a body that
+// violates the constraints of the type it was bound to is the client's
+// mistake, not the server's.
+
+// @NotNull: the field has to hold something.
+@interface NotNull {
+  String message() default "must not be null"
+}
+
+// @Size: a String field's length has to be within [min, max], both ends
+// included, which is Bean Validation's own rule and the only type this reads.
+@interface Size {
+  int min() default 0
+  int max() default 2147483647
+  String message() default "size is outside the allowed range"
+}
+
+// @Min and @Max bound a numeric field. `value` is a long so that one bound
+// covers an int field, a long field, and the box types they box to; a double or
+// float field is compared as the number it is, not as the integer part of it.
+@interface Min {
+  long value() default 0
+  String message() default "is below the minimum"
+}
+
+@interface Max {
+  long value() default 0
+  String message() default "is above the maximum"
+}
+
+// ValidationException is what a violated constraint throws. It is a
+// RuntimeException because a handler neither declares it nor catches it: the
+// server answers the request instead, and the message is the violation.
+class ValidationException extends RuntimeException {
+  public ValidationException(String message) {
+    super(message)
+  }
+}
+
+// Validation checks an object against the constraints its fields carry, which
+// is what a validator does for a bean: the fields are read reflectively -- the
+// same java.lang.reflect the JSON binding reads (lib/26_reflect.teyru) -- so a
+// class is checked by the annotations it declares and by nothing else.
+class Validation {
+  // check throws on the first field that violates a constraint. The message is
+  // "field: message", which is what a client has to see: which field, and what
+  // the constraint that refused it asks for. A null bean has no fields to
+  // check, which is not a violation -- @NotNull on the field is what says a
+  // field may not be missing, and there is no field here.
+  public static void check(Object bean) {
+    if (bean == null) {
+      return
+    }
+    Field[] fields = bean.getClass().getDeclaredFields()
+    for (int i = 0 : i < fields.length : i++) {
+      checkField(bean, fields[i])
+    }
+  }
+
+  private static void checkField(Object bean, Field f) {
+    // A static field belongs to the class rather than to the object being
+    // checked, so a constraint on one is not a statement about this value.
+    if (Modifier.isStatic(f.getModifiers())) {
+      return
+    }
+    Annotation[] annos = f.getAnnotations()
+    if (annos.length == 0) {
+      return
+    }
+    Object value = f.get(bean)
+    Annotation a = BeanScanner.has(annos, "NotNull")
+    if (a != null && value == null) {
+      throw violation(f, a)
+    }
+    a = BeanScanner.has(annos, "Size")
+    if (a != null && value != null) {
+      checkSize(f, a, value)
+    }
+    a = BeanScanner.has(annos, "Min")
+    if (a != null) {
+      checkBound(f, a, value, true)
+    }
+    a = BeanScanner.has(annos, "Max")
+    if (a != null) {
+      checkBound(f, a, value, false)
+    }
+  }
+
+  // checkSize measures a String field. A field of any other type is a
+  // violation with a message that says so: the constraint is a statement about
+  // the class, and a class that puts it on something it cannot mean anything
+  // for is wrong -- but the request that reached it should be a 400 that says
+  // which field, not a crash.
+  private static void checkSize(Field f, Annotation a, Object value) {
+    if ((value instanceof String) == false) {
+      throw violation(f, a, "@Size applies to a String, not to " + f.getType().getSimpleName())
+    }
+    int n = ((String) value).length()
+    if (n < a.intValue("min") || n > a.intValue("max")) {
+      throw violation(f, a)
+    }
+  }
+
+  // checkBound compares a numeric field with @Min's or @Max's value. A field
+  // that is not a number is a violation with a message that says so, which is
+  // what keeps a @Min on a String from being a crash.
+  //
+  // The comparison is a double for a double or float field and a long for
+  // every other number, so that 5.5 over a @Max(5) is the violation it is
+  // rather than 5.
+  private static void checkBound(Field f, Annotation a, Object value, boolean lower) {
+    if (numeric(f.getType()) == false) {
+      throw violation(f, a, "@" + a.annotationType().getSimpleName() +
+          " applies to a number, not to " + f.getType().getSimpleName())
+    }
+    if (value == null) {
+      return
+    }
+    Number n = (Number) value
+    double actual = floating(f.getType()) ? n.doubleValue() : (double) n.longValue()
+    double bound = (double) a.longValue("value")
+    if (lower && actual < bound) {
+      throw violation(f, a)
+    }
+    if (lower == false && actual > bound) {
+      throw violation(f, a)
+    }
+  }
+
+  private static boolean numeric(Class type) {
+    return integral(type) || floating(type)
+  }
+
+  private static boolean integral(Class type) {
+    return type.equals(int.class) || type.equals(Integer.class) ||
+        type.equals(long.class) || type.equals(Long.class) ||
+        type.equals(short.class) || type.equals(Short.class) ||
+        type.equals(byte.class) || type.equals(Byte.class)
+  }
+
+  private static boolean floating(Class type) {
+    return type.equals(double.class) || type.equals(Double.class) ||
+        type.equals(float.class) || type.equals(Float.class)
+  }
+
+  // violation is the exception a failed constraint throws, and the two forms
+  // are the two things a message can say: the constraint's own message, or why
+  // the constraint cannot read the field at all.
+  private static ValidationException violation(Field f, Annotation a) {
+    return new ValidationException(f.getName() + ": " + message(a))
+  }
+
+  private static ValidationException violation(Field f, Annotation a, String why) {
+    return new ValidationException(f.getName() + ": " + why)
+  }
+
+  // message is the annotation's message element. It is declared with a default,
+  // so it is there whether it was written or not; the fallback is for the one
+  // case the metadata does not carry it.
+  private static String message(Annotation a) {
+    if (a.has("message")) {
+      return a.stringValue("message")
+    }
+    return "@" + a.annotationType().getSimpleName() + " was violated"
+  }
+}

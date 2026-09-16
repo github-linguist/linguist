@@ -1,0 +1,38 @@
+class Person {
+  public String name
+  private int age
+  public int years {
+    get {
+      return field
+    }
+    set {
+      if (value < 0) {
+        field = 0
+      } else {
+        field = value
+      }
+    }
+  }
+  public String label {
+    get {
+      return name + " (" + age + ")"
+    }
+  }
+  public Person(String name, int age) {
+    this.name = name
+    this.age = age
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+    Person p = new Person("ada", 36)
+    System.out.println(p.name)
+    System.out.println(p.years)
+    p.years = -5
+    System.out.println(p.years)
+    System.out.println(p.label)
+    p.years = 42
+    System.out.println(p.getYears())
+  }
+}

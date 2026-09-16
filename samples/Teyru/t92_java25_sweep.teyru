@@ -1,0 +1,154 @@
+import teyru.*
+
+class Point implements Comparable<Point> {
+  int x
+  int y
+  Point(int x, int y) {
+    this.x = x
+    this.y = y
+  }
+  public int compareTo(Point o) { return Integer.compare(x, o.x) }
+  public String toString() { return "(" + x + "," + y + ")" }
+}
+
+record Pair(int a, String b) {
+  Pair {
+    if (a < 0) {
+      throw new IllegalArgumentException("neg")
+    }
+  }
+  String both() { return a + b }
+}
+
+sealed interface Shape permits Circle, Square {
+}
+
+record Circle(double r) implements Shape {
+}
+
+record Square(double s) implements Shape {
+}
+
+enum Colour {
+  RED,
+  GREEN,
+  BLUE:
+  boolean warm() { return this == RED }
+}
+
+interface Greeter {
+  String name()
+  default String greet() { return "hi " + name() }
+  static Greeter of(String n) { return () -> n }
+}
+
+class Box<T extends Comparable<T>> {
+  private T v
+  Box(T v) { this.v = v }
+  T get() { return v }
+  boolean bigger(Box<T> o) { return v.compareTo(o.get()) > 0 }
+}
+
+class Base {
+  Base(String tag) { System.out.println("base " + tag) }
+  int val() { return 1 }
+}
+
+class Derived extends Base {
+  int cached
+  Derived() {
+    int n = 41
+    super("flex " + n)
+    cached = n + 1
+  }
+  @Override int val() { return cached }
+}
+
+class Main {
+  static int fib(int n) { return n < 2 ? n : fib(n - 1) + fib(n - 2) }
+
+  static String classify(Shape s) {
+    return switch (s) {
+      case Circle c -> "circle " + c.r()
+      case Square q -> "square " + q.s()
+    }
+  }
+
+  static String kinds(Object o) {
+    if (o instanceof String s && s.length() > 2) {
+      return "long string " + s
+    }
+    if (o instanceof Pair(int a, String b)) {
+      return "pair " + a + b
+    }
+    return switch (o) {
+      case Integer i when i > 10 -> "big int " + i
+      case Integer i -> "int " + i
+      case String s -> "string " + s
+      case null -> "null"
+      default -> "other"
+    }
+  }
+
+  public static void main(String[] args) {
+    System.out.println(fib(10))
+    System.out.println(new Point(2, 3))
+    System.out.println(new Pair(4, "x").both())
+    System.out.println(classify(new Circle(2.5)))
+    System.out.println(kinds("abcd"))
+    System.out.println(kinds(20))
+    System.out.println(kinds((Object) null))
+    System.out.println(Colour.RED.warm())
+    System.out.println(Greeter.of("ann").greet())
+    System.out.println(new Box<Integer>(5).bigger(new Box<Integer>(3)))
+    System.out.println(new Derived().val())
+
+    var list = new ArrayList<String>()
+    list.add("a")
+    list.add("b")
+    for (String s : list) System.out.print(s)
+    System.out.println()
+
+    String text = """
+        line one
+        line two"""
+    System.out.println(text.split("\n").length)
+
+    List<Integer> nums = new ArrayList<Integer>()
+    nums.add(1)
+    nums.add(2)
+    nums.add(3)
+    int total = 0
+    for (int n : nums) {
+      total += n
+    }
+    System.out.println(total)
+
+    try (AutoCloseable c = () -> System.out.println("closed")) {
+      System.out.println("body")
+    } catch (Exception e) {
+      System.out.println("caught")
+    } finally {
+      System.out.println("finally")
+    }
+
+    int i = 0
+    outer:
+    while (true) {
+      i++
+      if (i > 3) break outer
+    }
+    System.out.println("label " + i)
+
+    System.out.println(new int[]{1, 2, 3}.length)
+    Object[] arr = new String[2]
+    arr[0] = "z"
+    System.out.println(arr[0])
+    System.out.println(1 + 2 * 3 - 4 / 2 % 3)
+    System.out.println(1 << 3 | 2 & 6 ^ 1)
+    System.out.println(7 >>> 1)
+    char ch = 'A'
+    System.out.println((int) ch + 1)
+    System.out.println(Math.max(3, 9))
+  }
+}

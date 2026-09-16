@@ -663,6 +663,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Texinfo:** [Alhadis/language-texinfo](https://github.com/Alhadis/language-texinfo)
 - **TextGrid:** [orhunulusahin/praatvscode](https://github.com/orhunulusahin/praatvscode)
 - **TextMate Properties:** [textmate/textmate.tmbundle](https://github.com/textmate/textmate.tmbundle)
+- **Teyru:** [teyru-lang/editors](https://github.com/teyru-lang/editors)
 - **Thrift:** [textmate/thrift.tmbundle](https://github.com/textmate/thrift.tmbundle)
 - **Toit:** [toitware/ide-tools](https://github.com/toitware/ide-tools)
 - **Tolk:** [ton-blockchain/ton-language-server](https://github.com/ton-blockchain/ton-language-server)
