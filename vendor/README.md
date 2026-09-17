@@ -85,6 +85,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Browserslist:** [browserslist/browserslist-vscode](https://github.com/browserslist/browserslist-vscode)
 - **Bru:** [usebruno/bruno-ide-extensions](https://github.com/usebruno/bruno-ide-extensions)
 - **BuildStream:** [atom/language-yaml](https://github.com/atom/language-yaml)
+- **Buraaq:** [ThoriumDC/buraaq-textmate](https://github.com/ThoriumDC/buraaq-textmate)
 - **C:** [tree-sitter/tree-sitter-c](https://github.com/tree-sitter/tree-sitter-c) 🐌
 - **C#:** [tree-sitter/tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp) 🐌
 - **C++:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)

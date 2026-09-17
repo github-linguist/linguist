@@ -1,0 +1,16 @@
+# Enum variants + match
+enum Status {
+    Ok,
+    Fail,
+}
+
+fn label(s: Status) -> text {
+    match s {
+        .Ok => "ok",
+        .Fail => "fail",
+    }
+}
+
+fn main() {
+    print(label(Status.Ok))
+}

@@ -1,0 +1,14 @@
+# Probe: struct passed to function (known codegen issue — huge allocation)
+struct Point {
+    x: int,
+    y: int,
+}
+
+fn magnitude_squared(p: Point) -> int {
+    p.x * p.x + p.y * p.y
+}
+
+fn main() {
+    p = Point { x: 3, y: 4 }
+    print(magnitude_squared(p).to_text())
+}

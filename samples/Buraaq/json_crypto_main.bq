@@ -1,0 +1,22 @@
+module main
+
+use std.fs.read
+use std.json.parse
+use std.crypto.sha256
+use std.io.println
+
+fn main() {
+    raw = read("payload.json")
+    doc = parse(raw)
+    n = doc.field("n")
+    digest = sha256("buraaq")
+    mut step = 0
+    while step < 2 {
+        if step == 0 {
+            println(n)
+        } else {
+            println(digest)
+        }
+        step = step + 1
+    }
+}
