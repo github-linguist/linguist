@@ -703,6 +703,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Vue:** [vuejs/language-tools](https://github.com/vuejs/language-tools)
 - **Vyper:** [davidhq/SublimeEthereum](https://github.com/davidhq/SublimeEthereum)
 - **WDL:** [stjude-rust-labs/sprocket-vscode](https://github.com/stjude-rust-labs/sprocket-vscode)
+- **WESL:** [wgsl-analyzer/wgsl-analyzer](https://github.com/wgsl-analyzer/wgsl-analyzer)
 - **WGSL:** [wgsl-analyzer/wgsl-analyzer](https://github.com/wgsl-analyzer/wgsl-analyzer)
 - **Wavefront Material:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Wavefront Object:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
