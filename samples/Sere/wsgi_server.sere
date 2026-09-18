@@ -1,0 +1,45 @@
+# Sere WSGI server: routing, query parameters, classes, and static files.
+# Source: https://github.com/Sere-Language/sere (examples/wsgi.sere)
+# License: MIT (Copyright (c) 2026 Sere Language)
+
+import wsgi
+
+def home(environ: wsgi.Environ) -> wsgi.Response:
+    return wsgi.html("<h1>Hello from Sere</h1>")
+
+def greet(environ: wsgi.Environ) -> wsgi.Response:
+    return wsgi.text("Hello, " + environ.param("name", "world") + "!")
+
+def query_echo(environ: wsgi.Environ) -> wsgi.Response:
+    return wsgi.text("q=" + environ.param("q", "none"))
+
+def header_echo(environ: wsgi.Environ) -> wsgi.Response:
+    return wsgi.text("x-test=" + environ.header("X-Test", "none"))
+
+def echo(environ: wsgi.Environ) -> wsgi.Response:
+    return wsgi.json(wsgi.json_string(environ.body))
+
+class Health:
+    checks: i32
+
+    def __init__(self) -> void:
+        self.checks = 0
+
+    def status(self, environ: wsgi.Environ) -> wsgi.Response:
+        self.checks = self.checks + 1
+        return wsgi.json("{\"ok\": true, \"checks\": " + str(self.checks) + "}")
+
+def main() -> i32:
+    health: Health = Health()
+    files: wsgi.Files = wsgi.Files("./public", "/static")
+    router: wsgi.Router = wsgi.Router()
+    router.get("/", home)
+    router.get("/greet/{name}", greet)
+    router.get("/query", query_echo)
+    router.get("/header", header_echo)
+    router.post("/echo", echo)
+    router.get("/health", health.status)
+    router.mount("/static", files.handle)
+    print("listening on http://127.0.0.1:8000")
+    wsgi.serve(router.dispatch, "127.0.0.1", 8000)
+    return 0

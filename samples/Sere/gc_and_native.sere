@@ -1,0 +1,74 @@
+# Garbage collectors, raw pointers, arenas, and C interop with `extern "C"`.
+# Source: https://github.com/Sere-Language/sere (examples/gc_mem.sere, examples/native_add.sere)
+# License: MIT (Copyright (c) 2026 Sere Language)
+
+import gc
+import heap
+from heap import Arena, Pool
+from vm import VM
+
+extern "C" "native_add"
+def add(left: i32, right: i32) -> i32
+
+struct Registers:
+    a: i32
+    x: i32
+    y: i32
+    sp: i32
+
+    def reset(self) -> void:
+        self.a = 0
+        self.x = 0
+        self.y = 0
+        self.sp = 0
+
+class Instruction:
+    @public name: str
+    @public cycles: i32
+
+    def __init__(self, name: str, cycles: i32) -> void:
+        self.name = name
+        self.cycles = cycles
+
+const MEMORY_SIZE: i64 = 65536
+
+def main() -> i32:
+    # Swap the collector, then use the mark-and-sweep entry points directly.
+    installed: bool = gc.use("mark_sweep")
+    raw: Ptr[i8] = gc.alloc_bytes(16)
+    heap.set(raw, 7, 16)
+    used: i64 = gc.bytes_in_use()
+
+    live: Ptr[i32] = alloc[i32]()
+    store(live, 0x44)
+    gc.add_root(live as Ptr[i8])
+    junk: Ptr[i32] = alloc[i32]()
+    store(junk, 1)
+    gc.collect()
+    gc.remove_root(live as Ptr[i8])
+    free(live)
+
+    # Bump allocation out of an arena, plus a fixed-size pool.
+    arena_on: bool = gc.use("arena")
+    scratch: Arena = Arena(4096)
+    block: Ptr[i8] = scratch.alloc(64)
+    heap.zero(block, 64)
+    scratch.destroy()
+
+    pool: Pool = Pool(16, 4)
+    slot: Ptr[i8] = pool.alloc()
+    pool.release(slot)
+    pool.destroy()
+    gc.free_bytes(raw)
+
+    # Structs are value types with field access; classes are heap references.
+    regs: Registers = Registers()
+    regs.reset()
+    regs.a = add(0x40, 0x04)
+    text: str = "cycles: " + str(used) + " " + str(installed) + " " + str(arena_on)
+
+    op: Instruction = Instruction("LDA", 2)
+    vm: VM = VM(MEMORY_SIZE)
+    vm.load([0xA9, regs.a])
+    print(text, regs.x, regs.sp, op.name, op.cycles, vm.read(0))
+    return 0

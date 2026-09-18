@@ -1,0 +1,125 @@
+# A tour of Sere: types, enums with payloads, generics, classes, callables,
+# error handling, async/await, and macros.
+# Source: https://github.com/Sere-Language/sere (examples/, stdlib/)
+# License: MIT (Copyright (c) 2026 Sere Language)
+
+import math
+import time
+
+const MAX_ATTEMPTS: i32 = 3
+static last_error: str = ""
+static attempts: i32 = 0
+
+enum Severity:
+    Debug
+    Info = 10
+    Error = 20
+
+    def label(self) -> str:
+        match self:
+            case Severity.Debug:
+                return "debug"
+            case Severity.Info:
+                return "info"
+            case _:
+                return "error"
+
+enum Outcome[T]:
+    Ok(T)
+    Err(str)
+
+    def is_ok(self) -> bool:
+        match self:
+            case Outcome.Ok(_):
+                return True
+            case Outcome.Err(_):
+                return False
+
+    def unwrap(self) -> T:
+        match self:
+            case Outcome.Ok(value):
+                return value
+            case Outcome.Err(message):
+                raise Exception(message)
+
+class Logger:
+    @public level: Severity
+    @private prefix: str
+    entries: list[str]
+
+    def __init__(self, prefix: str, level: Severity = Severity.Info) -> void:
+        self.prefix = prefix
+        self.level = level
+        self.entries = list[str]()
+
+    def log(self, message: str) -> void:
+        self.entries.append(message)
+        if self.level is Severity.Debug:
+            print(f"[{self.prefix}] {self.level.label()}: {message}")
+
+class ConsoleLogger(Logger):
+    @override
+    def log(self, message: str) -> void:
+        super().log(message)
+        print(f"[{self.prefix}] {message}")
+
+def identity[T](value: T) -> T:
+    return value
+
+def parse_scale(text: str) -> Outcome[f64]:
+    if len(text) == 0:
+        return Outcome.Err("empty scale")
+    value: f64 = f64(len(text)) / 2.0
+    return Outcome.Ok(math.sqrt(value))
+
+def classify(values: list[Any]) -> dict[str, i32]:
+    counts: dict[str, i32] = {"other": 0}
+    for value in values:
+        if isinstance(value, i32):
+            counts["other"] = counts["other"] + 1
+    return counts
+
+def retry(cb: Callable[[], i32], limit: i32) -> i32:
+    while attempts < limit:
+        attempts += 1
+        try:
+            return cb()
+        except Exception as error:
+            last_error = error.message
+    return -1
+
+async def measure(codes: list[str]) -> list[f64]:
+    started: i64 = time.now_ms()
+    results: list[f64] = []
+    for code in codes:
+        outcome: Outcome[f64] = parse_scale(code)
+        if outcome.is_ok():
+            results.append(outcome.unwrap())
+        else:
+            results.append(0.0)
+    time.sleep_ms(1)
+    print(f"measured {len(results)} values in {time.now_ms() - started} ms")
+    return results
+
+macro timed(expr):
+    quote:
+        before: i64 = time.now_ms()
+        value: i32 = $expr
+        print(f"{time.now_ms() - before} ms")
+        value
+
+def main() -> i32:
+    logger: Logger = ConsoleLogger("build", Severity.Debug)
+    logger.log("starting")
+
+    scale: f64 = identity(math.radians(180.0))
+    scores: list[f64] = [1.5, 2.0, 3.5]
+    names: list[str] = [name for name in ["ada", "linus"]]
+    tail: str = "sere-language"[0:4]
+    counts: dict[str, i32] = classify([1, "two", 3.5, True])
+
+    work: i32 = timed(identity(41) + 1)
+    recovered: i32 = retry(lambda (): i32: scale as i32, MAX_ATTEMPTS)
+
+    print(tail, scale, len(scores), names[0], counts["other"], work, recovered, last_error)
+    return 0
