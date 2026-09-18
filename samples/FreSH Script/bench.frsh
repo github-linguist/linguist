@@ -1,0 +1,109 @@
+rounds=${1:-20}
+fresh=${FRESH_BIN:-FreSH}
+
+now() {
+  local raw=$EPOCHREALTIME
+  echo $(( ${raw%.*} * 1000 + 10#${raw#*.} / 1000 ))
+}
+
+measure() {
+  local label=$1
+  shift
+
+  local best=99999999
+  local round=0
+  while [ "$round" -lt "$rounds" ]; do
+    local started=$(now)
+    "$@" > /dev/null 2>&1
+    local taken=$(( $(now) - started ))
+    if [ "$taken" -lt "$best" ]; then best=$taken; fi
+    round=$((round + 1))
+  done
+  printf '  %-30s %6s ms\n' "$label" "$best"
+}
+
+present() {
+  command -v "$1" > /dev/null 2>&1
+}
+
+launch() {
+  local label=$1
+  local program=$2
+  shift 2
+  if present "$program"; then
+    measure "$label" "$program" "$@"
+  else
+    printf '  %-30s %6s\n' "$label" "absent"
+  fi
+}
+
+work=.fresh-bench
+rm -r "$work" 2> /dev/null
+mkdir -p "$work/tree"
+
+seed=0
+while [ "$seed" -lt 60 ]; do
+  printf 'int unit_%s(void) { return %s; }\n' "$seed" "$seed" > "$work/tree/unit$seed.c"
+  seed=$((seed + 1))
+done
+
+printf '\n  FreSH benchmarks, best of %s\n\n' "$rounds"
+printf '  startup\n'
+launch "$fresh -c exit" "$fresh" -c exit
+launch "cmd /c exit" cmd /c exit
+launch "bash -c exit" bash -c exit
+launch "pwsh -c exit" pwsh -NoProfile -Command exit
+launch "powershell -c exit" powershell -NoProfile -Command exit
+
+count_loop() {
+  local i=0
+  while [ "$i" -lt 20000 ]; do i=$((i + 1)); done
+}
+
+sum_loop() {
+  local total=0
+  local i=0
+  for i in 1 2 3 4 5 6 7 8 9 10; do total=$((total + i)); done
+}
+
+expansions() {
+  local v=abcdefghijklmnop
+  local i=0
+  local out=
+  while [ "$i" -lt 5000 ]; do
+    out="${v#a}${v%p}${v/c/C}${#v}"
+    i=$((i + 1))
+  done
+}
+
+globbing() {
+  local files=("$work"/tree/*.c)
+  echo "${#files[@]}"
+}
+
+substitution() {
+  local out=$(echo hello)
+}
+
+pipeline() {
+  echo hello | cat | cat
+}
+
+conditions() {
+  local i=0
+  while [ "$i" -lt 5000 ]; do
+    if [[ "abc$i" == a* ]]; then i=$((i + 1)); fi
+  done
+}
+
+printf '\n  work\n'
+measure "20k while iterations" count_loop
+measure "10 for iterations" sum_loop
+measure "20k expansions" expansions
+measure "5k [[ ]] tests" conditions
+measure "glob 60 files" globbing
+measure "one command substitution" substitution
+measure "three stage pipeline" pipeline
+
+printf '\n'
+rm -r "$work"

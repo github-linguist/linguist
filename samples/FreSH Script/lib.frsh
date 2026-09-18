@@ -1,0 +1,51 @@
+passed=0
+failed=0
+current="?"
+
+suite() {
+  current=$1
+}
+
+check() {
+  if [ "$2" = "$3" ]; then
+    passed=$((passed + 1))
+  else
+    failed=$((failed + 1))
+    printf '\r\e[K  FAIL  %-18s %-22s got [%s] want [%s]\n' "$current" "$1" "$2" "$3"
+  fi
+}
+
+progress() {
+  local width=24
+  local filled=$(( $1 * width / $2 ))
+  local bar=""
+  local step=0
+
+  while [ "$step" -lt "$filled" ]; do
+    bar="$bar█"
+    step=$((step + 1))
+  done
+  while [ "$step" -lt "$width" ]; do
+    bar="$bar░"
+    step=$((step + 1))
+  done
+  printf '\r\e[K  \e[32m%s\e[0m  %2d/%d  \e[90m%s\e[0m' "$bar" "$1" "$2" "$3"
+}
+
+ok() {
+  check "$1" "$2" yes
+}
+
+on_windows() {
+  [ "${OS:-}" = Windows_NT ]
+}
+
+summary() {
+  printf '\n'
+  if [ "$failed" -eq 0 ]; then
+    printf '  %d passed\n' "$passed"
+  else
+    printf '  %d passed, %d failed\n' "$passed" "$failed"
+  fi
+  return "$failed"
+}

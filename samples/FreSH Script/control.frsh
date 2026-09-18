@@ -1,0 +1,108 @@
+suite control
+
+if true; then
+  ok if_taken yes
+else
+  ok if_taken no
+fi
+
+if false; then
+  branch=then
+elif true; then
+  branch=elif
+else
+  branch=else
+fi
+check elif_branch "$branch" elif
+
+if [ 5 -gt 3 ]; then ok test_numeric yes; fi
+if [[ 5 -gt 3 ]]; then ok bracket_numeric yes; fi
+if [[ abc == a* ]]; then ok bracket_glob yes; fi
+if [[ abc =~ ^a.c$ ]]; then ok bracket_regex yes; fi
+if [[ 3 -lt 5 && 5 -lt 9 ]]; then ok bracket_and yes; fi
+if [ -n "text" ]; then ok test_nonempty yes; fi
+if [ -z "" ]; then ok test_empty yes; fi
+
+collected=""
+for word in alpha beta gamma; do
+  collected="$collected${word}:"
+done
+check for_in "$collected" "alpha:beta:gamma:"
+
+count=0
+while [ "$count" -lt 3 ]; do
+  count=$((count + 1))
+done
+check while_loop "$count" 3
+
+count=0
+until [ "$count" -ge 2 ]; do
+  count=$((count + 1))
+done
+check until_loop "$count" 2
+
+found=""
+for candidate in a b c d; do
+  if [ "$candidate" = "c" ]; then
+    found=$candidate
+    break
+  fi
+done
+check break_loop "$found" c
+
+skipped=""
+for candidate in a b c; do
+  if [ "$candidate" = "b" ]; then continue; fi
+  skipped="$skipped$candidate"
+done
+check continue_loop "$skipped" ac
+
+case hello in
+  h*) matched=glob ;;
+  *)  matched=other ;;
+esac
+check case_glob "$matched" glob
+
+case beta in
+  alpha|beta|gamma) matched=alternatives ;;
+  *) matched=none ;;
+esac
+check case_alternatives "$matched" alternatives
+
+greet() {
+  echo "hi $1"
+}
+check function_call "$(greet world)" "hi world"
+
+scoped() {
+  local inner=local_value
+  echo "$inner"
+}
+outer_value=outer
+check local_value "$(scoped)" local_value
+check local_leaves_outer "$outer_value" outer
+
+factorial() {
+  if [ "$1" -le 1 ]; then
+    echo 1
+  else
+    local n=$1
+    echo $(( n * $(factorial $((n - 1))) ))
+  fi
+}
+check recursion "$(factorial 5)" 120
+
+returns_five() { return 5; }
+returns_five
+check return_status "$?" 5
+
+tight(){ echo glued; }
+check glued_braces "$(tight)" glued
+
+null_command() { :; }
+null_command
+check null_command_status "$?" 0
+
+check and_or_true "$(true && echo yes || echo no)" yes
+check and_or_false "$(false && echo yes || echo no)" no
+check not_operator "$(! false && echo negated)" negated
