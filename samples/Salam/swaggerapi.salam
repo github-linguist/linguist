@@ -1,0 +1,213 @@
+import net.router
+import net.http.swagger
+import encoding.json
+
+@doc "whether the link still resolves"
+enum Status:
+    Active
+    Broken
+end
+
+@doc "a saved link, as the API hands it back"
+struct Link:
+    @doc "assigned when the link is saved," "and never reused"
+    @json "" "string"
+    pub id: i64 = 0 as i64
+    @doc "where the link points"
+    pub url: str = ""
+
+    @doc "the page's own title, as it was when the link was saved"
+    @json "page_title"
+    pub title: str = ""
+    pub status: Status = Status.Active
+
+    @doc "whatever the saver wanted to remember about it"
+    @json "" "omitempty"
+    pub note: str = ""
+    @doc "free-form labels, for finding it again"
+    pub tags: Vector<str> = Vector {}
+
+    @json "-"
+    pub owner_id: i64 = 0 as i64
+end
+
+@doc "what a client sends to save one"
+struct NewLink:
+    @doc "where the link points"
+    pub url: str = ""
+    @json "page_title"
+    pub title: str = ""
+    @json "" "omitempty"
+    pub note: str = ""
+end
+
+@doc "one page of results, and how many there are in total"
+struct Page:
+    @doc "how many links match, ignoring limit and offset"
+    pub total: int = 0
+    pub items: Vector<Link> = Vector {}
+end
+
+@doc "what went wrong, when something did"
+struct Problem:
+    @doc "a short machine-readable name for the failure"
+    pub error: str = ""
+    @doc "a sentence a person can act on"
+    pub detail: str = ""
+end
+
+func list_links(_ctx: i64): ret end
+func create_link(_ctx: i64): ret end
+func get_link(_ctx: i64): ret end
+func delete_link(_ctx: i64): ret end
+func health(_ctx: i64): ret end
+
+func routes(): router.Router:
+    mut r := router.NewRouter()
+    router.Get(r, "/api/links", list_links)
+    router.Post(r, "/api/links", create_link)
+    router.Get(r, "/api/links/:id", get_link)
+    router.Delete(r, "/api/links/:id", delete_link)
+    router.Get(r, "/health", health)
+    ret r
+end
+
+func document(r: router.Router): swagger.Doc:
+    mut doc := swagger.New("Links API", "2.1.0")
+    swagger.Describe(doc, "Save a link, find it later.")
+    swagger.Server(doc, "https://links.example.test", "production")
+    swagger.Server(doc, "http://127.0.0.1:8090", "local")
+    swagger.Contact(doc, "Links team", "", "links@example.test")
+    swagger.License(doc, "MIT", "https://opensource.org/license/mit")
+    swagger.BearerAuth(doc, "bearer", "JWT")
+
+    swagger.Scan(doc, r)
+
+    _1 := swagger.At(doc, "GET", "/api/links")
+    swagger.Tag(doc, "links")
+    swagger.Summary(doc, "List links")
+    swagger.Details(doc, "Newest first. Use limit and offset to page.")
+    swagger.Query(doc, "status", "active, broken, or all (the default)", false)
+    swagger.QueryTyped(doc, "limit", "how many to return, at most 100", false, 0)
+    swagger.QueryTyped(doc, "offset", "how many to skip", false, 0)
+    swagger.Returns(doc, 200, "one page of links", Page {})
+
+    _2 := swagger.At(doc, "POST", "/api/links")
+    swagger.Tag(doc, "links")
+    swagger.Summary(doc, "Save a link")
+    swagger.Secure(doc, "bearer")
+    swagger.Accepts(doc, "the link to save", NewLink {})
+    swagger.Returns(doc, 201, "the link, with the id it was given", Link {})
+    swagger.ReturnsHeader(doc, 201, "Location", "where the saved link now lives")
+    swagger.Returns(doc, 422, "the url was not a url", Problem {})
+
+    _3 := swagger.At(doc, "GET", "/api/links/:id")
+    swagger.Tag(doc, "links")
+    swagger.Summary(doc, "One link")
+    swagger.PathParam(doc, "id", "the link's id")
+    swagger.Returns(doc, 200, "the link", Link {})
+    swagger.Returns(doc, 404, "no link with that id", Problem {})
+
+    _4 := swagger.At(doc, "DELETE", "/api/links/:id")
+    swagger.Tag(doc, "links")
+    swagger.Summary(doc, "Forget a link")
+    swagger.Secure(doc, "bearer")
+    swagger.PathParam(doc, "id", "the link's id")
+    swagger.ReturnsNothing(doc, 204, "gone")
+
+    ret doc
+end
+
+func show_paths(spec: str):
+    paths := json.Get(spec, "paths")
+    keys := json.Keys(paths)
+    defer keys.free()
+    repeat keys.len() with i:
+        path := keys.get(i)
+        methods := json.Keys(json.Get(paths, path))
+        defer methods.free()
+        repeat methods.len() with j:
+            m := methods.get(j)
+            op := json.Get(json.Get(paths, path), m)
+            summary := json.Get(op, "summary")
+            mut line := "  ".concat(m.upper()).concat(" ").concat(path)
+            if summary.len() > 0:
+                line = line.concat("  -  ").concat(summary)
+            end
+            println line
+        end
+    end
+end
+
+func show_schemas(spec: str):
+    schemas := json.Get(json.Get(spec, "components"), "schemas")
+    names := json.Keys(schemas)
+    defer names.free()
+    repeat names.len() with i:
+        name := names.get(i)
+        body := json.Get(schemas, name)
+        props := json.Keys(json.Get(body, "properties"))
+        defer props.free()
+        mut line := "  ".concat(name).concat(": ")
+        if props.len() == 0:
+
+            line = line.concat(json.Get(body, "enum"))
+        end
+        repeat props.len() with j:
+            if j > 0:
+                line = line.concat(" ")
+            end
+            line = line.concat(props.get(j))
+        end
+        println line
+    end
+end
+
+func main:
+    r := routes()
+    doc := document(r)
+    spec := swagger.Spec(doc)
+
+    println "== the routes, read out of the router =="
+    show_paths(spec)
+
+    println ""
+    println "== the schemas, read out of the types =="
+    show_schemas(spec)
+
+    println ""
+    println "== what the compiler derived for Link =="
+
+    println json.Get(json.Get(json.Get(spec, "components"), "schemas"), "Link")
+
+    println ""
+    println "== a response that names a header =="
+    created := json.Get(json.Get(json.Get(json.Get(spec, "paths"), "/api/links"), "post"), "responses")
+    println json.Get(json.Get(created, "201"), "headers")
+
+    println ""
+    println "== what the check has to say about it =="
+    probs := swagger.Problems(doc)
+    defer probs.free()
+    println probs.len()
+    undoc := swagger.Undocumented(doc)
+    defer undoc.free()
+    repeat undoc.len() with i:
+        println "  undescribed: ", undoc.get(i)
+    end
+
+    println ""
+    println "== the request body of POST /api/links =="
+    post := json.Get(json.Get(json.Get(spec, "paths"), "/api/links"), "post")
+    println json.Get(post, "requestBody")
+    println json.Get(post, "security")
+
+    println ""
+    println "== a route nobody described is still in the document =="
+    println json.Get(json.Get(json.Get(spec, "paths"), "/health"), "get")
+
+    println ""
+    println "== the document is valid JSON and says so =="
+    println json.Valid(spec)
+    println json.Get(spec, "openapi")
+end

@@ -1,0 +1,101 @@
+package main
+
+import crypto
+import jwt
+import time
+import net.http
+import net.router
+
+const PORT := 8083
+
+func guard(): jwt.Guard:
+    mut g := jwt.NewGuard("dev-only-secret-change-me")
+    g.opts.issuer = "session.example"
+    g.opts.require_exp = true
+
+    g.cookie = "session"
+    ret g
+end
+
+func password_hash(user: str): str:
+    if user == "sara": ret crypto.HashPassword("hunter2") end
+    if user == "ali": ret crypto.HashPassword("salam") end
+    ret ""
+end
+
+func page(ctx: i64, body: str):
+    http.Ctx_html(
+        ctx, "<!doctype html><meta charset=utf-8><title>Salam session</title>" + "<style>body{font:16px system-ui;margin:3rem auto;max-width:30rem}" + "input,button{font:inherit;padding:.4rem;margin:.2rem 0;display:block;width:100%}</style>" + body
+    )
+end
+
+func login_form(ctx: i64):
+    page(
+        ctx, "<h1>Sign in</h1>" + `<form method="post" action="/login">` + `<input name="user" placeholder="sara" autofocus>` + `<input name="password" type="password" placeholder="hunter2">` + `<button>Sign in</button></form>` + "<p><small>try sara / hunter2</small></p>"
+    )
+end
+
+func login(ctx: i64):
+
+    user := http.Ctx_form(ctx, "user")
+    password := http.Ctx_form(ctx, "password")
+    stored := password_hash(user)
+    if stored.len() == 0 || !crypto.VerifyPassword(password, stored):
+        http.Ctx_status(ctx, 401)
+        page(ctx, "<h1>No.</h1><p>Wrong user or password. <a href=/>Try again</a></p>")
+        ret
+    end
+    mut err := 0
+    token := jwt.IssueFor(guard(), user, 3600 as i64, err)
+    if err != jwt.JWT_OK:
+        http.Ctx_status(ctx, 500)
+        page(ctx, "<h1>Could not start a session</h1>")
+        ret
+    end
+
+    jwt.SetSessionCookieInsecure(ctx, guard(), token, 3600)
+    http.Ctx_redirect(ctx, "/dashboard")
+end
+
+func dashboard(ctx: i64):
+    mut t := jwt.Token {}
+
+    if !require_page(ctx, t): ret end
+    page(
+        ctx, "<h1>Hello, " + t.claims.sub + "</h1>" + "<p>Session ends at " + expiry(t) + ".</p>" + `<form method="post" action="/logout"><button>Sign out</button></form>`
+    )
+end
+
+func require_page(ctx: i64, t &: jwt.Token): bool:
+    mut err := 0
+    verified := jwt.Check(ctx, guard(), err)
+    if err != jwt.JWT_OK:
+        http.Ctx_redirect(ctx, "/")
+        ret false
+    end
+    t = verified
+    ret true
+end
+
+func expiry(t: jwt.Token): str:
+    ret time.FormatISO(t.claims.exp)
+end
+
+func logout(ctx: i64):
+
+    jwt.ClearSessionCookie(ctx, guard())
+    http.Ctx_redirect(ctx, "/")
+end
+
+func main:
+    mut r := router.NewRouter()
+    router.Get(r, "/", login_form)
+    router.Post(r, "/login", login)
+    router.Get(r, "/dashboard", dashboard)
+    router.Post(r, "/logout", logout)
+    mut s := http.NewServer(PORT)
+    http.Use(s, r)
+    println "listening on http://localhost:8083"
+    http.Run(s)
+    ret 0
+end

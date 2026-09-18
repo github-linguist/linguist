@@ -1,0 +1,153 @@
+import env
+import encoding.envfile
+import encoding.json
+
+const PREFIX := "DEMO_"
+
+struct Config:
+    pub name: str = ""
+    pub url: str = ""
+    pub port: int = 0
+    pub workers: int = 0
+    pub debug: bool = false
+    pub timeout: f64 = 0.0
+    @json "-"
+    pub secret: str = ""
+end
+
+func defaults(): str:
+    mut t := "DEMO_APP_NAME=salam-demo\n"
+    t = t + "DEMO_HOST=localhost\n"
+    t = t + "DEMO_PORT=8080\n"
+    t = t + "DEMO_WORKERS=2\n"
+    t = t + "DEMO_DEBUG=false\n"
+    t = t + "DEMO_TIMEOUT=1.5\n"
+    t = t + "DEMO_SECRET=\n"
+    ret t
+end
+
+func shared_env(): str:
+    mut t := "# shared settings, checked in\n"
+    t = t + "DEMO_URL=http://${DEMO_HOST}:${DEMO_PORT}/api\n"
+    t = t + "DEMO_WORKERS=4\n"
+    ret t
+end
+
+func production_env(): str:
+    mut t := "DEMO_HOST=api.example.com\n"
+    t = t + "DEMO_PORT=443\n"
+    t = t + "DEMO_DEBUG=false\n"
+    ret t
+end
+
+func missing(keys: Vector<str>): Vector<str>:
+    mut bad := Vector {} as Vector<str>
+    repeat keys.len() with i:
+        k := keys.get(i)
+        if env.Get(k).len() == 0:
+            bad.push(k)
+        end
+    end
+    ret bad
+end
+
+func read_config(): Config:
+    ret Config {
+        name = env.Get("DEMO_APP_NAME"),
+        url = env.Get("DEMO_URL"),
+        port = env.GetInt("DEMO_PORT", 0) as int,
+        workers = env.GetInt("DEMO_WORKERS", 1) as int,
+        debug = env.GetBool("DEMO_DEBUG", false),
+        timeout = env.GetFloat("DEMO_TIMEOUT", 0.0),
+        secret = env.Get("DEMO_SECRET")
+    }
+end
+
+func show(label: str, c: Config):
+    print label
+    print ": "
+    println json.Marshal(c)
+end
+
+func inspect_file():
+    mut d := envfile.Parse(shared_env())
+    defer envfile.Free(d)
+    print "shared .env keys: "
+    println envfile.Len(d)
+    mut refs := envfile.RefNamesIn(shared_env())
+    defer refs.free()
+    print "unresolved references: "
+    repeat refs.len() with i:
+        if i > 0: print ", " end
+        print refs.get(i)
+    end
+    println ""
+    print "DEMO_URL before expansion: "
+    println envfile.Get(d, "DEMO_URL")
+end
+
+func main:
+    println "== the file, unapplied =="
+    inspect_file()
+
+    println ""
+    println "== layers, strongest first =="
+
+    _s1 := env.Set("DEMO_SECRET", "s3cr3t-token-values")
+    _s2 := env.Set("DEMO_WORKERS", "16")
+    println "process environment: 2 keys"
+    show("after process env", read_config())
+
+    n2 := env.LoadText(production_env())
+    print "profile file applied:  "
+    println n2
+    show("after profile   ", read_config())
+
+    n3 := env.LoadText(shared_env())
+    print "shared file applied:   "
+    println n3
+    show("after shared    ", read_config())
+
+    n4 := env.LoadText(defaults())
+    print "defaults applied:      "
+    println n4
+    show("after defaults  ", read_config())
+
+    println ""
+    println "== validation =="
+    mut required := Vector {} as Vector<str>
+    defer required.free()
+    required.push("DEMO_APP_NAME")
+    required.push("DEMO_URL")
+    required.push("DEMO_SECRET")
+    required.push("DEMO_UNSET_KEY")
+    mut bad := missing(required)
+    defer bad.free()
+    print "missing required keys: "
+    repeat bad.len() with i:
+        if i > 0: print ", " end
+        print bad.get(i)
+    end
+    println ""
+
+    println ""
+    println "== effective =="
+    c := read_config()
+    print "url:      "
+    println c.url
+    print "port:     "
+    println c.port
+    print "workers:  "
+    println c.workers
+    print "debug:    "
+    println c.debug
+    print "timeout:  "
+    println c.timeout
+
+    print "secret:   "
+    println env.Mask(c.secret)
+    print "prefix:   "
+    println PREFIX
+    print "profile:  "
+    println env.GetOr("DEMO_PROFILE", "development")
+end

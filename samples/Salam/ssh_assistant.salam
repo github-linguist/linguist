@@ -1,0 +1,232 @@
+import ssh
+import io
+import str
+import os
+
+const RESET := "\x1b[0m"
+const BOLD := "\x1b[1m"
+const DIM := "\x1b[2m"
+const RED := "\x1b[31m"
+const GREEN := "\x1b[32m"
+const YELLOW := "\x1b[33m"
+const CYAN := "\x1b[36m"
+
+func c(color: str, text: str): str:
+    ret color + text + RESET
+end
+
+func banner():
+    println c(CYAN + BOLD, "+----------------------------------------+")
+    println c(CYAN + BOLD, "|          Salam SSH Assistant            |")
+    println c(CYAN + BOLD, "+----------------------------------------+")
+    println c(DIM, "Type a shell command to run it remotely.")
+    println c(DIM, "Built-ins: upload <local> <remote>, download <remote> <local>,")
+    println c(DIM, "           ls <remote-dir>, reconnect, exit")
+    println ""
+end
+
+func ask(label: str): str:
+    print label
+    ret io.Input().trim()
+end
+
+func ask_int(label: str, def_val: int): int:
+    s := ask(label)
+    if s.len() == 0:
+        ret def_val
+    end
+    ret s.to_int()
+end
+
+func warmup():
+    junk := "a,b,c".split(",")
+    defer junk.free()
+end
+
+func build_config(): ssh.Config:
+    host := ask(c(BOLD, "Host: "))
+    port := ask_int(c(BOLD, "Port [22]: "), 22)
+    user := ask(c(BOLD, "Username: "))
+    mut cfg := ssh.NewConfig(host, port, user)
+
+    method := ask(c(BOLD, "Auth [1=password, 2=key file]: "))
+    if str.Equals(method, "2"):
+        keypath := ask(c(BOLD, "Private key path: "))
+        if !ssh.WithKeyFile(cfg, keypath):
+            println c(RED, "Could not read that key file.")
+        end
+    else:
+        password := ask(c(BOLD, "Password: "))
+        ssh.WithPassword(cfg, password)
+    end
+    ret cfg
+end
+
+func print_status(client: ssh.Client):
+    println c(GREEN + BOLD, "Connected.")
+    println c(DIM, "  host key fingerprint: ") + ssh.HostKeyFingerprint(client)
+end
+
+func connect_flow(): ssh.Client:
+    mut cfg := build_config()
+    mut client := ssh.Dial(cfg)
+    until ssh.Ok(client):
+        println c(RED, "Connection failed: ") + ssh.Error(client)
+        retry := ask(c(BOLD, "Try again? [y/N]: "))
+        if !str.Equals(retry, "y") && !str.Equals(retry, "Y"):
+            ret client
+        end
+        cfg = build_config()
+        client = ssh.Dial(cfg)
+    end
+    print_status(client)
+    ret client
+end
+
+func print_exec_result(res: ssh.ExecResult):
+    if res.stdout.len() > 0:
+        print res.stdout
+    end
+    if res.stderr.len() > 0:
+        println c(RED, res.stderr)
+    end
+    if res.exit_code == 0:
+        println c(DIM, "[exit ") + c(GREEN, "" + res.exit_code) + c(DIM, "]")
+    else:
+        println c(DIM, "[exit ") + c(RED, "" + res.exit_code) + c(DIM, "]")
+    end
+end
+
+func cmd_upload(client &: ssh.Client, args: str):
+    parts := args.trim().split(" ")
+    defer parts.free()
+    if parts.len() < 2:
+        println c(RED, "usage: upload <local> <remote>")
+        ret
+    end
+    local := parts.get(0)
+    remote := parts.get(1)
+    if !os.Exists(local):
+        println c(RED, "local file not found: ") + local
+        ret
+    end
+    mut sftp := ssh.SftpOpen(client)
+    if !sftp.ok:
+        println c(RED, "could not start sftp subsystem")
+        ret
+    end
+    println c(DIM, "uploading ") + local + c(DIM, " -> ") + remote + c(DIM, " ...")
+    ok := ssh.Upload(client, sftp, local, remote)
+    ssh.SftpClose(client, sftp)
+    if ok:
+        println c(GREEN, "done.")
+    else:
+        println c(RED, "upload failed.")
+    end
+end
+
+func cmd_download(client &: ssh.Client, args: str):
+    parts := args.trim().split(" ")
+    defer parts.free()
+    if parts.len() < 2:
+        println c(RED, "usage: download <remote> <local>")
+        ret
+    end
+    remote := parts.get(0)
+    local := parts.get(1)
+    mut sftp := ssh.SftpOpen(client)
+    if !sftp.ok:
+        println c(RED, "could not start sftp subsystem")
+        ret
+    end
+    println c(DIM, "downloading ") + remote + c(DIM, " -> ") + local + c(DIM, " ...")
+    ok := ssh.Download(client, sftp, remote, local)
+    ssh.SftpClose(client, sftp)
+    if ok:
+        println c(GREEN, "done.")
+    else:
+        println c(RED, "download failed.")
+    end
+end
+
+func cmd_ls(client &: ssh.Client, args: str):
+    mut dir := args.trim()
+    if dir.len() == 0:
+        dir = "."
+    end
+    mut sftp := ssh.SftpOpen(client)
+    if !sftp.ok:
+        println c(RED, "could not start sftp subsystem")
+        ret
+    end
+    entries := ssh.ListDir(client, sftp, dir) as Vector<ssh.SftpFileInfo>
+    defer entries.free()
+    ssh.SftpClose(client, sftp)
+    each entry in entries:
+        mut label := entry.name
+        if entry.is_dir:
+            label = c(CYAN, entry.name + "/")
+        end
+        println "  " + label + c(DIM, "  " + entry.size + " bytes")
+    end
+end
+
+func dispatch(client &: ssh.Client, line: str): bool:
+    if str.Equals(line, "exit") || str.Equals(line, "quit"):
+        ret false
+    end
+    if str.Equals(line, "reconnect"):
+        println c(YELLOW, "Reconnecting...")
+        if ssh.Reconnect(client):
+            print_status(client)
+        else:
+            println c(RED, "Reconnect failed: ") + ssh.Error(client)
+        end
+        ret true
+    end
+    if str.StartsWith(line, "upload "):
+        cmd_upload(client, line.substr(7, line.len() - 7))
+        ret true
+    end
+    if str.StartsWith(line, "download "):
+        cmd_download(client, line.substr(9, line.len() - 9))
+        ret true
+    end
+    if str.Equals(line, "ls") || str.StartsWith(line, "ls "):
+        mut rest := ""
+        if line.len() > 2:
+            rest = line.substr(2, line.len() - 2)
+        end
+        cmd_ls(client, rest)
+        ret true
+    end
+    res := ssh.RunCommand(client, line)
+    if !res.ok:
+        println c(RED, "command failed to run (connection lost?)")
+        ret true
+    end
+    print_exec_result(res)
+    ret true
+end
+
+func main:
+    warmup()
+    banner()
+    mut client := connect_flow()
+    if !ssh.Ok(client):
+        println c(RED, "Giving up.")
+        ret
+    end
+
+    mut running := true
+    until !running:
+        line := ask(c(GREEN + BOLD, client.cfg.user + "@" + client.cfg.host + "$ "))
+        if line.len() == 0:
+            continue
+        end
+        running = dispatch(client, line)
+    end
+
+    ssh.Close(client)
+    println c(DIM, "Goodbye.")
+end

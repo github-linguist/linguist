@@ -1,0 +1,175 @@
+import encoding.json
+import encoding.encerr
+import encoding.value
+
+struct Reading:
+    pub sensor: str = ""
+    pub celsius: f64 = 0.0
+
+    @json "" "optional"
+    pub seq: i64 = 0
+    @json "" "optional"
+    pub ok: bool = true
+end
+
+struct Report:
+    pub accepted: int = 0
+    pub rejected: int = 0
+    pub warmest: str = ""
+    pub warmest_c: f64 = 0.0
+end
+
+func take(line: str, out &: Reading): str:
+    mut e := encerr.NoError()
+    if json.Unmarshal(line, out, e):
+        ret ""
+    end
+
+    ret e.message + " at " + e.position
+end
+
+func take_lenient(line: str, out &: Reading): str:
+    mut e := encerr.NoError()
+    if json.UnmarshalLenient(line, out, e):
+        ret ""
+    end
+    ret e.message + " at " + e.position
+end
+
+func feed(): Vector<str>:
+    mut v := Vector {} as Vector<str>
+    v.push("{\"sensor\":\"boiler\",\"celsius\":91.5,\"seq\":1}")
+    v.push("{\"sensor\":\"roof\",\"celsius\":-4.25,\"seq\":2,\"ok\":false}")
+    v.push("{\"sensor\":\"cellar\",\"celsius\":12}")
+    v.push("{\"sensor\":\"attic\",\"celsius\":\"warm\",\"seq\":4}")
+    v.push("{\"sensor\":\"yard\",\"seq\":5}")
+    v.push("{\"sensor\":\"lab\",\"celsius\":20.5,\"unit\":\"C\"}")
+    v.push("{\"sensor\":\"gate\",\"celsius\":8.0,\"seq\":7,\"seq\":8}")
+    v.push("{\"sensor\":\"pump\",\"celsius\":33.0}]")
+    v.push("not json at all")
+    v.push("")
+    ret v
+end
+
+func report_line(i: int, why: str):
+    print "  ["
+    print i
+    print "] "
+    if why.len() == 0:
+        println "ok"
+    else:
+        print "rejected: "
+        println why
+    end
+end
+
+func strict_pass(lines: Vector<str>): Report:
+    mut r := Report {}
+    repeat lines.len() with i:
+        mut rd := Reading {}
+        why := take(lines.get(i), rd)
+        report_line(i, why)
+        if why.len() == 0:
+            r.accepted = r.accepted + 1
+            if r.warmest.len() == 0 || rd.celsius > r.warmest_c:
+                r.warmest = rd.sensor
+                r.warmest_c = rd.celsius
+            end
+        else:
+            r.rejected = r.rejected + 1
+        end
+    end
+    ret r
+end
+
+func lenient_pass(lines: Vector<str>): Report:
+    mut r := Report {}
+    repeat lines.len() with i:
+        mut rd := Reading {}
+        why := take_lenient(lines.get(i), rd)
+        if why.len() == 0:
+            r.accepted = r.accepted + 1
+            if r.warmest.len() == 0 || rd.celsius > r.warmest_c:
+                r.warmest = rd.sensor
+                r.warmest_c = rd.celsius
+            end
+        else:
+            r.rejected = r.rejected + 1
+        end
+    end
+    ret r
+end
+
+func inspect(line: str):
+    mut e := encerr.NoError()
+    v := json.Decode(line, e)
+    if encerr.IsError(e):
+        print "  not a document: "
+        println e.message
+        ret
+    end
+    if value.IsObject(v) == false:
+        println "  not an object"
+        ret
+    end
+    mut keys := value.ObjectKeys(v)
+    defer keys.free()
+    print "  keys: "
+    println keys.len()
+    print "  has 'unit': "
+    println value.ObjectHas(v, "unit")
+    if value.ObjectHas(v, "celsius"):
+        c := value.ObjectGet(v, "celsius")
+        print "  celsius is a number: "
+        println value.IsNumber(c)
+        print "  celsius as f64: "
+        println value.AsFloat(c)
+    end
+end
+
+func main:
+    mut lines := feed()
+    defer lines.free()
+
+    println "== strict pass =="
+    strict := strict_pass(lines)
+    println ""
+    print "strict: "
+    println json.Marshal(strict)
+
+    println ""
+    println "== the same feed, read leniently =="
+    lax := lenient_pass(lines)
+    print "lenient: "
+    println json.Marshal(lax)
+    println "three more accepted: the missing key, the unknown key, the repeated key"
+    println "still rejected: the wrong type, and the three that are not documents"
+
+    println ""
+    println "== a line whose shape is not known ahead of time =="
+    println lines.get(5)
+    inspect(lines.get(5))
+
+    println ""
+    println "== and one that is not a document =="
+    inspect(lines.get(8))
+
+    println ""
+    println "== what survived =="
+    mut kept := Vector {} as Vector<Reading>
+    defer kept.free()
+    repeat lines.len() with i:
+        mut rd := Reading {}
+        if take(lines.get(i), rd).len() == 0:
+            kept.push(rd)
+        end
+    end
+    println json.Marshal(kept)
+    print "re-decodes: "
+    mut back := Vector {} as Vector<Reading>
+    defer back.free()
+    mut e := encerr.NoError()
+    println json.Unmarshal(json.Marshal(kept), back, e)
+    print "same count: "
+    println back.len() == kept.len()
+end

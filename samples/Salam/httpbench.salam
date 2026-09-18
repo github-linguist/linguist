@@ -1,0 +1,275 @@
+package main
+
+import os
+import mem
+import str
+import net.http
+import net.router
+
+const DEFAULT_PORT := 8099
+
+mut _cached_file := ""
+mut _asset_dir := ""
+
+mut _data_path := ""
+
+func text(ctx: i64, body: str):
+    http.Ctx_status(ctx, 200)
+    http.Ctx_text(ctx, body)
+end
+
+func json_ok(ctx: i64, body: str):
+    http.Ctx_status(ctx, 200)
+    http.Ctx_json(ctx, body)
+end
+
+func json_owned(ctx: i64, body: str):
+    http.Ctx_status(ctx, 200)
+    http.Ctx_json(ctx, http.Ctx_own(ctx, body))
+end
+
+func fail(ctx: i64, code: int, message: str):
+    mut b := str.NewBuilder()
+    defer str.BufFree(b)
+    str.BufAppend(b, `{"error":"`)
+    append_json_escaped(b, message)
+    str.BufAppend(b, `"}`)
+    http.Ctx_status(ctx, code)
+    http.Ctx_json(ctx, http.Ctx_own(ctx, str.BufStr(b)))
+end
+
+func int_query(ctx: i64, name: str, fallback: int, lo: int, hi: int): int:
+    raw := http.Ctx_query(ctx, name)
+    if raw.len() == 0: ret fallback end
+    v := raw.to_int()
+    if v < lo: ret lo end
+    if v > hi: ret hi end
+    ret v
+end
+
+func plaintext(ctx: i64):
+    text(ctx, "Hello, World!")
+end
+
+func health(ctx: i64):
+    json_ok(ctx, `{"status":"ok","service":"httpbench"}`)
+end
+
+func json_route(ctx: i64):
+    json_ok(
+        ctx,
+        `{"message":"Hello, World!","server":"salam","routes":13,"ok":true}`
+    )
+end
+
+func home(ctx: i64):
+    mut b := str.NewBuilder()
+    defer str.BufFree(b)
+    str.BufAppend(b, "<!doctype html>\n<html lang=\"en\">\n<head>\n")
+    str.BufAppend(b, "<meta charset=\"utf-8\">\n")
+    str.BufAppend(b, "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n")
+    str.BufAppend(b, "<title>Salam httpbench</title>\n")
+    str.BufAppend(b, "<link rel=\"stylesheet\" href=\"/static/style.css\">\n")
+    str.BufAppend(b, "</head>\n<body>\n<main>\n")
+    str.BufAppend(b, "<h1>Salam httpbench</h1>\n")
+    str.BufAppend(b, "<p>A server built to be measured. Each route isolates one cost.</p>\n")
+    str.BufAppend(b, "<table>\n<tr><th>Route</th><th>What it costs</th></tr>\n")
+    row(b, "/plaintext", "the floor: accept, parse, route, write")
+    row(b, "/json", "small-object serialization")
+    row(b, "/", "this page, assembled per request")
+    row(b, "/file", "a disk read on every request")
+    row(b, "/cached", "the same bytes, read once at boot")
+    row(b, "/static/style.css", "the built-in static file path")
+    row(b, "/users/:id", "one router-extracted path parameter")
+    row(b, "/search?q=salam&n=5", "query-string parsing")
+    row(b, "/compute?n=1000", "tunable CPU work")
+    row(b, "/headers", "request headers walked and echoed")
+    row(b, "/echo (POST)", "request body read back out")
+    row(b, "/health", "a load balancer's poll")
+    str.BufAppend(b, "</table>\n</main>\n</body>\n</html>\n")
+    http.Ctx_status(ctx, 200)
+    http.Ctx_html(ctx, http.Ctx_own(ctx, str.BufStr(b)))
+end
+
+func row(b &: str.StringBuilder, path: str, note: str):
+    str.BufAppend(b, "<tr><td><a href=\"")
+    str.BufAppend(b, path)
+    str.BufAppend(b, "\">")
+    str.BufAppend(b, path)
+    str.BufAppend(b, "</a></td><td>")
+    str.BufAppend(b, note)
+    str.BufAppend(b, "</td></tr>\n")
+end
+
+func file_route(ctx: i64):
+    body := os.ReadFile(_data_path)
+    if body.len() == 0:
+        mem.Free(body as void *)
+        fail(ctx, 500, "asset missing")
+        ret
+    end
+    json_owned(ctx, body)
+end
+
+func cached_route(ctx: i64):
+    json_ok(ctx, _cached_file)
+end
+
+func user_route(ctx: i64):
+    id := http.Ctx_param(ctx, "id")
+    if id.len() == 0:
+        fail(ctx, 400, "missing id")
+        ret
+    end
+    mut b := str.NewBuilder()
+    defer str.BufFree(b)
+    str.BufAppend(b, `{"id":"`)
+    append_json_escaped(b, id)
+    str.BufAppend(b, `","name":"user-`)
+    append_json_escaped(b, id)
+    str.BufAppend(b, `","active":true}`)
+    json_owned(ctx, str.BufStr(b))
+end
+
+func search_route(ctx: i64):
+    q := http.Ctx_query(ctx, "q")
+    n := int_query(ctx, "n", 5, 0, 100)
+    mut b := str.NewBuilder()
+    defer str.BufFree(b)
+    str.BufAppend(b, `{"query":"`)
+    append_json_escaped(b, q)
+    str.BufAppend(b, `","count":`)
+    str.BufAppendInt(b, n as i64)
+    str.BufAppend(b, `,"results":[`)
+    repeat n with i:
+        if i > 0: str.BufAppend(b, ",") end
+        str.BufAppend(b, `{"rank":`)
+        str.BufAppendInt(b, (i + 1) as i64)
+        str.BufAppend(b, `,"title":"`)
+        append_json_escaped(b, q)
+        str.BufAppend(b, " result ")
+        str.BufAppendInt(b, (i + 1) as i64)
+        str.BufAppend(b, `"}`)
+    end
+    str.BufAppend(b, "]}")
+    json_owned(ctx, str.BufStr(b))
+end
+
+func echo_route(ctx: i64):
+    body := http.Ctx_body(ctx)
+    mut b := str.NewBuilder()
+    defer str.BufFree(b)
+    str.BufAppend(b, `{"bytes":`)
+    str.BufAppendInt(b, body.len() as i64)
+    str.BufAppend(b, `,"echo":"`)
+    append_json_escaped(b, body)
+    str.BufAppend(b, `"}`)
+    json_owned(ctx, str.BufStr(b))
+end
+
+func append_json_escaped(b &: str.StringBuilder, s: str):
+    p := s as i8 *
+    n := s.len()
+    repeat n with i:
+        mut c := p[i] as int
+        if c < 0: c += 256 end
+        if c == 34: str.BufAppend(b, `\"`)
+        else c == 92: str.BufAppend(b, "\\\\")
+        else c == 10: str.BufAppend(b, "\\n")
+        else c == 13: str.BufAppend(b, "\\r")
+        else c == 9: str.BufAppend(b, "\\t")
+        else c == 8: str.BufAppend(b, "\\b")
+        else c == 12: str.BufAppend(b, "\\f")
+        else c < 32:
+
+            str.BufAppend(b, "\\u00")
+            str.BufAppendChar(b, hex_digit(c / 16))
+            str.BufAppendChar(b, hex_digit(c % 16))
+        else:
+            str.BufAppendChar(b, c)
+        end
+    end
+end
+
+func hex_digit(v: int): int:
+    if v < 10: ret 48 + v end
+    ret 87 + v
+end
+
+func compute_route(ctx: i64):
+    n := int_query(ctx, "n", 1000, 0, 5000000)
+    mut acc := 0 as i64
+    mut i := 0
+    until i < n:
+        acc += ((i * i) % 7) as i64
+        i += 1
+    end
+    mut b := str.NewBuilder()
+    defer str.BufFree(b)
+    str.BufAppend(b, `{"n":`)
+    str.BufAppendInt(b, n as i64)
+    str.BufAppend(b, `,"sum":`)
+    str.BufAppendInt(b, acc)
+    str.BufAppend(b, "}")
+    json_owned(ctx, str.BufStr(b))
+end
+
+func headers_route(ctx: i64):
+    mut b := str.NewBuilder()
+    defer str.BufFree(b)
+    str.BufAppend(b, `{"host":"`)
+    append_json_escaped(b, http.Ctx_header(ctx, "Host"))
+    str.BufAppend(b, `","user_agent":"`)
+    append_json_escaped(b, http.Ctx_header(ctx, "User-Agent"))
+    str.BufAppend(b, `","accept":"`)
+    append_json_escaped(b, http.Ctx_header(ctx, "Accept"))
+    str.BufAppend(b, `","method":"`)
+    append_json_escaped(b, http.Ctx_method(ctx))
+    str.BufAppend(b, `","path":"`)
+    append_json_escaped(b, http.Ctx_path(ctx))
+    str.BufAppend(b, `"}`)
+    json_owned(ctx, str.BufStr(b))
+end
+
+func asset_dir(): str:
+    d := os.Env("HTTPBENCH_ASSETS")
+    if d.len() > 0: ret d end
+    ret "tests/en/apps/httpbench/public"
+end
+
+func port(): int:
+    p := os.Env("PORT")
+    if p.len() == 0: ret DEFAULT_PORT end
+    v := p.to_int()
+    if v <= 0 || v > 65535: ret DEFAULT_PORT end
+    ret v
+end
+
+func main:
+    _asset_dir = asset_dir()
+    _data_path = _asset_dir.concat("/data.json")
+    _cached_file = os.ReadFile(_data_path)
+    if _cached_file.len() == 0:
+        println "assets not found under ", _asset_dir
+        println "run from the repository root, or set HTTPBENCH_ASSETS"
+        ret 1
+    end
+    mut r := router.NewRouter()
+    router.Get(r, "/", home)
+    router.Get(r, "/plaintext", plaintext)
+    router.Get(r, "/json", json_route)
+    router.Get(r, "/health", health)
+    router.Get(r, "/file", file_route)
+    router.Get(r, "/cached", cached_route)
+    router.Get(r, "/users/:id", user_route)
+    router.Get(r, "/search", search_route)
+    router.Get(r, "/compute", compute_route)
+    router.Get(r, "/headers", headers_route)
+    router.Post(r, "/echo", echo_route)
+    router.Static(r, "/static", _asset_dir)
+    mut s := http.NewServer(port())
+    http.Use(s, r)
+    println "httpbench on http://localhost:", port()
+    http.Run(s)
+    ret 0
+end

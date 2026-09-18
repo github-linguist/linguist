@@ -1,0 +1,148 @@
+import encoding.json
+import encoding.query
+import encoding.csv
+import encoding
+import crypto
+import str
+
+struct Event:
+    pub id: i64 = 0
+    pub kind: str = ""
+    pub actor: str = ""
+    pub weight: f64 = 0.0
+    pub live: bool = false
+    pub tags: Vector<str> = Vector {} as Vector<str>
+end
+
+func sample(): Event:
+    mut e := Event {
+        id = 4815162342,
+        kind = "deploy started",
+        actor = "ali@example.com",
+        weight = 0.75,
+        live = true
+    }
+    e.tags.push("prod")
+    e.tags.push("eu-west")
+    ret e
+end
+
+func line(label: str, value: str):
+    print label
+    print ": "
+    println value
+end
+
+func size(label: str, value: str):
+    print label
+    print " bytes: "
+    println value.len()
+end
+
+func as_json(e: Event): str:
+    ret json.Marshal(e)
+end
+
+func as_query(e: Event): str:
+    mut q := query.NewQueryMap()
+    query.Add(q, "id", "" + e.id)
+    query.Add(q, "kind", e.kind)
+    query.Add(q, "actor", e.actor)
+    query.Add(q, "live", e.live ? "1" : "0")
+    repeat e.tags.len() with i:
+        query.Add(q, "tag", e.tags.get(i))
+    end
+    ret query.Encode(q)
+end
+
+func show_query(qs: str):
+    print "pairs:  "
+    println query.Size(query.Decode(qs))
+    line("id     ", query.Get(qs, "id"))
+    line("kind   ", query.Get(qs, "kind"))
+    line("actor  ", query.Get(qs, "actor"))
+    line("live   ", query.Get(qs, "live"))
+    mut tags := query.GetAll(qs, "tag")
+    defer tags.free()
+    print "tags:   "
+    repeat tags.len() with i:
+        if i > 0: print ", " end
+        print tags.get(i)
+    end
+    println ""
+    print "escaped and read back intact: "
+    println query.Get(qs, "actor") == "ali@example.com"
+end
+
+func as_csv(e: Event): str:
+    mut head := Vector {} as Vector<str>
+    defer head.free()
+    head.push("id")
+    head.push("kind")
+    head.push("actor")
+    head.push("tags")
+    mut row := Vector {} as Vector<str>
+    defer row.free()
+    row.push("" + e.id)
+    row.push(e.kind)
+    row.push(e.actor)
+    row.push(str.Join(e.tags, " "))
+    ret csv.WriteLine(head) + "\n" + csv.WriteLine(row)
+end
+
+func as_transport(text: str):
+    b64 := encoding.Base64Encode(text)
+    line("base64", b64)
+    size("base64", b64)
+    hex := encoding.HexEncode(text)
+    line("hex   ", hex)
+    line("url   ", encoding.URLEncode(text))
+end
+
+func sign(payload: str, secret: str): str:
+    ret crypto.HmacSha256Hex(secret, payload)
+end
+
+func main:
+    e := sample()
+
+    println "== the record =="
+    println e
+
+    println ""
+    println "== formats =="
+    j := as_json(e)
+    line("json ", j)
+    size("json ", j)
+    println ""
+    println "query:"
+    show_query(as_query(e))
+    println ""
+    println "csv:"
+    println as_csv(e)
+
+    println ""
+    println "== transport encodings of a short field =="
+    as_transport(e.kind)
+
+    println ""
+    println "== transport encodings of the whole record =="
+    b64 := encoding.Base64Encode(j)
+    size("json  ", j)
+    size("base64", b64)
+    print "base64 round trip is lossless: "
+    println encoding.Base64Decode(b64) == j
+    hex := encoding.HexEncode(j)
+    size("hex   ", hex)
+    print "hex round trip is lossless: "
+    println encoding.HexDecode(hex) == j
+
+    println ""
+    println "== signed payload =="
+    sig := sign(j, "shared-secret")
+    line("hmac-sha256", sig)
+    print "verifies: "
+    println sign(j, "shared-secret") == sig
+    print "a different secret does not: "
+    println sign(j, "other-secret") == sig
+end
