@@ -1,0 +1,75 @@
+module std::collections::ring_queue;
+
+import core::option::*;
+import core::result::*;
+
+// Estrutura genérica monomorfizada em tempo de compilação com semântica de valor
+pub struct RingBuffer forge<T> {
+    pub buffer: [T; 256];
+    pub head: usize;
+    pub tail: usize;
+    pub count: usize;
+
+    pub fn new() -> RingBuffer forge<T> {
+        return RingBuffer {
+            buffer: [0; 256],
+            head: 0,
+            tail: 0,
+            count: 0
+        };
+    }
+
+    pub fn is_empty(self) -> bool {
+        return self.count == 0;
+    }
+
+    pub fn is_full(self) -> bool {
+        return self.count == 256;
+    }
+
+    pub fn push(mut self, item: T) -> bool {
+        if self.is_full() {
+            return false;
+        }
+        self.buffer[self.tail] = item;
+        self.tail = (self.tail + 1) % 256;
+        self.count = self.count + 1;
+        return true;
+    }
+
+    pub fn pop(mut self) -> Option<T> {
+        if self.is_empty() {
+            return Option::None;
+        }
+        let item = self.buffer[self.head];
+        self.head = (self.head + 1) % 256;
+        self.count = self.count - 1;
+        return Option::Some(item);
+    }
+}
+
+pub enum TaskPriority {
+    Idle,
+    Normal,
+    High,
+    Realtime
+}
+
+pub fn evaluate_priority(p: TaskPriority) -> i32 {
+    // Casamento de padrões exaustivo
+    discern p {
+        case .Idle => {
+            return 0;
+        }
+        case .Normal => {
+            return 10;
+        }
+        case .High => {
+            return 50;
+        }
+        case .Realtime => {
+            return 100;
+        }
+    }
+    return 0;
+}

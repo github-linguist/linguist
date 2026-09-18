@@ -1,0 +1,58 @@
+module baken::drivers::timer;
+
+import core::option::*;
+import core::result::*;
+import system::intrinsics::*;
+
+// Avaliação em tempo de compilação: cálculo estático da frequência base do clock
+const BASE_FREQUENCY_HZ: u64 = 1193182;
+const TARGET_HZ: u64 = 1000;
+const DIVISOR: u16 = comptime (BASE_FREQUENCY_HZ / TARGET_HZ) as u16;
+
+// Mapeamento topológico de registradores MMIO
+mesh TimerRegisters {
+    control:  u32 align(4);
+    period:   u32 align(4);
+    counter:  u32 align(4);
+    prescale: u32 align(4);
+}
+
+pub struct HardwareTimer {
+    pub base_address: *rawphys TimerRegisters;
+    pub is_active: bool;
+}
+
+impl HardwareTimer {
+    @system pub fn new(base: u64) -> HardwareTimer {
+        return HardwareTimer {
+            base_address: base as *rawphys TimerRegisters,
+            is_active: false
+        };
+    }
+
+    @system pub fn initialize(mut self) {
+        unsafe {
+            // Configuração atômica com seção crítica de hardware
+            clinch {
+                // Programação direta de registradores com bit-slicing
+                self.base_address.control.notch[0] = false; // Desativa temporariamente
+                self.base_address.period = DIVISOR as u32;
+                self.base_address.control.slit[4..7] = 0b011; // Modo de onda quadrada
+
+                // Instrução de controle de CPU via assembly inline estruturado
+                asm volatile ("cli");
+                outb(0x43, 0x36);
+                outb(0x40, (DIVISOR & 0xFF) as u8);
+                outb(0x40, ((DIVISOR >> 8) & 0xFF) as u8);
+                asm volatile ("sti");
+
+                self.base_address.control.notch[0] = true;  // Reativa timer
+            } revert {
+                // Fallback garantido em caso de interrupção ou falha de hardware
+                self.base_address.control.notch[0] = false;
+                rebound;
+            }
+        }
+        self.is_active = true;
+    }
+}

@@ -1,0 +1,95 @@
+module baken::net::stack;
+
+import core::option::*;
+import core::result::*;
+import system::intrinsics::*;
+
+// Definições de constantes de protocolo de rede
+pub const ETHERTYPE_IPV4: u16 = 0x0800;
+pub const IP_PROTO_UDP:   u8  = 17;
+pub const RX_BUFFER_SIZE: usize = 2048;
+
+// Cabeçalho de enlace Ethernet IEEE 802.3
+mesh EthernetHeader {
+    dest_mac:   [u8; 6];
+    src_mac:    [u8; 6];
+    ethertype:  u16 align(2);
+}
+
+// Cabeçalho de rede IPv4 (RFC 791) sem alocação dinâmica
+mesh Ipv4Header {
+    ver_ihl:    u8;
+    tos:        u8;
+    total_len:  u16 align(2);
+    ident:      u16 align(2);
+    flags_frag: u16 align(2);
+    ttl:        u8;
+    protocol:   u8;
+    checksum:   u16 align(2);
+    src_ip:     u32 align(4);
+    dest_ip:    u32 align(4);
+}
+
+// Cabeçalho de transporte UDP (RFC 768)
+mesh UdpHeader {
+    src_port:   u16 align(2);
+    dest_port:  u16 align(2);
+    length:     u16 align(2);
+    checksum:   u16 align(2);
+}
+
+// Descritor de pacote com posse exclusiva e zero-copy
+pub struct PacketDescriptor {
+    pub buffer_phys: u64;
+    pub length: u16;
+    pub is_valid: bool;
+}
+
+// Pilha de rede desacoplada e autônoma
+pub struct NetworkInterface {
+    pub io_base: u64;
+    pub rx_head: usize;
+    pub rx_count: usize;
+}
+
+impl NetworkInterface {
+    @system
+    pub fn new(base: u64) -> NetworkInterface {
+        return NetworkInterface {
+            io_base: base,
+            rx_head: 0,
+            rx_count: 0
+        };
+    }
+
+    // Processamento assíncrono de pacotes sem alocação heap
+    @system
+    pub async fn poll_incoming_frame(mut self, handover frame: *mut u8, len: usize) -> Result<u16, u32> {
+        if frame == null || len < 14 {
+            return Result::Err(1); // Pacote truncado
+        }
+
+        unsafe {
+            let eth: *const EthernetHeader = frame as *const EthernetHeader;
+            let ethertype: u16 = eth.ethertype;
+
+            // Verificação de protocolo IPv4
+            if ethertype != ETHERTYPE_IPV4 {
+                return Result::Err(2); // Tipo não suportado
+            }
+
+            let ip_offset: usize = 14;
+            let ip: *const Ipv4Header = (frame + ip_offset) as *const Ipv4Header;
+
+            if ip.protocol == IP_PROTO_UDP {
+                let udp_offset: usize = ip_offset + 20;
+                let udp: *const UdpHeader = (frame + udp_offset) as *const UdpHeader;
+                let dest_port: u16 = udp.dest_port;
+
+                return Result::Ok(dest_port);
+            }
+        }
+
+        return Result::Err(3);
+    }
+}
