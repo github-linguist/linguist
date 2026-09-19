@@ -594,6 +594,9 @@ class TestFileBlob < Minitest::Test
     assert sample_blob(".teamcity/Project_Name_CI/Project.kt").vendored?
     assert sample_blob(".teamcity/Project_Name_CI/settings.kts").vendored?
     assert sample_blob(".teamcity/Project_Name_CI/patches/projects/3b71d400-c5d6-4628-8164-c50b1254cf1d.kts").vendored?
+
+    # XVBA dependencies
+    assert sample_blob("xvba_modules/excel-types/err.d.vb").vendored?
   end
 
   def test_documentation
@@ -671,6 +674,7 @@ class TestFileBlob < Minitest::Test
     # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
       "#{samples_path}/C/rpc.h" => ["C", "C++"],
+      "#{samples_path}/JavaScript/js" => ["JavaScript", "TypeScript"],
     }
     Samples.each do |sample|
       blob = sample_blob(sample[:path])
