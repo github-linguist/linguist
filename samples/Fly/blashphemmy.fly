@@ -1,0 +1,67 @@
+group Human {
+
+    name
+    age
+    pet
+    brain
+
+    job introduce() {
+        show("I am {self.name}")
+        show("My age is {self.age}")
+        show("My pet is {self.pet.name}")
+        show("My brain is {self.brain.name}")
+    }
+}
+
+group Machine {
+
+    name
+    operator
+    owner
+
+    job identify() {
+        show("Machine: {self.name}")
+        show("Operator: {self.operator.name}")
+        show("Owner: {self.owner.name}")
+    }
+}
+
+group Dog from Human {
+
+    breed
+    owner
+
+    job introduce() {
+        show("I am {self.name}")
+        show("I am a {self.breed}")
+        show("My owner is {self.owner.name}")
+        show("My owner's pet is {self.owner.pet.name}")
+    }
+}
+
+job main() {
+
+    machine = Machine("Toaster", EMP, EMP)
+
+    bob = Human("Bob", 42, machine, machine)
+
+    dog = Dog("NotBob", 999, machine, machine, "DefinitelyNotADog", bob)
+
+    machine = Machine("Toaster", dog, bob)
+
+    bob.introduce()
+    dog.introduce()
+    machine.identify()
+
+    things = [bob, dog, machine, Yes, No, EMP, 69, "banana"]
+
+    show("The collection contains {count(things)} things.")
+
+    weird = Human(dog, machine, dog, machine)
+
+    show("Weird name: {weird.name}")
+    show("Weird pet: {weird.pet.name}")
+    show("Weird pet name owner's pet: {weird.pet.owner.pet.name}")
+}
+
+main()
