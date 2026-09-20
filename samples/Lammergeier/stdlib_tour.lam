@@ -1,0 +1,39 @@
+# A quick tour of the Lammergeier standard library.
+# Run with:
+#     ./lamc examples/stdlib_tour.lam --run
+
+from lamstrings import Strings
+from lamfmt import Fmt
+from lammath import Math
+from lamstack import Stack
+from lamset import Set
+
+func main() {
+    # Strings
+    print(Strings.toUpper("lammergeier"))
+    print(Strings.padLeft("42", 5, "0"))
+
+    # Fmt — variadic sprintf/printf/println
+    print(Fmt.sprintf("%s is %d", "Alice", 30))
+
+    # Math — pure helpers built on Go's math package
+    print(f"sqrt(2) = {Math.sqrt(2.0)}")
+    print(f"gcd(12,18) = {Math.gcd(12, 18)}")
+
+    # Stack — push/pop/peek/size/isEmpty/clear/toList
+    s: Stack = Stack()
+    s.push(1)
+    s.push(2)
+    s.push(3)
+    print(f"stack peek={s.peek()} size={s.size()}")
+
+    # Set — add/remove/contains/union/intersect/difference
+    a: Set = Set()
+    a.add("x")
+    a.add("y")
+    b: Set = Set()
+    b.add("y")
+    b.add("z")
+    u: Set = a.union(b)
+    print(f"union size={u.size()}")
+}

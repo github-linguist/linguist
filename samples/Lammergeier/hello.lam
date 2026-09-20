@@ -1,0 +1,8 @@
+# The classic hello world in Lammergeier.
+# Compile and run with:
+#     ./lamc examples/hello.lam --run
+
+func main() {
+    name: str = "World"
+    print(f"Hello, {name}!")
+}

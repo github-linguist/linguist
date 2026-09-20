@@ -1,0 +1,26 @@
+# Circles: classes + the standard library.
+# Run with:
+#     ./lamc examples/circle.lam --run
+
+from lammath import Math
+
+class Circle {
+    func __init__(self, radius: float) {
+        self.radius: float = radius
+    }
+
+    func area(self) -> float {
+        return Math.pi() * self.radius * self.radius
+    }
+
+    func circumference(self) -> float {
+        return 2.0 * Math.pi() * self.radius
+    }
+}
+
+func main() {
+    shapes: list[Circle] = [Circle(1.0), Circle(2.5), Circle(5.0)]
+    for c in shapes {
+        print(f"r={c.radius} area={c.area()} circumference={c.circumference()}")
+    }
+}

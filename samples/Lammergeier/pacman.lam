@@ -1,0 +1,797 @@
+# Pac-Man clone: Lammergeier game logic with a small Go TUI wrapper.
+# Run with:
+#     ./lamc examples/pacman.lam --run
+#
+# Controls: WASD to move, p to pause, r to restart after game over, q to quit.
+
+from lamconcurrency import Channel
+from lamconv import Conv
+from lamtime import Time
+
+go! {
+    import (
+        "fmt"
+
+        termbox "github.com/nsf/termbox-go"
+    )
+}
+
+class Keys {
+    static up: str = "w"
+    static left: str = "a"
+    static down: str = "s"
+    static right: str = "d"
+    static pause: str = "p"
+    static restart: str = "r"
+    static quit: str = "q"
+    static esc: int = 27
+    static ctrlC: int = 3
+}
+
+class TermColors {
+    static func normal() -> int {
+        go! { return int(termbox.ColorDefault) }
+    }
+
+    static func background() -> int {
+        go! { return int(termbox.ColorBlack) }
+    }
+
+    static func wall() -> int {
+        go! { return int(termbox.ColorBlue | termbox.AttrBold) }
+    }
+
+    static func dot() -> int {
+        go! { return int(termbox.ColorWhite) }
+    }
+
+    static func pacman() -> int {
+        go! { return int(termbox.ColorYellow | termbox.AttrBold) }
+    }
+
+    static func blinky() -> int {
+        go! { return int(termbox.ColorRed | termbox.AttrBold) }
+    }
+
+    static func pinky() -> int {
+        go! { return int(termbox.ColorMagenta | termbox.AttrBold) }
+    }
+
+    static func inky() -> int {
+        go! { return int(termbox.ColorCyan | termbox.AttrBold) }
+    }
+
+    static func clyde() -> int {
+        go! { return int(termbox.ColorYellow | termbox.AttrBold) }
+    }
+
+    static func frightened() -> int {
+        go! { return int(termbox.ColorWhite | termbox.AttrBold) }
+    }
+
+    static func help() -> int {
+        go! { return int(termbox.ColorGreen) }
+    }
+
+    static func text() -> int {
+        go! { return int(termbox.ColorWhite | termbox.AttrBold) }
+    }
+}
+
+class Terminal {
+    static func open() {
+        go! {
+            if err := termbox.Init(); err != nil {
+                panic(err)
+            }
+            termbox.SetInputMode(termbox.InputEsc)
+        }
+    }
+
+    static func shutdown() {
+        go! {
+            termbox.Close()
+        }
+    }
+
+    static func readRawKey() -> str {
+        go! {
+            ev := termbox.PollEvent()
+            if ev.Type != termbox.EventKey {
+                return ""
+            }
+            if ev.Ch != 0 {
+                return string(ev.Ch)
+            }
+            return "#" + fmt.Sprintf("%d", ev.Key)
+        }
+    }
+
+    static func erase() {
+        go! {
+            termbox.Clear(termbox.ColorBlack, termbox.ColorBlack)
+        }
+    }
+
+    static func flush() {
+        go! {
+            termbox.Flush()
+        }
+    }
+
+    static func drawCell(x: int, y: int, glyph: str, fg: int) {
+        setCell(x, y, glyph, fg, TermColors.background())
+    }
+}
+
+private func setCell(x: int, y: int, glyph: str, fg: int, bg: int) {
+    go! {
+        rs := []rune(glyph)
+        ch := ' '
+        if len(rs) > 0 {
+            ch = rs[0]
+        }
+        termbox.SetCell(x, y, ch, termbox.Attribute(fg), termbox.Attribute(bg))
+    }
+}
+
+func specialKey(code: int) -> str {
+    if code == Keys.esc or code == Keys.ctrlC {
+        return Keys.quit
+    }
+    return ""
+}
+
+func normalizeKey(raw: str) -> str {
+    match raw.toLower() {
+        case "w" {
+            return Keys.up
+        }
+        case "a" {
+            return Keys.left
+        }
+        case "s" {
+            return Keys.down
+        }
+        case "d" {
+            return Keys.right
+        }
+        case "p" {
+            return Keys.pause
+        }
+        case "q" {
+            return Keys.quit
+        }
+        case "r" {
+            return Keys.restart
+        }
+        case _ {
+            if len(raw) > 1 and raw[0:1] == "#" {
+                code: int = Conv.toInt(raw[1:])
+                return specialKey(code)
+            }
+            return ""
+        }
+    }
+    return ""
+}
+
+func readKey() -> str {
+    return normalizeKey(Terminal.readRawKey())
+}
+
+func paletteInk(style: str) -> int {
+    match style {
+        case "#" {
+            return TermColors.wall()
+        }
+        case "." {
+            return TermColors.dot()
+        }
+        case "o" {
+            return TermColors.pacman()
+        }
+        case "p" {
+            return TermColors.pacman()
+        }
+        case "1" {
+            return TermColors.blinky()
+        }
+        case "2" {
+            return TermColors.pinky()
+        }
+        case "3" {
+            return TermColors.inky()
+        }
+        case "4" {
+            return TermColors.clyde()
+        }
+        case "f" {
+            return TermColors.frightened()
+        }
+        case _ {
+            return TermColors.normal()
+        }
+    }
+    return TermColors.normal()
+}
+
+class Screen {
+    static func drawText(x: int, y: int, text: str, fg: int) {
+        for i in range(len(text)) {
+            Terminal.drawCell(x + i, y, text[i:i + 1], fg)
+        }
+    }
+
+    static func drawRows(rows: list[str], styles: list[str], status: str, help: str) {
+        Terminal.erase()
+        for y in range(len(rows)) {
+            row: str = rows[y]
+            styleRow: str = ""
+            if y < len(styles) {
+                styleRow = styles[y]
+            }
+            for x in range(len(row)) {
+                style: str = " "
+                if x < len(styleRow) {
+                    style = styleRow[x:x + 1]
+                }
+                Terminal.drawCell(x, y, row[x:x + 1], paletteInk(style))
+            }
+        }
+        Screen.drawText(0, len(rows) + 1, status, TermColors.text())
+        Screen.drawText(0, len(rows) + 2, help, TermColors.help())
+        Terminal.flush()
+    }
+}
+
+async func inputPump(keys: Channel) -> bool {
+    while true {
+        key: str = readKey()
+        if key != "" {
+            keys.send(key)
+            if key == Keys.quit {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+func absInt(v: int) -> int {
+    if v < 0 {
+        return -v
+    }
+    return v
+}
+
+func distance(a: Point, b: Point) -> int {
+    return absInt(a.x - b.x) + absInt(a.y - b.y)
+}
+
+class Point {
+    func init(self, x: int, y: int) {
+        self.x: int = x
+        self.y: int = y
+    }
+
+    func add(self, other: Point) -> Point {
+        return Point(self.x + other.x, self.y + other.y)
+    }
+
+    func copy(self) -> Point {
+        return Point(self.x, self.y)
+    }
+
+    func same(self, other: Point) -> bool {
+        return self.x == other.x and self.y == other.y
+    }
+
+    func opposite(self) -> Point {
+        return Point(-self.x, -self.y)
+    }
+}
+
+func dirNone() -> Point {
+    return Point(0, 0)
+}
+
+func dirUp() -> Point {
+    return Point(0, -1)
+}
+
+func dirDown() -> Point {
+    return Point(0, 1)
+}
+
+func dirLeft() -> Point {
+    return Point(-1, 0)
+}
+
+func dirRight() -> Point {
+    return Point(1, 0)
+}
+
+func allDirections() -> list[Point] {
+    dirs: list[Point] = []
+    dirs.append(dirUp())
+    dirs.append(dirLeft())
+    dirs.append(dirDown())
+    dirs.append(dirRight())
+    return dirs
+}
+
+interface TargetStrategy {
+    func target(game: Game, ghost: Ghost) -> Point
+}
+
+class BlinkyTarget {
+    func target(self, game: Game, _ghost: Ghost) -> Point {
+        return game.pac.copy()
+    }
+}
+
+class PinkyTarget {
+    func target(self, game: Game, _ghost: Ghost) -> Point {
+        return Point(game.pac.x + game.pacDir.x * 4, game.pac.y + game.pacDir.y * 4)
+    }
+}
+
+class InkyTarget {
+    func target(self, game: Game, _ghost: Ghost) -> Point {
+        blinkyGhost: Ghost = game.ghosts[0]
+        blinkyX: int = blinkyGhost.pos.x
+        blinkyY: int = blinkyGhost.pos.y
+        ahead: Point = Point(game.pac.x + game.pacDir.x * 2, game.pac.y + game.pacDir.y * 2)
+        return Point(ahead.x + (ahead.x - blinkyX), ahead.y + (ahead.y - blinkyY))
+    }
+}
+
+class ClydeTarget {
+    func target(self, game: Game, ghost: Ghost) -> Point {
+        if distance(ghost.pos, game.pac) > 8 {
+            return game.pac.copy()
+        }
+        return ghost.scatter.copy()
+    }
+}
+
+class Ghost {
+    func init(self, name: str, mark: str, x: int, y: int, scatterX: int, scatterY: int, strategy: TargetStrategy) {
+        self.name: str = name
+        self.mark: str = mark
+        self.pos: Point = Point(x, y)
+        self.home: Point = Point(x, y)
+        self.dir: Point = dirLeft()
+        self.scatter: Point = Point(scatterX, scatterY)
+        self.strategy: TargetStrategy = strategy
+    }
+
+    func reset(self) {
+        self.pos = self.home.copy()
+        self.dir = dirLeft()
+    }
+
+    func display(self, frightened: bool) -> str {
+        if frightened {
+            return "f"
+        }
+        return self.mark
+    }
+
+    func target(self, game: Game) -> Point {
+        if game.isFrightened() {
+            return Point(game.width - game.pac.x - 1, game.height - game.pac.y - 1)
+        }
+        if game.isScatterMode() {
+            return self.scatter.copy()
+        }
+        return self.strategy.target(game, self)
+    }
+
+    func chooseDirection(self, game: Game) -> Point {
+        options: list[Point] = []
+        dirs: list[Point] = allDirections()
+        reverseDir: Point = self.dir.opposite()
+        for d in dirs {
+            next: Point = game.wrap(self.pos.add(d))
+            if game.canStand(next) {
+                if not d.same(reverseDir) {
+                    options.append(d)
+                }
+            }
+        }
+        if len(options) == 0 {
+            for d in dirs {
+                next: Point = game.wrap(self.pos.add(d))
+                if game.canStand(next) {
+                    options.append(d)
+                }
+            }
+        }
+        if len(options) == 0 {
+            return dirNone()
+        }
+
+        target: Point = self.target(game)
+        best: Point = options[0]
+        bestScore: int = distance(game.wrap(self.pos.add(best)), target)
+        for d in options {
+            score: int = distance(game.wrap(self.pos.add(d)), target)
+            if game.isFrightened() {
+                if score > bestScore {
+                    best = d
+                    bestScore = score
+                }
+            } elif score < bestScore {
+                best = d
+                bestScore = score
+            }
+        }
+        return best
+    }
+
+    func step(self, game: Game) {
+        self.dir = self.chooseDirection(game)
+        self.pos = game.wrap(self.pos.add(self.dir))
+    }
+}
+
+class Game {
+    func init(self) {
+        self.board: list[str] = [
+            "#####################",
+            "#.........#.........#",
+            "#.###.###.#.###.###.#",
+            "#o###.###.#.###.###o#",
+            "#...................#",
+            "#.###.#.#####.#.###.#",
+            "#.....#...#...#.....#",
+            "#####.###.#.###.#####",
+            "#####.#.......#.#####",
+            "#####.#.## ##.#.#####",
+            "     ...#   #...     ",
+            "#####.#.#####.#.#####",
+            "#####.#.......#.#####",
+            "#####.#.#####.#.#####",
+            "#.........#.........#",
+            "#.###.###.#.###.###.#",
+            "#o..#..... .....#..o#",
+            "###.#.#.#####.#.#.###",
+            "#.....#...#...#.....#",
+            "#.#######.#.#######.#",
+            "#...................#",
+            "#####################",
+        ]
+        self.width: int = len(self.board[0])
+        self.height: int = len(self.board)
+        self.pac: Point = Point(10, 16)
+        self.pacDir: Point = dirLeft()
+        self.wantedDir: Point = dirLeft()
+        self.ghosts: list[Ghost] = [
+            Ghost("Blinky", "1", 10, 8, 19, 1, BlinkyTarget()),
+            Ghost("Pinky", "2", 9, 10, 1, 1, PinkyTarget()),
+            Ghost("Inky", "3", 10, 10, 19, 20, InkyTarget()),
+            Ghost("Clyde", "4", 11, 10, 1, 20, ClydeTarget()),
+        ]
+        self.score: int = 0
+        self.lives: int = 3
+        self.tick: int = 0
+        self.powerTicks: int = 0
+        self.dots: int = self.countDots()
+        self.paused: bool = false
+        self.gameOver: bool = false
+        self.won: bool = false
+        self.started: bool = false
+    }
+
+    func countDots(self) -> int {
+        total: int = 0
+        for row in self.board {
+            for i in range(len(row)) {
+                ch: str = row[i:i + 1]
+                if ch == "." or ch == "o" {
+                    total += 1
+                }
+            }
+        }
+        return total
+    }
+
+    func wrap(self, p: Point) -> Point {
+        x: int = p.x
+        if x < 0 {
+            x = self.width - 1
+        } elif x >= self.width {
+            x = 0
+        }
+        return Point(x, p.y)
+    }
+
+    func tileAt(self, p: Point) -> str {
+        q: Point = self.wrap(p)
+        if q.y < 0 or q.y >= self.height {
+            return "#"
+        }
+        return self.board[q.y][q.x:q.x + 1]
+    }
+
+    func canStand(self, p: Point) -> bool {
+        return self.tileAt(p) != "#"
+    }
+
+    func setTile(self, p: Point, value: str) {
+        q: Point = self.wrap(p)
+        row: str = self.board[q.y]
+        self.board[q.y] = row[:q.x] + value + row[q.x + 1:]
+    }
+
+    func setWanted(self, key: str) {
+        if key == "w" {
+            self.wantedDir = dirUp()
+            self.started = true
+        } elif key == "a" {
+            self.wantedDir = dirLeft()
+            self.started = true
+        } elif key == "s" {
+            self.wantedDir = dirDown()
+            self.started = true
+        } elif key == "d" {
+            self.wantedDir = dirRight()
+            self.started = true
+        }
+    }
+
+    func isFrightened(self) -> bool {
+        return self.powerTicks > 0
+    }
+
+    func isScatterMode(self) -> bool {
+        wave: int = (self.tick / 70) % 4
+        return wave == 1
+    }
+
+    func eatAtPacman(self) {
+        tile: str = self.tileAt(self.pac)
+        if tile == "." {
+            self.score += 10
+            self.dots -= 1
+            self.setTile(self.pac, " ")
+        } elif tile == "o" {
+            self.score += 50
+            self.dots -= 1
+            self.powerTicks = 80
+            self.setTile(self.pac, " ")
+        }
+        if self.dots <= 0 {
+            self.won = true
+        }
+    }
+
+    func resetActors(self) {
+        self.pac = Point(10, 16)
+        self.pacDir = dirLeft()
+        self.wantedDir = dirLeft()
+        self.started = false
+        for g in self.ghosts {
+            g.reset()
+        }
+    }
+
+    func handleCollisions(self) {
+        for g in self.ghosts {
+            if g.pos.same(self.pac) {
+                if self.isFrightened() {
+                    self.score += 200
+                    g.reset()
+                } else {
+                    self.lives -= 1
+                    self.powerTicks = 0
+                    if self.lives <= 0 {
+                        self.gameOver = true
+                    } else {
+                        self.resetActors()
+                    }
+                    return
+                }
+            }
+        }
+    }
+
+    func stepPacman(self) {
+        wantedNext: Point = self.wrap(self.pac.add(self.wantedDir))
+        if self.canStand(wantedNext) {
+            self.pacDir = self.wantedDir.copy()
+        }
+        next: Point = self.wrap(self.pac.add(self.pacDir))
+        if self.canStand(next) {
+            self.pac = next
+        }
+        self.eatAtPacman()
+    }
+
+    func stepGhosts(self) {
+        for g in self.ghosts {
+            if self.isFrightened() and self.tick % 2 == 0 {
+                continue
+            }
+            g.step(self)
+        }
+    }
+
+    func step(self) {
+        if not self.started or self.paused or self.gameOver or self.won {
+            return
+        }
+        self.tick += 1
+        if self.powerTicks > 0 {
+            self.powerTicks -= 1
+        }
+        self.stepPacman()
+        self.handleCollisions()
+        if self.gameOver or self.won {
+            return
+        }
+        self.stepGhosts()
+        self.handleCollisions()
+    }
+
+    func place(self, rows: list[str], p: Point, value: str) -> list[str] {
+        q: Point = self.wrap(p)
+        row: str = rows[q.y]
+        rows[q.y] = row[:q.x] + value + row[q.x + 1:]
+        return rows
+    }
+
+    func tokenRows(self) -> list[str] {
+        rows: list[str] = []
+        for row in self.board {
+            rows.append(row)
+        }
+        rows = self.place(rows, self.pac, "P")
+        for g in self.ghosts {
+            rows = self.place(rows, g.pos, g.display(self.isFrightened()))
+        }
+        return rows
+    }
+
+    func spriteTop(self, token: str) -> str {
+        if token == "#" {
+            return "###"
+        } elif token == "." {
+            return " . "
+        } elif token == "o" {
+            return " o "
+        } elif token == "P" {
+            if self.pacDir.same(dirRight()) {
+                return " O>"
+            } elif self.pacDir.same(dirLeft()) {
+                return "<O "
+            } elif self.pacDir.same(dirUp()) {
+                return " ^ "
+            }
+            return " O "
+        } elif token == "1" or token == "2" or token == "3" or token == "4" {
+            return ".-."
+        } elif token == "f" {
+            return ".-."
+        }
+        return "   "
+    }
+
+    func spriteBottom(self, token: str) -> str {
+        if token == "#" {
+            return "###"
+        } elif token == "P" {
+            if self.pacDir.same(dirUp()) {
+                return " O "
+            } elif self.pacDir.same(dirDown()) {
+                return " v "
+            }
+            return "   "
+        } elif token == "1" or token == "2" or token == "3" or token == "4" {
+            return "mMm"
+        } elif token == "f" {
+            return "www"
+        }
+        return "   "
+    }
+
+    func styleFor(self, token: str) -> str {
+        if token == "P" {
+            return "p"
+        }
+        return token
+    }
+
+    func styleRun(self, token: str) -> str {
+        style: str = self.styleFor(token)
+        return style + style + style
+    }
+
+    func artRows(self) -> list[str] {
+        tokens: list[str] = self.tokenRows()
+        rows: list[str] = []
+        for row in tokens {
+            top: str = ""
+            bottom: str = ""
+            for i in range(len(row)) {
+                token: str = row[i:i + 1]
+                top += self.spriteTop(token)
+                bottom += self.spriteBottom(token)
+            }
+            rows.append(top)
+            rows.append(bottom)
+        }
+        return rows
+    }
+
+    func styleRows(self) -> list[str] {
+        tokens: list[str] = self.tokenRows()
+        rows: list[str] = []
+        for row in tokens {
+            top: str = ""
+            bottom: str = ""
+            for i in range(len(row)) {
+                run: str = self.styleRun(row[i:i + 1])
+                top += run
+                bottom += run
+            }
+            rows.append(top)
+            rows.append(bottom)
+        }
+        return rows
+    }
+
+    func status(self) -> str {
+        mode: str = "CHASE"
+        if not self.started {
+            mode = "READY"
+        } elif self.isFrightened() {
+            mode = "FRIGHT"
+        } elif self.isScatterMode() {
+            mode = "SCATTER"
+        }
+        state: str = ""
+        if self.paused {
+            state = " PAUSED"
+        } elif self.won {
+            state = " YOU WIN"
+        } elif self.gameOver {
+            state = " GAME OVER"
+        }
+        return f"Score {self.score}  Lives {self.lives}  Dots {self.dots}  Mode {mode}{state}"
+    }
+}
+
+func main() {
+    game: Game = Game()
+    keys: Channel = Channel(16)
+    Terminal.open()
+    defer Terminal.shutdown()
+    _input: any = inputPump(keys)
+
+    running: bool = true
+    while running {
+        key: str = ""
+        rawKey: any = keys.tryRecv()
+        if rawKey != None {
+            key = str(rawKey)
+        }
+        if key == Keys.quit {
+            running = false
+        } elif key == Keys.pause {
+            game.paused = not game.paused
+        } elif key == Keys.restart {
+            if game.gameOver or game.won {
+                game = Game()
+            }
+        } elif key == Keys.up or key == Keys.left or key == Keys.down or key == Keys.right {
+            game.setWanted(key)
+        }
+
+        game.step()
+        Screen.drawRows(game.artRows(), game.styleRows(), game.status(), "WASD move | p pause | r restart | q quit")
+        Time.sleepMs(180)
+    }
+}
