@@ -564,6 +564,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ren'Py:** [williamd1k0/language-renpy](https://github.com/williamd1k0/language-renpy)
 - **Rez:** [textmate/rez.tmbundle](https://github.com/textmate/rez.tmbundle)
 - **Rhai:** [rhaiscript/vscode-rhai](https://github.com/rhaiscript/vscode-rhai)
+- **Rhombus:** [jerryz123/rhombus-textmate](https://github.com/jerryz123/rhombus-textmate)
 - **Rich Text Format:** [nwhetsell/language-rtf](https://github.com/nwhetsell/language-rtf)
 - **Ring:** [MahmoudFayed/atom-language-ring](https://github.com/MahmoudFayed/atom-language-ring)
 - **Riot:** [riot/syntax-highlight](https://github.com/riot/syntax-highlight)
