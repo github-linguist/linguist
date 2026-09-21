@@ -1,0 +1,61 @@
+/*
+ * Salam Programming Language (2024-2026)
+ *
+ * Repository: https://github.com/SalamLang/Salam
+ *
+ */
+
+import env
+import encoding.envfile
+import encoding.json
+
+const PREFIX := "DEMO_"
+
+struct Config:
+    pub name: str = ""
+    pub url: str = ""
+    pub port: int = 0
+    pub workers: int = 0
+    pub debug: bool = false
+    pub timeout: f64 = 0.0
+    @json "-"
+    pub secret: str = ""
+end
+
+func defaults(): str:
+    mut t := "DEMO_APP_NAME=salam-demo\n"
+    t = t + "DEMO_HOST=localhost\n"
+    t = t + "DEMO_PORT=8080\n"
+    t = t + "DEMO_WORKERS=2\n"
+    t = t + "DEMO_DEBUG=false\n"
+    t = t + "DEMO_TIMEOUT=1.5\n"
+    t = t + "DEMO_SECRET=\n"
+    ret t
+end
+
+func read_config(): Config:
+    ret Config {
+        name = env.Get("DEMO_APP_NAME"),
+        url = env.Get("DEMO_URL"),
+        port = env.GetInt("DEMO_PORT", 0) as int,
+        workers = env.GetInt("DEMO_WORKERS", 1) as int,
+        debug = env.GetBool("DEMO_DEBUG", false),
+        timeout = env.GetFloat("DEMO_TIMEOUT", 0.0),
+        secret = env.Get("DEMO_SECRET")
+    }
+end
+
+func main:
+    n := env.LoadText(defaults())
+    println "loaded defaults: "
+    println n
+    c := read_config()
+    print "app: "
+    println c.name
+    print "port: "
+    println c.port
+    print "debug: "
+    println c.debug
+    print "prefix: "
+    println PREFIX
+end
