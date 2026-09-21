@@ -1053,16 +1053,10 @@ disambiguations:
   - language: TSX
 - extensions: ['.txt']
   rules:
-    # VIM_MODELINE from strategy/modeline.rb, without comments/whitespace and
-    # with each language capture specialized to (help). Checked in test_strategies.rb.
-  - language: Vim Help File
-    pattern: '(?:(?:^|[ \t])(?:vi|[Vv]im(?:[<=>]?[0-9]+)?)|[ \t]ex):[ \t]*(?:set?[ \t]+(?:\w*(?:[ \t]*=(?:[^\\\s:]|\\.)*)?[ \t]+)*(?:filetype|ft|syntax)[ \t]*=(help)(?:[ \t][^\r\n:]*:|:)|(?:(?:(?:[^\Ws]\w*|s[^\We]\w*|se[^\Wt]\w*|set\w+|s)(?:[ \t]*=(?:[^\\\s]|\\.)*)?(?:[ \t]*:[ \t]*|[ \t])|set?=(?:[^\\\s]|\\.)*(?:[ \t]*:[ \t]*|[ \t])|(?:set?)?:[ \t]*)(?:\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?(?:[ \t]*:[ \t]*|[ \t]))*)?(?:filetype|ft|syntax)[ \t]*=(help)(?:$|\s|:))'
   - language: Hosts File
     pattern: '^(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(?:\.(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}(?:/(?:3[0-2]|[12]?[0-9]))?(?:[ \t]+[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?(?:\.[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?)*)+(?:[ \t]|$)'
   - language: Adblock Filter List
     pattern: '\A\[(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?(?:[ \t]?;[ \t]?(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?)*\]'
-    # HACK: This is a contrived use of heuristics needed to address
-    # an unusual edge-case. See https://git.io/JULye for discussion.
   - language: Text
 - extensions: ['.typ']
   rules:
