@@ -28,6 +28,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Ada:** [textmate/ada.tmbundle](https://github.com/textmate/ada.tmbundle)
 - **Adblock Filter List:** [AdguardTeam/VscodeAdblockSyntax](https://github.com/AdguardTeam/VscodeAdblockSyntax)
 - **Adobe Font Metrics:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
+- **Aethium** [A-Solo-Engineer/Aethium] (https://github.com/A-Solo-Engineer/Aethium)
 - **Agda:** [agda/agda-github-syntax-highlighting](https://github.com/agda/agda-github-syntax-highlighting)
 - **Aiken:** [aiken-lang/vscode-aiken](https://github.com/aiken-lang/vscode-aiken)
 - **Aleo:** [ProvableHQ/aleo-linguist](https://github.com/ProvableHQ/aleo-linguist)
