@@ -862,6 +862,30 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
+- extensions: ['.rl']
+  rules:
+  - language: Rl
+    pattern:
+    - '^\s*get\s+.*\s+from\s+std::'
+    - '^\s*dec\s+'
+    - '^\s*fn\s+\w+\s*\('
+    - '^\s*CONST\s+'
+    - '!\#\[.*\]'
+    - '\bmatch\s+\w+\s*\{'
+    - '->\s*(int|float|bool|string|void|result|arr|map|set)'
+    - '\bresult\[.*\]'
+    - '^\s*get\s+\w+(\s*,\s*\w+)*\s+from\s+'
+  - language: Ragel
+    pattern:
+    - '%%\{'
+    - '^\s*machine\s+\w+\s*;'
+    - '^\s*action\s+\w+\s*\{'
+    - 'write\s+(data|init|exec|first|last|error)'
+    - '^\s*include\s+\w+\s+"'
+    - '\|[\*\|]'
+    - 'f(hold|call|goto|next|exec|break|return)\b'
+    - 'alphtype\s+'
+    - 'getkey\s+'
 - extensions: ['.rsc']
   rules:
   - language: Rascal
