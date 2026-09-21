@@ -126,6 +126,48 @@ class TestStrategies < Minitest::Test
     assert_equal Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc").language
   end
 
+  def test_vim_help_heuristic_uses_modeline_regex
+    rules = Heuristics.load_config["disambiguations"].find { |item| item["extensions"] == [".txt"] }["rules"]
+    pattern = rules.find { |rule| rule["language"] == "Vim Help File" }["pattern"]
+    # Preserve character classes while removing extended-mode comments and whitespace.
+    collapsed = Strategy::Modeline::VIM_MODELINE.source.gsub(/\[(?:\\.|[^\]\\])*\]|#.*$|\s+/) do |part|
+      part.start_with?("[") ? part : ""
+    end
+    assert_equal collapsed.gsub('(\w+)', '(help)'), pattern
+  end
+
+  def test_vim_modeline_forms
+    [
+      "vi:ft=ruby",
+      "vim600: titlestring=foo\\ bar syntax=ruby",
+      "Vim<700: set ts=8 ft=ruby:",
+      " ex: noexpandtab: filetype=ruby",
+      "vim: se ts=8 syntax=ruby noet:",
+      "vim: set fillchars=stl\\:^,vert\\:\\| ft=ruby:",
+      "vim: sessionoptions=blank secure sections=SHNHH ft=ruby",
+      "vim: titlestring=foo\\\\ ft=ruby",
+      "vim:ft =ruby",
+      "vim::ft=ruby",
+      "vim:se:ft=ruby",
+    ].each do |modeline|
+      assert_equal "ruby", Strategy::Modeline.modeline(modeline), modeline
+    end
+
+    [
+      "Vi: ft=ruby",
+      "ex: ft=ruby",
+      "prefixvim: ft=ruby",
+      "vim: set ts=8 ft=ruby",
+      "vim: se ft=ruby\n:",
+      "vim: set ts=8: ft=ruby",
+      "vim: set titlestring=one:two ft=ruby:",
+      "vim: titlestring=escaped\\ ft=ruby",
+      "vim: ft=ruby-script",
+    ].each do |modeline|
+      assert_nil Strategy::Modeline.modeline(modeline), modeline
+    end
+  end
+
   def test_shebangs
     assert_interpreter nil, ""
     assert_interpreter nil, "foo"

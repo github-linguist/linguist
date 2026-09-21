@@ -51,78 +51,43 @@ module Linguist
 
       # NOTE: When changing this regex, be sure to keep the Vim Help heuristic updated too (#5347)
       VIM_MODELINE = %r[
-        (?-m)
-
         # Start of modeline (syntax documented in E520)
         (?:
-          # `vi:`, `vim:` or `Vim:`
-          (?:^|[ \t]) (?:vi|Vi(?=m))
-
-          # Check if specific Vim version(s) are requested (won't work in vi/ex)
-          (?:
-            # Versioned modeline. `vim<700:` targets Vim versions older than 7.0
-            m
-            [<=>]?    # If comparison operator is omitted, *only* this version is targeted
-            [0-9]+    # Version argument = (MINOR_VERSION_NUMBER * 100) + MINOR_VERSION_NUMBER
-            |
-
-            # Unversioned modeline. `vim:` targets any version of Vim.
-            m
-          )?
+          # `vi:`, `vim:`, `Vim:`, or a versioned marker such as `vim<700:`
+          (?:^|[ \t]) (?:vi|[Vv]im(?:[<=>]?[0-9]+)?)
           |
 
           # `ex:`, which requires leading whitespace to avoid matching stuff like "lex:"
           [ \t] ex
-        )
+        ) : [ \t]*
 
-        # If the option-list begins with `set ` or `se `, it indicates an alternative
-        # modeline syntax partly-compatible with older versions of Vi. Here, the colon
-        # serves as a terminator for an option sequence, delimited by whitespace.
-        (?=
-          # So we have to ensure the modeline ends with a colon
-          : (?=[ \t]* set? [ \t] [^\r\n:]+ :) |
-
-          # Otherwise, it isn't valid syntax and should be ignored
-          : (?![ \t]* set? [ \t])
-        )
-
-        # Possible (unrelated) `option=value` pairs to skip past
         (?:
-          # Option separator, either
+          # `se`/`set` forms have whitespace-delimited options and a terminating colon.
+          set? [ \t]+
+          (?: \w* (?:[ \t]*=(?:[^\\\s:]|\\.)*)? [ \t]+ )*
+          (?:filetype|ft|syntax) [ \t]*= (\w+)
+          (?: [ \t][^\r\n:]*: | : )
+          |
+
+          # Ordinary forms have whitespace- or colon-delimited options.
           (?:
-            # 1. A colon (possibly surrounded by whitespace)
-            [ \t]* : [ \t]*     # vim: noai :  ft=sh:noexpandtab
-            |
-
-            # 2. At least one (horizontal) whitespace character
-            [ \t]               # vim: noai ft=sh noexpandtab
-          )
-
-          # Option's name. All recognised Vim options have an alphanumeric form.
-          \w*
-
-          # Possible value. Not every option takes an argument.
-          (?:
-            # Whitespace between name and value is allowed: `vim: ft   =sh`
-            [ \t]*=
-
-            # Option's value. Might be blank; `vim: ft= ` means "use no filetype".
             (?:
-              [^\\\s]    # Beware of escaped characters: titlestring=\ ft=sh
-              |          # will be read by Vim as { titlestring: " ft=sh" }.
-              \\.
-            )*
+              # Exclude exactly `se` and `set` before whitespace, without lookahead.
+              (?: [^\Ws]\w* | s[^\We]\w* | se[^\Wt]\w* | set\w+ | s )
+              (?:[ \t]*=(?:[^\\\s]|\\.)*)?
+              (?:[ \t]*:[ \t]*|[ \t])
+              |
+              # Immediately followed by `=` or `:`, `se`/`set` are not commands.
+              set? = (?:[^\\\s]|\\.)* (?:[ \t]*:[ \t]*|[ \t])
+              |
+              (?:set?)? : [ \t]*
+            )
+            # Escaped spaces belong to values, not to the next option.
+            (?: \w* (?:[ \t]*=(?:[^\\\s]|\\.)*)? (?:[ \t]*:[ \t]*|[ \t]) )*
           )?
-        )*
-
-        # The actual filetype declaration
-        [ \t:] (?:filetype|ft|syntax) [ \t]*=
-
-        # Language's name
-        (\w+)
-
-        # Ensure it's followed by a legal separator (including EOL)
-        (?=$|\s|:)
+          (?:filetype|ft|syntax) [ \t]*= (\w+)
+          (?:$|\s|:)
+        )
       ]x
 
       MODELINES = [EMACS_MODELINE, VIM_MODELINE]
@@ -157,7 +122,7 @@ module Linguist
       # Returns a String or nil
       def self.modeline(data)
         match = MODELINES.map { |regex| data.match(regex) }.reject(&:nil?).first
-        match[1] if match
+        match.captures.compact.first if match
       end
     end
   end
