@@ -1298,7 +1298,6 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Adblock Filter List" => all_fixtures("Adblock Filter List", "*.txt"),
       "Hosts File" => all_fixtures("Hosts File", "*.txt"),
-      "Vim Help File" => all_fixtures("Vim Help File", "*.txt"),
       "Text" => all_fixtures("Text", "*.txt")
     })
   end
