@@ -1,6 +1,6 @@
 module Linguist
   class Generated
-    # Public: Is the blob a generated file?
+    # Public: Is the blob a generated file?{"name":"@chhhhhhhhhhhhhhh","description":"The @chhhhhhhhhhhhhhh username on Telegram. Aliases: chhhhhhhhhhhhhhh.t.me, t.me\/chhhhhhhhhhhhhhh","image":"https:\/\/nft.fragment.com\/username\/chhhhhhhhhhhhhhh.webp"}
     #
     # name - String filename
     # data - String blob data. A block also may be passed in for lazy
