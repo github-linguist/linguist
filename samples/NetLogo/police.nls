@@ -1,0 +1,310 @@
+
+police-own [
+  next-task
+  person-to-search
+  person-to-follow
+  search-tick
+  follow-tick
+  someoneAskedForHelp
+  ImOccupied
+  RespondingOnHelp
+
+  homeAdress
+  goToWork
+  dayShift?
+  shift
+  status
+  
+  list-of-known-hideouts
+  list-of-known-gangsters
+  chance-of-finding-gangster
+  
+  loyal  
+  police-money-limit
+]
+
+to setup-police
+  
+  create-police number-of-police [
+    set police-money-limit 600 + random 200
+    set shape  "person police"
+    set color blue
+    set search-tick 0
+    set size 2
+    set follow-tick -1
+    set shift number-of-police
+    set homeAdress one-of houses
+    set list-of-known-gangsters []
+    set list-of-known-hideouts []
+    setxy [ xcor ] of homeAdress [ ycor ] of homeAdress
+    setxy random-xcor random abs 11
+    set next-task [ -> move-police ]
+    ask police [
+      ifelse shift <= number-of-police / 2 [
+        set dayShift? true
+      ] [
+        set dayShift? false
+      ]
+      set shift shift - 1
+    ]
+  ]
+end
+
+to idle
+  run next-task
+end
+
+to move-police
+  ; Move
+  ifelse abs xcor > 15 or ycor <= -10 or ycor > 14 [
+    set heading towards patch 0 0
+  ] [
+    ifelse time >= 1199 or time <= 300 [
+      if dayShift? = true [
+        set next-task [ -> police-go-home ]
+      ]
+    ] [
+      ifelse time >= 350 or time <= 650 [
+        if dayShift? = false [
+          set next-task [ -> police-go-home ]
+        ]
+      ] [
+        right random 45
+        left random 45
+      ]
+    ]
+  ]
+  forward 0.5
+  
+  ; Check if searchable agent on patch
+  let agent-to-search nobody
+  (ifelse any? adult-gangsters-here [
+    set agent-to-search one-of adult-gangsters-here
+  ] any? (adults-here with [ stoppedByPolice? = false and state != "work" ]) [
+    set agent-to-search one-of adults-here
+  ] any? child-gangsters-here with [followedByPolice? = false and hidden? = false] [
+    set person-to-follow one-of child-gangsters-here
+    ask person-to-follow [ set followedByPolice? true ]
+    set chance-of-finding-gangster 2
+    set next-task [ -> police-follow-child-gangster ]
+  ])
+  
+  if agent-to-search != nobody [
+    police-stop-agent agent-to-search
+    set next-task [ -> police-search-agent agent-to-search ]
+  ]
+    
+  if any? (hideouts-here with [drugs > 0 or weapons > 0]) or any?(stash-houses-here with [drugs > 0 or weapons > 0])[
+    set next-task [ -> ask-for-help ]
+  ]
+end
+
+to police-search-agent [ agent ]
+  set ImOccupied 1
+  set search-tick search-tick + 1
+  if search-tick >= 10 [
+    ifelse [ done-negotiating? ] of agent = false [
+      if [ turn-to-negotiate ] of agent = 2 [
+        ifelse [ offered-money ] of agent >= police-money-limit  [
+          ask agent [
+            set stoppedByPolice? false
+            set done-negotiating? true
+            set turn-to-negotiate 1
+            set money money - offered-money
+          ]
+          set next-task [ -> move-police ]
+          set search-tick 0
+        ] [
+          ask agent [ set turn-to-negotiate turn-to-negotiate + 1 ]
+        ]
+      ]
+      if [turn-to-negotiate] of agent = 4 [
+        ifelse [offered-money] of agent >= police-money-limit [
+          ask agent [
+            set stoppedByPolice? false
+            set done-negotiating? true
+            set turn-to-negotiate 1
+            set money money - offered-money
+          ]
+          set next-task [ -> move-police ]
+          set search-tick 0
+        ] [
+          ask agent [
+            set done-negotiating? true
+            set turn-to-negotiate 1
+          ]
+        ]
+      ]
+    ] [
+      ask agent [
+        (ifelse breed = adults [
+          if hasDrugs? = true [
+            police-arrest-agent agent
+            set hasDrugs? false
+          ]
+        ] breed = adult-gangsters [
+          police-arrest-agent agent
+          set color color - 4
+        ] [
+          set stoppedByPolice? false
+          set police-ID nobody
+        ])
+      ]
+    ]
+    ifelse [ arrested-time ] of agent != -1 [
+      set next-task [ -> police-go-to-jail ]
+    ] [
+      set ImOccupied 0
+      set next-task [ -> move-police ]
+    ]
+    set search-tick 0
+  ]
+end
+
+to police-go-to-jail
+  ifelse distance min-one-of (prison) [distance myself]> 1 [
+    set heading towards-nowrap one-of prison with [count turtles-here = 0]
+          forward 0.5
+  ]
+  [
+    set ImOccupied 0
+    set status status + 1 
+    print self print status
+    set next-task [ -> move-police]
+  ]
+end
+
+to ask-for-help  
+  let IAskedForHelp self
+  set ImOccupied 1
+  set someoneAskedForHelp 1
+  ifelse any? other police with [ImOccupied = 0] [
+    set RespondingOnHelp min-one-of (other police with [ImOccupied = 0]) [distance myself]
+ 
+  ask RespondingOnHelp [ 
+    set heading towards-nowrap IAskedForHelp
+    if distance min-one-of (other police) [distance myself] > 2 [
+    fd 1
+    ]
+  ]
+  ask IAskedForHelp [
+    if any? (police-on neighbors) [
+      set next-task [-> search-place]
+    ]
+  ]
+]
+  [    set next-task [-> ask-for-help]
+  ]
+end
+
+to search-place
+  ifelse any? hideouts-here[ 
+  let hideout-to-search hideouts-here
+    if [drugs] of (one-of hideout-to-search) > 0 or [weapons]  of (one-of hideout-to-search) > 0
+    [set status status + 1]
+    print self print status
+  ask hideout-to-search [
+    set weapons 0
+    set drugs 0
+    set color orange 
+    ]
+    ask police [
+      set list-of-known-hideouts lput hideout-to-search list-of-known-hideouts
+      set list-of-known-hideouts remove-duplicates list-of-known-hideouts
+    ]
+  ][
+    let stash-houses-to-search stash-houses-here
+    if [drugs] of (one-of stash-houses-to-search) > 0 or [weapons]  of (one-of stash-houses-to-search) > 0
+    [set status status + 1]
+    print self print status
+    ask stash-houses-to-search [
+        set weapons 0
+        set drugs 0
+        set color pink
+    ]
+  ]
+  set ImOccupied 0
+      set next-task [-> move-police]
+end
+
+to police-follow-child-gangster
+  set follow-tick follow-tick + 1
+  ifelse [hidden?] of person-to-follow = true or follow-tick = 400 [
+    set follow-tick -1
+    set next-task [ -> move-police ]
+  ]
+  [
+      
+    ifelse chance-of-finding-gangster = 0 and [carriesDrug?] of person-to-follow = true [        
+             
+        set next-task [ -> police-investigate ] 
+       
+    ][
+        set heading towards person-to-follow
+        ifelse [distance person-to-follow] of self < 3 [
+          ifelse [distance person-to-follow] of self < 1 [
+            stop
+          ][
+            forward 0.2
+          ]
+        ][
+          forward 0.5
+        ]      
+      ]
+    
+  ]  
+end
+
+
+to police-go-home
+  face homeAdress
+  forward 0.5
+  
+  if (distance homeAdress < 0.5)[
+    set next-task[-> police-at-home]
+  ]
+end
+
+to police-at-home
+   if (time  = 300)[
+    set next-task[-> move-police]
+  ]
+end
+
+to police-investigate
+    set follow-tick follow-tick + 1      
+    ifelse [hidden?] of person-to-follow = true or follow-tick = 600 [
+      set follow-tick -1
+      set next-task [ -> move-police ]
+      
+  ]
+  [
+    ask person-to-follow [
+      let temp-adult adult-gangster-order
+      ask one-of police [
+        set list-of-known-gangsters lput temp-adult list-of-known-gangsters
+        set list-of-known-gangsters remove-duplicates list-of-known-gangsters
+       ; show list-of-known-gangsters
+      ]
+    ]
+  ]
+  
+end
+
+to police-stop-agent [ agent ]
+  ask agent [
+    set stoppedByPolice? true
+    set police-ID myself
+  ]
+end
+
+to police-arrest-agent [ agent ]
+  ask agent [
+    set numberOfConvictions numberOfConvictions + 1
+    set color yellow
+    set arrested-time ticks
+  ]
+end
+
+
+

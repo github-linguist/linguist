@@ -1,0 +1,212 @@
+
+;; ============================================
+;;                 OUTPUT
+;; ============================================
+
+to calculate-r0
+  let new-infected nb-infected
+  let new-recovered nb-recovered
+  let currently-infected table:get populations "infected"
+  let currently-recovered table:get populations "recovered"
+  set nb-infected-previous (currently-infected + new-recovered - new-infected)  ;; Number of infected people at the previous tick
+  let susceptible-t (N-people - currently-infected - currently-recovered)  ;; Number of susceptibles now
+  ifelse nb-infected-previous < 10
+  [ set beta-n 0 ]
+  [ set beta-n (new-infected / nb-infected-previous) ]       ;; This is the average number of new secondary infections per infected this tick
+  
+  ifelse nb-infected-previous < 5
+  [ set gamma 0 ]
+  [ set gamma (new-recovered / nb-infected-previous) ]    ;; This is the average number of new recoveries per infected this tick
+  
+  if ((N-people - susceptible-t) != 0 and (susceptible-t != 0))   ;; Prevent from dividing by 0
+  [
+    ;; This is derived from integrating dI / dS = (beta*SI - gamma*I) / (-beta*SI)
+    ;; Assuming one infected individual introduced in the beginning, and hence counting I(0) as negligible,
+    ;; we get the relation
+    ;; N - gamma*ln(S(0)) / beta = S(t) - gamma*ln(S(t)) / beta, where N is the initial 'susceptible' population.
+    ;; Since N >> 1
+    ;; Using this, we have R_0 = beta*N / gamma = N*ln(S(0)/S(t)) / (K-S(t))
+    set r0 (ln (s0 / susceptible-t) / (N-people - susceptible-t))
+    set r0 r0 * s0 
+  ]
+end
+
+to current-rt
+  ifelse length table:keys infections > 0
+  [
+    let allinfections []
+    foreach table:values infections [dd -> foreach dd [dd1 -> set allinfections lput dd1 allinfections]]
+    if length allinfections > 1 [
+      set rtime mean allinfections
+      let spreaders length all-infections
+      set k0 ifelse-value rtime > 0 [(sum sublist reverse sort all-infections 0 (spreaders * 0.2)) / sum all-infections][0]
+    ]
+  ][set rtime 0]
+end
+
+;; ========================== SUMMARY ==========================
+;; These show in the output window and in the plots when we are running 
+;; in graphical mode. They have no effect in batch mode
+;; ============================================================
+
+to print-current-summary
+  let infected count turtles with [infected?]
+  let recovered count turtles with [cured?]
+  let propinf precision (infected / N-people) 3
+  let proprec precision (recovered / N-people) 3
+  let proprec2 precision (recovered / (infected + count turtles with [cured?])) 3
+  output-print (word "Currently infected: " infected " (" precision (propinf * 100) 1 "% of population)" )
+  output-print (word "Currently recovered: " recovered " (" precision (proprec * 100) 1 "% of population - " precision (proprec2 * 100) 1 "% of all infected)" )
+  output-print (word "Current average R0: " precision rtime 2)
+end
+
+to print-double-time
+  output-print (word "On day " ticks " cases doubled within: "  (ticks - double-t) " days"  )     
+end
+
+to-report inc-rate  
+ report table:get populations "infected" / cum-infected
+end
+
+to plot-friends
+  set-current-plot "Degree distribution (log-log)"
+  let max-degree max [count friends] of turtles with [age > 12]
+  ;; for this plot, the axes are logarithmic, so we can't
+  ;; use "histogram-from"; we have to plot the points
+  ;; ourselves one at a time
+  plot-pen-reset
+  let degree 1
+  while [degree <= max-degree] [
+    let matches turtles with [age > 12 and count friends = degree]
+    if any? matches
+    [ plotxy log degree 10
+      log (count matches) 10 ]
+    set degree degree + 1
+  ]
+
+  set-current-plot "Degree distribution"
+  set max-degree max [count friends] of turtles with [age > 12]
+  plot-pen-reset  ;; erase what we plotted before
+  set-plot-x-range 1 (max-degree + 1)  ;; + 1 to make room for the width of the last bar
+  histogram [count friends] of turtles with [age > 12]
+end
+
+to plot-contacts
+  set-current-plot "Number of contacts per day of infected"
+  set-plot-x-range 0 50
+  histogram [nm_contacts / (days_cont + 0.0000001)]  of turtles with [my-state = "recovered"] 
+end
+
+to plot-age
+  set-current-plot "Age distribution"
+  let maxage max [age] of turtles
+  plot-pen-reset  ;; erase what we plotted before
+  set-plot-x-range 1 (maxage + 1)  ;; + 1 to make room for the width of the last bar
+  set-plot-pen-interval 5
+  histogram [age] of turtles
+end
+
+to plot-spreaders
+  set-current-plot "Infections per agent"
+  let max-spreading max all-infections
+  plot-pen-reset  ;; erase what we plotted before
+  set-plot-x-range 1 (max-spreading + 1)  ;; + 1 to make room for the width of the last bar
+  histogram all-infections
+end
+
+to plot-inf
+  set-current-plot "Infection distribution (log-log)"
+  let max-degree max all-infections
+  plot-pen-reset
+  let degree 1
+  while [degree <= max-degree] [
+    let matches filter [i -> i = degree] all-infections
+    if length matches > 0
+    [ plotxy log degree 10
+      log (length matches) 10 
+    ]
+    set degree degree + 1
+  ]
+end
+
+to export-agents
+  file-open "glasgow_agents.csv"
+  ask turtles [file-print (word who "," age "," sex "," hhtype "," neigh)]
+  file-close
+end
+
+;; ================================ OUTPUT FILES ====================================
+
+;; These are produced only when we run in batch mode. We generate two output files: 
+;; one contains the final state of the simulation once the epidemic is over;
+;; the other (suffix _ind) records the progression of the epidemic in a single run.
+
+;; ==================================================================================
+
+to print-final-summary
+  let deaths table:get populations "dead"
+  let recovered table:get populations "recovered"
+  let totalinf table:get populations "infected" + recovered + deaths
+  let totalinfpct precision ((totalinf / N-people) * 100) 3
+  
+  ifelse behaviorspace-run-number = 0 [
+    plot-spreaders
+    plot-inf
+    output-print " ================================ "
+    output-print (word "End of epidemic: day " ticks)
+    output-print (word "Total infected: " totalinfpct "% of population" )
+    output-print (word "Total deaths: " deaths ". - Mortality rate: " precision ((deaths / totalinf) * 100) 2 "%")
+    output-print (word "Tests performed: " tests-performed)
+    let asy table:get cumulatives "asymptomatic"
+    let sym table:get cumulatives "symptomatic"
+    let sev table:get cumulatives "severe"
+    let all_cases sev + sym + asy  
+    output-print (word "Ratio: hospital reported/community non-reported: " precision (( asy + sym) / sev ) 1 ) 
+    output-print (word "Severe: " precision (100 * sev / all_cases) 1 "% " " Symptomatic: "  precision (100 * sym / all_cases) 1 "% " " Asymptomatic: " precision (100 * asy / all_cases) 1 "% ") 
+    let tot sum table:values counters 
+    output-print (word "Infection sources: ")
+    foreach table:keys counters [ctr -> 
+      output-type (word ctr ": " (precision (100 * table:get counters ctr / tot) 1) "% "  )
+    ]
+  ]
+  [
+    let file-name word behaviorspace-experiment-name ".csv"
+    ifelse file-exists? file-name
+    [file-open file-name]
+    [
+      file-open file-name
+      file-print "run,beta,lambda,prob-rnd-infection,f,pctApp,pctTest,lockdown,schools,compliance,SymPriority,deaths,propInfected,mortality,days,tests,household,relations,friends,school,random,work"
+    ]
+    let tot sum table:values counters
+    file-type (word
+      behaviorspace-run-number "," infection-chance "," lambda "," prob-rnd-infection "," per-dif-friends "," pct-with-tracing-app "," tests-per-100-people "," lockdown-at-first-death "," schools-open? "," app-compliance "," prioritize-symptomatics? "," 
+      deaths "," ((totalinf / N-people) * 100) "," (precision ((deaths / totalinf) * 100) 2) "," ticks "," tests-performed
+    )
+    ifelse tot > 0 
+    [foreach table:values counters [ctr -> file-type (word "," (precision (ctr / tot) 2))]]
+    [file-type ",0,0,0,0,0"]
+    file-print ""
+    file-close
+  ]
+end
+
+to save-individual 
+  let file-name word behaviorspace-experiment-name "_ind.csv" 
+  ifelse file-exists? file-name
+  [file-open file-name]
+  [
+    file-open file-name
+    file-print "run,t,beta,lambda,prob-rnd-infection,f,pctApp,pctTest,lockdown,schoolsopen,compliance,SymPriority,susceptible,infected,recovered,isolated,dead,hospitalized,presymptomatic,symptomatic,asymptomatic,severe,tests,positiveTests"
+  ]
+  file-print (word behaviorspace-run-number "," ticks "," infection-chance "," lambda "," prob-rnd-infection "," per-dif-friends "," pct-with-tracing-app "," tests-per-100-people ","
+    lockdown-at-first-death ","  schools-open? "," app-compliance "," prioritize-symptomatics? "," csv:to-row table:values populations "," tests-today "," tested-positive) 
+  file-close
+end
+
+to save_contacts
+  file-open "contacts_13_10.csv"
+  file-print "contacts,days"
+  ask turtles with [my-state = "recovered" and days_cont > 0]
+     [file-print (word nm_contacts "," days_cont)]
+  file-close
+end
