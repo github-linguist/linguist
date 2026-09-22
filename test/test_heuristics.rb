@@ -1117,10 +1117,9 @@ class TestHeuristics < Minitest::Test
     })
   end
 
-  def test_sip_by_heuristics
+  def test_sim_by_heuristics
     assert_heuristics({
-      "Quartus Simulation IP" => all_fixtures("Quartus Simulation IP", "*.sip"),
-      "SIP" => all_fixtures("SIP", "*.sip")
+      "Simula" => Dir.glob("#{fixtures_path}/Generic/sim/Simula/*")
     })
   end
 
