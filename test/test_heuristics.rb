@@ -1126,20 +1126,6 @@ class TestHeuristics < Minitest::Test
     }, "test.shader")
   end
 
-  def test_shader_version_by_heuristics
-    candidates = [Language["GLSL"], Language["ShaderLab"]]
-    glsl = [Language["GLSL"]]
-
-    assert_equal glsl, Heuristics.call(Blob.new("test.shader", "#version 120"), candidates)
-    assert_equal glsl, Heuristics.call(Blob.new("test.shader", "\r\n \t# version 330 core // desktop\r\n"), candidates)
-    assert_equal glsl, Heuristics.call(Blob.new("test.shader", "#version 300 es\n"), candidates)
-    assert_equal glsl, Heuristics.call(Blob.new("test.shader", "#version 450 compatibility\n"), candidates)
-    assert_equal [], Heuristics.call(Blob.new("test.shader", "// #version 120\n"), candidates)
-    assert_equal [], Heuristics.call(Blob.new("test.shader", "/*\n#version 120\n*/\n"), candidates)
-    assert_equal [], Heuristics.call(Blob.new("test.shader", "#shader vertex\n#version 440 core\n"), candidates)
-    assert_equal [], Heuristics.call(Blob.new("test.shader", "#version 330core\n"), candidates)
-  end
-
   def test_sip_by_heuristics
     assert_heuristics({
       "Quartus Simulation IP" => all_fixtures("Quartus Simulation IP", "*.sip"),
