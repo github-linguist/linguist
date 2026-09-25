@@ -1117,6 +1117,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_shader_by_heuristics
+    ambiguous = ["#{samples_path}/GLSL/islandScene.shader"]
+    assert_heuristics({
+      "GLSL" => all_fixtures("GLSL", "*.shader") - ambiguous,
+      "ShaderLab" => all_fixtures("ShaderLab", "*.shader"),
+      nil => ambiguous + all_fixtures("Text")
+    }, "test.shader")
+  end
+
   def test_sip_by_heuristics
     assert_heuristics({
       "Quartus Simulation IP" => all_fixtures("Quartus Simulation IP", "*.sip"),
