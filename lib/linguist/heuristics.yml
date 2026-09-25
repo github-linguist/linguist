@@ -556,13 +556,24 @@ disambiguations:
   - language: MUF
     pattern: '^: '
   - language: M
-    pattern: '^\s*;'
+    pattern:
+    - '^\s*;'
+    # Dot-indented commands, global assignments, and WRITE newline controls.
+    - '(?i)^[ \t]+(?:\.[ \t]+)+(?:d(?:o)?|f(?:or)?|i(?:f)?|n(?:ew)?|q(?:uit)?|s(?:et)?|w(?:rite)?)[ \t:]'
+    - '(?i)^[ \t]+s(?:et)?[ \t]+\^[%a-z][a-z0-9]*(?:\(|=)'
+    # A formatting delimiter after ! distinguishes WRITE from w != value.
+    - '(?i)^[ \t]+w(?:rite)?[ \t]+(?:!|[^;\r\n]*,!)(?:[,!#?]|[ \t]*(?:;|\r?$))'
   - language: Wolfram Language
     and:
       - pattern: '\(\*'
       - pattern: '\*\)$'
+  # Keep comments separate to avoid slow Regexp.union matches on blank lines.
   - language: MATLAB
     pattern: '^\s*%'
+  - language: MATLAB
+    pattern:
+    - '^[ \t]*function[ \t]+(?:\[[^\]\r\n]*\][ \t]*=[ \t]*|[A-Za-z]\w*[ \t]*=[ \t]*)?[A-Za-z]\w*[ \t]*\('
+    - '^[ \t]*classdef[ \t]+(?:\([^\r\n)]*\)[ \t]*)?[A-Za-z]\w*'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
@@ -851,6 +862,12 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
+- extensions: ['.rsc']
+  rules:
+  - language: Rascal
+    pattern: '^[ \t]*module[ \t]+\w+(?:::\w+)*[ \t]*\r?$'
+  - language: RouterOS Script
+    pattern: '^[ \t]*:(?:local|global)[ \t]+[A-Za-z0-9]+(?:[ \t;]|\r?$)'
 - extensions: ['.s']
   rules:
   - language: Unix Assembly
@@ -872,6 +889,12 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.sch']
+  rules:
+  - language: KiCad Schematic
+    pattern:
+    - '\AEESchema Schematic File Version[ \t]+[0-9]+[ \t]*(?:\r?\n|\r|\z)'
+    - '\Av[ \t]+[0-9]{8}[ \t]+[0-9]+[ \t]*(?:\r?\n|\r|\z)'
 - extensions: ['.scm']
   rules:
   - language: Tree-sitter Query
@@ -1008,6 +1031,12 @@ disambiguations:
     pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
   - language: Smarty
     pattern: '(\A|[^{])\{(\*\s|\$|\/)?\w*\b'
+- extensions: ['.trigger']
+  rules:
+  - language: Apex
+    pattern:
+    - '(?i)^[ \t]*trigger\s+[a-z_][a-z0-9_]*\s+on\s+[a-z_][a-z0-9_]*\s*\(\s*(?:before|after)\s+(?:insert|update|delete|undelete)\b'
+    - '(?i)^[ \t]*(?:public|global)\s+(?:with|without|inherited)\s+sharing\s+class\s+[a-z_][a-z0-9_]*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
@@ -1037,31 +1066,7 @@ disambiguations:
   - language: Vim Help File
     pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
   - language: Hosts File
-    pattern: |-
-      (?xi) ^
-
-      # IPv4 address
-      (?<ipv4>
-        (?!\.)
-        (?:\.?
-          (?: 25[0-5]  # 250-255
-          |   2[0-4]\d # 200-249
-          |   1\d\d    # 100-199
-          |   [1-9]?\d # 0-99
-          )\b
-      ){4})
-
-      # CIDR notation: /[0-32]
-      (?<cidr>/(3[0-2]|[12]?\d)\b)?
-
-      # Domains list
-      (?<domains>
-        [ \t]+
-        \w[-\w]* (?:\.\w[-\w]*)*
-        (?<!-)\b
-      )*+
-
-      (?:$|\s)
+    pattern: '^(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(?:\.(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}(?:/(?:3[0-2]|[12]?[0-9]))?(?:[ \t]+[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?(?:\.[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?)*)+(?:[ \t]|$)'
   - language: Adblock Filter List
     pattern: '\A\[(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?(?:[ \t]?;[ \t]?(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?)*\]'
     # HACK: This is a contrived use of heuristics needed to address
