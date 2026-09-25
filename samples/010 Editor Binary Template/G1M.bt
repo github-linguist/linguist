@@ -1,0 +1,113 @@
+//------------------------------------------------
+//--- 010 Editor v9.0.2 Binary Template
+//
+//      File: G1M.bt
+//   Authors: Raytwo, HealingBrew, Joschka
+//   Version: 1.2
+//   Purpose: Parsing G1M models
+//  Category: Game File
+// File Mask: *.g1m
+//  ID Bytes: 5F 4D 31 47
+//   History:
+//   1.2      2020-01-01  Joschka : Updated with NUNO and NUNV parsing
+//   1.1      2019-11-01  HealingBrew: Updated with section parsing
+//   1.0      2019-08-26  Raytwo: Made the original file
+//------------------------------------------------
+
+
+#ifndef G1M
+#define G1M
+
+
+#ifndef G1M_FILELESS
+#define G1M_FILELESS
+#define G1M_FILELESS_MASTER
+LittleEndian();
+#endif // G1M_FILELESS
+
+#include "G1SharedStructures.bt"
+#include "G1M/G1MF.bt"
+#include "G1M/G1MS.bt"
+#include "G1M/G1MM.bt"
+#include "G1M/G1MG/G1MG_Socket.bt"
+#include "G1M/G1MG/G1MG_Material.bt"
+#include "G1M/G1MG/G1MG_ShaderParam.bt"
+#include "G1M/G1MG/G1MG_VertexBuffer.bt"
+#include "G1M/G1MG/G1MG_VertexAttribute.bt"
+#include "G1M/G1MG/G1MG_BoneBind.bt"
+#include "G1M/G1MG/G1MG_IndexBuffer.bt"
+#include "G1M/G1MG/G1MG_SubMesh.bt"
+#include "G1M/G1MG/G1MG_Mesh.bt"
+#include "G1M/G1MG.bt"
+#include "G1M/NUNO.bt"
+#include "G1M/NUNV.bt"
+#include "G1M/NUNS.bt"
+#include "G1M/EXTR.bt"
+#include "G1M/SOFT.bt"
+
+typedef struct G1MSUBSECTION {
+    local int32 pos = FTell();
+    GResourceSectionHeader header<name="Section Header", read=GetSectionName>;
+    switch(header.magic)
+    {
+        case "FM1G":
+            FSeek(pos);
+            G1MFormat data<name="Format">;
+            break;
+        case "SM1G":
+            G1MSkeleton data<name="Skeleton">;
+            break;
+        case "MM1G":
+            G1MMatrixSet data<name="Matrix">;
+            break;
+        case "GM1G":
+            G1MGeometry data<name="Geometry">;
+            break;
+        case "ONUN":
+            G1MNunoSection date<name="Nuno data">;
+            break;
+        case "VNUN":
+            G1MNunvSection date<name="Nunv data">;
+            break;
+        case "SNUN":
+            G1MNunsSection date<name="Nuns data">;
+            break;
+        case "RTXE":
+            G1MExtraSet data<name="Extra">;
+            break;
+        case "TFOS":
+            G1MSoftSection data<name="Soft">;
+            break;
+        default:
+            Printf("*NOTE (%s) Offset 0x%X: Unhandled G1 Resource Section %s\n", GetFileName(), pos, header.magic);
+            byte data[header.size - 0xC]<name="Blob">;
+            break;
+    }
+    FSeek(pos + header.size);
+} G1MSubSection;
+
+string GetSubSectionName(G1MSUBSECTION &section) {
+    return GetSectionName(section.header);
+}
+
+typedef struct G1MSTRUCTURE {
+    GResourceSectionHeader header<name="Header", read=GetSectionName>;
+
+    int32 data_start<name="Start Offset", format=hex>;
+    int32 reserved1<name="Unknown1", hidden=true>;
+    int32 section_count<name="Section Count">;
+} G1MStructure;
+
+#ifdef G1M_FILELESS_MASTER
+
+struct FILE {
+    G1MStructure header<name="Header">;
+
+    FSeek(header.data_start);
+
+    G1MSubSection sections[header.section_count]<name="Section", read=GetSubSectionName, optimize=false>;
+}File<name="G1M", open=true>;
+
+#endif // G1M_FILELESS_MASTER
+
+#endif //G1M
