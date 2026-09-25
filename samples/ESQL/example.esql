@@ -1,0 +1,68 @@
+// Basic query with pipe chain
+FROM kibana_sample_data_logs
+| WHERE response.status_code >= 400
+| STATS error_count = COUNT(*) BY host.name
+| SORT error_count DESC
+| LIMIT 10
+
+// Functions and string operations
+FROM logs-*
+| EVAL message = CONCAT("Error: ", error.message)
+| WHERE STARTS_WITH(message, "Error")
+| KEEP @timestamp, message, host.name
+
+// Time intervals and buckets
+FROM metrics
+| WHERE @timestamp >= NOW() - 1h
+| STATS avg_cpu = AVG(system.cpu.total.pct) BY BUCKET(@timestamp, 5minutes)
+
+// Triple-quoted string (KQL)
+FROM logs
+| WHERE KQL("""log.level:"error" AND message:"timeout" """)
+
+/* Block comment */
+ROW value = 1.5::integer, name = "test"::keyword
+
+FROM employees
+| LEFT JOIN departments ON employees.dept_id == departments.id
+| KEEP name, department_name
+
+// Query parameters
+FROM ?index
+| WHERE status = ?status AND timestamp > ?1
+
+// DISSECT and GROK
+FROM web_logs
+| DISSECT message "%{ip} %{method} %{path} %{status}"
+| GROK path "%{WORD:section}/%{GREEDYDATA:rest}"
+
+// Numeric literals and math
+ROW x = 42, y = 3.14, z = 1.5e10
+| EVAL result = SQRT(POW(x, 2) + POW(y, 2))
+
+// ENRICH with options
+FROM logs
+| ENRICH hosts_policy ON host.ip WITH os, datacenter
+
+// MV functions
+FROM events
+| EVAL tags = MV_SORT(tags)
+| WHERE MV_COUNT(tags) > 3
+
+// Backtick-escaped column names
+FROM data
+| EVAL `my column` = `nested.field` + 1
+| RENAME `my column` AS result
+
+// FORK
+FROM logs
+| FORK
+  ( WHERE level == "error" | STATS errors = COUNT() )
+  ( WHERE level == "warn"  | STATS warnings = COUNT() )
+
+// Boolean operators
+FROM data
+| WHERE status IS NOT NULL
+  AND (category IN ("a", "b", "c") OR priority > 5)
+  AND name LIKE "test*"
+  AND pattern RLIKE "^[a-z]+$"
