@@ -1,0 +1,90 @@
+module wayland;
+
+// common utils for bindings
+
+const MARSHAL_FLAG_DESTROY = 1;
+alias Fixed = int;
+
+typedef EventQueue = void*;
+typedef TimeSpec = void*;
+alias Dispatcher_Func_T = fn int (void *user_data, void *target,
+								  uint opcode, Message* msg, Argument* args);
+
+alias Log_Func_T = fn void (char *fmt, ...);
+
+struct Wl_List { Wl_List *prev; Wl_List* next; }
+
+// used by server
+alias Wl_List_Init = fn void (Wl_List *list);
+alias Wl_List_Insert = fn void (Wl_List* list, Wl_List* elm);
+alias Wl_List_Remove = fn void (Wl_List *elm);
+alias Wl_List_Length = fn int (Wl_List *list);
+alias Wl_List_Empty = fn int (Wl_List *list);
+alias Wl_List_Insert_List = fn void (Wl_List *list, Wl_List *other);
+
+Wl_List_Init         wl_list_init;
+Wl_List_Insert       wl_list_insert;
+Wl_List_Remove       wl_list_remove;
+Wl_List_Length       wl_list_length;
+Wl_List_Empty        wl_list_empty;
+Wl_List_Insert_List   wl_list_insert_list;
+
+// NOTE: This needs to be a generic struct
+struct Array {
+  usz cap, size;
+  void* data;
+}
+
+struct Queue {
+  int a;
+}
+
+struct Object {
+  Interface* iface;
+  void* implementation;
+  uint id;
+}
+
+struct Message {
+	ZString name;
+	ZString signature;
+	Interface** types;
+}
+
+struct Interface {
+	ZString name;
+	int version;
+	int method_count;
+	Message *methods;
+	int event_count;
+	Message *events;
+}
+
+constdef ArgType {
+  INT    = 'i',
+  UINT   = 'u',
+  FIXED  = 'f',
+  STRING = 's',
+  OBJECT = 'o',
+  NEW_ID = 'n',
+  ARRAY  = 'a',
+  FD     = 'h',
+}
+
+union Argument {
+  int i;     /**< `int`    */
+  uint u;	 /**< `uint`   */
+  Fixed f;	 /**< `fixed`  */
+  char* s;	 /**< `string` */
+  Object* o; /**< `object` */
+  uint n;	 /**< `new_id` */
+  Array *a;	 /**< `array`  */
+  int h;	 /**< `fd`     */
+}
+
+constdef IteratorResult {
+	/** Stop the iteration */
+	WL_ITERATOR_STOP,
+	/** Continue the iteration */
+	WL_ITERATOR_CONTINUE
+}

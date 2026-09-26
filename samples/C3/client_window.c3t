@@ -1,0 +1,39 @@
+module test_mod @if($feature(WL_TEST));
+
+import wayland::wl;
+import wayland::client::wl;
+import std::io;
+import std::core::log;
+import libc;
+
+struct Window {
+    wayland::wl::Display display;
+}
+
+fn void simple_test() @test {
+  // log::init();
+  Window window;
+
+  wl::init()!!;
+
+  window.display.connect("")!!;
+
+  wl::Registry registry = window.display.get_registry()!!;
+
+  registry.add_listener(&registry_listener, null);
+
+  window.display.roundtrip()!!;
+  window.display.roundtrip()!!;
+
+  log::info("Exitting");
+}
+
+fn void registry_global (void* data, Registry* registry, uint name, ZString _interface, uint version) {
+  log::debug("%s",_interface);
+}
+
+fn void registry_global_remove (void* data, Registry* registry, uint name) {
+   
+}
+
+wl::RegistryListener registry_listener = { &registry_global, &registry_global_remove };

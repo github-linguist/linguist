@@ -1,0 +1,32 @@
+// #target: macos-x64
+module test;
+
+macro void @test(bool $skip = false)
+{
+	$if $skip:
+
+	$else
+	int a;
+	int b;
+	defer
+	{
+		a = b;
+	}
+	$endif
+}
+
+fn int main() {
+	@test();
+    return 0;
+}
+/* #expect: test.ll
+
+entry:
+  %a = alloca i32, align 4
+  %b = alloca i32, align 4
+  store i32 0, ptr %a, align 4
+  store i32 0, ptr %b, align 4
+  %0 = load i32, ptr %b, align 4
+  store i32 %0, ptr %a, align 4
+  ret i32 0
+}
