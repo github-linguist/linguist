@@ -369,6 +369,15 @@ disambiguations:
     pattern: '^\s*(#version|precision|uniform|varying|vec[234])'
   - language: Filterscript
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
+- extensions: ['.fun']
+  rules:
+  - language: Fun
+    pattern:
+    - '(?m)^[ \t]*#'
+    - '(?i)\bend[ \t]+(?:if|fun|class|loop|case|try|do)\b'
+    - '(?i)\bvar[ \t]+[A-Za-z_][A-Za-z0-9_]*[ \t]*[=(]'
+    - '\?\.'
+  - language: Standard ML
 - extensions: ['.ftl']
   rules:
   - language: FreeMarker

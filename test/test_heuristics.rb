@@ -515,6 +515,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_fun_by_heuristics
+    assert_heuristics({
+      "Fun" => all_fixtures("Fun"),
+      "Standard ML" => all_fixtures("Standard ML")
+    }, alt_name="file.fun")
+  end
+
   def test_ftl_by_heuristics
     assert_heuristics({
       "Fluent" => all_fixtures("Fluent", "*.ftl"),
