@@ -499,6 +499,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_frag_by_heuristics
+    assert_heuristics({
+      "GLSL" => all_fixtures("GLSL", "*.frag"),
+      nil => all_fixtures("JavaScript", "*.frag")
+    })
+  end
+
   def test_frm_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.frm"),

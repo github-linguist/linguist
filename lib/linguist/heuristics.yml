@@ -347,6 +347,17 @@ disambiguations:
   - language: Frege
     pattern: '^\s*(import|module|package|data|type) '
   - language: Text
+- extensions: ['.frag']
+  rules:
+  - language: GLSL
+    # A version directive belongs at the start of a shader.
+    pattern: '\A[ \t\r\n]*#[ \t]*version[ \t]+[0-9]{3}(?:[ \t]+(?:core|compatibility|es))?[ \t]*(?://[^\r\n]*)?(?:\r?\n|\z)'
+  - language: GLSL
+    and:
+    # Require both a typed interface declaration and fragment output, rather
+    # than claiming JavaScript fragments from one shader-like token.
+    - pattern: '^[ \t]*(?:uniform|varying)[ \t]+(?:(?:lowp|mediump|highp)[ \t]+)?(?:[biud]?vec[234]|d?mat[234](?:x[234])?|float|double|int|uint|bool|[iu]?sampler[A-Za-z0-9_]*)[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:[ \t]*\[[^\]\r\n]*\])?[ \t]*;'
+    - pattern: '^[ \t]*gl_FragColor[ \t]*='
 - extensions: ['.frm']
   rules:
   - language: VBA
