@@ -1124,6 +1124,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_shader_by_heuristics
+    ambiguous = ["#{samples_path}/GLSL/islandScene.shader"]
+    assert_heuristics({
+      "GLSL" => all_fixtures("GLSL", "*.shader") - ambiguous,
+      "ShaderLab" => all_fixtures("ShaderLab", "*.shader"),
+      nil => ambiguous + all_fixtures("Text")
+    }, "test.shader")
+  end
+
   def test_sip_by_heuristics
     assert_heuristics({
       "Quartus Simulation IP" => all_fixtures("Quartus Simulation IP", "*.sip"),
@@ -1142,6 +1151,14 @@ class TestHeuristics < Minitest::Test
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
       "Solidity" => Dir.glob("#{fixtures_path}/Generic/sol/Solidity/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/sol/nil/*")
+    })
+  end
+
+  def test_spec_by_heuristics
+    ambiguous = all_fixtures("Python", "*.spec") + all_fixtures("Ruby", "*.spec")
+    assert_heuristics({
+      "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
+      nil => ambiguous
     })
   end
 
@@ -1305,7 +1322,6 @@ class TestHeuristics < Minitest::Test
     assert_heuristics({
       "Adblock Filter List" => all_fixtures("Adblock Filter List", "*.txt"),
       "Hosts File" => all_fixtures("Hosts File", "*.txt"),
-      "Vim Help File" => all_fixtures("Vim Help File", "*.txt"),
       "Text" => all_fixtures("Text", "*.txt")
     })
   end
