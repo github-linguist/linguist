@@ -715,15 +715,17 @@ class TestHeuristics < Minitest::Test
   end
 
   def test_m_by_heuristics
-    ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m")
+    ambiguous = all_fixtures("Objective-C", "cocoa_monitor.m") +
+                all_fixtures("M", "mileage.m") +
+                all_fixtures("MATLAB", "Check_plot.m")
     assert_heuristics({
-      "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
-      "Mercury" => all_fixtures("Mercury", "*.m"),
-      "MUF" => all_fixtures("MUF", "*.m"),
-      "M" => all_fixtures("M", "MDB.m"),
-      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
-      "MATLAB" => all_fixtures("MATLAB", "create_ieee_paper_plots.m"),
       "Limbo" => all_fixtures("Limbo", "*.m"),
+      "M" => all_fixtures("M", "*.m") - ambiguous,
+      "MATLAB" => all_fixtures("MATLAB", "*.m") - ambiguous,
+      "MUF" => all_fixtures("MUF", "*.m"),
+      "Mercury" => all_fixtures("Mercury", "*.m"),
+      "Objective-C" => all_fixtures("Objective-C", "*.m") - ambiguous,
+      "Wolfram Language" => all_fixtures("Wolfram Language", "*.m") - all_fixtures("Wolfram Language", "Problem12.m"),
       nil => ambiguous
     })
   end
@@ -1062,6 +1064,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_rsc_by_heuristics
+    ambiguous = all_fixtures("RouterOS Script", "vlans.rsc")
+    assert_heuristics({
+      "Rascal" => all_fixtures("Rascal", "*.rsc"),
+      "RouterOS Script" => all_fixtures("RouterOS Script", "*.rsc") - ambiguous,
+      nil => ambiguous
+    })
+  end
+
   def test_s_by_heuristics
     assert_heuristics({
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),
@@ -1084,6 +1095,15 @@ class TestHeuristics < Minitest::Test
     }, alt_name="test.scd")
   end
 
+  def test_sch_by_heuristics
+    assert_heuristics({
+      "KiCad Schematic" => all_fixtures("KiCad Schematic", "*.sch"),
+      nil => all_fixtures("Eagle", "*.sch") +
+        all_fixtures("Scheme", "*.sch") +
+        all_fixtures("XML", "*.sch")
+    })
+  end
+
   def test_scm_by_heuristics
     assert_heuristics({
       "Scheme" => all_fixtures("Scheme", "*.scm"),
@@ -1104,6 +1124,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_shader_by_heuristics
+    ambiguous = ["#{samples_path}/GLSL/islandScene.shader"]
+    assert_heuristics({
+      "GLSL" => all_fixtures("GLSL", "*.shader") - ambiguous,
+      "ShaderLab" => all_fixtures("ShaderLab", "*.shader"),
+      nil => ambiguous + all_fixtures("Text")
+    }, "test.shader")
+  end
+
   def test_sip_by_heuristics
     assert_heuristics({
       "Quartus Simulation IP" => all_fixtures("Quartus Simulation IP", "*.sip"),
@@ -1122,6 +1151,14 @@ class TestHeuristics < Minitest::Test
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
       "Solidity" => Dir.glob("#{fixtures_path}/Generic/sol/Solidity/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/sol/nil/*")
+    })
+  end
+
+  def test_spec_by_heuristics
+    ambiguous = all_fixtures("Python", "*.spec") + all_fixtures("Ruby", "*.spec")
+    assert_heuristics({
+      "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
+      nil => ambiguous
     })
   end
 
@@ -1246,6 +1283,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_trigger_by_heuristics
+    assert_heuristics({
+      "Apex" => all_fixtures("Apex", "*.trigger"),
+      nil => all_fixtures("Shell", "*.trigger")
+    })
+  end
+
   def test_ts_by_heuristics
     assert_heuristics({
       "TypeScript" => all_fixtures("TypeScript", "*.ts"),
@@ -1277,7 +1321,7 @@ class TestHeuristics < Minitest::Test
   def test_txt_by_heuristics
     assert_heuristics({
       "Adblock Filter List" => all_fixtures("Adblock Filter List", "*.txt"),
-      "Vim Help File" => all_fixtures("Vim Help File", "*.txt"),
+      "Hosts File" => all_fixtures("Hosts File", "*.txt"),
       "Text" => all_fixtures("Text", "*.txt")
     })
   end
