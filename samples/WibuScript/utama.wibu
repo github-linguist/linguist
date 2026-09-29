@@ -1,0 +1,24 @@
+// File: samples/WibuScript/utama.wibu
+// Demonstrasi integrasi sistem impor modul, logika, dan file I/O WibuScript
+
+mite("--- Program Utama WibuScript ---")
+
+// Impor modul kalkulator
+yobu("./kalkulator.wibu")
+
+kore angkaA = 20
+kore angkaB = 5
+
+kore hasilTambah = tambah(angkaA, angkaB)
+kore hasilKurang = kurang(angkaA, angkaB)
+kore hasilKali = kali(angkaA, angkaB)
+kore hasilBagi = bagi(angkaA, angkaB)
+
+kore riwayat = catatHasil("Perkalian", angkaA, angkaB, hasilKali)
+mite("Riwayat: " + riwayat.namaOperasi + " = " + riwayat.total)
+
+kore teksLaporan = "Hasil Penjumlahan: " + hasilTambah
+kaku("./hasil.txt", teksLaporan)
+
+kore isiBerkas = yomu("./hasil.txt")
+mite("Isi Berkas: " + isiBerkas)

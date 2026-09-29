@@ -1,0 +1,40 @@
+// File: samples/WibuScript/oop_sekte.wibu
+// Demonstrasi Pemrograman Berorientasi Objek (OOP) WibuScript
+
+sekte Pendekar {
+  tanjou(nama, klan) {
+    jibun.nama = nama
+    jibun.klan = klan
+    jibun.chakra = 100
+  }
+
+  status() {
+    kaesu "[Pendekar: " + jibun.nama + " | Klan: " + jibun.klan + "]"
+  }
+
+  latihan(jam) {
+    jibun.chakra = jibun.chakra + (jam * 10)
+    mite(jibun.nama + " berlatih. Chakra: " + jibun.chakra)
+  }
+}
+
+sekte Kage keishou Pendekar {
+  tanjou(nama, klan, gelar) {
+    jibun.nama = nama
+    jibun.klan = klan
+    jibun.chakra = 500
+    jibun.gelar = gelar
+  }
+
+  jurusPemberantas() {
+    jibun.chakra = jibun.chakra - 50
+    mite(jibun.gelar + " " + jibun.nama + " Rasengan! Chakra: " + jibun.chakra)
+  }
+}
+
+kore naruto = atarashii Kage("Naruto", "Uzumaki", "Hokage")
+mite(naruto.status())
+naruto.jurusPemberantas()
+naruto.latihan(2)
+
+koukai { naruto, Pendekar, Kage }
