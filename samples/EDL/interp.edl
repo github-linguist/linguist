@@ -1,0 +1,445 @@
+## The EDL interpreter.
+##
+## A tree-walking interpreter over the EDL IR. It runs an EDL program directly,
+## with no EDL-to-bootstrap translation and no external compiler: the IR is
+## typed, fully resolved and free of syntax, so evaluating it is a direct
+## structural walk.
+##
+## This is the path that makes `edl run` independent of the bootstrap substrate:
+## no `.nim` is generated, no `nim` binary is invoked. Program output goes to
+## stdout, exactly as it does from a natively built binary.
+##
+## Bootstrap dialect: see specs/decisions/ADR-0001.
+
+import ./ir
+import ./types
+
+type
+  ValueKind = enum
+    vkVoid
+    vkInt
+    vkFloat
+    vkBool
+    vkChar
+    vkString
+    vkEnum
+    vkStruct
+
+  Value = ref object
+    kind: ValueKind
+    intVal: int64
+    floatVal: float64
+    boolVal: bool
+    charVal: char
+    strVal: string
+    enumTypeName: string
+    enumValueName: string
+    structName: string
+    fields: seq[Value]
+
+  FlowKind = enum
+    flowNormal
+    flowReturn
+    flowBreak
+    flowContinue
+
+  Frame = object
+    bindings: seq[(string, Value)]
+
+  Interp = ref object
+    module: IrModule
+    types: TypeTable
+    frames: seq[Frame]
+    flow: FlowKind
+    returnValue: Value
+
+# ---- value constructors -----------------------------------------------------
+
+proc voidValue(): Value =
+  result = Value(kind: vkVoid, intVal: 0, floatVal: 0.0, boolVal: false,
+                 charVal: '\0', strVal: "", enumTypeName: "",
+                 enumValueName: "", structName: "", fields: @[])
+
+proc intValue(v: int64): Value =
+  result = voidValue()
+  result.kind = vkInt
+  result.intVal = v
+
+proc floatValue(v: float64): Value =
+  result = voidValue()
+  result.kind = vkFloat
+  result.floatVal = v
+
+proc boolValue(v: bool): Value =
+  result = voidValue()
+  result.kind = vkBool
+  result.boolVal = v
+
+proc charValue(v: char): Value =
+  result = voidValue()
+  result.kind = vkChar
+  result.charVal = v
+
+proc stringValue(v: string): Value =
+  result = voidValue()
+  result.kind = vkString
+  result.strVal = v
+
+proc isTruthy(v: Value): bool =
+  if v == nil:
+    result = false
+  else:
+    result = v.kind == vkBool and v.boolVal
+
+# ---- frame helpers ----------------------------------------------------------
+
+proc lookup(interp: Interp, name: string, outValue: var Value): bool =
+  var i = interp.frames.len - 1
+  while i >= 0:
+    let frame = interp.frames[i]
+    for j in 0 ..< frame.bindings.len:
+      if frame.bindings[j][0] == name:
+        outValue = frame.bindings[j][1]
+        return true
+    dec i
+  outValue = nil
+  result = false
+
+proc bindFrame(interp: Interp, name: string, v: Value) =
+  if interp.frames.len > 0:
+    interp.frames[interp.frames.len - 1].bindings.add((name, v))
+
+proc setBinding(interp: Interp, name: string, v: Value): bool =
+  ## Replaces the binding of `name` in place; returns false when it is unknown.
+  var i = interp.frames.len - 1
+  while i >= 0:
+    let frame = addr interp.frames[i]
+    for j in 0 ..< frame.bindings.len:
+      if frame.bindings[j][0] == name:
+        frame.bindings[j][1] = v
+        return true
+    dec i
+  result = false
+
+# ---- structural lookups -----------------------------------------------------
+
+proc findEnumValue(interp: Interp, enumName, valueName: string): int64 =
+  for e in interp.module.enums:
+    if e.name == enumName:
+      for v in e.values:
+        if v.name == valueName:
+          return v.value
+  result = 0
+
+proc findEnumValueName(interp: Interp, enumName: string,
+                       value: int64): string =
+  for e in interp.module.enums:
+    if e.name == enumName:
+      for v in e.values:
+        if v.value == value:
+          return v.name
+  result = enumName
+
+proc structFieldIndex(interp: Interp, structName, fieldName: string): int =
+  for s in interp.module.structs:
+    if s.name == structName:
+      for i in 0 ..< s.fields.len:
+        if s.fields[i].name == fieldName:
+          return i
+  result = -1
+
+proc findFn(interp: Interp, name: string, outFn: var IrFn): bool =
+  for fn in interp.module.fns:
+    if fn.name == name:
+      outFn = fn
+      return true
+  result = false
+
+# ---- printing ---------------------------------------------------------------
+
+proc printValue(v: Value) =
+  if v == nil:
+    return
+  case v.kind
+  of vkVoid: discard
+  of vkInt: echo $v.intVal
+  of vkFloat: echo $v.floatVal
+  of vkBool: echo $v.boolVal
+  of vkChar: echo $v.charVal
+  of vkString: echo $v.strVal
+  of vkEnum: echo $v.enumValueName
+  of vkStruct: discard
+
+# ---- expression evaluation --------------------------------------------------
+
+proc evalExpr(interp: Interp, e: IrNode): Value
+
+proc evalStmt(interp: Interp, s: IrNode)
+
+proc evalBinary(interp: Interp, e: IrNode, l, r: Value): Value =
+  result = voidValue()
+  case e.name
+  of "and": result = boolValue(isTruthy(l) and isTruthy(r))
+  of "or": result = boolValue(isTruthy(l) or isTruthy(r))
+  of "+":
+    if l.kind == vkString:
+      result = stringValue(l.strVal & r.strVal)
+    elif l.kind == vkFloat:
+      result = floatValue(l.floatVal + r.floatVal)
+    else:
+      result = intValue(l.intVal + r.intVal)
+  of "-":
+    if l.kind == vkFloat:
+      result = floatValue(l.floatVal - r.floatVal)
+    else:
+      result = intValue(l.intVal - r.intVal)
+  of "*":
+    if l.kind == vkFloat:
+      result = floatValue(l.floatVal * r.floatVal)
+    else:
+      result = intValue(l.intVal * r.intVal)
+  of "/":
+    if l.kind == vkFloat:
+      result = floatValue(l.floatVal / r.floatVal)
+    else:
+      result = intValue(l.intVal div r.intVal)
+  of "%":
+    result = intValue(l.intVal mod r.intVal)
+  of "==":
+    if l.kind == vkInt or l.kind == vkEnum:
+      result = boolValue(l.intVal == r.intVal)
+    elif l.kind == vkFloat:
+      result = boolValue(l.floatVal == r.floatVal)
+    elif l.kind == vkBool:
+      result = boolValue(l.boolVal == r.boolVal)
+    elif l.kind == vkChar:
+      result = boolValue(l.charVal == r.charVal)
+    else:
+      result = boolValue(l.strVal == r.strVal)
+  of "!=":
+    if l.kind == vkInt or l.kind == vkEnum:
+      result = boolValue(l.intVal != r.intVal)
+    elif l.kind == vkFloat:
+      result = boolValue(l.floatVal != r.floatVal)
+    elif l.kind == vkBool:
+      result = boolValue(l.boolVal != r.boolVal)
+    elif l.kind == vkChar:
+      result = boolValue(l.charVal != r.charVal)
+    else:
+      result = boolValue(l.strVal != r.strVal)
+  of "<":
+    if l.kind == vkFloat:
+      result = boolValue(l.floatVal < r.floatVal)
+    elif l.kind == vkChar:
+      result = boolValue(l.charVal < r.charVal)
+    else:
+      result = boolValue(l.intVal < r.intVal)
+  of "<=":
+    if l.kind == vkFloat:
+      result = boolValue(l.floatVal <= r.floatVal)
+    elif l.kind == vkChar:
+      result = boolValue(l.charVal <= r.charVal)
+    else:
+      result = boolValue(l.intVal <= r.intVal)
+  of ">":
+    if l.kind == vkFloat:
+      result = boolValue(l.floatVal > r.floatVal)
+    elif l.kind == vkChar:
+      result = boolValue(l.charVal > r.charVal)
+    else:
+      result = boolValue(l.intVal > r.intVal)
+  of ">=":
+    if l.kind == vkFloat:
+      result = boolValue(l.floatVal >= r.floatVal)
+    elif l.kind == vkChar:
+      result = boolValue(l.charVal >= r.charVal)
+    else:
+      result = boolValue(l.intVal >= r.intVal)
+  else:
+    discard
+
+proc evalUnary(interp: Interp, e: IrNode, operand: Value): Value =
+  result = voidValue()
+  if e.name == "not":
+    result = boolValue(not isTruthy(operand))
+  else:
+    if operand.kind == vkFloat:
+      result = floatValue(-operand.floatVal)
+    else:
+      result = intValue(-operand.intVal)
+
+proc evalCall(interp: Interp, name: string, args: seq[IrNode]): Value =
+  result = voidValue()
+  var fn: IrFn
+  if not findFn(interp, name, fn):
+    return
+  var frame = Frame(bindings: @[])
+  var i = 0
+  while i < fn.params.len and i < args.len:
+    frame.bindings.add((fn.params[i].name, evalExpr(interp, args[i])))
+    inc i
+  let outerFlow = interp.flow
+  interp.frames.add(frame)
+  interp.flow = flowNormal
+  interp.returnValue = voidValue()
+  for stmt in fn.body:
+    if interp.flow != flowNormal:
+      break
+    evalStmt(interp, stmt)
+  result = interp.returnValue
+  if interp.frames.len > 0:
+    interp.frames.setLen(interp.frames.len - 1)
+  interp.flow = outerFlow
+
+proc evalBuiltin(interp: Interp, name: string, args: seq[IrNode]): Value =
+  result = voidValue()
+  if name == "print":
+    if args.len > 0:
+      printValue(evalExpr(interp, args[0]))
+
+proc evalFieldAccess(interp: Interp, e: IrNode): Value =
+  result = voidValue()
+  if e.args.len < 1:
+    return
+  let receiver = evalExpr(interp, e.args[0])
+  if receiver == nil or receiver.kind != vkStruct:
+    return
+  let idx = structFieldIndex(interp, receiver.structName, e.name)
+  if idx >= 0 and idx < receiver.fields.len:
+    result = receiver.fields[idx]
+
+proc evalExpr(interp: Interp, e: IrNode): Value =
+  if e == nil:
+    return voidValue()
+  case e.kind
+  of irIntLit:
+    result = intValue(e.intVal)
+  of irFloatLit:
+    result = floatValue(e.floatVal)
+  of irStringLit:
+    result = stringValue(e.strVal)
+  of irCharLit:
+    if e.strVal.len > 0:
+      result = charValue(e.strVal[0])
+    else:
+      result = charValue('\0')
+  of irBoolLit:
+    result = boolValue(e.boolVal)
+  of irLocal, irParam:
+    var v: Value
+    if lookup(interp, e.name, v):
+      result = v
+    else:
+      result = voidValue()
+  of irEnumValue:
+    result = voidValue()
+    result.kind = vkEnum
+    result.enumTypeName = e.ownerName
+    result.enumValueName = e.name
+    result.intVal = findEnumValue(interp, e.ownerName, e.name)
+  of irBinary:
+    if e.args.len >= 2:
+      result = evalBinary(interp, e, evalExpr(interp, e.args[0]),
+                          evalExpr(interp, e.args[1]))
+    else:
+      result = voidValue()
+  of irUnary:
+    if e.args.len >= 1:
+      result = evalUnary(interp, e, evalExpr(interp, e.args[0]))
+    else:
+      result = voidValue()
+  of irFieldAccess:
+    result = evalFieldAccess(interp, e)
+  of irCall:
+    result = evalCall(interp, e.name, e.args)
+  of irBuiltinCall:
+    result = evalBuiltin(interp, e.name, e.args)
+  else:
+    result = voidValue()
+
+# ---- statement execution ----------------------------------------------------
+
+proc execBody(interp: Interp, body: seq[IrNode]) =
+  for stmt in body:
+    if interp.flow != flowNormal:
+      return
+    evalStmt(interp, stmt)
+
+proc execAssign(interp: Interp, s: IrNode) =
+  if s.args.len < 2:
+    return
+  let target = s.args[0]
+  let value = evalExpr(interp, s.args[1])
+  if target.kind == irLocal or target.kind == irParam:
+    if not setBinding(interp, target.name, value):
+      bindFrame(interp, target.name, value)
+  elif target.kind == irFieldAccess:
+    if target.args.len >= 1:
+      let receiver = evalExpr(interp, target.args[0])
+      if receiver != nil and receiver.kind == vkStruct:
+        let idx = structFieldIndex(interp, receiver.structName, target.name)
+        if idx >= 0 and idx < receiver.fields.len:
+          receiver.fields[idx] = value
+
+proc evalStmt(interp: Interp, s: IrNode) =
+  if s == nil:
+    return
+  case s.kind
+  of irLet, irVar:
+    var v = voidValue()
+    if s.args.len > 0:
+      v = evalExpr(interp, s.args[0])
+    bindFrame(interp, s.name, v)
+  of irAssign:
+    execAssign(interp, s)
+  of irReturn:
+    if s.args.len > 0:
+      interp.returnValue = evalExpr(interp, s.args[0])
+    else:
+      interp.returnValue = voidValue()
+    interp.flow = flowReturn
+  of irIf:
+    if s.args.len < 1:
+      return
+    if isTruthy(evalExpr(interp, s.args[0])):
+      execBody(interp, s.thenBody)
+    else:
+      execBody(interp, s.elseBody)
+  of irWhile:
+    while isTruthy(evalExpr(interp, s.args[0])):
+      execBody(interp, s.thenBody)
+      if interp.flow == flowBreak:
+        interp.flow = flowNormal
+        break
+      elif interp.flow == flowContinue:
+        interp.flow = flowNormal
+      elif interp.flow == flowReturn:
+        break
+  of irBlock:
+    interp.frames.add(Frame(bindings: @[]))
+    execBody(interp, s.thenBody)
+    if interp.frames.len > 0:
+      interp.frames.setLen(interp.frames.len - 1)
+  of irBreak:
+    interp.flow = flowBreak
+  of irContinue:
+    interp.flow = flowContinue
+  of irExprStmt:
+    if s.args.len > 0:
+      discard evalExpr(interp, s.args[0])
+  else:
+    discard
+
+# ---- entry point ------------------------------------------------------------
+
+proc interpRunModule*(m: IrModule, t: TypeTable): int =
+  ## Interprets the module's `main` function, sending program output to stdout.
+  ## Returns a process-style exit code (0 on success).
+  let interp = Interp(module: m, types: t, frames: @[], flow: flowNormal,
+                      returnValue: nil)
+  var mainFn: IrFn
+  if findFn(interp, "main", mainFn):
+    interp.frames.add(Frame(bindings: @[]))
+    interp.flow = flowNormal
+    execBody(interp, mainFn.body)
+  result = 0
