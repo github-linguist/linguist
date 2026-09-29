@@ -1,0 +1,11 @@
+dml 1.4;
+
+header %{
+typedef struct {
+    void (*simple_method)(conf_object_t *obj, int arg);
+} sample_interface_t;
+%}
+
+extern typedef struct {
+    void (*simple_method)(conf_object_t *obj, int arg);
+} sample_interface_t;
