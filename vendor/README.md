@@ -758,6 +758,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **dircolors:** [jolkdarr/language-dircolors](https://github.com/jolkdarr/language-dircolors)
 - **eC:** [ecere/ec.tmbundle](https://github.com/ecere/ec.tmbundle)
 - **edn:** [atom/language-clojure](https://github.com/atom/language-clojure)
+- **env-spec:** [dmno-dev/varlock](https://github.com/dmno-dev/varlock)
 - **fish:** [l15n/fish-tmbundle](https://github.com/l15n/fish-tmbundle)
 - **hoon:** [pkova/hoon-grammar](https://github.com/pkova/hoon-grammar)
 - **iCalendar:** [kimsey0/iCalendar-sublime](https://github.com/kimsey0/iCalendar-sublime)
