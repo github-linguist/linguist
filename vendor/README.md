@@ -13,6 +13,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ABAP CDS:** [FreHu/abap-cds-grammar](https://github.com/FreHu/abap-cds-grammar)
 - **ABNF:** [Alhadis/language-grammars](https://github.com/Alhadis/language-grammars)
 - **AGS Script:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
+- **AGSL:** [styropyr0/language-agsl](https://github.com/styropyr0/language-agsl)
 - **AIDL:** [google/aidl-language](https://github.com/google/aidl-language)
 - **AL:** [microsoft/AL](https://github.com/microsoft/AL)
 - **ALGOL:** [PolariTOON/language-algol60](https://github.com/PolariTOON/language-algol60)
