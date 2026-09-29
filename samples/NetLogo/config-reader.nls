@@ -1,0 +1,265 @@
+;; SWILT WP 3 simple fab simulation - functions & definitions for reading config files
+;; -----------------------------------------------------------------------------------
+;;
+
+extensions [ 
+  csv                     ; extension for working with CSV file format
+  table                   ; extension for working with tables
+]
+
+
+
+globals [                 ; for values see config-init function
+  
+  config_dir              ; directory for config files
+  
+  mfile                   ; keyword "MFILE " for machine config file name
+  rfile                   ; keyword "RFILE " for recipe config file name
+  lfile                   ; keyword "LFLIE " for lot config file name
+  
+  mfile_fname             ; machine config file name
+  rfile_fname             ; recipe config file name
+  lfile_fname             ; lot config file name
+  
+  sim_config              ; list of lists from meta-config file = file names of machines, recipes, lots 
+  machine_config          ; list of lists of machines from MFILE
+  recipe_config           ; list of lists of recipes from RFILE
+  lot_config              ; list of lists of lots from LFILE
+  
+  TABLE_M                 ; tables for data: TABLE_M = table of machines
+  TABLE_R                 ;                  TABLE_R = table of recipes
+  TABLE_L                 ;                  TABLE_L = table of lots   
+]
+
+
+
+;;; define prefixes and filename of meta-configfile here
+;;
+;;  @result   sets config_fname, mfile, rfile, lfile
+;;
+to config-init  
+  
+  if config_fname = "" [ set config_fname "config_simu.txt" ]  ; default setting
+  
+  set config_dir "config-files"                                ; directory for config files, relative to .nlogo
+  
+  set mfile "MFILE "                                           ; keywords for filenames of sub-configfiles
+  set rfile "RFILE "
+  set lfile "LFILE "
+  
+end
+
+
+
+;;; read the meta-configfile to determine the filenames of the config files for 
+;;  recipes (RFILE), lots (LFILE), and machines (MFILE), parse them and do a
+;;  consistency check
+;;
+;;  @input    globals config_dir, config_fname, mfile, rfile, lfile + the actual config files
+;;  @result   sets mfile_fname, rfile_fname, lfile_fname
+;;
+to read-sim-config
+  
+  print "Reading config..."
+  
+  config-init                                          
+  
+  set sim_config csv:from-file (word config_dir "/" config_fname)                      ; reads CSV file (list of lists)
+  
+  foreach sim_config [ x ->                                                            ; remove header/all lines starting with ";;"
+    if member? ";;" (reduce word x) [ set sim_config remove-item (position x sim_config) sim_config ] 
+  ]
+  
+  foreach sim_config [ x ->
+    if (member? mfile (reduce word x)) [ set mfile_fname remove mfile (reduce word x) ]  ; read machine config file+dir
+    if member? rfile (reduce word x) [ set rfile_fname remove rfile (reduce word x) ]    ; read recipe config file+dir
+    if member? lfile (reduce word x) [ set lfile_fname remove lfile (reduce word x) ]    ; read lot config file+dir
+  ]
+  
+  parse-machine-config
+  parse-recipe-config
+  parse-lot-config  
+  
+  consistency-check
+  
+end
+
+
+
+;;; consistency check if number of recipes consistent across TABLE_R/RFILE + TABLE_L/LFILE
+;;  check if needed machines listed in recipes in TABLE_R/RFILE exist in TABLE_M/MFILE
+;;
+;;  @input    globals TABLE_R, TABLE_L, TABLE_M
+;;  @result   stops program if inconsistencies detected
+;;
+to consistency-check
+  ;;number of recipes N in TABLE_R must equal recipe number RN in TABLE_L
+  ifelse (table:length TABLE_R = table:length TABLE_L) [ if DEBUG? [ print "    All lots have their recipes." ] ] 
+                                                       [ user-message "The number of recipes in recipe config and lot config is not equal!" stop] 
+  
+  ;;list of requested PIDs in RFILE must have corresponding machines in MFILE
+  let needed_machines reduce sentence table:values TABLE_R                       ; flat list of all needed machines from all recipes (incl duplicates)
+  set needed_machines remove-duplicates needed_machines                          ; without duplicates
+  let available_machines table:keys TABLE_M                                      ; flat list of all machine ids
+  
+  foreach needed_machines [ m ->    
+    ifelse (member? m available_machines) [ if DEBUG? [ print (word "    Necessary machine " m " available." ) ] ] 
+                                          [ user-message (word "Missing PID >> " m " << in MFILE!") stop]    
+  ]
+  print "Consistency checks passed..."                                           ; only reaches this if ok
+end
+
+
+
+;;; read and parse the LOT config file LFILE
+;;  assumes ;; = comment line
+;;  reads as many lines as in the file
+;;
+;;  ATTN: no consistency checks yet. assumes file is correct and there exist
+;;        recipe definitions for every recipe number
+;;        with RN=0...(NOR-1) from RFILE
+;;
+;;  @input    globals config_dir, lfile_fname
+;;  @result   TABLE_L: [ [ 0 50 ]  [ 1 30 ] ... ]
+;;                     keys = 0...(NOR-1) = recipe number
+;;                     values = number of lots for that RN
+;;
+to parse-lot-config
+  
+  if DEBUG? [print (word "*** LFILE: " lfile_fname) ]
+  
+  set lot_config (csv:from-file (word config_dir "/" lfile_fname) " ")  ; use " " as delimiter -> returns a list of lists
+                                                                  ; with 1 list per line with 1 list element per column  
+  set TABLE_L table:make                                          ; table for resulting machines  
+  let curr_lot_rn 0                                               ; RN=PID becomes table key, 0...no lot definition read yet
+  let curr_lot_nol 0                                              ; number of lots (NOL) to produce of this type
+  
+  foreach lot_config [ line ->    
+    ifelse item 0 line = ";;" [                                   ; --- comment line, ignore for now TODO: maybe parse later
+      
+      if DEBUG? [ print line ]
+      
+    ] [                                                           ; --- new lot definition
+      set curr_lot_rn (item 0 line)                               ; recipe number = product type (!= PID), starts at 0 in file
+      set curr_lot_nol (item 1 line)                              ; number of lots
+      table:put TABLE_L curr_lot_rn curr_lot_nol
+    ]          
+  ]
+  
+  if DEBUG? [ print (word "TABLE_L: " TABLE_L)]
+  
+end
+
+
+
+;;; read and parse the MACHINE config file MFILE
+;;  assumes ;; = comment line
+;;  assumes cols = [ PID BS WT NOM TIME ]
+;;                   PID ... process ID of machine = machine type from Excel
+;;                   BS  ... batch size
+;;                   WT  ... waiting time [h] for batch to fill up (if BS > 1)
+;;                   NOM ... number of machines
+;;                   TIME... time [h] the machine takes to run this process,
+;;                           one decimal place; 0.1 h = 6 min -> 1 tick in TABLE_M
+;;
+;;  TODO: type for TIME format and possibility to encode different distributions
+;;        planned as PID BS WT TIME_T (type) TIME_1 TIME_2
+;;        with TIME_T = F...fixed, N...normal distri, U...uniform, etc
+;;
+;;  ATTN: doesn't check if PIDs are unique; if same PID occurs twice in file
+;;        then later entries will overwrite existing lines; iow last line will be used
+;;
+;;  ATTN: doesn't check if PIDs are in valid range
+;;
+;;  @input    globals config_dir, mfile_fname
+;;  @result   TABLE_M: [ [ 1 [2 0.5 1 7] ]  [ 2 [1 0 2 12] ] ... ]
+;;                     keys = PID 1...10, 20
+;;                     values = [BS WT NOM TIME]
+;;                               TIME ... in ticks, 0.1 h = 6 min = 1 tick
+;;
+to parse-machine-config
+  
+  if DEBUG? [print (word "*** MFILE: " mfile_fname) ]
+  
+  set machine_config (csv:from-file (word config_dir "/" mfile_fname) " ")  ; use " " as delimiter -> returns a list of lists
+                                                                  ; with 1 list per line with 1 list element per column  
+  set TABLE_M table:make                                          ; table for resulting machines  
+  let curr_machine_pid 0                                          ; PID becomes table key, 0...no machine read yet
+  let curr_machine_values []                                      ; list of [BS WT NOM TIME] = value
+  
+  foreach machine_config [ line ->    
+    ifelse item 0 line = ";;" [                                   ; --- comment line, ignore for now TODO: maybe parse later
+      
+      if DEBUG? [ print line ]
+      
+    ] [                                                           ; --- new machine definition
+      set curr_machine_pid (item 0 line)                          ; PID
+      set curr_machine_values (but-first line)                    ; [BS WT NOM TIME]
+                                                                  ; convert TIME hrs to ticks and replace time val in list      
+      let nr_ticks round ((last curr_machine_values) * 10)        ; 0.1 h = 1 tick, round off if more decimal places
+      let time_pos length curr_machine_values - 1                 ; position of time value in list = last
+      set curr_machine_values replace-item time_pos curr_machine_values nr_ticks
+      
+      set nr_ticks round ((item 1 curr_machine_values) * 10)      ; convert WT hrs to ticks and replace WT val in list
+      let wt_pos 1                                                ; position of WT value in list = 1
+      set curr_machine_values replace-item wt_pos curr_machine_values nr_ticks
+      
+      table:put TABLE_M curr_machine_pid curr_machine_values
+    ]          
+  ]
+  
+  if DEBUG? [ print (word "TABLE_M: " TABLE_M)]
+end
+
+
+
+;;; read and parse the RECIPE config file RFILE
+;;  assumes ;; = comment line
+;;  assumes separator = # (hardcoded)
+;;  reads as many recipes as in the file (don't parse NOR value yet)
+;;  assumes lines not starting with ;; or # have a recipe step in the first col
+;;
+;;  ATTN: doesn't check validity of PID range (1...10, 20)
+;;
+;;  ATTN: assumes a # as the start of each recipe, therefore:
+;;        MUST HAVE a # before the start of each recipe (even the first one)
+;;        MUST HAVE a # after the last recipe
+;;
+;;  @input    globals config_dir, rfile_fname
+;;  @result   TABLE_R: [ [ 0 [5 2 9 ...] ]  [ 1 [3 9 2 ...] ... ]
+;;                     keys = 0...n = recipe number = product type
+;;                     values = list of recipe steps / process steps (PID nrs from Excel file)
+;;
+to parse-recipe-config
+  
+  if DEBUG? [print (word "*** RFILE: " rfile_fname) ]
+  
+  set recipe_config (csv:from-file (word config_dir "/" rfile_fname) " ")  ; use " " as delimiter -> returns a list of lists
+                                                                  ; with 1 list per line with 1 list element per column  
+  set TABLE_R table:make                                          ; table for resulting recipes
+                                                                  ; values = list with recipe steps  
+  let recipe_counter -1                                           ; no recipes yet, first recipe will be 0
+  let curr_recipe_list []                                         ; list for the current recipe
+  
+  foreach recipe_config [ line ->    
+    ifelse item 0 line = ";;" [                                   ; --- comment line, ignore for now TODO: maybe parse later
+      
+      if DEBUG? [ print line ]
+      
+      ] [ ifelse item 0 line = "#" [                              ; --- separator between recipes
+        
+        if recipe_counter > -1 [                                  ; we already read a recipe (ie. not the first # in file) -> save          
+          table:put TABLE_R recipe_counter curr_recipe_list       ; key = recipe no (0,1,...), value = [step1 step2 ...]
+        ]        
+        set recipe_counter recipe_counter + 1                     ; generate a new key
+        set curr_recipe_list []                                   ; start new blank recipe
+        
+      ] [                                                         ; --- new step in current recipe       
+        set curr_recipe_list lput (item 0 line) curr_recipe_list        
+      ]      
+    ]    
+  ]
+  
+  if DEBUG? [ print (word "TABLE_R: " TABLE_R)]
+end
+
