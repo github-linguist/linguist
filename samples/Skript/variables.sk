@@ -1,0 +1,53 @@
+
+#
+# This example stores a time-stamp in the global `{timer}` variable.
+# This variable is accessible everywhere, and will be saved when the server stops.
+#
+# The `{_difference}` variable is local and is different for each use of the command.
+#
+
+command /timer:
+	permission: skript.example.timer
+	trigger:
+		if {timer} is set:
+			send "This command was last run %time since {timer}% ago."
+		else:
+			send "This command has never been run."
+		set {timer} to now
+
+#
+# This example stores two items in a global list variable `{items::%uuid of player%::*}`.
+# These items can then be recalled with the example `/outfit` command, which then clears the list.
+#
+
+on join:
+	set {items::%uuid of player%::helmet} to player's helmet
+	set {items::%uuid of player%::boots} to player's boots
+	send "Stored your helmet and boots."
+
+command /outfit:
+	executable by: players
+	permission: skript.example.outfit
+	trigger:
+		give player {items::%uuid of player%::*} # gives the contents of the list
+		clear {items::%uuid of player%::*} # clears this list
+		send "Gave you the helmet and boots you joined with."
+
+#
+# An example of adding, looping and removing the contents of a list variable.
+# This list variable is local, and so will not be kept between uses of the command.
+#
+
+command /shoppinglist:
+	permission: skript.example.list
+	trigger:
+		add "bacon" to {_shopping list::*}
+		add "eggs" to {_shopping list::*}
+		add "oats" and "sugar" to {_shopping list::*}
+		send "You have %size of {_shopping list::*}% things in your shopping list:"
+		loop {_shopping list::*}:
+			send "%loop-index%. %loop-value%"
+		send "You bought some %{_shopping list::1}%!"
+		remove "bacon" from {_shopping list::*}
+		send "Removing bacon from your list."
+		send "You now have %size of {_shopping list::*}% things in your shopping list."

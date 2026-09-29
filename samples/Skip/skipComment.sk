@@ -1,0 +1,35 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+module Token;
+
+class LineComment() extends CommentKind {
+  fun toString(): String {
+    "Line Comment"
+  }
+}
+
+class DelimitedComment() extends CommentKind {
+  fun toString(): String {
+    "Delimited Comment"
+  }
+}
+
+extension class Comment {
+  // The contents of the comment not including leading //, /* or trailing */
+  // Does include the trailing NewLine for // comments if present.
+  fun contents(): String {
+    v = this.value;
+    this.kind match {
+    | LineComment() -> v.getIter().forward(2).collectString()
+    | DelimitedComment() ->
+      v.getIter().forward(2).slice(v.getEndIter().rewind(2))
+    }
+  }
+}
+
+module end;
