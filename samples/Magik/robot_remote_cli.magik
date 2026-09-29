@@ -1,0 +1,100 @@
+#% text_encoding = iso8859_1
+
+#----------------------------------------------------------------------
+#  Copyright 2012-2023 Luiko Czub, Smallcases Software GmbH
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#----------------------------------------------------------------------
+#
+# Project : Automated testing Magik Images with Robot Framework
+#           http://github.com/lczub/robotframework-magik
+# 
+# Scope:    Procedure to start a remote_cli with port and auth settings
+#           configured via environment variables
+#
+#           Could be used as startup procedure in an image under test.
+#
+#----------------------------------------------------------------------
+
+_package sw
+$
+
+_global robot_start_remote_cli <<
+_proc @robot_start_remote_cli()
+	## Starts a remote_cli with port and auth settings configured
+	## via environment variables:
+	## ROBOT_CLI_PORT
+	## - defines the port, the remote_cli listens on.
+	## - if not set, no remote_cli will be started
+	## ROBOT_HOSTADDR:
+	## - defines additonal host adresses, the remote_cli allows Robot
+	## connections from
+	##   Example: ROBOT_HOSTADDR="111.222.333.*" means, all address
+	##            matching "111.222.333.*" are allowed
+        ##            ROBOT_HOSTADDR="111.222.333.44" means, only
+        ##            connections from "111.222.333.44" are allowed
+	## - if not set, no connections except from localhost are allowed
+
+
+	_local robot_port << system.getenv("ROBOT_CLI_PORT")
+	_if !remote_cli! _isnt _unset
+	_then
+		write("Info Robot Test: a remote_cli is already running!")
+	_elif robot_port _is _unset _orif
+	    (robot_port << robot_port.as_integer()) _is unset
+	_then
+		write("Info Robot Test: No remote_cli port defined - remote_cli is deactivated!")
+	_else
+		write("Info Robot Test: Activating remote_cli on port ", robot_port)
+		_local robot_hostaddr << system.getenv("ROBOT_HOSTADDR")
+		_if robot_hostaddr _isnt _unset
+		_then
+			write("Info Robot Test: Connections are allowed from LOCALHOST and ",
+			      robot_hostaddr)
+		_else
+			write("Info Robot Test: Connections are only allowed from LOCALHOST")
+			robot_hostaddr << "LOCALHOST"
+		_endif 
+		_local robot_auth_proc <<
+				_proc (hostname, hostaddr)
+					## a customised remote_cli auth_proc
+					_import robot_hostaddr
+					
+					_if hostaddr = "127.0.0.1" _orif                 # default local host ip
+					    hostaddr.matches?("*.0.0.0.0.0.0.0.1") _orif # unconventional local ip under sw5
+					    hostaddr.matches?(robot_hostaddr)            # special authorised none local ip
+					_then
+						# trust localhost or local network
+						_return _true
+					_else
+						# trust nobody
+						_return _false
+					_endif
+				_endproc
+
+		remote_cli.new(robot_port, robot_auth_proc)
+	_endif 
+	
+_endproc
+$
+
+_global robot_add_startup_procedure_remote_cli <<
+_proc @robot_add_startup_procdure_remote_cli()
+	## Add procedure robot_start_remote_cli() as startup_procedure
+	## The remote_cli will be started as last startup action
+
+	smallworld_product.add_startup_procedure(robot_start_remote_cli)
+	write("Info Robot Test: startup procedure robot_start_remote_cli() added")
+	
+_endproc 
+$
