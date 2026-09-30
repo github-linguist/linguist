@@ -149,6 +149,10 @@ class TestGenerated < Minitest::Test
     # PostScript
     generated_sample_loading_data("PostScript/lambda.pfa")
 
+    # gRPC Python
+    generated_fixture_loading_data("Generated/helloworld_pb2_grpc.py")
+    generated_sample_loading_data("Python/flask-view.py", true)
+
     # Perl ppport.h
     generated_fixture_loading_data("Generated/ppport.h")
 
