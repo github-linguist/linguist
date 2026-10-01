@@ -323,6 +323,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **JavaScript:** [tree-sitter/tree-sitter-javascript](https://github.com/tree-sitter/tree-sitter-javascript) 🐌
 - **JavaScript+ERB:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **Jest Snapshot:** [jest-community/vscode-jest](https://github.com/jest-community/vscode-jest)
+- **Jesun.Code:** [JesunAhmadUshno/jesun-code-tmlanguage](https://github.com/JesunAhmadUshno/jesun-code-tmlanguage)
 - **Jinja:** [textmate/python-django.tmbundle](https://github.com/textmate/python-django.tmbundle)
 - **Jison:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
 - **Jison Lex:** [cdibbs/language-jison](https://github.com/cdibbs/language-jison)
