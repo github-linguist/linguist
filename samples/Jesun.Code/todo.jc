@@ -1,0 +1,56 @@
+note todo.jc: the v1.2 flagship demo (spec v1.2 section 8).
+note A todo list app written entirely in Jesun.Code: sqlite storage,
+note sessions for a visitor counter, a JSON API at /api/todos, HTML at /.
+note Run it: python3 jesun.py examples/todo.jc
+note Then: curl http://localhost:8080/api/todos
+
+bring in "jweb"
+bring in "sqlite"
+
+db is open_database with "todos.db"
+db_run with db and "CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY, task TEXT, done INTEGER)" and nothing
+
+to home_page with request
+    sess is session_of with request
+    if not (sess contains "visits") then
+        sess["visits"] is 0
+    sess["visits"] is sess["visits"] + 1
+    rows is db_query with db and "SELECT id, task, done FROM todos ORDER BY id" and nothing
+    items is ""
+    for each r in rows
+        mark is "done"
+        if r["done"] is 0 then
+            mark is "open"
+        items is items + "<li>" + text of r["id"] + ": " + r["task"] + " (" + mark + ")</li>"
+    give back "<h1>Todos</h1><p>visit number " + text of sess["visits"] + "</p><ul>" + items + "</ul>"
+
+to api_todos with request
+    rows is db_query with db and "SELECT id, task, done FROM todos ORDER BY id" and nothing
+    give back json_response with rows
+
+to api_add with request
+    body is request["body"]
+    data is parse json body
+    task is data["task"]
+    if task is nothing then
+        give back {"status": 400, "headers": {"content-type": "text/plain"}, "body": "missing task"}
+    db_run with db and "INSERT INTO todos (task, done) VALUES (?, ?)" and [task, 0]
+    give back json_response with {"added": task}
+
+to api_toggle with request
+    id is request["params"]["id"]
+    rows is db_query with db and "SELECT done FROM todos WHERE id = ?" and [id]
+    if length of rows is 0 then
+        give back {"status": 404, "headers": {"content-type": "text/plain"}, "body": "no such todo"}
+    done_val is 1
+    if rows[0]["done"] is 1 then
+        done_val is 0
+    db_run with db and "UPDATE todos SET done = ? WHERE id = ?" and [done_val, id]
+    give back json_response with {"id": id, "done": done_val}
+
+add_route with "GET /" and home_page
+add_route with "GET /api/todos" and api_todos
+add_route with "POST /api/todos" and api_add
+add_route with "POST /api/todos/:id/toggle" and api_toggle
+
+serve with 8080

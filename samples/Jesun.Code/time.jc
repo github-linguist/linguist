@@ -1,0 +1,17 @@
+note jpm package "time": plain-English clock helpers.
+
+import time as timemod
+import datetime as dtmod
+
+to time_now
+    give back timemod.strftime("%H:%M:%S")
+
+to time_today
+    d is dtmod.date.today()
+    give back d.isoformat()
+
+to time_stamp
+    give back timemod.time()
+
+to time_wait with seconds
+    timemod.sleep(seconds)

@@ -1,0 +1,78 @@
+note sitegen demo: builds a three-page sample site into ./sitegen_demo_out
+note through the interpreter, then checks the head, the blog card, and
+note the sitemap. The v1.5 proof of life: chrome in Jesun.Code, bodies
+note authored, everything byte-identical on both interpreters.
+
+bring in "sitegen"
+
+home is a new table
+home["path"] is "index.html"
+home["title"] is "Acme Docs"
+home["description"] is "Docs for the Acme widget."
+home["canonical"] is "https://acme.example/"
+home["body"] is "<main><h1>Acme Docs</h1><p>Read the sentences.</p></main>"
+home["jsonld"] is "{{\"@type\": \"WebSite\", \"name\": \"Acme Docs\"}}"
+
+faq is a new table
+faq["path"] is "faq.html"
+faq["title"] is "FAQ: Acme Docs"
+faq["description"] is "Real questions, direct answers."
+faq["canonical"] is "https://acme.example/faq.html"
+faq["body"] is "<main><h1>FAQ</h1></main>"
+faq["date"] is "2026-09-30"
+
+site is a new table
+site["base"] is "sitegen_demo_out"
+site["site_url"] is "https://acme.example/"
+site["name"] is "Acme<em>.Docs</em>"
+site["version"] is "v1.5.0"
+site["github_url"] is "https://github.com/acme/docs"
+site["summary"] is "Docs for the Acme widget."
+site["llms_name"] is "Acme Docs"
+
+post is a new table
+post["title"] is "Hello, docs"
+post["date"] is "2026-09-30"
+post["slug"] is "hello-docs"
+post["summary"] is "The <code>sitegen</code> package builds this page."
+
+blogbody is sitegen_blog_index with [post] and site
+
+blog is a new table
+blog["path"] is "blog/index.html"
+blog["title"] is "Blog: Acme Docs"
+blog["description"] is "Notes from the docs team."
+blog["canonical"] is "https://acme.example/blog/"
+blog["body"] is blogbody
+blog["nav"] is "sub"
+blog["root_prefix"] is "../"
+
+site["pages"] is [home, faq, blog]
+
+written is sitegen_build with site
+show "files written: " + (text of (length of written))
+
+read file "sitegen_demo_out/index.html" giving home_html
+if home_html contains "<title>Acme Docs</title>" then
+    show "head: title ok"
+otherwise
+    fail with "the generated head lost the title."
+
+if home_html contains "Acme<em>.Docs</em>" then
+    show "nav: brand ok"
+otherwise
+    fail with "the generated nav lost the brand."
+
+read file "sitegen_demo_out/blog/index.html" giving blog_html
+if blog_html contains "<a href=\"hello-docs.html\">Hello, docs</a>" then
+    show "blog: card ok"
+otherwise
+    fail with "the generated blog index lost the post card."
+
+read file "sitegen_demo_out/sitemap.xml" giving sm
+if sm contains "<loc>https://acme.example/faq.html</loc>" then
+    show "sitemap: faq ok"
+otherwise
+    fail with "the generated sitemap lost the faq page."
+
+show "demo green: the site builds itself."
