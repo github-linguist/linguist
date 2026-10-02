@@ -56,7 +56,6 @@ module Linguist
       cocoapods? ||
       carthage_build? ||
       generated_graphql_relay? ||
-      generated_net_designer_file? ||
       generated_net_specflow_feature_file? ||
       composer_lock? ||
       cargo_lock? ||
@@ -270,16 +269,6 @@ module Linguist
       return lines[1].include?("<doc>") &&
         lines[2].include?("<assembly>") &&
         lines[-2].include?("</doc>")
-    end
-
-    # Internal: Is this a codegen file for a .NET project?
-    #
-    # Visual Studio often uses code generation to generate partial classes, and
-    # these files can be quite unwieldy. Let's hide them.
-    #
-    # Returns true or false
-    def generated_net_designer_file?
-      !!name.match(/\.designer\.(cs|vb)$/i)
     end
 
     # Internal: Is this a generated C# or VB.NET file according to Roslyn's file analysis?
