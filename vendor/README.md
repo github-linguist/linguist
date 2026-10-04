@@ -648,6 +648,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **TMDL:** [microsoft/vscode-tmdl](https://github.com/microsoft/vscode-tmdl)
 - **TOML:** [textmate/toml.tmbundle](https://github.com/textmate/toml.tmbundle)
 - **TSQL:** [beau-witter/language-tsql](https://github.com/beau-witter/language-tsql)
+- **TSRX:** [tsrx-org/tsrx](https://github.com/tsrx-org/tsrx)
 - **TSV:** [Alhadis/language-dsv](https://github.com/Alhadis/language-dsv)
 - **TSX:** [Microsoft/TypeScript-TmLanguage](https://github.com/Microsoft/TypeScript-TmLanguage)
 - **TXL:** [MikeHoffert/Sublime-Text-TXL-syntax](https://github.com/MikeHoffert/Sublime-Text-TXL-syntax)
