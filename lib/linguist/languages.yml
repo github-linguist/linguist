@@ -3189,6 +3189,17 @@ HTML+Razor:
   codemirror_mode: htmlmixed
   codemirror_mime_type: text/html
   language_id: 479039817
+HTML+Soli:
+  type: markup
+  color: "#4f46e5"
+  tm_scope: text.html.soli
+  group: Soli
+  extensions:
+  - ".slv"
+  ace_mode: html
+  codemirror_mode: htmlembedded
+  codemirror_mime_type: application/x-erb
+  language_id: 61271172
 HTTP:
   type: data
   color: "#005C9C"
@@ -4228,7 +4239,7 @@ LLVM TableGen:
   tm_scope: source.tablegen
   ace_mode: text
   color: "#6E8B3D"
-  aliases: 
+  aliases:
   - tablegen
   language_id: 184265095
 LOLCODE:
@@ -7718,6 +7729,17 @@ Snakemake:
   aliases:
   - snakefile
   language_id: 151241392
+Soli:
+  type: programming
+  color: "#4f46e5"
+  extensions:
+  - ".sl"
+  tm_scope: source.soli
+  ace_mode: text
+  aliases:
+  - solilang
+  - soli_lang
+  language_id: 877848979
 Solidity:
   type: programming
   color: "#AA6746"

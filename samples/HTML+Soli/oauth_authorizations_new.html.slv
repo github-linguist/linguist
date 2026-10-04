@@ -1,0 +1,41 @@
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-md">
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+      <h1 class="text-2xl font-bold mb-2 text-center"><%= h(client["name"]) %></h1>
+      <p class="text-center text-sm text-slate-400 mb-6">
+        wants to access your account
+      </p>
+
+      <ul class="space-y-2 mb-6 text-sm">
+        <% for scope in scopes %>
+          <li class="flex items-start gap-2 text-slate-300">
+            <span class="text-indigo-400 mt-0.5">&check;</span>
+            <span><%= h(scope["description"]) %></span>
+          </li>
+        <% end %>
+      </ul>
+
+      <form action="/oauth/authorize" method="POST" class="space-y-3">
+        <%- csrf_field() %>
+        <% for key in params.keys() %>
+          <input type="hidden" name="<%= h(key) %>" value="<%= h(params[key]) %>">
+        <% end %>
+        <input type="hidden" name="response_type" value="code">
+
+        <button type="submit" name="approve" value="1"
+                class="w-full rounded-md bg-indigo-600 hover:bg-indigo-700 px-4 py-2 font-medium text-white transition-colors">
+          Allow
+        </button>
+        <button type="submit" name="approve" value="0"
+                class="w-full rounded-md bg-slate-800 hover:bg-slate-700 px-4 py-2 font-medium text-slate-300 transition-colors">
+          Deny
+        </button>
+      </form>
+    </div>
+
+    <p class="mt-4 text-center text-xs text-slate-500">
+      You will be returned to
+      <code class="text-slate-400"><%= h(params["redirect_uri"]) %></code>
+    </p>
+  </div>
+</div>

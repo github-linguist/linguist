@@ -1,0 +1,42 @@
+<div class="min-h-screen flex items-center justify-center px-4">
+  <div class="w-full max-w-md">
+    <h1 class="text-2xl font-bold mb-6 text-center">Sign in</h1>
+
+    <% if error.present? %>
+      <div class="mb-4 rounded-md bg-red-500/10 border border-red-500/30 px-4 py-3 text-sm text-red-300">
+        <%= h(error) %>
+      </div>
+    <% end %>
+
+    <form action="/login" method="POST" class="space-y-4 bg-slate-900 border border-slate-800 rounded-xl p-6">
+      <%- csrf_field() %>
+      <div>
+        <label class="block text-sm font-medium text-slate-400 mb-1" for="email">Email</label>
+        <input id="email" name="email" type="email" required autofocus
+               value="<%= h(email) %>"
+               class="w-full rounded-md bg-slate-950 border border-slate-700 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-400 mb-1" for="password">Password</label>
+        <input id="password" name="password" type="password" required
+               class="w-full rounded-md bg-slate-950 border border-slate-700 px-3 py-2 text-white focus:border-indigo-500 focus:outline-none">
+      </div>
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center gap-2 text-slate-400">
+          <input type="checkbox" name="remember_me" value="1"
+                 class="rounded bg-slate-950 border-slate-700 text-indigo-600 focus:ring-indigo-500">
+          Remember me
+        </label>
+        <a href="/password/reset" class="text-indigo-400 hover:text-indigo-300">Forgot password?</a>
+      </div>
+      <button type="submit"
+              class="w-full rounded-md bg-indigo-600 hover:bg-indigo-700 px-4 py-2 font-medium text-white transition-colors">
+        Sign in
+      </button>
+    </form>
+
+    <p class="mt-4 text-center text-sm text-slate-400">
+      No account? <a href="/signup" class="text-indigo-400 hover:text-indigo-300">Create one</a>
+    </p>
+  </div>
+</div>

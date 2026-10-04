@@ -952,6 +952,18 @@ disambiguations:
   - language: Quartus Simulation IP
     pattern: '^[ \t]*set_global_assignment\b'
   - language: SIP
+- extensions: ['.sl']
+  rules:
+  - language: Slash
+    # Slash sources are templates: code lives inside <% %> tags.
+    pattern: '^\s*<%'
+  - language: Soli
+    pattern:
+    - '^\s*(?:class|module)\s+[A-Z]\w*(?:\s+(?:<|extends)\s+[A-Z][\w:]*)?\s*$'
+    - '^\s*(?:static\s+)?def\s+\w+[?!]?\s*(?:\(.*\))?\s*$'
+    - '^\s*(?:fn|def)\s+\w+[?!]?\s*\(.*\)\s*(?:->\s*[\w\[\]<>, ]+?\s*)?\{'
+    - '^\s*(?:let|const)\s+\w+\s*(?::\s*\w+\s*)?='
+    - '^\s*(?:describe|test)\s*\(\s*"'
 - extensions: ['.sol']
   rules:
   - language: Solidity

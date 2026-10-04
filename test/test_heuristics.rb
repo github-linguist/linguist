@@ -1147,6 +1147,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_sl_by_heuristics
+    assert_heuristics({
+      "Slash" => all_fixtures("Slash", "*.sl"),
+      "Soli" => all_fixtures("Soli", "*.sl")
+    })
+  end
+
   def test_socket_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.socket"),
