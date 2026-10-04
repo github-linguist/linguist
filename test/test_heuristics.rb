@@ -499,6 +499,13 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_frag_by_heuristics
+    assert_heuristics({
+      "GLSL" => all_fixtures("GLSL", "*.frag"),
+      nil => all_fixtures("JavaScript", "*.frag")
+    })
+  end
+
   def test_frm_by_heuristics
     assert_heuristics({
       "VBA" => all_fixtures("VBA", "*.frm"),
@@ -520,6 +527,13 @@ class TestHeuristics < Minitest::Test
       "Fluent" => all_fixtures("Fluent", "*.ftl"),
       "FreeMarker" => all_fixtures("FreeMarker", "*.ftl")
     }, alt_name="main.ftl")
+  end
+
+  def test_fx_by_heuristics
+    assert_heuristics({
+      "HLSL" => all_fixtures("HLSL", "*.fx"),
+      "FLUX" => all_fixtures("FLUX", "*.fx")
+    })
   end
 
   def test_g_by_heuristics
@@ -1117,6 +1131,15 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_shader_by_heuristics
+    ambiguous = ["#{samples_path}/GLSL/islandScene.shader"]
+    assert_heuristics({
+      "GLSL" => all_fixtures("GLSL", "*.shader") - ambiguous,
+      "ShaderLab" => all_fixtures("ShaderLab", "*.shader"),
+      nil => ambiguous + all_fixtures("Text")
+    }, "test.shader")
+  end
+
   def test_sip_by_heuristics
     assert_heuristics({
       "Quartus Simulation IP" => all_fixtures("Quartus Simulation IP", "*.sip"),
@@ -1135,6 +1158,14 @@ class TestHeuristics < Minitest::Test
       "Gerber Image" => Dir.glob("#{fixtures_path}/Generic/sol/Gerber Image/*"),
       "Solidity" => Dir.glob("#{fixtures_path}/Generic/sol/Solidity/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/sol/nil/*")
+    })
+  end
+
+  def test_spec_by_heuristics
+    ambiguous = all_fixtures("Python", "*.spec") + all_fixtures("Ruby", "*.spec")
+    assert_heuristics({
+      "RPM Spec" => all_fixtures("RPM Spec", "*.spec"),
+      nil => ambiguous
     })
   end
 
