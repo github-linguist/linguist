@@ -329,6 +329,16 @@ class TestBlob < Minitest::Test
     end
   end
 
+  def test_xpp_markdown_file_detection
+    markdown = "```xpp\n[ExtensionOf(tableNum(CustTable))]\nfinal class CustTable_Extension {}\n```\n"
+    assert_equal Language['Markdown'], Blob.new('README.md', markdown).language
+  end
+
+  def test_xpp_metadata_file_detection
+    metadata = '<AxClass><SourceCode><Declaration><![CDATA[public class Example {}]]></Declaration></SourceCode></AxClass>'
+    assert_equal Language['XML'], Blob.new('Example.xml', metadata).language
+  end
+
   def test_minified_files_not_safe_to_highlight
     assert !sample_blob_memory("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
   end

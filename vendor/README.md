@@ -725,6 +725,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **X BitMap:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **X Font Directory Index:** [Alhadis/language-fontforge](https://github.com/Alhadis/language-fontforge)
 - **X PixMap:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
+- **X++:** [fraga/xpp-syntax](https://github.com/fraga/xpp-syntax)
 - **X10:** [x10-lang/x10-highlighting](https://github.com/x10-lang/x10-highlighting)
 - **XC:** [graymalkin/xc.tmbundle](https://github.com/graymalkin/xc.tmbundle)
 - **XCompose:** [samcv/language-xcompose](https://github.com/samcv/language-xcompose)
