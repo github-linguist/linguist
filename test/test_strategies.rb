@@ -98,6 +98,9 @@ class TestStrategies < Minitest::Test
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs.pl")
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs2.pl")
     assert_modeline Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc")
+    assert_modeline Language["Vim Help File"], sample_blob("Vim Help File/modeline.txt")
+    assert_modeline nil, sample_blob("Vim script/textobj-rubyblock.vba")
+    assert_modeline nil, sample_blob("Vim script/todo.vmb")
     assert_modeline nil, sample_blob("C++/runtime-compiler.cc")
   end
 
@@ -124,6 +127,9 @@ class TestStrategies < Minitest::Test
     assert_equal Language["JavaScript"], fixture_blob("Data/Modelines/iamjs.pl").language
     assert_equal Language["JavaScript"], fixture_blob("Data/Modelines/iamjs2.pl").language
     assert_equal Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc").language
+    assert_equal Language["Vim Help File"], sample_blob("Vim Help File/modeline.txt").language
+    assert_equal Language["Vim script"], sample_blob("Vim script/textobj-rubyblock.vba").language
+    assert_equal Language["Vim script"], sample_blob("Vim script/todo.vmb").language
   end
 
   def test_shebangs
@@ -187,6 +193,7 @@ class TestStrategies < Minitest::Test
       "#{samples_path}/XML/Default.props",
       "#{samples_path}/XML/racoon.mjml",
       "#{samples_path}/XML/route-gas-works-lake-union-loop.gpx",
+      "#{samples_path}/XML/script_22621_x64.meta4",
       "#{samples_path}/XML/some-ideas.mm",
       "#{samples_path}/XML/GMOculus.project.gmx",
       "#{samples_path}/XML/obj_control.object.gmx",
@@ -194,6 +201,7 @@ class TestStrategies < Minitest::Test
       "#{samples_path}/XML/Robots.slnx",
       "#{samples_path}/XML/Win64.pubxml",
       "#{samples_path}/XML/Deep_Ocean.icls",
+      "#{samples_path}/XML/roblox-model.rbxmx"
     ]
     assert_all_xml all_xml_fixtures("*") - no_root_tag
 

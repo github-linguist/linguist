@@ -1,0 +1,53 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $Login : Adw.ApplicationWindow {
+  default-width: 450;
+  default-height: 550;
+  width-request: 360;
+  title: _("Tabella");
+
+  Adw.ToastOverlay toast_overlay {
+
+    Adw.ToolbarView {
+
+      [top]
+      Adw.HeaderBar {
+        // Empty HeaderBar, just for window dragging
+      }
+
+      Adw.StatusPage {
+        title: _("Welcome Back");
+        description: _("Sign in to your account");
+        icon-name: "avatar-default-symbolic";
+
+        Adw.Clamp {
+          maximum-size: 320;
+
+          Gtk.Box {
+            orientation: vertical;
+            spacing: 24;
+
+            Adw.PreferencesGroup {
+              title: _("Credentials");
+
+              Adw.EntryRow username_entry {
+                title: _("Username");
+              }
+
+              Adw.PasswordEntryRow password_entry {
+                title: _("Password");
+              }
+            }
+
+            Gtk.Button login_button {
+              label: _("Sign In");
+              styles ["suggested-action", "pill"]
+              clicked => $on_login_clicked();
+            }
+          }
+        }
+      }
+    }
+  }
+}
