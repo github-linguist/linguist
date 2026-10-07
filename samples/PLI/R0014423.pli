@@ -1,0 +1,145 @@
+ /*       SIST ENDRET 29/08-97 12.28.46 AV   JDA7339                  */00000000
+ /*       SIST ENDRET 28/08-97 08.53.13 AV   SPA7339                  */00000010
+ /*       SIST ENDRET 28/07-97 12.34.29 AV   HLA7339                  */00000020
+ /*       SIST ENDRET 30/11-94 08.37.01 AV   JDA0310                  */00000030
+ /*       SIST ENDRET 12/06-92 13.52.59 AV   TRUDE                    */00000040
+ /*       SIST ENDRET 28/01-92 12.26.55 AV   DYBVIK                   */00000050
+ /*       SIST ENDRET 06/03-91 12.15.45 AV   DYBVIK                   */00000060
+ /*       SIST ENDRET 11/12-90 13.23.23 AV   DYBVIK                   */00000070
+ /*       SIST ENDRET 16/10-89 15.40.27 AV   HERMAN                   */00000080
+ /*       SIST ENDRET 08/12-87 12.37.17 AV   DYBVIK                   */00000090
+ /*       SIST ENDRET 31/03-87 09.42.05 AV   DYBVIK                   */00000100
+ /*       SIST ENDRET 27/01-83 13.45.35 AV   FARVIK                   */00000110
+ /*       SIST ENDRET 03/11-82 15.15.01 AV   FARVIK                   */00000120
+ /*       SIST ENDRET 01/10-82 14.07.42 AV   FARVIK                   */00000130
+ /* ***************************************************************** */00000140
+ /* IDENTIFIKASJON                                                    */00000150
+ /*     R0014423 - OPPDATER_GAMMEL_UFØREHISTORIKK - PROSEDYRE I PLI.  */00000160
+ /*     PROGRAMMERER: TOM JØRGENSEN, JULI 82.                         */00000170
+ /* HENSIKT                                                           */00000180
+ /*     OPPDATERER UFØREHISTORIKK.                                    */00000190
+ /* PROGRAMTILKNYTNING                                                */00000200
+ /*     PROSEDYREN BLIR INKLUDERT I R0014401 - BEREGN_UFØREPENSJON.   */00000210
+ /* ***************************************************************** */00000220
+ OPPDATER_GAMMEL_UFØRHISTORIKK:                                         00000230
+  PROC;                                                                 00000240
+   DCL I,J,K   FIXED BIN (15);                                          00000250
+   DCL SISTE_KODE  PIC '9';                                             00000260
+                                                                        00000270
+   DO I = 1 TO 7;       /*0697 HL*/                                     00000280
+      B02.UFØRHIST(BER_SØ_IND,I) = B01.UFØRHIST(BER_SØ_IND,I);          00000290
+                                                                        00000300
+  /*  DO J = 1 TO 3;              */                                    00000310
+  /*ENDRET 2.12.87 HL - FRAPP 552 */                                    00000320
+                                                                        00000330
+      DO J = 1 TO 7;        /*0697 HL*/                                 00000340
+         B02.UFØRGRAD(BER_SØ_IND,I,J) = B01.UFØRGRAD(BER_SØ_IND,I,J);   00000350
+      END;                                                              00000360
+   END;                                                                 00000370
+                                                                        00000380
+                                                                        00000390
+                                                                        00000400
+                                                                        00000410
+   DO I = 1 TO 7;          /*0697 HL*/                                  00000420
+      IF B02.UFØRHIST.UFT_ÅM(BER_SØ_IND,I) = 0 THEN                     00000430
+                                                                        00000440
+         DO;                                                            00000450
+            I = I - 1;                                                  00000460
+                                                                        00000470
+ /*TILLEGG 28.11.94 HL : */                                             00000480
+                                                                        00000490
+            B02.UFØRHIST.OPPHØRSDATO_ÅM(BER_SØ_IND,I) = 0;              00000500
+            B02.UFØRHIST.OPPHØRSKODE   (BER_SØ_IND,I) = ' ';            00000510
+ /*HIT*/                                                                00000520
+            DO J = 1 TO 7;          /*0697 HL*/                         00000530
+               IF B02.UFG_ØVRIGE(BER_SØ_IND,I,J) = 0 THEN               00000540
+                  DO;                                                   00000550
+                                                                        00000560
+                     IF (J = 1 &                                        00000570
+                         B02.UFØRHIST.UFG(BER_SØ_IND,I) ^=              00000580
+                                 B02.UFØRPENS.UFG(BER_SØ_IND)) !        00000590
+                        (J > 1 & B02.UFG_ØVRIGE(BER_SØ_IND,I,J - 1) ^=  00000600
+                                 B02.UFØRPENS.UFG(BER_SØ_IND)) THEN     00000610
+                                                                        00000620
+                        DO;                                             00000630
+                           B02.UFG_ØVRIGE(BER_SØ_IND,I,J) =             00000640
+                                       B02.UFØRPENS.UFG(BER_SØ_IND);    00000650
+                           B02.UFG_DATO_ÅM(BER_SØ_IND,I,J) =            00000660
+                                             F_SNU_DATO(U_UFT_MÅ);      00000670
+                        END;                                            00000680
+                     J = 7;               /*0697 HL*/                   00000690
+                     I = 7;               /*0697 HL*/                   00000700
+                  END;                                                  00000710
+               ELSE                                                     00000720
+                  IF J = 7 THEN           /*0697 HL*/                   00000730
+ /* UFØREPERIODENE ER BRUKT OPP - MELDING OM FEIL.                    */00000740
+                     DO;                                                00000750
+  L100:                                                                 00000760
+                        FEIL_VED_LABEL = '100';                         00000770
+                        FEIL_MELD_NR   = 1804;                          00000780
+                        I              = 7;       /*0697 HL*/           00000790
+                     END;                                               00000800
+            END;                                                        00000810
+         END;                                                           00000820
+   END;                                                                 00000830
+                                                                        00000840
+    /*BUP_GARANTI SKAL IKKE OPPDATERES FOR UNGE UFØRE TYPE 'E' **       00000850
+    DO K = 7 TO 1 BY -1 UNTIL (B02.UFØRHIST.BUP_GAR_KODE(BER_SØ_IND,K)  00000860
+                                                  ^= ' ');              00000870
+       SISTE_KODE    = K;                                               00000880
+    END;                                                                00000890
+                                                                        00000900
+    IF B02.STATUS.TP_GAR_KODE(BER_SØ_IND) = 'E' &                       00000910
+       B02.BUP_GAR_KODE(BER_SØ_IND,SISTE_KODE)  ^= 'D'  THEN            00000920
+       DO;                                                              00000930
+          DO I = 1 TO 7;                                                00000940
+             IF B02.UFØRHIST.UFT_ÅM(BER_SØ_IND,I) > 0 THEN              00000950
+                DO;                                                     00000960
+                   B02.BUP_GAR_KODE(BER_SØ_IND,I)   = 'E';              00000970
+                    IF B02.VIRK_DATO_ÅM(BER_SØ_IND)   < 9101  THEN      00000980
+                       B02.BUP_GARANTI (BER_SØ_IND,I)   = 1.6;          00000990
+                                                                        00001000
+                    IF B02.VIRK_DATO_ÅM(BER_SØ_IND)   > 9100  &         00001010
+                       B02.VIRK_DATO_ÅM(BER_SØ_IND)   < 9201  THEN      00001020
+                      DO;                                               00001030
+                       IF FNR_R.ÅR >= 25 THEN                           00001040
+                       IF FNR_R.ÅR >= 25 THEN                           00001050
+                          B02.BUP_GARANTI (BER_SØ_IND,I)   = 2;         00001060
+                       ELSE                                             00001070
+                          B02.BUP_GARANTI (BER_SØ_IND,I)   = 1.6;       00001080
+                      END;                                              00001090
+                                                                        00001100
+                    IF B02.VIRK_DATO_ÅM(BER_SØ_IND)   > 9200  &         00001110
+                       B02.VIRK_DATO_ÅM(BER_SØ_IND)   < 9205  THEN      00001120
+                      DO;                                               00001130
+                       IF    FNR_R.ÅR   > 25  &                         00001140
+                             FNR_R.ÅR   < 45  THEN                      00001150
+                             B02.BUP_GARANTI (BER_SØ_IND,I)   = 2.5;    00001160
+                       ELSE                                             00001170
+                         IF FNR_R.ÅR   = 23 !                           00001180
+                            FNR_R.ÅR   = 24  THEN                       00001190
+                            B02.BUP_GARANTI (BER_SØ_IND,I)   = 1.6;     00001200
+                         ELSE                                           00001210
+                           IF FNR_R.ÅR   = 25  THEN                     00001220
+                              B02.BUP_GARANTI (BER_SØ_IND,I) = 2;       00001230
+                      END;                                              00001240
+                    IF B02.VIRK_DATO_ÅM(BER_SØ_IND)   > 9204  THEN      00001250
+                      DO;                                               00001260
+                       IF    FNR_R.ÅR   > 25  &                         00001270
+                             FNR_R.ÅR   < 45  THEN                      00001280
+                             B02.BUP_GARANTI (BER_SØ_IND,I)   = 3.00;   00001290
+                       ELSE                                             00001300
+                         IF FNR_R.ÅR   = 23 !                           00001310
+                            FNR_R.ÅR   = 24  THEN                       00001320
+                            B02.BUP_GARANTI (BER_SØ_IND,I)   = 1.6;     00001330
+                         ELSE                                           00001340
+                           IF FNR_R.ÅR   = 25  THEN                     00001350
+                              B02.BUP_GARANTI (BER_SØ_IND,I) = 2;       00001360
+                      END;                                              00001370
+                END;                                                    00001380
+             ELSE                                                       00001390
+                 I = 7;                                                 00001400
+          END;                                                          00001410
+        END;                                                            00001420
+    ************************ IKKE OPPDATER BUP_GAR 9708 HL ** */        00001430
+ END OPPDATER_GAMMEL_UFØRHISTORIKK;                                     00001440
