@@ -1,0 +1,85 @@
+// The standard library: math, string methods, list generics, assert, enums,
+// optionals, closures.
+// Compile with the self-hosted compiler: zc.exe --rt tests/fixtures/basics/stdlib.zeph out.exe
+import "std/list.zeph"        // contains/indexOf/reverse/slice/map/... are
+                                 // ordinary generic Zephyr, not compiler builtins
+enum Color { Red, Green, Blue }
+
+print(abs(0 - 7))                    // 7
+print(min(3, 8))                     // 3
+print(max(3, 8))                     // 8
+print(pow(2, 16))                    // 65536
+
+let s = "Hello, World"
+print(s.upper())                     // HELLO, WORLD
+print(s.replace("World", "Zephyr"))    // Hello, Zephyr
+print(s.contains("World"))           // true
+print(s.indexOf("World"))           // 7
+print(s.startsWith("Hello"))        // true
+print("a,b,c".split(",").len())      // 3
+print("  hi  ".trim())               // hi
+print("ab".repeat(3))                // ababab
+
+var xs = [3, 1, 4, 1, 5]
+print(xs.contains(4))                // true
+xs.reverse()
+print(xs[0])                         // 5
+print(xs.slice(0, 2).len())          // 2
+var ss = [5, 3, 9, 1]
+ss.sort()
+print(ss)                            // [1, 3, 5, 9]
+
+print(3.14159)                       // 3.14159
+print(sqrt(2.0))                     // 1.4142135623731
+print(1.0 / 4.0)                     // 0.25
+
+let c = Color.Green
+print(c)                             // Green  (enums print their member name)
+print(c == Color.Green)              // true
+print(Color.Blue as int)             // 2
+
+var ages: [str: int] = ["alice": 30, "bob": 25]
+ages["carol"] = 41
+ages.remove("bob")
+print(ages["alice"])                 // 30
+print(ages.len())                    // 2
+print(ages.has("carol"))             // true
+print(ages.has("bob"))               // false
+print(ages.keys().len())             // 2
+
+// optionals: absence without a panic
+fn find(xs: [int], target: int) -> int? {
+    for i in 0..xs.len() { if xs[i] == target { return i } }
+    return none
+}
+print(find([9, 8, 7], 8).or(0 - 1))  // 1
+print(find([9, 8, 7], 3).or(0 - 1))  // -1
+print(ages.get("alice").or(0))       // 30   (safe map lookup)
+print(ages.get("nobody").or(0))      // 0
+print(ages.get("nobody"))            // none
+let zero: int? = 0
+print(zero.has())                    // true  (0 is a value, not none)
+
+// first-class functions
+fn square(n: int) -> int { return n * n }
+fn map_list(xs: [int], f: fn(int) -> int) -> [int] {
+    var out: [int] = []
+    for x in xs { out.push(f(x)) }
+    return out
+}
+print(map_list([1, 2, 3, 4], square))   // [1, 4, 9, 16]
+let g = square
+print(g(9))                             // 81
+
+// generics + closures: everything above from std/list.zeph is ordinary Zephyr
+print(map([1, 2, 3], fn(x: int) -> int { return x * x }))               // [1, 4, 9]
+print(filter([1, 2, 3, 4], fn(x: int) -> bool { return x % 2 == 0 }))   // [2, 4]
+print(fold([1, 2, 3, 4], 0, fn(a: int, x: int) -> int { return a + x })) // 10
+let base = 100
+print(map([1, 2], fn(x: int) -> int { return x + base }))               // [101, 102] — captures
+print(["aa", "b"].any(fn(s: str) -> bool { return s.len() > 1 }))       // true
+
+assert(pow(2, 10) == 1024)
+assert(min(2.0, 5.0) < 3.0, "min of floats")
+assert(c != Color.Red, "enum compare")
+print("ok")

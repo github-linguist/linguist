@@ -1,0 +1,58 @@
+// Object-oriented Zephyr: structs with methods (impl blocks), associated
+// constructors, and interfaces with dynamic dispatch.
+
+struct Point { x: float, y: float }
+
+impl Point {
+    // associated function (no self): called as Point.new(...)
+    fn new(x: float, y: float) -> Point { return Point{x: x, y: y} }
+    // instance methods take `self`
+    fn len(self) -> float { return sqrt(self.x * self.x + self.y * self.y) }
+    fn add(self, o: Point) -> Point { return Point.new(self.x + o.x, self.y + o.y) }
+    fn scale(self, k: float) -> Point { return Point.new(self.x * k, self.y * k) }
+}
+
+// A shape is anything that can report its area and name.
+interface Shape {
+    fn area(self) -> float
+    fn name(self) -> str
+}
+
+struct Circle { r: float }
+impl Circle {
+    fn area(self) -> float { return 3.14159265 * self.r * self.r }
+    fn name(self) -> str { return "circle" }
+}
+
+struct Rect { w: float, h: float }
+impl Rect {
+    fn area(self) -> float { return self.w * self.h }
+    fn name(self) -> str { return "rect" }
+}
+
+// takes any Shape -- dispatched dynamically at runtime
+fn describe(s: Shape) {
+    print("{s.name()} has area {s.area()}")
+}
+
+fn main() {
+    let a = Point.new(3.0, 4.0)
+    print("len = {a.len()}")                 // 5
+    let b = a.add(Point.new(1.0, 1.0)).scale(2.0)
+    print("b = ({b.x}, {b.y})")              // (8, 10)
+
+    // polymorphism: a heterogeneous list of shapes
+    var shapes: [Shape] = []
+    shapes.push(Circle{r: 2.0})
+    shapes.push(Rect{w: 3.0, h: 4.0})
+    shapes.push(Circle{r: 1.0})
+
+    var total = 0.0
+    for s in shapes {
+        describe(s)
+        total = total + s.area()
+    }
+    print("total area = {total}")
+}
+
+main()

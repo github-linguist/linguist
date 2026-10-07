@@ -1,0 +1,392 @@
+// zui kit: ready-made components on top of ui.zeph, modelled on the React
+// ecosystem's usual building blocks (shadcn/ui and Radix primitives, sonner
+// toasts, react-resizable-panels handles, react-rnd frames). Everything takes
+// its colours and fonts from `kit`, the way shadcn components read CSS
+// variables; an app sets `kit` once at startup.
+//
+//   button("Save", BTN_PRIMARY, fn() { ... })
+//   iconBtn(I_GEAR, "Settings", false, fn() { ... })        // with a tooltip
+//   tabs(["day", "week"], current, fn(v: str) { ... })      // gliding indicator
+//   switchToggle(on, fn() { ... })                          // gliding knob
+//   spinner(16, kit.accent)   badge("beta", TONE_ACCENT)   kbdKeys("Ctrl+K")
+import "ui.zeph"
+import "std/math_core.zeph"
+
+struct KitTheme {
+    bg: int = 0x131417ff
+    surface: int = 0x1d1e21ff          // cards, inputs
+    surfaceHi: int = 0x26272aff        // hover, popovers
+    surfaceTop: int = 0x2e2f32ff       // tracks, pressed
+    border: int = 0x303134ff
+    hairline: int = 0xffffff0f         // subtle outlines on surfaces
+    text: int = 0xe4e4e7ff
+    textSoft: int = 0xc7c7caff
+    muted: int = 0x959598ff
+    faint: int = 0x6b6b6eff
+    accent: int = 0x8a9bc4ff
+    accentHi: int = 0xa5b1ceff
+    accentDim: int = 0x8a9bc422
+    accentSoft: int = 0x8a9bc440
+    onAccent: int = 0x131417ff
+    good: int = 0x8fbf9fff
+    warn: int = 0xd8b26aff
+    bad: int = 0xe08a8aff
+    info: int = 0x959598ff
+    font: int = 0
+    fontBold: int = 0
+    fontSmall: int = 0
+    fontSmallBold: int = 0
+    fontMono: int = 0
+    fontIcon: int = 0
+    fontIconSmall: int = 0
+}
+
+var kit = KitTheme{}
+
+const BTN_PRIMARY = 0
+const BTN_SECONDARY = 1
+const BTN_GHOST = 2
+const BTN_OUTLINE = 3
+const BTN_DANGER = 4
+
+const TONE_NEUTRAL = 0
+const TONE_ACCENT = 1
+const TONE_GOOD = 2
+const TONE_WARN = 3
+const TONE_BAD = 4
+
+fn toneColor(tone: int) -> int {
+    if tone == TONE_ACCENT { return kit.accentHi }
+    if tone == TONE_GOOD { return kit.good }
+    if tone == TONE_WARN { return kit.warn }
+    if tone == TONE_BAD { return kit.bad }
+    return kit.muted
+}
+
+// a colour at a new alpha (0..255)
+fn tint(color: int, alpha: int) -> int { return (color & 0xffffff00) | (alpha & 255) }
+
+fn kitLabel(content: str, font: int, color: int) -> El {
+    let el = textStyled(st().fontOf(font).fg(color), content)
+    el.selectable = false
+    return el
+}
+
+// logical width of a string in a font
+fn textW(font: int, content: str) -> int { return ((textWidth(font, content) as float) / uiScale + 0.999) as int }
+
+// ---- buttons ----
+
+fn buttonStyle(variant: int) -> Style {
+    let base = st().row().alignTo(CENTER).justifyTo(CENTER).gapOf(7).padXY(14, 7).round(8)
+    if variant == BTN_PRIMARY { return base.fill(kit.accent).hover(kit.accentHi) }
+    if variant == BTN_SECONDARY { return base.fill(kit.surfaceHi).hover(kit.surfaceTop) }
+    if variant == BTN_OUTLINE { return base.hover(kit.surfaceHi).outline(kit.border, 1) }
+    if variant == BTN_DANGER { return base.fill(tint(kit.bad, 0x26)).hover(tint(kit.bad, 0x40)) }
+    return base.hover(kit.surfaceHi)
+}
+
+fn buttonFg(variant: int) -> int {
+    if variant == BTN_PRIMARY { return kit.onAccent }
+    if variant == BTN_DANGER { return kit.bad }
+    if variant == BTN_GHOST { return kit.textSoft }
+    return kit.text
+}
+
+fn button(content: str, variant: int, onClick: fn()) -> El {
+    return clickable(buttonStyle(variant), [kitLabel(content, if variant == BTN_PRIMARY { kit.fontBold } else { kit.font }, buttonFg(variant))], onClick)
+}
+
+fn buttonIcon(glyph: str, content: str, variant: int, onClick: fn()) -> El {
+    return clickable(buttonStyle(variant), [
+        kitLabel(glyph, kit.fontIconSmall, buttonFg(variant)),
+        kitLabel(content, if variant == BTN_PRIMARY { kit.fontBold } else { kit.font }, buttonFg(variant))
+    ], onClick)
+}
+
+// an icon-font glyph centred on its ink, not its advance box (icon fonts
+// put glyphs off-centre in the line, which shows in round buttons)
+fn inkIcon(glyph: str, font: int, color: int, size: int) -> El {
+    return canvas(st().w(size).h(size), false, fn(x: int, y: int, w: int, h: int) {
+        let (cp, n) = utf8At(glyph, 0)
+        let g = glyphFor(font, cp)
+        if g.w <= 0 { return }
+        let gx = x + (w - g.w) / 2
+        let gy = y + (h - g.h) / 2
+        quad(gx, gy, gx + g.w, gy + g.h, g.x, g.y, g.x + g.w, g.y + g.h, color)
+    })
+}
+
+// a square icon button with a tooltip; `active` tints it with the accent
+fn iconBtn(glyph: str, tip: str, active: bool, onClick: fn()) -> El {
+    let el = clickable(st().w(30).h(30).round(8).alignTo(CENTER).justifyTo(CENTER).fill(if active { kit.accentDim } else { 0 }).hover(if active { kit.accentSoft } else { kit.surfaceHi }), [
+        inkIcon(glyph, kit.fontIcon, if active { kit.accentHi } else { kit.muted }, 30)
+    ], onClick)
+    return withTip(el, tip)
+}
+
+// a smaller one for dense rows (title bars, list items)
+fn iconBtnSmall(glyph: str, tip: str, color: int, onClick: fn()) -> El {
+    let el = clickable(st().w(24).h(24).round(6).alignTo(CENTER).justifyTo(CENTER).hover(kit.surfaceHi), [
+        inkIcon(glyph, kit.fontIconSmall, color, 24)
+    ], onClick)
+    return withTip(el, tip)
+}
+
+// ---- small display pieces ----
+
+fn badge(content: str, tone: int) -> El {
+    let color = toneColor(tone)
+    return box(st().row().alignTo(CENTER).padXY(7, 1).round(6).fill(tint(color, 0x1f)), [kitLabel(content, kit.fontSmallBold, color)])
+}
+
+fn kbdKeys(keys: str) -> El {
+    return box(st().padXY(6, 1).round(5).fill(kit.surfaceHi).outline(kit.hairline, 1), [kitLabel(keys, kit.fontSmall, kit.muted)])
+}
+
+fn dot(size: int, color: int) -> El { return box(st().w(size).h(size).round(size / 2 + 1).fill(color), []) }
+
+fn separator() -> El { return box(st().h(1).fill(kit.hairline), []) }
+fn vrule(height: int) -> El { return box(st().w(1).h(height).fill(kit.hairline), []) }
+
+fn avatar(content: str, size: int, color: int) -> El {
+    return box(st().w(size).h(size).round(size * 3 / 10).fill(color).alignTo(CENTER).justifyTo(CENTER), [kitLabel(content, kit.fontBold, kit.onAccent)])
+}
+
+// a thin determinate bar; `permille` is 0..1000
+fn progressBar(permille: int, width: int, color: int) -> El {
+    let fillW = max(min(permille, 1000) * width / 1000, 2)
+    return box(st().w(width).h(5).round(3).fill(kit.surfaceTop), [box(st().w(fillW).h(5).round(3).fill(color), [])])
+}
+
+// ---- motion pieces ----
+
+// a rotating ring with a fading tail (the usual loading spinner)
+fn spinner(size: int, color: int) -> El {
+    return canvas(st().w(size).h(size), true, fn(x: int, y: int, w: int, h: int) {
+        let d = min(w, h)
+        let segments = 18
+        let radius = (d as float) * 0.38
+        let stroke = max((d as float * 0.09) as int, 1)
+        let cx = x + w / 2
+        let cy = y + h / 2
+        let head = (frameNow % 900) as float / 900.0 * 6.2831853
+        for i in 0..segments {
+            let along = (i as float) / (segments as float)          // 0 tail .. 1 head
+            let angle = head - (1.0 - along) * 4.4
+            let px = cx + (fsin(angle) * radius) as int
+            let py = cy - (fcos(angle) * radius) as int
+            fillCircle(px, py, stroke, tint(color, ((color & 255) as float * (0.15 + 0.85 * along)) as int))
+        }
+    })
+}
+
+// a placeholder block that gently pulses while content loads
+fn skeleton(width: int, height: int) -> El {
+    return canvas(st().w(width).h(height), true, fn(x: int, y: int, w: int, h: int) {
+        let t = 0.5 + 0.5 * fsin((frameNow % 1600) as float / 1600.0 * 6.2831853)
+        fillRound(x, y, w, h, sc(6), mixColor(kit.surface, kit.surfaceTop, t))
+    })
+}
+
+// ---- controls ----
+
+// an on/off switch whose knob glides
+fn switchToggle(on: bool, onClick: fn()) -> El {
+    let knob = glide(box(st().at(if on { 18 } else { 2 }, 2, 0 - 1, 0 - 1).w(16).h(16).round(8).fill(if on { kit.onAccent } else { kit.muted }), []))
+    return clickable(st().w(36).h(20).round(10).fill(if on { kit.accent } else { kit.surfaceTop }).hover(if on { kit.accentHi } else { kit.border }), [knob], onClick)
+}
+
+// a segmented control (Radix Tabs / ToggleGroup): equal-width segments under
+// a highlight that glides to the chosen one
+fn tabs(options: [str], current: str, onPick: fn(str)) -> El {
+    var segW = 0
+    for option in options { segW = max(segW, textW(kit.fontSmall, option) + 22) }
+    var parts: [El] = []
+    var index = 0
+    for i, option in options {
+        if option == current { index = i }
+    }
+    if options.len() > 0 {
+        parts.push(glide(box(st().at(2 + index * segW, 2, 0 - 1, 2).w(segW).round(6).fill(kit.surfaceTop).outline(kit.hairline, 1), [])))
+    }
+    for option in options {
+        let chosen = option
+        let on = option == current
+        // minWidth keeps a squeezed row from stacking the label vertically;
+        // the control overflows its parent instead of collapsing
+        parts.push(clickable(st().w(segW).minWidth(segW).padXY(0, 5).alignTo(CENTER).round(6), [
+            kitLabel(option, kit.fontSmall, if on { kit.text } else { kit.muted })
+        ], fn() { onPick(chosen) }))
+    }
+    return box(st().row().alignTo(CENTER).pad(2).round(8).fill(kit.surface).outline(kit.hairline, 1), parts)
+}
+
+const GLYPH_CHECK = "\xef\x80\x8c"      // Nerd Font check mark (U+F04C)
+const GLYPH_CHEVRON = "\xef\x81\xb8"    // Nerd Font chevron down (U+F078)
+
+// shadcn Checkbox: an 18px box with a tick when on, a label beside it
+fn checkbox(content: str, checked: bool, onClick: fn()) -> El {
+    var tick: [El] = []
+    if checked { tick.push(inkIcon(GLYPH_CHECK, kit.fontIconSmall, kit.onAccent, 14)) }
+    var parts: [El] = [
+        box(st().w(18).h(18).round(5).fill(if checked { kit.accent } else { 0 }).outline(if checked { kit.accent } else { kit.border }, 1).alignTo(CENTER).justifyTo(CENTER), tick),
+        kitLabel(content, kit.font, kit.textSoft)
+    ]
+    return clickable(st().row().alignTo(CENTER).gapOf(8).padXY(4, 2).round(6).hover(kit.surfaceHi), parts, onClick)
+}
+
+// Radix RadioGroup: a row of radio options
+fn radioRow(options: [str], current: str, onPick: fn(str)) -> El {
+    var parts: [El] = []
+    for option in options {
+        let chosen = option
+        let on = option == current
+        var dot: [El] = []
+        if on { dot.push(box(st().w(6).h(6).round(3).fill(kit.onAccent), [])) }
+        parts.push(clickable(st().row().alignTo(CENTER).gapOf(8).padXY(8, 4).round(6).hover(kit.surfaceHi), [
+            box(st().w(18).h(18).round(9).fill(if on { kit.accent } else { 0 }).outline(if on { kit.accent } else { kit.border }, 1).alignTo(CENTER).justifyTo(CENTER), dot),
+            kitLabel(option, kit.font, if on { kit.text } else { kit.textSoft })
+        ], fn() { onPick(chosen) }))
+    }
+    return box(st().row().gapOf(4).wrapRows(), parts)
+}
+
+// Radix Slider: a track with a fill and a draggable thumb; onChange gets the
+// new value while dragging (0, 0 on the press)
+fn slider(value: int, lo: int, hi: int, width: int, onChange: fn(int)) -> El {
+    let span = max(hi - lo, 1)
+    let thumbX = (value - lo) * (width - 12) / span
+    return draggable(st().w(width).h(20).alignTo(CENTER), [
+        box(st().at(0, 0, 0 - 1, 0 - 1).w(width).h(4).round(2).fill(kit.surfaceTop), [
+            box(st().w(max(thumbX + 6, 6)).h(4).round(2).fill(kit.accent), [])
+        ]),
+        box(st().at(thumbX, 0 - 1, 0 - 1, 0 - 1).w(12).h(20).alignTo(CENTER).justifyTo(CENTER), [dot(12, kit.accentHi)])
+    ], fn(dx: int, dy: int) {
+        if dx == 0 { return }
+        let v = lo + (thumbX + dx) * span / (width - 12)
+        onChange(max(min(v, hi), lo))
+    })
+}
+
+// shadcn Select: a trigger showing the current value; picking opens a menu of
+// the options in the top layer. Its open state is a hook, so it is a keyed
+// component. ponytail: no click-outside-to-close; the trigger toggles it
+fn select(key: str, options: [str], current: str, onPick: fn(str)) -> El {
+    return component(key, fn(ctx: Ctx) -> El {
+        let open = ctx.useBool(false)
+        var wMax = textW(kit.fontSmall, current) + 44
+        for option in options { wMax = max(wMax, textW(kit.fontSmall, option) + 44) }
+        let trigger = clickable(st().row().alignTo(CENTER).gapOf(8).padXY(10, 6).round(8).fill(kit.surfaceHi).hover(kit.surfaceTop).outline(kit.hairline, 1), [
+            kitLabel(current, kit.fontSmall, kit.text),
+            inkIcon(GLYPH_CHEVRON, kit.fontIconSmall, kit.muted, 14)
+        ], fn() { open.toggle() })
+        if not open.flag() { return trigger }
+        var items: [El] = []
+        for option in options {
+            let chosen = option
+            items.push(menuItem("", chosen, "", chosen == current, fn() {
+                open.setFlag(false)
+                onPick(chosen)
+            }))
+        }
+        return box(st(), [trigger, popover(key, st().at(0, 32, 0 - 1, 0 - 1).w(wMax), items)])
+    })
+}
+
+// ---- surfaces ----
+
+fn card(style: Style, children: [El]) -> El {
+    return box(style.fill(kit.surface).round(12).outline(kit.hairline, 1), children)
+}
+
+// a callout (shadcn Alert): an icon, a message and an optional action
+fn alert(tone: int, glyph: str, message: str, action: [El]) -> El {
+    let color = toneColor(tone)
+    var parts: [El] = [kitLabel(glyph, kit.fontIcon, color), box(st().flex(1), [kitLabel(message, kit.fontSmall, kit.text)])]
+    for a in action { parts.push(a) }
+    return box(st().row().alignTo(CENTER).gapOf(10).padXY(12, 9).round(10).fill(tint(color, 0x14)).outline(tint(color, 0x55), 1), parts)
+}
+
+// a floating surface for menus and popovers, in the top layer; it drops in
+// when it appears
+fn popover(key: str, style: Style, children: [El]) -> El {
+    return portal(presence(key, ENTER_DROP, box(style.fill(kit.surfaceHi).outline(kit.hairline, 1).round(10).pad(4).gapOf(1).shadowed(18), children)))
+}
+
+// a sonner-style toast card: a tone-tinted icon chip, a message and optional
+// actions; an app stacks these in a corner portal and expires them itself
+fn toastCard(tone: int, glyph: str, message: str, action: [El]) -> El {
+    let color = toneColor(tone)
+    var parts: [El] = [
+        box(st().w(22).h(22).round(11).fill(tint(color, 0x22)).alignTo(CENTER).justifyTo(CENTER), [inkIcon(glyph, kit.fontIconSmall, color, 22)]),
+        box(st().flex(1), [kitLabel(message, kit.fontSmall, kit.text)])
+    ]
+    for a in action { parts.push(a) }
+    return box(st().row().alignTo(CENTER).gapOf(10).padXY(14, 10).round(12).fill(kit.surfaceHi).outline(kit.hairline, 1).shadowed(16), parts)
+}
+
+// Radix Dialog / shadcn dialog: a dimmed backdrop and a centred card, both in
+// the top layer. Returns the two portals — push them into your root columns
+// so they centre on the window. The app owns the content and closes the
+// dialog itself.
+const MODAL_BACKDROP = 0x0000008a
+
+fn modal(key: str, width: int, children: [El]) -> [El] {
+    return [
+        portal(exitFade(presence(key + "-backdrop", ENTER_FADE, box(st().at(0, 0, 0, 0).fill(MODAL_BACKDROP), [])))),
+        portal(exitRise(presence(key, ENTER_RISE, box(st().at(0 - 1, 0 - 1, 0 - 1, 0 - 1).w(width).fill(kit.surface).outline(kit.border, 1).round(16).pad(22).gapOf(12).shadowed(28), children))))
+    ]
+}
+
+// a menu row (Radix DropdownMenu.Item / cmdk Command.Item)
+fn menuItem(glyph: str, content: str, hint: str, selected: bool, onClick: fn()) -> El {
+    var parts: [El] = []
+    if glyph != "" { parts.push(box(st().w(18).alignTo(CENTER), [kitLabel(glyph, kit.fontIconSmall, if selected { kit.accentHi } else { kit.faint })])) }
+    parts.push(box(st().flex(1), [kitLabel(content, kit.font, if selected { kit.text } else { kit.textSoft })]))
+    if hint != "" { parts.push(kitLabel(hint, kit.fontSmall, kit.faint)) }
+    return clickable(st().row().alignTo(CENTER).gapOf(10).padXY(10, 6).round(7).fill(if selected { kit.accentDim } else { 0 }).hover(kit.surfaceTop), parts, onClick)
+}
+
+// ---- layout handles ----
+
+// a drag handle between two panels (react-resizable-panels): a thin rule
+// that brightens on hover and reports drags (0, 0 on press, then the offset)
+fn splitter(vertical: bool, onDrag: fn(int, int)) -> El {
+    // it stretches across its parent (the default cross-axis alignment)
+    let style = if vertical { st().w(7).alignTo(CENTER) } else { st().h(7).row().alignTo(CENTER) }
+    style.cursor = if vertical { CURSOR_EW } else { CURSOR_NS }
+    let line = if vertical { st().w(1).flex(1) } else { st().h(1).flex(1) }
+    return draggable(style.hover(kit.accentDim), [box(line.fill(kit.hairline), [])], onDrag)
+}
+
+// invisible resize grips on the edges and corners of an absolutely placed
+// box (react-rnd); onResize gets the edges being dragged (RESIZE_* bits)
+// and the logical offset since the press, (0, 0) at the press
+const RESIZE_LEFT = 1
+const RESIZE_RIGHT = 2
+const RESIZE_TOP = 4
+const RESIZE_BOTTOM = 8
+
+fn resizeHandles(edges: int, onResize: fn(int, int, int)) -> [El] {
+    var out: [El] = []
+    let g = 6           // grip thickness
+    let c = 14          // corner size
+    if (edges & RESIZE_LEFT) != 0 { out.push(resizeGrip(st().at(0, c, 0 - 1, c).w(g), CURSOR_EW, RESIZE_LEFT, onResize)) }
+    if (edges & RESIZE_RIGHT) != 0 { out.push(resizeGrip(st().at(0 - 1, c, 0, c).w(g), CURSOR_EW, RESIZE_RIGHT, onResize)) }
+    if (edges & RESIZE_TOP) != 0 { out.push(resizeGrip(st().at(c, 0, c, 0 - 1).h(g), CURSOR_NS, RESIZE_TOP, onResize)) }
+    if (edges & RESIZE_BOTTOM) != 0 { out.push(resizeGrip(st().at(c, 0 - 1, c, 0).h(g), CURSOR_NS, RESIZE_BOTTOM, onResize)) }
+    for corner in [RESIZE_LEFT | RESIZE_TOP, RESIZE_RIGHT | RESIZE_TOP, RESIZE_LEFT | RESIZE_BOTTOM, RESIZE_RIGHT | RESIZE_BOTTOM] {
+        if (edges & corner) != corner { continue }
+        let left = (corner & RESIZE_LEFT) != 0
+        let top = (corner & RESIZE_TOP) != 0
+        let style = st().at(if left { 0 } else { 0 - 1 }, if top { 0 } else { 0 - 1 }, if left { 0 - 1 } else { 0 }, if top { 0 - 1 } else { 0 }).w(c).h(c)
+        out.push(resizeGrip(style, if left == top { CURSOR_NWSE } else { CURSOR_NESW }, corner, onResize))
+    }
+    return out
+}
+
+fn resizeGrip(style: Style, cursor: int, edges: int, onResize: fn(int, int, int)) -> El {
+    style.cursor = cursor
+    return draggable(style, [], fn(dx: int, dy: int) { onResize(edges, dx, dy) })
+}

@@ -1,0 +1,74 @@
+// Threads, and the collector that has to survive them.
+//
+// Each worker allocates hard in a loop so the heap keeps crossing its
+// collection threshold while every other worker is mid-flight. That is the part
+// that would break a single-stack collector: a list that only exists in another
+// thread's registers or stack gets swept, and the answer comes out wrong or the
+// process dies.
+//
+// Results go into a raw buffer indexed by worker, since the thread argument is
+// an int rather than a heap reference.
+
+import "std/thread.zeph"
+
+let WORKERS = 8
+let ROUNDS = 4000
+let PER_ROUND = 40
+
+// results[i] = the checksum worker i computed
+var results = win("VirtualAlloc", 0, WORKERS * 8, 12288, 4)
+
+// Deliberately allocation-heavy: each round builds lists that die immediately,
+// and keeps one alive across the next allocation so there is always a live
+// object reachable only from this thread's stack.
+fn work(id: int) {
+    var acc = 0
+    for r in 0..ROUNDS {
+        var keep: [int] = []
+        for k in 0..PER_ROUND {
+            var tmp: [int] = []
+            tmp.push(id)
+            tmp.push(r)
+            tmp.push(k)
+            acc = acc + tmp[0] * 3 + tmp[1] + tmp[2]
+            if k % 8 == 0 { keep.push(acc) }
+        }
+        // `keep` is live only through this stack slot while the inner loop of
+        // the next round allocates
+        acc = acc + keep.len()
+    }
+    store64(results + id * 8, acc)
+}
+
+// the same arithmetic, single-threaded, for comparison
+fn expected(id: int) -> int {
+    var acc = 0
+    for r in 0..ROUNDS {
+        var n = 0
+        for k in 0..PER_ROUND {
+            acc = acc + id * 3 + r + k
+            if k % 8 == 0 { n += 1 }
+        }
+        acc = acc + n
+    }
+    return acc
+}
+
+print("cpus: {cpuCount()}, workers: {WORKERS}")
+
+var ts: [Thread] = []
+for i in 0..WORKERS { ts.push(spawnThread(work, i)) }
+for t in ts { t.join() }
+
+var bad = 0
+for i in 0..WORKERS {
+    let got = load64(results + i * 8)
+    let want = expected(i)
+    if got != want {
+        print("  worker {i}: got {got}, want {want}")
+        bad += 1
+    }
+}
+print("checked {WORKERS} workers, {bad} wrong")
+assert(bad == 0, "threaded results disagree with the single-threaded answer")
+print("OK")

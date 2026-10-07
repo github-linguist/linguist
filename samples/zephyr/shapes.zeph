@@ -1,0 +1,27 @@
+struct Point { x: float, y: float }
+
+fn dist(a: Point, b: Point) -> float {
+    let dx = a.x - b.x
+    let dy = a.y - b.y
+    return sqrt(dx * dx + dy * dy)
+}
+
+fn scale(p: Point, k: float) -> Point {
+    return Point{x: p.x * k, y: p.y * k}
+}
+
+let a = Point{x: 0.0, y: 0.0}
+let b = Point{x: 3.0, y: 4.0}
+
+print(dist(a, b))      // plain call
+print(b.dist(a))       // same function, method syntax (UFCS)
+
+let c = b.scale(2.0)
+print(c)
+
+let pts = [a, b]
+pts.push(c)
+print(pts.len())
+for p in pts {
+    print("({p.x}, {p.y})")
+}
