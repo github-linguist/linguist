@@ -96,5 +96,9 @@ func ConvertProto(path, ext string, data []byte) (*grammar.Rule, []string, error
 		return nil, nil, &UndeclaredScopeError{path}
 	}
 
+	if strings.ContainsAny(out.ScopeName, `/\`) {
+		return nil, nil, &InvalidScopeError{path, out.ScopeName}
+	}
+
 	return &out, filterUnusedKeys(md.Unused), nil
 }
