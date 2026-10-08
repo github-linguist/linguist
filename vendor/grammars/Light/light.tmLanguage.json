@@ -1,0 +1,206 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Light",
+    "scopeName": "source.light",
+    "fileTypes": [".light"],
+    "patterns": [
+        { "include": "#comments" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#keywords" },
+        { "include": "#operators" },
+        { "include": "#types" },
+        { "include": "#builtins" },
+        { "include": "#string_interpolation" },
+        { "include": "#decorator" },
+        { "include": "#punctuation" }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.number-sign.light",
+                    "begin": "#",
+                    "end": "$",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.comment.light" }
+                    }
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.light",
+                    "begin": "\"",
+                    "end": "\"",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.string.begin.light" }
+                    },
+                    "endCaptures": {
+                        "0": { "name": "punctuation.definition.string.end.light" }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#string_interpolation"
+                        },
+                        {
+                            "name": "constant.character.escape.light",
+                            "match": "\\\\[nrt\"'\\\\]"
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.single.light",
+                    "begin": "'",
+                    "end": "'",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.string.begin.light" }
+                    },
+                    "endCaptures": {
+                        "0": { "name": "punctuation.definition.string.end.light" }
+                    },
+                    "patterns": [
+                        {
+                            "name": "constant.character.escape.light",
+                            "match": "\\\\[nrt\"'\\\\]"
+                        }
+                    ]
+                },
+                {
+                    "name": "string.quoted.other.light",
+                    "begin": "「",
+                    "end": "」",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.string.begin.light" }
+                    },
+                    "endCaptures": {
+                        "0": { "name": "punctuation.definition.string.end.light" }
+                    }
+                }
+            ]
+        },
+        "string_interpolation": {
+            "patterns": [
+                {
+                    "name": "meta.embedded.interpolation.light",
+                    "begin": "\\{",
+                    "end": "\\}",
+                    "beginCaptures": {
+                        "0": { "name": "punctuation.definition.interpolation.begin.light" }
+                    },
+                    "endCaptures": {
+                        "0": { "name": "punctuation.definition.interpolation.end.light" }
+                    },
+                    "patterns": [
+                        { "include": "#keywords" },
+                        { "include": "#operators" },
+                        { "include": "#builtins" },
+                        { "include": "#numbers" },
+                        { "include": "#strings" }
+                    ]
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.float.light",
+                    "match": "\\b[0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?\\b"
+                },
+                {
+                    "name": "constant.numeric.integer.light",
+                    "match": "\\b[0-9]+\\b"
+                },
+                {
+                    "name": "constant.numeric.hex.light",
+                    "match": "\\b0[xX][0-9a-fA-F]+\\b"
+                },
+                {
+                    "name": "constant.numeric.binary.light",
+                    "match": "\\b0[bB][01]+\\b"
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "name": "keyword.control.flow.light",
+                    "match": "(?<![一-鿿])(如果|否则|否则如果|否则若|若|则|遍历|当|循环|跳出|继续|跳过|返回|匹配|情况|默认|结束|为)(?![一-鿿])"
+                },
+                {
+                    "name": "keyword.declaration.light",
+                    "match": "(?<![一-鿿])(段落|段|函数|类|接口|实现|数据|枚举|构造|属性|继承|外部|标注|trait|类型别名|错误|新建|定义|常量|类型|接收|导出|类型)(?![一-鿿])"
+                },
+                {
+                    "name": "keyword.other.light",
+                    "match": "(?<![一-鿿])(导入|从|设|为|使用|尝试|捕获|抛出|最终|异步|等待|嵌入|结束嵌入|并|pass|全局|非局部|删除|断言|静态|类方法|特性|抽象|生成|产出|产出从|是|在|不在|不是|私有|公有|保护|取地址|解引用|指针偏移)(?![一-鿿])"
+                },
+                {
+                    "name": "constant.language.light",
+                    "match": "(?<![一-鿿])(真|假|空|无|己|父)(?![一-鿿])"
+                },
+                {
+                    "name": "keyword.control.import.light",
+                    "match": "(?<![一-鿿])(从|导入|导出|为)(?![一-鿿])"
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "name": "keyword.operator.arithmetic.light",
+                    "match": "(?<![一-鿿])(加|减|乘|除|除以|模|取余|幂|求幂|整除|加上|减去|乘以|于)(?![一-鿿])"
+                },
+                {
+                    "name": "keyword.operator.comparison.light",
+                    "match": "(?<![一-鿿])(等于|不等于|大于|小于|大于等于|小于等于|不小于|不大于)(?![一-鿿])"
+                },
+                {
+                    "name": "keyword.operator.logical.light",
+                    "match": "(?<![一-鿿])(且|与|或|异或|非)(?![一-鿿])"
+                },
+                {
+                    "name": "keyword.operator.bitwise.light",
+                    "match": "(?<![一-鿿])(左移|右移)(?![一-鿿])"
+                }
+            ]
+        },
+        "types": {
+            "patterns": [
+                {
+                    "name": "support.type.light",
+                    "match": "(?<![一-鿿])(整数|浮数|小数|字符串|串|布尔|列表|列|字典|典|集合|集|元组|空|任意|可选|联合|可调用|可迭代|迭代器|生成器|列表类型|字典类型|集合类型|元组类型|序列|映射|类型|己|指针)(?![一-鿿])"
+                }
+            ]
+        },
+        "builtins": {
+            "patterns": [
+                {
+                    "name": "support.function.light",
+                    "match": "(?<![一-鿿])(打印|显示|输出|读取|输入|长度|类型|范围|整数|浮数|小数|字符串|串|列表|列|字典|典|集合|集|布尔|绝对值|最大值|最小值|求和|排序|反转|筛选|映射|打包|枚举|全部|任意|四舍五入|取整|转整数|转小数|转浮点|转字符串|解析JSON|序列化JSON|打开|关闭|读取文件|写入文件|实例检查|等等|列表长度|字符串长度|分割字符串|连接字符串|替换字符串|去除空白|转字符串|字符串包含|列表追加|列表插入|列表移除|列表排序|列表反转|字典键|字典值|字典项|文件存在|创建目录|列出目录|删除文件)(?![一-鿿])"
+                }
+            ]
+        },
+        "decorator": {
+            "patterns": [
+                {
+                    "name": "entity.other.attribute-name.light",
+                    "match": "@\\w+"
+                }
+            ]
+        },
+        "punctuation": {
+            "patterns": [
+                {
+                    "name": "punctuation.separator.light",
+                    "match": "：|；|，|。|、"
+                },
+                {
+                    "name": "punctuation.bracket.light",
+                    "match": "（|）|【|】|《|》"
+                }
+            ]
+        }
+    }
+}

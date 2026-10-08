@@ -1,0 +1,15 @@
+# Light L4 Foreign Reference sample - Python
+# Demonstrates: L4 Python interop, calling Python libraries
+
+引 Python:
+    import numpy as np
+    def calc_mean(data):
+        return float(np.mean(data))
+结束引
+
+# Use Python code from Light
+设 数据 = [12, 25, 30, 43, 52, 67]
+设 均值 = calc_mean(数据)
+
+打印("数据: " + 转字符串(数据))
+打印("均值: " + 转字符串(均值))

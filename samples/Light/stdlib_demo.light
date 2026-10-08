@@ -1,0 +1,26 @@
+# Light Standard Library sample
+# Demonstrates: built-in functions, string operations, data structures
+
+# String operations
+设 文本 = "光明编程语言"
+打印("原文: " + 文本)
+打印("长度: " + 转字符串(长度(文本)))
+
+# List operations
+设 列表 = [3, 1, 4, 1, 5, 9, 2, 6]
+列表排序(列表)
+打印("排序后: " + 转字符串(列表))
+
+# Dictionary
+设 字典 = {
+    "name": "光明",
+    "version": "0.4.0",
+    "language": "Chinese"
+}
+打印("名称: " + 字典["name"])
+打印("版本: " + 字典["version"])
+
+# Math module
+设 半径 = 5.0
+设 面积 = π * 半径 * 半径
+打印("圆面积: " + 转字符串(面积))

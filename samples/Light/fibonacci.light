@@ -1,0 +1,11 @@
+# Light Fibonacci sample
+# Demonstrates: functions, recursion, integer arithmetic
+
+段落 斐波那契(n)：
+    如果 n <= 1：
+        返回 n
+    返回 斐波那契(n - 1) + 斐波那契(n - 2)
+
+# Print first 10 Fibonacci numbers
+遍历 i 于 0 至 9：
+    打印("F(" + 转字符串(i) + ") = " + 转字符串(斐波那契(i)))

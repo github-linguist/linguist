@@ -1,0 +1,20 @@
+# Light Class sample
+# Demonstrates: object-oriented programming, classes, methods, constructors
+
+类 学生：
+    属性 姓名
+    属性 年龄
+
+    构造(姓名, 年龄)：
+        己.姓名 = 姓名
+        己.年龄 = 年龄
+
+    段落 介绍()：
+        打印("我叫 " + 己.姓名 + "，今年 " + 转字符串(己.年龄) + " 岁")
+
+# Create instances
+设 张三 = 新建 学生("张三", 20)
+设 李四 = 新建 学生("李四", 22)
+
+张三.介绍()
+李四.介绍()

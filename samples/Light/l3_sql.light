@@ -1,0 +1,18 @@
+# Light L3 Domain Embedding sample - SQL
+# Demonstrates: L3 native SQL embedding, parameterized queries
+
+引 SQL:
+    CREATE TABLE users (
+        id    INTEGER PRIMARY KEY,
+        name  TEXT,
+        age   INTEGER
+    );
+    INSERT INTO users VALUES (1, 'Alice', 25);
+    INSERT INTO users VALUES (2, 'Bob', 30);
+    SELECT name, age FROM users WHERE age > ?;
+结束引
+
+# Execute the L3 SQL block
+设 结果 = l3_sql_query([27])
+遍历 行 于 结果：
+    打印(行)
