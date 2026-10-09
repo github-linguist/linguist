@@ -1522,6 +1522,22 @@ Cpp-ObjDump:
   - c++-objdump
   ace_mode: assembly_x86
   language_id: 70
+Cpy:
+  type: programming
+  color: "#4B8BBE"
+  extensions:
+  - ".cpi"
+  - ".cpy2"
+  tm_scope: source.python
+  ace_mode: python
+  codemirror_mode: python
+  codemirror_mime_type: text/x-python
+  interpreters:
+  - cpy
+  aliases:
+  - cpy-lang
+  # language_id assigned by script/update-ids
+
 Creole:
   type: prose
   wrap: true
