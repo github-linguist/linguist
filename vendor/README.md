@@ -551,6 +551,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **RUNOFF:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Racket:** [soegaard/racket-highlight-for-github](https://github.com/soegaard/racket-highlight-for-github)
 - **Raku:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
+- **Ramos:** [zackmsa777-a11y/language-ramos](https://github.com/zackmsa777-a11y/language-ramos)
 - **Rascal:** [usethesource/rascal-syntax-highlighting](https://github.com/usethesource/rascal-syntax-highlighting)
 - **ReScript:** [rescript-lang/rescript-vscode](https://github.com/rescript-lang/rescript-vscode)
 - **Readline Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)

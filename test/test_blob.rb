@@ -9,6 +9,15 @@ class TestBlob < Minitest::Test
     blob
   end
 
+  def test_ramos_by_extension
+    blob = sample_blob_memory("Ramos/line-stats.ramos")
+    assert_equal "Ramos", blob.language.name
+    assert_equal "source.ramos", blob.language.tm_scope
+    assert blob.include_in_language_stats?
+    assert_equal "Ramos", Blob.new("program.ramos", "fn main() {}\n").language.name
+    assert_equal "Rust", Blob.new("program.rs", "fn main() {}\n").language.name
+  end
+
   def test_name
     assert_equal "foo.rb", sample_blob_memory("Ruby/foo.rb").name
   end

@@ -1,0 +1,33 @@
+// Read a byte stream as lines and report useful text statistics.
+// A final line without a newline is included; blank lines are counted.
+fn main() {
+    var lines = 0
+    var blank = 0
+    var payload = 0
+    var longest = 0
+    var done = false
+    while !done {
+        let line = read_line()
+        if io_error() != 0 {
+            stderr("line-stats: stdin read failed\n")
+            exit(1)
+        }
+        let size = buffer_len(line)
+        if size == 0 && stdin_eof() {
+            done = true
+        } else {
+            lines = lines + 1
+            payload = payload + size
+            if size == 0 { blank = blank + 1 }
+            if size > longest { longest = size }
+        }
+    }
+    print("Lines:")
+    print(lines)
+    print("Blank lines:")
+    print(blank)
+    print("Payload bytes:")
+    print(payload)
+    print("Longest line in bytes:")
+    print(longest)
+}
