@@ -99,6 +99,9 @@ class TestGenerated < Minitest::Test
     # Bun lockfile
     generated_sample_without_loading_data("JSON/filenames/bun.lock")
 
+    # APM (Agent Package Manager) lockfile
+    generated_sample_without_loading_data("Dummy/apm.lock.yaml")
+
     # Yarn Plug'n'Play file
     generated_sample_without_loading_data(".pnp.js")
     generated_sample_without_loading_data(".pnp.cjs")
