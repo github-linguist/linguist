@@ -1,0 +1,91 @@
+// functions.sa -- `make` declares, `give` returns.
+//
+// Pure-min dialect: seed-min, gen2 and native_aot all accept it.
+//
+// Declarations are top-level and a function has to be defined before it is
+// called. Recursion works. `give` inside a `when` block returns early, which
+// is how guards are written -- there is no `return` keyword. One statement per
+// line: `when x { give y }` collapsed onto one line is not parsed.
+//
+// A body here is only guards and a final `give`. A local binding
+// (`hold t = ...` inside `make`) is a gen2 full-language form: native_aot
+// rejects it, because a local would live in the shared data segment and be
+// clobbered by recursion.
+//
+// Typed parameters (`make s_len(s: str) -> num`) and generics
+// (`make twice<T>(a: T) -> T`) are gen2-only too; see selfhost/seed_tests/tg.sa
+// and docs/GENERICS.md.
+
+make add(a, b) {
+  give a + b
+}
+
+make square(x) {
+  give x * x
+}
+
+// guard clause, then the general case
+make absv(n) {
+  when n < 0 {
+    give 0 - n
+  }
+  give n
+}
+
+make max2(a, b) {
+  when a > b {
+    give a
+  }
+  give b
+}
+
+// a comparison is a value: 1 or 0
+make is_even(n) {
+  give n % 2 == 0
+}
+
+// Euclid's algorithm, recursive
+make gcd(a, b) {
+  when b == 0 {
+    give a
+  }
+  give gcd(b, a % b)
+}
+
+make fact(n) {
+  when n <= 1 {
+    give 1
+  }
+  give n * fact(n - 1)
+}
+
+// double recursion: the classic exponential Fibonacci
+make fib(n) {
+  when n < 2 {
+    give n
+  }
+  give fib(n - 1) + fib(n - 2)
+}
+
+show add(40, 2)
+show square(9)
+show absv(0 - 7)
+show absv(7)
+show max2(3, 11)
+show is_even(10)
+show is_even(7)
+show gcd(1071, 462)
+show fact(10)
+show fib(20)
+
+// a function result can be bound and reused
+hold g = gcd(48, 18)
+show g
+show add(g, square(g))
+
+// the same recursion, driven by a loop at the top level where `hold` is fine
+hold i = 0
+while i < 10 {
+  show fib(i)
+  hold i = i + 1
+}

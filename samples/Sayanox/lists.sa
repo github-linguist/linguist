@@ -1,0 +1,71 @@
+// lists.sa -- numeric list algorithms.
+//
+// Pure-min dialect: seed-min, gen2 and native_aot all accept it.
+//
+// Lists hold numbers. Indexing is zero-based, `len` gives the length and
+// `push` appends and gives the list back, so the grown list has to be bound
+// with `hold`. A bare `push(xs, v)` statement is also allowed.
+
+hold xs = [5, 3, 9, 1]
+
+show len(xs)
+show xs[0]
+
+// an index has to be a number literal or a bare name -- `xs[len(xs) - 1]` is
+// rejected as an "unsupported index expression", so bind the index first
+hold last = len(xs) - 1
+show xs[last]
+
+// sum, max and min in one pass over the list
+hold total = 0
+hold biggest = xs[0]
+hold smallest = xs[0]
+hold i = 0
+while i < len(xs) {
+  hold v = xs[i]
+  hold total = total + v
+  when v > biggest {
+    hold biggest = v
+  }
+  when v < smallest {
+    hold smallest = v
+  }
+  hold i = i + 1
+}
+show total
+show biggest
+show smallest
+
+// count how many of the original entries are above the mean.
+// Each loop body gets its own slot for a name, so this loop uses `w` rather
+// than reusing `v` from the loop above.
+hold mean = total / len(xs)
+show mean
+
+hold above = 0
+hold j = 0
+while j < len(xs) {
+  hold w = xs[j]
+  when w > mean {
+    hold above = above + 1
+  }
+  hold j = j + 1
+}
+show above
+
+// grow the list afterwards: `push` gives the list back, so it is rebound
+hold xs = push(xs, 7)
+hold xs = push(xs, 2)
+show len(xs)
+hold last2 = len(xs) - 1
+show xs[last2]
+
+// a list of lists is not a thing: lists are flat and numeric, so a matrix is
+// modelled as one list plus an index helper.
+make cell(row, col, width) {
+  give row * width + col
+}
+
+hold grid = [1, 2, 3, 4, 5, 6]
+hold k = cell(1, 2, 3)
+show grid[k]

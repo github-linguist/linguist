@@ -1,0 +1,72 @@
+// structs.sa -- records with numeric, string and nested values.
+//
+// Pure-min dialect: seed-min, gen2 and native_aot all accept it.
+//
+// A struct lists its field names, comma separated. A literal fills them either
+// by name (`Point { x: 3, y: 4 }`) or by position (`Point { 3, 4 }`), and
+// named fields must appear in declaration order. Field kinds are fixed by the
+// first value, so a struct cannot hold a string in one instance and a number in
+// another. A nested struct's type has to be declared before it is used.
+
+struct Point {
+  x,
+  y
+}
+
+struct Labelled {
+  name,
+  value
+}
+
+struct Scene {
+  origin,
+  label
+}
+
+hold p = Point { x: 3, y: 4 }
+show p.x
+show p.y
+show p.x + p.y
+
+// positional literal, same field order as the declaration
+hold q = Point { 10, 20 }
+show q.x
+show q.y
+
+// a string field and a numeric field in one record
+hold l = Labelled { name: "origin", value: 0 }
+show l.name
+show len(l.name)
+show l.value + 1
+
+// nesting: Scene holds a Point and a string
+hold s = Scene { origin: Point { x: 1, y: 2 }, label: "main" }
+show s.origin.x
+show s.origin.y
+show s.label
+
+// a struct value can be bound on its own and copied
+hold c = s.origin
+show c.x
+show c.y
+
+// Fields compose into expressions in a `show` or a `when`.
+//
+// Backend note: computing with a field works, but *binding* the result does not
+// run everywhere. native_aot accepts `show p.x * p.x` and
+// `when p.x > 2 { ... }`, yet rejects `hold d = p.x * p.x` with
+// `* is numeric-only` (and `+ is for numbers or strings` for `+`), and it
+// rejects passing a field into a user function with
+// `function 'f' takes numbers (arg 1 is not a number)`. seed-min and gen2
+// accept all of those. So keep struct arithmetic in `show`/`when` when a
+// program has to run on all three backends.
+show p.x * p.x + p.y * p.y
+
+when p.x < p.y {
+  show "y is larger"
+} otherwise {
+  show "x is larger"
+}
+
+show s.origin.x + s.origin.y
+show len(s.label)

@@ -1,0 +1,111 @@
+// control_flow.sa -- loops, chains and word operators.
+//
+// gen2 full-language dialect. seed-min reports `unknown statement` for
+// `for`/`break`/`continue` and native_aot names the form it does not have, so
+// neither mis-compiles this file -- they refuse it. The portable equivalent is
+// a `while` loop with a counter, as in lists.sa and functions.sa.
+//
+//   ./selfhost/gen2 samples/Sayanox/control_flow.sa /tmp/cf.c
+//   cc -O2 -o /tmp/cf /tmp/cf.c && /tmp/cf
+
+// for NAME in EXPR -- one iteration per element, over a list literal, a bound
+// list, a call, or any expression `hold` accepts
+for v in [4, 5, 6] {
+  show v
+}
+
+hold xs = [10, 20, 30]
+for v in xs {
+  show v * 2
+}
+
+// the counting form: 0..n runs n iterations
+for i in 0..4 {
+  show i
+}
+
+// over a string: one iteration per byte, and the name is a one-character
+// string, so it concatenates rather than adding
+for c in "say" {
+  show c
+}
+
+hold word = ""
+for c in "Sayanox" {
+  word = concat(word, c)
+}
+show word
+show len(word)
+
+// break and continue work in every loop, and loops nest
+for i in 0..10 {
+  when i % 2 == 0 {
+    continue
+  }
+  when i > 7 {
+    break
+  }
+  show i
+}
+
+for a in 0..3 {
+  for b in 0..3 {
+    when a == b {
+      continue
+    }
+    when a + b == 4 {
+      show a * 10 + b
+    }
+  }
+}
+
+// word operators: `and` binds tighter than `or`, as in C, and both
+// short-circuit
+hold n = 7
+when n > 5 and n < 10 {
+  show "in range"
+}
+when n == 1 or n == 7 {
+  show "one or seven"
+}
+
+// `not` takes the whole comparison up to the next and/or, so this reads
+// !(n == 8) and not (!n) == 8
+when not n == 8 {
+  show "not eight"
+}
+when not (n > 100) and n >= 0 {
+  show "small and non-negative"
+}
+
+// boolean literals are 1 and 0
+hold ready = true
+hold broken = false
+show ready
+show broken
+
+// condition chains: `elif`, and the aliases `else if`, `else when` and
+// `otherwise when`; `else` is an alias of `otherwise`
+hold score = 73
+when score >= 90 {
+  show "A"
+} elif score >= 80 {
+  show "B"
+} elif score >= 70 {
+  show "C"
+} otherwise {
+  show "F"
+}
+
+// a chain over a computed value, ending in `else`
+for i in 0..5 {
+  when i % 3 == 0 and i % 5 == 0 {
+    show "FizzBuzz"
+  } elif i % 3 == 0 {
+    show "Fizz"
+  } elif i % 5 == 0 {
+    show "Buzz"
+  } else {
+    show i
+  }
+}
