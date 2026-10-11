@@ -1,0 +1,197 @@
+% This is `chesspieces.mf' version 1.0 as of 8/90
+% METAfounded by Piet Tutelaers (internet: rcpt@urc.tue.nl)
+
+% this file generates the final chess font
+
+background:=light; color:=white;
+
+beginchar("0", d#, d#, 0); "0: light square";
+endchar;
+
+background:=dark;
+
+beginchar("Z", d#, d#, 0); "Z: dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+endchar;
+
+background:=light; color:=white;
+
+beginchar("K", d#, d#, 0); "K: white king on light square";
+   define_whole_pixels(d);
+   K(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("k", d#, d#, 0); "k: black king on light square";
+   define_whole_pixels(d);
+   K(d, 0, 0);
+endchar;
+
+background:=dark; color:=white;
+
+beginchar("J", d#, d#, 0); "J: white king on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   K(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("j", d#, d#, 0); "j: black king on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   K(d, 0, 0);
+endchar;
+
+background:=light; color:=white;
+
+beginchar("Q", d#, d#, 0); "Q: white queen on light square";
+   define_whole_pixels(d);
+   Q(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("q", d#, d#, 0); "q: black queen on light square";
+   define_whole_pixels(d);
+   Q(d, 0, 0);
+endchar;
+
+background:=dark; color:=white;
+
+beginchar("L", d#, d#, 0); "L: white queen on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   Q(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("l", d#, d#, 0); "l: black queen on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   Q(d, 0, 0);
+endchar;
+
+background:=light; color:=white;
+
+beginchar("R", d#, d#, 0); "R: white rook on light square";
+   define_whole_pixels(d);
+   R(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("r", d#, d#, 0); "r: black rook on light square";
+   define_whole_pixels(d);
+   R(d, 0, 0);
+endchar;
+
+background:=dark; color:=white;
+
+beginchar("S", d#, d#, 0); "S: white rook on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   R(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("s", d#, d#, 0); "s: black rook on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   R(d, 0, 0);
+endchar;
+
+background:=light; color:=white;
+
+beginchar("B", d#, d#, 0); "B: white bishop on light square";
+   define_whole_pixels(d);
+   B(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("b", d#, d#, 0); "b: black bishop on light square";
+   define_whole_pixels(d);
+   B(d, 0, 0);
+endchar;
+
+background:=dark; color:=white;
+
+beginchar("A", d#, d#, 0); "A: white bishop on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   B(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("a", d#, d#, 0); "a: black bishop on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   B(d, 0, 0);
+endchar;
+
+background:=light; color:=white;
+
+beginchar("N", d#, d#, 0); "N: white knight on light square";
+   define_whole_pixels(d);
+   N(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("n", d#, d#, 0); "n: black knight on light square";
+   define_whole_pixels(d);
+   N(d, 0, 0);
+endchar;
+
+background:=dark; color:=white;
+
+beginchar("M", d#, d#, 0); "M: white knight on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   N(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("m", d#, d#, 0); "m: black knight on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   N(d, 0, 0);
+endchar;
+
+background:=light; color:=white;
+
+beginchar("P", d#, d#, 0); "P: white pawn on light square";
+   define_whole_pixels(d);
+   p(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("p", d#, d#, 0); "p: black pawn on light square";
+   define_whole_pixels(d);
+   p(d, 0, 0);
+endchar;
+
+background:=dark; color:=white;
+
+beginchar("O", d#, d#, 0); "O: white pawn on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   p(d, 0, 0);
+endchar;
+
+color:=black;
+
+beginchar("o", d#, d#, 0); "o: black pawn on dark square";
+   define_whole_pixels(d);
+   dark_square(d);
+   p(d, 0, 0);
+endchar;
+
