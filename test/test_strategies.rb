@@ -98,6 +98,9 @@ class TestStrategies < Minitest::Test
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs.pl")
     assert_modeline Language["JavaScript"], fixture_blob("Data/Modelines/iamjs2.pl")
     assert_modeline Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc")
+    assert_modeline Language["Vim Help File"], sample_blob("Vim Help File/modeline.txt")
+    assert_modeline nil, sample_blob("Vim script/textobj-rubyblock.vba")
+    assert_modeline nil, sample_blob("Vim script/todo.vmb")
     assert_modeline nil, sample_blob("C++/runtime-compiler.cc")
   end
 
@@ -124,6 +127,9 @@ class TestStrategies < Minitest::Test
     assert_equal Language["JavaScript"], fixture_blob("Data/Modelines/iamjs.pl").language
     assert_equal Language["JavaScript"], fixture_blob("Data/Modelines/iamjs2.pl").language
     assert_equal Language["PHP"], fixture_blob("Data/Modelines/iamphp.inc").language
+    assert_equal Language["Vim Help File"], sample_blob("Vim Help File/modeline.txt").language
+    assert_equal Language["Vim script"], sample_blob("Vim script/textobj-rubyblock.vba").language
+    assert_equal Language["Vim script"], sample_blob("Vim script/todo.vmb").language
   end
 
   def test_shebangs

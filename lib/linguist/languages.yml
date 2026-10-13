@@ -423,6 +423,16 @@ Arc:
   tm_scope: none
   ace_mode: text
   language_id: 20
+ArkTS:
+  type: programming
+  color: "#0080ff"
+  extensions:
+  - ".ets"
+  tm_scope: source.ets
+  ace_mode: typescript
+  codemirror_mode: javascript
+  codemirror_mime_type: application/typescript
+  language_id: 56341321
 AsciiDoc:
   type: prose
   color: "#73a0c5"
@@ -655,6 +665,15 @@ Befunge:
   tm_scope: source.befunge
   ace_mode: text
   language_id: 30
+Bend:
+  type: programming
+  aliases:
+  - bend2
+  extensions:
+  - ".bend"
+  tm_scope: source.bend
+  ace_mode: text
+  language_id: 571794812
 Berry:
   type: programming
   extensions:
@@ -2047,7 +2066,7 @@ Eiffel:
   language_id: 99
 Elixir:
   type: programming
-  color: "#6e4a7e"
+  color: "#8847B9"
   extensions:
   - ".ex"
   - ".exs"
@@ -4202,6 +4221,16 @@ LLVM:
   ace_mode: text
   color: "#185619"
   language_id: 191
+LLVM TableGen:
+  type: programming
+  extensions:
+  - ".td"
+  tm_scope: source.tablegen
+  ace_mode: text
+  color: "#6E8B3D"
+  aliases: 
+  - tablegen
+  language_id: 184265095
 LOLCODE:
   type: programming
   extensions:
@@ -5017,6 +5046,9 @@ MoonBit:
   color: "#b92381"
   extensions:
   - ".mbt"
+  filenames:
+  - moon.mod
+  - moon.pkg
   tm_scope: source.moonbit
   ace_mode: text
   language_id: 181453007
