@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"regexp"
 	"strings"
 
 	grammar "github.com/github/linguist/tools/grammars/proto"
@@ -11,6 +12,8 @@ import (
 	"github.com/mitchellh/mapstructure"
 	yaml "gopkg.in/yaml.v2"
 )
+
+var invalidScopeName = regexp.MustCompile(`(?i)[/\\]|^(?:AUX|CON|NUL|PRN|(?:COM|LPT)[1-9¹²³])(?:$|\.)`)
 
 func looseDecoder(f reflect.Kind, t reflect.Kind, data interface{}) (interface{}, error) {
 	dataVal := reflect.ValueOf(data)
@@ -96,7 +99,7 @@ func ConvertProto(path, ext string, data []byte) (*grammar.Rule, []string, error
 		return nil, nil, &UndeclaredScopeError{path}
 	}
 
-	if strings.ContainsAny(out.ScopeName, `/\`) {
+	if invalidScopeName.MatchString(out.ScopeName) {
 		return nil, nil, &InvalidScopeError{path, out.ScopeName}
 	}
 

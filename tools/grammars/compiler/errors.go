@@ -111,7 +111,7 @@ type InvalidScopeError struct {
 
 func (err *InvalidScopeError) Error() string {
 	return fmt.Sprintf(
-		"Invalid scope in grammar: `%s` has scope name %q containing a path separator",
+		"Invalid scope in grammar: `%s` has scope name %q with a path separator or reserved Windows filename",
 		err.Path, err.Scope,
 	)
 }
