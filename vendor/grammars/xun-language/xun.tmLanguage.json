@@ -1,0 +1,103 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "XUN",
+  "scopeName": "source.xun",
+  "fileTypes": ["xun"],
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#multiline-block" },
+    { "include": "#key-value" },
+    { "include": "#list-item" },
+    { "include": "#tagged-value" },
+    { "include": "#constants" }
+  ],
+  "repository": {
+    "comment": {
+      "name": "comment.line.number-sign.xun",
+      "match": "^\\s*#.*$"
+    },
+    "multiline-block": {
+      "begin": "(:\\s*)(\\|([a-zA-Z0-9_-]*))\\s*$",
+      "beginCaptures": {
+        "1": { "name": "punctuation.separator.key-value.xun" },
+        "2": { "name": "punctuation.definition.string.begin.xun" },
+        "3": { "name": "entity.name.tag.delimiter.xun" }
+      },
+      "end": "^\\s*(\\|\\3|\\3)\\s*$",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.end.xun" }
+      },
+      "name": "string.unquoted.multiline.xun",
+      "patterns": []
+    },
+    "key-value": {
+      "match": "^(\\s*)([^\\s#:\\[\\]{}!\\-]+)(\\s*)(:)(\\s+|$)",
+      "captures": {
+        "2": { "name": "entity.name.tag.xun" },
+        "4": { "name": "punctuation.separator.key-value.xun" }
+      }
+    },
+    "list-item": {
+      "match": "^(\\s*)(-)(\\s+)",
+      "captures": {
+        "2": { "name": "punctuation.definition.list.xun" }
+      }
+    },
+    "tagged-value": {
+      "patterns": [
+        {
+          "match": "!(s|n|i|f|x|xb|o|b|d|t|dt|tz|du|sz|unix|ver|uuid|ip|b64|c|[a-zA-Z0-9_-]+)(\\[)",
+          "captures": {
+            "0": { "name": "keyword.operator.tag.xun" },
+            "1": { "name": "storage.type.tag.name.xun" },
+            "2": { "name": "punctuation.definition.array.begin.xun" }
+          }
+        },
+        {
+          "match": "!(s|n|i|f|x|xb|o|b|d|t|dt|tz|du|sz|unix|ver|uuid|ip|b64|c|[a-zA-Z0-9_-]+)\\b",
+          "name": "keyword.operator.tag.xun"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "match": "\\b(true|false)\\b",
+          "name": "constant.language.boolean.xun"
+        },
+        {
+          "match": "\\b0x[0-9a-fA-F_]+\\b|\\b[0-9a-fA-F]{4,}\\b",
+          "name": "constant.numeric.hex.xun"
+        },
+        {
+          "match": "\\b[-+]?\\d+(_\\d+)*\\.\\d+([eE][-+]?\\d+)?\\b",
+          "name": "constant.numeric.float.xun"
+        },
+        {
+          "match": "\\b[-+]?\\d+(_\\d+)*\\b",
+          "name": "constant.numeric.integer.xun"
+        },
+        {
+          "match": "\\b\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2}))?\\b",
+          "name": "constant.other.date-time.xun"
+        },
+        {
+          "match": "\\b(\\d+(\\.\\d+)?)(ms|s|m|h|d|B|KB|MB|GB|TB|KiB|MiB|GiB|TiB)\\b",
+          "name": "constant.other.unit.xun"
+        },
+        {
+          "match": "\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\b|\\b([0-9a-fA-F]{1,4}:){1,7}:?([0-9a-fA-F]{1,4})?\\b",
+          "name": "constant.other.network.ip.xun"
+        },
+        {
+          "match": "\\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\b",
+          "name": "constant.other.uuid.xun"
+        },
+        {
+          "match": "[\\[\\]{}]",
+          "name": "punctuation.definition.bracket.xun"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,44 @@
+# CI/CD pipeline configuration
+
+pipeline:
+  name: release-build
+  trigger: push
+  branch: main
+
+steps:
+  - name: checkout
+    uses: actions/checkout
+    depth: !n 1
+
+  - name: build
+    run: make all
+    env:
+      GO_VERSION: !ver 1.22
+      CGO_ENABLED: !n 0
+      GOOS: linux
+
+  - name: test
+    run: make test
+    timeout: !du 5m
+    parallel: !b true
+
+  - name: publish
+    run: make publish
+    if: !b true
+    env:
+      REGISTRY: ghcr.io
+      IMAGE: myorg/myapp
+
+# Artifact retention
+artifacts:
+  paths:
+    - dist/
+    - coverage/
+  retention: !du 7d
+  max_size: !sz 500MiB
+
+# Notification
+notify:
+  slack: https://hooks.slack.com/services/xxx
+  on_failure: !b true
+  on_success: !b false

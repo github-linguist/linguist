@@ -1,0 +1,42 @@
+# XUN server configuration example
+
+server:
+  host: localhost
+  port: !n 8080
+  bind: !ip ::1
+  tls:
+    cert: /etc/ssl/cert.pem
+    key: /etc/ssl/key.pem
+    mode: !o 755
+
+# Feature flags
+features:
+  - auth
+  - cache
+  - rate-limit
+
+# Network settings
+ports: !n[80, 443, 8080]
+endpoint: https://api.example.com/v2/orders
+timeout: !du 30s
+limit: !sz 10MiB
+
+# Locale
+tz: !tz Asia/Shanghai
+lang: zh-CN
+
+# Deployment
+version: !ver 3.10
+color: !xb FF00AA
+when: !dt 2026-08-14T16:54:00+08:00
+
+roles: !s[]
+  - admin
+  - ops
+  - viewer
+
+# Welcome banner (multiline block)
+banner: |
+  Welcome to the XUN config demo.
+  Unquoted by default, types explicitly tagged.
+|

@@ -1,0 +1,29 @@
+# Example from the language README
+server:
+  host: localhost
+  port: !n 8080
+  bind: !ip ::1
+  tls:
+    cert: /etc/ssl/cert.pem
+    mode: !o 755
+
+features:
+  - auth
+  - cache
+
+ports: !n[80, 443, 8080]
+endpoint: https://api.example.com/v2/orders
+tz: !tz Asia/Shanghai
+py: !ver 3.10
+limit: !sz 10MiB
+when: !dt 2026-08-14T16:54:00+08:00
+color: !xb FF00AA
+
+roles: !s[]
+  - admin
+  - ops
+
+banner: |
+  Welcome
+  to XUN
+|
