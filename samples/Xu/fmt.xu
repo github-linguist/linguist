@@ -1,0 +1,690 @@
+@fmt
+
+#errors
+#strconv
+#strings
+#io
+
+
+const verb_s = 115
+const verb_v = 118
+const verb_q = 113
+const verb_x = 120
+const verb_upper_x = 88
+const verb_b = 98
+const verb_o = 111
+const verb_d = 100
+const verb_c = 99
+const verb_t = 116
+const verb_f = 102
+const verb_e = 101
+const verb_upper_e = 69
+const verb_g = 103
+const verb_lbrack = 91
+pub struct Arg {
+    pub kind int
+    pub iv int
+    pub sv string
+    pub bv bool
+    pub fv f64
+}
+
+pub fn i(x int) Arg { << Arg{kind: 0, iv: x, sv: "", bv: false, fv: 0.0} }
+pub fn s(x string) Arg { << Arg{kind: 1, iv: 0, sv: x, bv: false, fv: 0.0} }
+pub fn b(x bool) Arg { << Arg{kind: 2, iv: 0, sv: "", bv: x, fv: 0.0} }
+pub fn f(x f64) Arg { << Arg{kind: 3, iv: 0, sv: "", bv: false, fv: x} }
+pub fn c(x int) Arg { << Arg{kind: 4, iv: x, sv: "", bv: false, fv: 0.0} }
+
+// fmt_value reads an Arg through its owning-string field WITHOUT moving it
+// (the cyclic borrow checker would reject moving an owning array element by
+// index). Take the element by reference, then read fields; for the string
+// field use the auto-borrow the language provides.
+fn fmt_value(args &[]Arg, i int) string {
+    if args[i].kind == 0 {
+        << strconv.format_int(args[i].iv, 10) or (err) { << err.msg() }
+    }
+    if args[i].kind == 1 {
+        << args[i].sv
+    }
+    if args[i].kind == 2 {
+        << strconv.format_bool(args[i].bv)
+    }
+    if args[i].kind == 3 {
+        << strconv.format_float(args[i].fv, 103, -1) or (err) { << err.msg() }
+    }
+    << string_from_byte(args[i].iv)
+}
+
+fn type_value(tag int, iv int, sv string, bv bool) string {
+    if tag == 0 {
+        s := strconv.format_int(iv, 10) or (err) { << err.msg() }
+        mut out := io.buffer()
+        out.write_str("int=")
+        out.write(&s)
+        << out.bytes()
+    }
+    if tag == 1 {
+        mut out := io.buffer()
+        out.write_str("string=")
+        out.write(&sv)
+        << out.bytes()
+    }
+    if tag == 2 {
+        fs := strconv.format_bool(bv)
+        mut out := io.buffer()
+        out.write_str("bool=")
+        out.write(&fs)
+        << out.bytes()
+    }
+    << "float64=?"
+}
+
+fn type_float(fv f64) string {
+    // Keep f64 as the first parameter: Gen1 currently mis-passes f64 when it
+    // follows a multi-slot (string) argument in the same parameter list.
+    s := strconv.format_float(fv, 103, -1) or (err) { << err.msg() }
+    mut out := io.buffer()
+    out.write_str("float64=")
+    out.write(&s)
+    << out.bytes()
+}
+
+fn fmt_unknown_arg(verb int, name string, value string) string {
+    mut out := io.buffer()
+    out.write_str("%!")
+    out.write_byte(verb)
+    out.write_str("(")
+    out.write_str(name)
+    out.write_str("=")
+    out.write_str(value)
+    out.write_str(")")
+    << out.bytes()
+}
+
+fn fmt_unknown_arg_no_value(verb int, name string) string {
+    mut out := io.buffer()
+    out.write_str("%!")
+    out.write_byte(verb)
+    out.write_str("(")
+    out.write_str(name)
+    out.write_str(")")
+    << out.bytes()
+}
+
+fn join_args(args []Arg, sep string, trailing bool) string {
+    mut out := io.buffer()
+    mut first := true
+    for i in 0:args.len {
+        if !first {
+            out.write(&sep)
+        }
+        first = false
+        out.write_str(fmt_value(&args, i))
+    }
+    if trailing {
+        out.write_byte(10)
+    }
+    << out.bytes()
+}
+
+pub fn sprintf(f string, args <-> Arg) string {
+    << sprintf_args(f, args)
+}
+
+struct Spec {
+    minus bool
+    plus bool
+    space bool
+    sharp bool
+    zero bool
+    wid int
+    prec int
+    prec_on bool
+    verb int
+}
+
+fn fill(ch int, n int) string {
+    if n <= 0 {
+        << ""
+    }
+    mut out := ""
+    mut i := 0
+    while i < n {
+        out.push_byte(ch & 255)
+        i += 1
+    }
+    << out
+}
+
+fn pad_field(s string, wid int, minus bool) string {
+    n := wid - s.len
+    if n <= 0 {
+        << s
+    }
+    pad := fill(32, n)
+    if minus {
+        mut out := io.buffer()
+        out.write(&s)
+        out.write(&pad)
+        << out.bytes()
+    }
+    mut out := io.buffer()
+    out.write(&pad)
+    out.write(&s)
+    << out.bytes()
+}
+
+fn trunc_bytes(s &string, prec int, prec_on bool) string {
+    if !prec_on {
+        << s + ""
+    }
+    if prec <= 0 {
+        << ""
+    }
+    if prec >= s.len {
+        << s + ""
+    }
+    << s[0:prec]
+}
+
+fn fmt_str_spec(s string, sp Spec) string {
+    verb := sp.verb
+    src := trunc_bytes(&s, sp.prec, sp.prec_on)
+    if verb == verb_s || verb == verb_v {
+        << pad_field(src, sp.wid, sp.minus)
+    }
+    if verb == verb_q {
+        if sp.sharp {
+            if can_backquote(&src) {
+                mut quoted := io.buffer()
+                quoted.write_str("`")
+                quoted.write(&src)
+                quoted.write_str("`")
+                << pad_field(quoted.bytes(), sp.wid, sp.minus)
+            }
+        }
+        << pad_field(strconv.quote(&src), sp.wid, sp.minus)
+    }
+    if verb == verb_x || verb == verb_upper_x {
+        << fmt_str_hex(src, sp)
+    }
+    >> errors.new(fmt_unknown_arg(verb, "string", s))
+}
+
+fn int_digits(n int, base int) string {
+    s := strconv.format_int(n, base) or >>
+    if n < 0 {
+        if s.len > 0 && s[0] == 45 {
+            << s[1:s.len]
+        }
+    }
+    << s
+}
+
+fn pad_digits(body string, prec int) string {
+    n := prec - body.len
+    if n <= 0 {
+        << body
+    }
+    mut out := io.buffer()
+    out.write_str(fill(48, n))
+    out.write(&body)
+    << out.bytes()
+}
+
+fn fmt_int_spec(sp Spec, v int) string {
+    verb := sp.verb
+    mut base := 10
+    mut upper := false
+    if verb == verb_b {
+        base = 2
+    } else if verb == verb_o {
+        base = 8
+    } else if verb == verb_x {
+        base = 16
+    } else if verb == verb_upper_x {
+        base = 16
+        upper = true
+    } else if verb == verb_d || verb == verb_v {
+        base = 10
+    } else if verb == verb_c {
+        << pad_field(string_from_byte(v), sp.wid, sp.minus)
+    } else if verb == verb_q {
+        << pad_field(strconv.quote_rune(v), sp.wid, sp.minus)
+    } else {
+        s := strconv.format_int(v, 10) or >>
+        >> errors.new(fmt_unknown_arg(verb, "int", s))
+    }
+    if sp.prec_on {
+        if sp.prec == 0 {
+            if v == 0 {
+                << pad_field("", sp.wid, sp.minus)
+            }
+        }
+    }
+    mut body := int_digits(v, base)
+    if upper {
+        body = nhex2_upper(body)
+    }
+    mut digit_prec := 0
+    if sp.prec_on {
+        digit_prec = sp.prec
+    } else if sp.zero {
+        if !sp.minus {
+            if sp.wid > 0 {
+                digit_prec = sp.wid
+                if v < 0 || sp.plus || sp.space {
+                    digit_prec = digit_prec - 1
+                }
+            }
+        }
+    }
+    body = pad_digits(body, digit_prec)
+    mut prefix := ""
+    if sp.sharp {
+        if base == 2 {
+            prefix = "0b"
+        } else if base == 8 {
+            if body.len == 0 || body[0] != 48 {
+                prefix = "0"
+            }
+        } else if base == 16 {
+            if verb == verb_upper_x {
+                prefix = "0X"
+            } else {
+                prefix = "0x"
+            }
+        }
+    }
+    mut sign := ""
+    if v < 0 {
+        sign = "-"
+    } else if sp.plus {
+        sign = "+"
+    } else if sp.space {
+        sign = " "
+    }
+    mut out := io.buffer()
+    out.write(&sign)
+    out.write(&prefix)
+    out.write(&body)
+    << pad_field(out.bytes(), sp.wid, sp.minus)
+}
+
+fn fmt_str_hex(s string, sp Spec) string {
+    n := s.len
+    mut hexd := "0123456789abcdef"
+    if sp.verb == verb_upper_x {
+        hexd = "0123456789ABCDEF"
+    }
+    if n <= 0 {
+        << pad_field("", sp.wid, sp.minus)
+    }
+    mut out := io.buffer()
+    mut i := 0
+    while i < n {
+        if sp.space {
+            if i > 0 {
+                out.write_str(" ")
+                if sp.sharp {
+                    if sp.verb == verb_upper_x { out.write_str("0X") }
+                    else { out.write_str("0x") }
+                }
+            }
+        }
+        c := s[i] & 255
+        out.write_byte(hexd[c >> 4])
+        out.write_byte(hexd[c & 15])
+        i = i + 1
+    }
+    mut out_s := out.bytes()
+    if sp.sharp {
+        if !sp.space {
+            mut pref := io.buffer()
+            if sp.verb == verb_upper_x { pref.write_str("0X") } else { pref.write_str("0x") }
+            pref.write(&out_s)
+            out_s = pref.bytes()
+        }
+    }
+    << pad_field(out_s, sp.wid, sp.minus)
+}
+
+fn can_backquote(s &string) bool {
+    mut i := 0
+    while i < s.len {
+        c := s[i] & 255
+        if c == 96 {
+            << false
+        }
+        if c < 32 && c != 9 {
+            << false
+        }
+        i = i + 1
+    }
+    << true
+}
+
+fn fmt_bool_spec(sp Spec, bv bool) string {
+    verb := sp.verb
+    if verb == verb_t || verb == verb_v {
+        << pad_field(strconv.format_bool(bv), sp.wid, sp.minus)
+    }
+    s := strconv.format_bool(bv)
+    >> errors.new(fmt_unknown_arg(verb, "bool", s))
+}
+
+fn upper_e(s &string) string {
+    mut out := io.buffer()
+    mut i := 0
+    while i < s.len {
+        if s[i] == 101 { out.write_str("E") } else { out.write_byte(s[i]) }
+        i = i + 1
+    }
+    << out.bytes()
+}
+
+fn is_nan_or_inf(s &string) bool {
+    mut i := 0
+    if s.len > 0 {
+        if s[0] == 43 || s[0] == 45 || s[0] == 32 {
+            i = 1
+        }
+    }
+    if i >= s.len {
+        << false
+    }
+    c := s[i]
+    << c == 78 || c == 73
+}
+
+fn pad_zero_sign(s &string, wid int) string {
+    if s.len >= wid {
+        << s + ""
+    }
+    mut i := 0
+    if s.len > 0 {
+        if s[0] == 43 || s[0] == 45 || s[0] == 32 {
+            i = 1
+        }
+    }
+    z := fill(48, wid - s.len)
+    mut out := io.buffer()
+    out.write_str(s[0:i])
+    out.write(&z)
+    out.write_str(s[i:s.len])
+    << out.bytes()
+}
+
+fn fmt_float_spec(sp Spec, fv f64) string {
+    verb := sp.verb
+    mut tag := 103
+    mut as_e := false
+    if verb == verb_f {
+        tag = 102
+    } else if verb == verb_e {
+        tag = 101
+    } else if verb == verb_upper_e {
+        tag = 101
+        as_e = true
+    } else if verb == verb_g || verb == verb_v {
+        tag = 103
+    } else {
+        fs := strconv.format_float(fv, 103, -1) or >>
+        >> errors.new(fmt_unknown_arg(verb, "float64", fs))
+    }
+    mut p := 0 - 1
+    if sp.prec_on {
+        p = sp.prec
+    }
+    mut s := strconv.format_float(fv, tag, p) or >>
+    if as_e {
+        s = upper_e(&s)
+    }
+    if s.len == 0 || (s[0] != 45 && s[0] != 43) {
+        if sp.plus {
+            mut out := io.buffer()
+            out.write_str("+")
+            out.write(&s)
+            s = out.bytes()
+        } else if sp.space {
+            mut out := io.buffer()
+            out.write_str(" ")
+            out.write(&s)
+            s = out.bytes()
+        }
+    }
+    if is_nan_or_inf(&s) {
+        << pad_field(s, sp.wid, sp.minus)
+    }
+    if sp.zero {
+        if !sp.minus {
+            s = pad_zero_sign(&s, sp.wid)
+        }
+    }
+    << pad_field(s, sp.wid, sp.minus)
+}
+
+fn fmt_char_spec(sp Spec, v int) string {
+    verb := sp.verb
+    if verb == verb_c || verb == verb_v {
+        << pad_field(string_from_byte(v), sp.wid, sp.minus)
+    }
+    if verb == verb_q {
+        << pad_field(strconv.quote_rune(v), sp.wid, sp.minus)
+    }
+    s := strconv.format_int(v, 10) or >>
+    >> errors.new(fmt_unknown_arg(verb, "c", s))
+}
+
+pub fn sprintf_args(f string, args []Arg) string {
+    // Gen1: reading Arg fields from an owned []Arg inside this large
+    // function sees kind=0 (fmt.s/fmt.f then throw %!s(int=0)). The
+    // same fields through &[]Arg are correct — same pattern as fmt_value.
+    << sprintf_args_ref(f, &args)
+}
+
+fn sprintf_args_ref(f string, args &[]Arg) string {
+    mut out := io.buffer()
+    mut ai := 0
+    mut i := 0
+    while i < f.len {
+        c := f[i]
+        if c != 37 {
+            out.write_byte(c)
+            i = i + 1
+            ->
+        }
+        i = i + 1
+        if i >= f.len {
+            >> errors.new("%!(NOVERB)")
+        }
+        if f[i] == 37 {
+            out.write_str("%")
+            i = i + 1
+            ->
+        }
+        mut minus := false
+        mut plus := false
+        mut space := false
+        mut sharp := false
+        mut zero := false
+        while i < f.len {
+            ch := f[i]
+            if ch == 45 {
+                minus = true
+                i = i + 1
+                ->
+            }
+            if ch == 43 {
+                plus = true
+                i = i + 1
+                ->
+            }
+            if ch == 32 {
+                space = true
+                i = i + 1
+                ->
+            }
+            if ch == 35 {
+                sharp = true
+                i = i + 1
+                ->
+            }
+            if ch == 48 {
+                zero = true
+                i = i + 1
+                ->
+            }
+            <-
+        }
+        mut wid := 0
+        if i < f.len && f[i] == 42 {
+            if ai >= args.len {
+                >> errors.new("%!(BADWIDTH)")
+            }
+            if args[ai].kind != 0 {
+                >> errors.new("%!(BADWIDTH)")
+            }
+            wid = args[ai].iv
+            ai = ai + 1
+            i = i + 1
+            if wid < 0 {
+                minus = true
+                wid = 0 - wid
+            }
+        } else {
+            while i < f.len && f[i] >= 48 && f[i] <= 57 {
+                wid = wid * 10 + (f[i] - 48)
+                i = i + 1
+            }
+        }
+        mut prec := 0
+        mut prec_on := false
+        if i < f.len && f[i] == 46 {
+            prec_on = true
+            i = i + 1
+            if i < f.len && f[i] == 42 {
+                if ai >= args.len {
+                    >> errors.new("%!(BADPREC)")
+                }
+                if args[ai].kind != 0 {
+                    >> errors.new("%!(BADPREC)")
+                }
+                prec = args[ai].iv
+                ai = ai + 1
+                i = i + 1
+                if prec < 0 {
+                    prec_on = false
+                    prec = 0
+                }
+            } else {
+                prec = 0
+                while i < f.len && f[i] >= 48 && f[i] <= 57 {
+                    prec = prec * 10 + (f[i] - 48)
+                    i = i + 1
+                }
+            }
+        }
+        if i >= f.len {
+            >> errors.new("%!(NOVERB)")
+        }
+        verb := f[i]
+        i = i + 1
+        if verb == verb_lbrack {
+            >> errors.new("fmt: unsupported format directive")
+        }
+        if ai >= args.len {
+            >> errors.new(fmt_unknown_arg_no_value(verb, "MISSING"))
+        }
+        sp := Spec{
+            minus: minus,
+            plus: plus,
+            space: space,
+            sharp: sharp,
+            zero: zero,
+            wid: wid,
+            prec: prec,
+            prec_on: prec_on,
+            verb: verb
+        }
+        k := args[ai].kind
+        if k == 0 {
+            out.write_str(fmt_int_spec(sp, args[ai].iv))
+        } else if k == 1 {
+            mut sv := args[ai].sv
+            out.write_str(fmt_str_spec(sv, sp))
+        } else if k == 2 {
+            out.write_str(fmt_bool_spec(sp, args[ai].bv))
+        } else if k == 3 {
+            out.write_str(fmt_float_spec(sp, args[ai].fv))
+        } else {
+            out.write_str(fmt_char_spec(sp, args[ai].iv))
+        }
+        ai = ai + 1
+    }
+    if ai < args.len {
+        mut extra := io.buffer()
+        extra.write_str("%!(EXTRA ")
+        mut first := true
+        while ai < args.len {
+            if !first { extra.write_str(", ") }
+            if args[ai].kind == 0 { extra.write_str(type_value(0, args[ai].iv, "", false)) }
+            else if args[ai].kind == 1 { extra.write_str(type_value(1, 0, args[ai].sv, false)) }
+            else if args[ai].kind == 2 { extra.write_str(type_value(2, 0, "", args[ai].bv)) }
+            else if args[ai].kind == 3 { extra.write_str(type_float(args[ai].fv)) }
+            else { extra.write_str(type_value(0, args[ai].iv, "", false)) }
+            first = false
+            ai = ai + 1
+        }
+        extra.write_str(")")
+        out.write_str(extra.bytes())
+    }
+    << out.bytes()
+}
+
+fn nhex2_upper(s string) string {
+    mut out := io.buffer()
+    for i in 0:s.len {
+        if s[i] >= 97 && s[i] <= 122 {
+            out.write_byte(s[i] - 32)
+        } else {
+            out.write_byte(s[i])
+        }
+    }
+    << out.bytes()
+}
+
+pub fn sprint(args <-> Arg) string {
+    << join_args(args, " ", false)
+}
+
+pub fn sprintln(args <-> Arg) string {
+    << join_args(args, " ", true)
+}
+
+pub fn sprint_args(args []Arg) string {
+    << join_args(args, " ", false)
+}
+
+pub fn print(args <-> Arg) {
+    println(sprint_args(args))
+}
+
+pub fn println(args <-> Arg) {
+    println(sprint_args(args))
+}
+
+pub fn printf(f string, args <-> Arg) {
+    s := sprintf_args(f, args) or (err) {
+        println(err.msg())
+        <<
+    }
+    println(s)
+}
+
+pub fn errorf(f string, args <-> Arg) errors.StrErr {
+    s := sprintf_args(f, args) or (err) {
+        << errors.new(err.msg())
+    }
+    << errors.new(s)
+}

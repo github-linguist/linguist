@@ -1,0 +1,603 @@
+@maps
+
+#errors
+
+// Open-addressing string-key maps. Language `map[K]V` is L-C; this package
+// is the user-facing table until then. used: 0 empty, 1 live, 2 tombstone.
+
+pub struct StrInt {
+    pub keys []string
+    pub vals []int
+    pub used []int
+    pub n int
+    pub cap int
+}
+
+pub struct StrStr {
+    pub keys []string
+    pub vals []string
+    pub used []int
+    pub n int
+    pub cap int
+}
+
+fn hash_str(s &string) int {
+    mut h := 5381
+    for i in 0:s.len {
+        h = ((h << 5) + h) + (s[i] & 255)
+        h = h & 2147483647
+    }
+    << h
+}
+
+fn map_str_eq(a &string, b &string) bool {
+    if a.len != b.len {
+        << false
+    }
+    for i in 0:a.len {
+        if a[i] != b[i] {
+            << false
+        }
+    }
+    << true
+}
+
+fn new_int_cap(ncap int) StrInt {
+    mut c := ncap
+    if c < 16 {
+        c = 16
+    }
+    mut keys := []string{}
+    mut vals := []int{}
+    mut used := []int{}
+    for i in 0:c {
+        keys.push("")
+        vals.push(0)
+        used.push(0)
+    }
+    << StrInt{keys: keys, vals: vals, used: used, n: 0, cap: c}
+}
+
+fn new_str_cap(ncap int) StrStr {
+    mut c := ncap
+    if c < 16 {
+        c = 16
+    }
+    mut keys := []string{}
+    mut vals := []string{}
+    mut used := []int{}
+    for i in 0:c {
+        keys.push("")
+        vals.push("")
+        used.push(0)
+    }
+    << StrStr{keys: keys, vals: vals, used: used, n: 0, cap: c}
+}
+
+pub fn new_str_int() StrInt {
+    << new_int_cap(16)
+}
+
+pub fn new_str_str() StrStr {
+    << new_str_cap(16)
+}
+
+fn (m &StrInt) find_live(k &string) int {
+    if m.cap <= 0 {
+        << -1
+    }
+    h := hash_str(k)
+    mask := m.cap - 1
+    mut i := h & mask
+    start := i
+    while true {
+        u := m.used[i]
+        if u == 0 {
+            << -1
+        }
+        if u == 1 {
+            ki := m.keys[i]
+            if map_str_eq(&ki, k) {
+                << i
+            }
+        }
+        i = (i + 1) & mask
+        if i == start {
+            << -1
+        }
+    }
+    << -1
+}
+
+fn (m &StrInt) find_insert(k &string) int {
+    if m.cap <= 0 {
+        << -1
+    }
+    h := hash_str(k)
+    mask := m.cap - 1
+    mut i := h & mask
+    start := i
+    mut tomb := -1
+    while true {
+        u := m.used[i]
+        if u == 0 {
+            if tomb >= 0 {
+                << tomb
+            }
+            << i
+        }
+        if u == 1 {
+            ki := m.keys[i]
+            if map_str_eq(&ki, k) {
+                << i
+            }
+        }
+        if u == 2 && tomb < 0 {
+            tomb = i
+        }
+        i = (i + 1) & mask
+        if i == start {
+            << tomb
+        }
+    }
+    << -1
+}
+
+fn (m &StrStr) find_live(k &string) int {
+    if m.cap <= 0 {
+        << -1
+    }
+    h := hash_str(k)
+    mask := m.cap - 1
+    mut i := h & mask
+    start := i
+    while true {
+        u := m.used[i]
+        if u == 0 {
+            << -1
+        }
+        if u == 1 {
+            ki := m.keys[i]
+            if map_str_eq(&ki, k) {
+                << i
+            }
+        }
+        i = (i + 1) & mask
+        if i == start {
+            << -1
+        }
+    }
+    << -1
+}
+
+fn (m &StrStr) find_insert(k &string) int {
+    if m.cap <= 0 {
+        << -1
+    }
+    h := hash_str(k)
+    mask := m.cap - 1
+    mut i := h & mask
+    start := i
+    mut tomb := -1
+    while true {
+        u := m.used[i]
+        if u == 0 {
+            if tomb >= 0 {
+                << tomb
+            }
+            << i
+        }
+        if u == 1 {
+            ki := m.keys[i]
+            if map_str_eq(&ki, k) {
+                << i
+            }
+        }
+        if u == 2 && tomb < 0 {
+            tomb = i
+        }
+        i = (i + 1) & mask
+        if i == start {
+            << tomb
+        }
+    }
+    << -1
+}
+
+fn (m &mut StrInt) grow() {
+    old_cap := m.cap
+    mut ncap := old_cap * 2
+    if ncap < 16 {
+        ncap = 16
+    }
+    mut new_keys := []string{}
+    mut new_vals := []int{}
+    mut new_used := []int{}
+    for i in 0:ncap {
+        new_keys.push("")
+        new_vals.push(0)
+        new_used.push(0)
+    }
+    mut new_n := 0
+    for i in 0:old_cap {
+        if m.used[i] == 1 {
+            key := m.keys[i] + ""
+            h := hash_str(&key)
+            mask := ncap - 1
+            mut j := h & mask
+            start := j
+            while true {
+                if new_used[j] == 0 {
+                    new_keys[j] = key
+                    new_vals[j] = m.vals[i]
+                    new_used[j] = 1
+                    new_n = new_n + 1
+                    <-
+                }
+                j = (j + 1) & mask
+                if j == start {
+                    <-
+                }
+            }
+        }
+    }
+    m.keys = new_keys
+    m.vals = new_vals
+    m.used = new_used
+    m.cap = ncap
+    m.n = new_n
+}
+
+fn (m &mut StrStr) grow() {
+    old_cap := m.cap
+    mut ncap := old_cap * 2
+    if ncap < 16 {
+        ncap = 16
+    }
+    mut new_keys := []string{}
+    mut new_vals := []string{}
+    mut new_used := []int{}
+    for i in 0:ncap {
+        new_keys.push("")
+        new_vals.push("")
+        new_used.push(0)
+    }
+    mut new_n := 0
+    for i in 0:old_cap {
+        if m.used[i] == 1 {
+            key := m.keys[i] + ""
+            val := m.vals[i] + ""
+            h := hash_str(&key)
+            mask := ncap - 1
+            mut j := h & mask
+            start := j
+            while true {
+                if new_used[j] == 0 {
+                    new_keys[j] = key
+                    new_vals[j] = val
+                    new_used[j] = 1
+                    new_n = new_n + 1
+                    <-
+                }
+                j = (j + 1) & mask
+                if j == start {
+                    <-
+                }
+            }
+        }
+    }
+    m.keys = new_keys
+    m.vals = new_vals
+    m.used = new_used
+    m.cap = ncap
+    m.n = new_n
+}
+
+pub fn (m &mut StrInt) set(k string, v int) {
+    key := k + ""
+    if m.cap <= 0 {
+        for i in 0:16 {
+            m.keys.push("")
+            m.vals.push(0)
+            m.used.push(0)
+        }
+        m.n = 0
+        m.cap = 16
+    }
+    if m.n * 4 >= m.cap * 3 {
+        m.grow()
+    }
+    mut slot := m.find_insert(&key)
+    if slot < 0 {
+        m.grow()
+        slot = m.find_insert(&key)
+    }
+    if slot < 0 {
+        <<
+    }
+    if m.used[slot] == 1 {
+        m.vals[slot] = v
+        <<
+    }
+    m.keys[slot] = key
+    m.vals[slot] = v
+    m.used[slot] = 1
+    m.n = m.n + 1
+}
+
+pub fn (m &mut StrStr) set(k string, v string) {
+    key := k + ""
+    val := v + ""
+    if m.cap <= 0 {
+        for i in 0:16 {
+            m.keys.push("")
+            m.vals.push("")
+            m.used.push(0)
+        }
+        m.n = 0
+        m.cap = 16
+    }
+    if m.n * 4 >= m.cap * 3 {
+        m.grow()
+    }
+    mut slot := m.find_insert(&key)
+    if slot < 0 {
+        m.grow()
+        slot = m.find_insert(&key)
+    }
+    if slot < 0 {
+        <<
+    }
+    if m.used[slot] == 1 {
+        m.vals[slot] = val
+        <<
+    }
+    m.keys[slot] = key
+    m.vals[slot] = val
+    m.used[slot] = 1
+    m.n = m.n + 1
+}
+
+pub fn (m &StrInt) has(k string) bool {
+    << m.find_live(&k) >= 0
+}
+
+pub fn (m &StrStr) has(k string) bool {
+    << m.find_live(&k) >= 0
+}
+
+pub fn (m &StrInt) get(k string) int {
+    slot := m.find_live(&k)
+    if slot < 0 {
+        >> errors.new("maps: missing key")
+    }
+    << m.vals[slot]
+}
+
+pub fn (m &StrStr) get(k string) string {
+    slot := m.find_live(&k)
+    if slot < 0 {
+        >> errors.new("maps: missing key")
+    }
+    << m.vals[slot] + ""
+}
+
+pub fn (m &mut StrInt) del(k string) {
+    slot := m.find_live(&k)
+    if slot < 0 {
+        <<
+    }
+    m.used[slot] = 2
+    m.keys[slot] = ""
+    m.vals[slot] = 0
+    m.n = m.n - 1
+}
+
+pub fn (m &mut StrStr) del(k string) {
+    slot := m.find_live(&k)
+    if slot < 0 {
+        <<
+    }
+    m.used[slot] = 2
+    m.keys[slot] = ""
+    m.vals[slot] = ""
+    m.n = m.n - 1
+}
+
+pub fn (m &mut StrInt) clear() {
+    mut i := 0
+    while i < m.cap {
+        m.used[i] = 0
+        m.keys[i] = ""
+        m.vals[i] = 0
+        i = i + 1
+    }
+    m.n = 0
+}
+
+pub fn (m &mut StrStr) clear() {
+    mut i := 0
+    while i < m.cap {
+        m.used[i] = 0
+        m.keys[i] = ""
+        m.vals[i] = ""
+        i = i + 1
+    }
+    m.n = 0
+}
+
+pub fn (m &StrInt) len() int {
+    << m.n
+}
+
+pub fn (m &StrStr) len() int {
+    << m.n
+}
+
+pub fn (m &StrInt) keys() []string {
+    mut out := []string{}
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            out.push(m.keys[i] + "")
+        }
+        i = i + 1
+    }
+    << out
+}
+
+pub fn (m &StrStr) keys() []string {
+    mut out := []string{}
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            out.push(m.keys[i] + "")
+        }
+        i = i + 1
+    }
+    << out
+}
+
+pub fn (m &StrInt) values() []int {
+    mut out := []int{}
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            out.push(m.vals[i])
+        }
+        i = i + 1
+    }
+    << out
+}
+
+pub fn (m &StrStr) values() []string {
+    mut out := []string{}
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            out.push(m.vals[i] + "")
+        }
+        i = i + 1
+    }
+    << out
+}
+
+pub fn (m &StrInt) clone() StrInt {
+    mut c := new_str_int()
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            c.set(m.keys[i] + "", m.vals[i])
+        }
+        i = i + 1
+    }
+    << c
+}
+
+pub fn (m &StrStr) clone() StrStr {
+    mut c := new_str_str()
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            c.set(m.keys[i] + "", m.vals[i] + "")
+        }
+        i = i + 1
+    }
+    << c
+}
+
+pub fn (m &StrInt) equal(o &StrInt) bool {
+    if m.n != o.n {
+        << false
+    }
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            k := m.keys[i] + ""
+            slot := o.find_live(&k)
+            if slot < 0 {
+                << false
+            }
+            if o.vals[slot] != m.vals[i] {
+                << false
+            }
+        }
+        i = i + 1
+    }
+    << true
+}
+
+pub fn (m &StrStr) equal(o &StrStr) bool {
+    if m.n != o.n {
+        << false
+    }
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            k := m.keys[i] + ""
+            slot := o.find_live(&k)
+            if slot < 0 {
+                << false
+            }
+            if o.vals[slot] != m.vals[i] {
+                << false
+            }
+        }
+        i = i + 1
+    }
+    << true
+}
+
+pub fn copy_str_int(dst &mut StrInt, src &StrInt) {
+    mut i := 0
+    while i < src.cap {
+        if src.used[i] == 1 {
+            dst.set(src.keys[i] + "", src.vals[i])
+        }
+        i = i + 1
+    }
+}
+
+pub fn copy_str_str(dst &mut StrStr, src &StrStr) {
+    mut i := 0
+    while i < src.cap {
+        if src.used[i] == 1 {
+            dst.set(src.keys[i] + "", src.vals[i] + "")
+        }
+        i = i + 1
+    }
+}
+
+pub fn (m &mut StrInt) delete_func(f fn(string, int) bool) {
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            k := m.keys[i] + ""
+            v := m.vals[i]
+            if f(k, v) {
+                m.used[i] = 2
+                m.keys[i] = ""
+                m.vals[i] = 0
+                m.n = m.n - 1
+            }
+        }
+        i = i + 1
+    }
+}
+
+pub fn (m &mut StrStr) delete_func(f fn(string, string) bool) {
+    mut i := 0
+    while i < m.cap {
+        if m.used[i] == 1 {
+            k := m.keys[i] + ""
+            v := m.vals[i] + ""
+            if f(k, v) {
+                m.used[i] = 2
+                m.keys[i] = ""
+                m.vals[i] = ""
+                m.n = m.n - 1
+            }
+        }
+        i = i + 1
+    }
+}

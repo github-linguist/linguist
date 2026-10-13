@@ -1,0 +1,386 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Xu",
+  "scopeName": "source.xu",
+  "fileTypes": [
+    "xu"
+  ],
+  "foldingStartMarker": "\\{\\s*(//.*)?$",
+  "foldingStopMarker": "^\\s*\\}",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#functions"
+    },
+    {
+      "include": "#namespace"
+    },
+    {
+      "include": "#module_import"
+    },
+    {
+      "include": "#flow_ops"
+    },
+    {
+      "include": "#modifiers"
+    },
+    {
+      "include": "#control_keywords"
+    },
+    {
+      "include": "#other_keywords"
+    },
+    {
+      "include": "#declaration_keywords"
+    },
+    {
+      "include": "#primitive_types"
+    },
+    {
+      "include": "#builtin_functions"
+    },
+    {
+      "include": "#boolean_constants"
+    },
+    {
+      "include": "#self_type"
+    },
+    {
+      "include": "#caps_constants"
+    },
+    {
+      "include": "#type_names"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#punctuation"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.xu",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.xu",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.begin.xu"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.end.xu"
+            }
+          }
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.other.raw.xu",
+          "begin": "`",
+          "end": "`",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.xu"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.xu"
+            }
+          }
+        },
+        {
+          "name": "string.quoted.double.xu",
+          "begin": "\"",
+          "end": "\"",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.begin.xu"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.string.end.xu"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#string_escapes"
+            },
+            {
+              "include": "#string_interpolation"
+            }
+          ]
+        }
+      ]
+    },
+    "string_escapes": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.xu",
+          "match": "\\\\(n|t|r|\\\\|'|\")"
+        }
+      ]
+    },
+    "string_interpolation": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.xu",
+          "match": "\\$\\$"
+        },
+        {
+          "name": "variable.other.interpolated.xu",
+          "match": "\\$[A-Za-z_][A-Za-z0-9_]*"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.integer.hexadecimal.xu",
+          "match": "\\b0[xX][0-9a-fA-F]([0-9a-fA-F_]*[0-9a-fA-F])?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.binary.xu",
+          "match": "\\b0[bB][01]([01_]*[01])?\\b"
+        },
+        {
+          "name": "constant.numeric.float.decimal.xu",
+          "match": "\\b\\d([\\d_]*\\d)?\\.\\d([\\d_]*\\d)?([eE][+-]?\\d([\\d_]*\\d)?)?\\b"
+        },
+        {
+          "name": "constant.numeric.float.decimal.xu",
+          "match": "\\b\\d([\\d_]*\\d)?[eE][+-]?\\d([\\d_]*\\d)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.decimal.xu",
+          "match": "\\b\\d([\\d_]*\\d)?\\b"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "meta.function.xu",
+          "match": "\\b(fn)\\s+(?:\\([^)]*\\)\\s*)?([A-Za-z_][A-Za-z0-9_]*)(?:#[A-Za-z_][A-Za-z0-9_]*(?::\\s*[A-Za-z_][A-Za-z0-9_]*)?)?\\s*(?=\\()",
+          "captures": {
+            "1": {
+              "name": "keyword.control.xu"
+            },
+            "2": {
+              "name": "entity.name.function.xu"
+            }
+          }
+        }
+      ]
+    },
+    "namespace": {
+      "patterns": [
+        {
+          "match": "\\b(xu)(?=\\.)",
+          "captures": {
+            "1": {
+              "name": "entity.name.namespace.xu"
+            }
+          }
+        }
+      ]
+    },
+    "module_import": {
+      "patterns": [
+        {
+          "comment": "Package decl @name — sigil vs name use different scopes so themes can diverge.",
+          "match": "^\\s*(@)([A-Za-z_][A-Za-z0-9_.]*)\\b",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.package.xu"
+            },
+            "2": {
+              "name": "entity.name.package.xu"
+            }
+          }
+        },
+        {
+          "comment": "Import #path [as alias]",
+          "match": "^\\s*(#)([A-Za-z_][A-Za-z0-9_./]*)(?:\\s+(as)\\s+([A-Za-z_][A-Za-z0-9_]*))?",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.import.xu"
+            },
+            "2": {
+              "name": "string.unquoted.import.xu"
+            },
+            "3": {
+              "name": "keyword.control.xu"
+            },
+            "4": {
+              "name": "variable.other.import-alias.xu"
+            }
+          }
+        },
+        {
+          "comment": "Import alias #path",
+          "match": "^\\s*([A-Za-z_][A-Za-z0-9_]*)\\s+(#)([A-Za-z_][A-Za-z0-9_./]*)",
+          "captures": {
+            "1": {
+              "name": "variable.other.import-alias.xu"
+            },
+            "2": {
+              "name": "punctuation.definition.import.xu"
+            },
+            "3": {
+              "name": "string.unquoted.import.xu"
+            }
+          }
+        }
+      ]
+    },
+    "modifiers": {
+      "match": "\\b(mut|pub)\\b",
+      "name": "storage.modifier.xu"
+    },
+    "control_keywords": {
+      "match": "\\b(fn|if|else|for|in|while|match|xu|select|or|as|is|let)\\b",
+      "name": "keyword.control.xu"
+    },
+    "other_keywords": {
+      "match": "\\b(const)\\b",
+      "name": "keyword.other.xu"
+    },
+    "declaration_keywords": {
+      "match": "\\b(struct|enum|chan|map|any)\\b",
+      "name": "storage.type.xu"
+    },
+    "primitive_types": {
+      "match": "\\b(int|bool|string|f64|i32|u32|u8|byte)\\b",
+      "name": "storage.type.primitive.xu"
+    },
+    "builtin_functions": {
+      "match": "\\b(println|eprintln|str|string_from_byte|string_from_bytes|parse_int|parse_float|starts_with|volatile_store|volatile_store8|volatile_load|volatile_load8|raise_irq|read_file|read_dir|write_file|args|now_ns|sleep_ns|assert|close|pid|ppid|uid|gid|euid|egid|pagesize|host_name|cwd|env_get|env_list|tmp_dir)\\b",
+      "name": "support.function.builtin.xu"
+    },
+    "boolean_constants": {
+      "match": "\\b(true|false)\\b",
+      "name": "constant.language.boolean.xu"
+    },
+    "self_type": {
+      "match": "\\bSelf\\b",
+      "name": "entity.name.type.xu"
+    },
+    "caps_constants": {
+      "match": "\\b[A-Z][A-Z0-9_]+\\b",
+      "name": "constant.other.caps.xu"
+    },
+    "type_names": {
+      "match": "\\b[A-Z][A-Za-z0-9_]*\\b",
+      "name": "entity.name.type.xu"
+    },
+    "flow_ops": {
+      "patterns": [
+        {
+          "name": "keyword.control.flow.xu",
+          "match": "<<<"
+        },
+        {
+          "match": "\\b(or)\\s+(>>)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.xu"
+            },
+            "2": {
+              "name": "keyword.control.flow.xu"
+            }
+          }
+        },
+        {
+          "comment": "Statement return << / throw >> (line start or after { ;).",
+          "match": "(?:^|(?<=[\\n{;]))(\\s*)(<<|>>)(?![<=])",
+          "captures": {
+            "2": {
+              "name": "keyword.control.flow.xu"
+            }
+          }
+        },
+        {
+          "comment": "Statement continue -> / break <- (no operand). `<-ch` / `a -> b` / `ch <- x` stay operators.",
+          "match": "(?:^|(?<=[\\n{;]))(\\s*)(->|<-)(?=\\s*(?:$|\\}|//|\\n))",
+          "captures": {
+            "2": {
+              "name": "keyword.control.flow.xu"
+            }
+          }
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.xu",
+          "match": ":=|\\+=|-=|\\*=|/=|%="
+        },
+        {
+          "name": "keyword.operator.comparison.xu",
+          "match": "==|!=|<=|>="
+        },
+        {
+          "name": "keyword.operator.bitwise.xu",
+          "match": "<<|>>"
+        },
+        {
+          "comment": "Slice/index range `:` inside `[]` — `xs[lo:hi]`, `[:b]`, `[a:]`, `[:]`.",
+          "name": "keyword.operator.range.xu",
+          "match": "(?<=\\[[^\\]\\n]*)\\s*:\\s*"
+        },
+        {
+          "comment": "for-header range `:` after `in` — `for i in a:b`.",
+          "name": "keyword.operator.range.xu",
+          "match": "(?<=\\bin\\b[^\\n{]*)\\s*:\\s*"
+        },
+        {
+          "comment": "Match-arm integer range `:` — `0:13`. Type/field colon is not Int:Int.",
+          "name": "keyword.operator.range.xu",
+          "match": "(?<=\\d)\\s*:\\s*(?=\\d)"
+        },
+        {
+          "name": "keyword.operator.channel.xu",
+          "match": "<-"
+        },
+        {
+          "name": "keyword.operator.xu",
+          "match": "\\.\\.\\.|\\.\\.|&&|\\|\\||[+*/%<>!&|^?-]"
+        },
+        {
+          "comment": "Glued type/generic markers mid-line (not line-top @pkg / #import).",
+          "match": "(?<=[A-Za-z0-9_])(@|#)",
+          "name": "punctuation.definition.constraint.xu"
+        },
+        {
+          "name": "keyword.operator.assignment.xu",
+          "match": "="
+        }
+      ]
+    },
+    "punctuation": {
+      "match": ":",
+      "name": "punctuation.separator.xu"
+    }
+  }
+}

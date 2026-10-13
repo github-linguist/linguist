@@ -1,0 +1,116 @@
+@errors
+
+// Error values: struct types + `struct@ Error` constraint.
+// Dynamic boxing is language syntax: `errors.Error(concrete)` (not defined here).
+//
+// Scope: message text, typed error structs, wrap chain, is_err().
+// wrap stores the inner message as text (not a boxed Error), so is_err()
+// walks that text chain: exact match, or a suffix ": " + target.msg().
+// Not in this package: string join, logging, generic dynamic boxing.
+// Typed tests use language `is`/`as`, not this package (`is` is a keyword).
+
+struct@ Error {
+    fn msg() string
+}
+
+pub struct StrErr {
+    pub text string
+}
+
+pub fn (e StrErr) msg() string {
+    << e.text + ""
+}
+
+pub struct CodeErr {
+    pub code int
+    pub text string
+}
+
+pub fn (e CodeErr) msg() string {
+    << e.text + ""
+}
+
+pub fn code(code int, text string) CodeErr {
+    << CodeErr{code: code, text: text}
+}
+
+pub fn new(text string) StrErr {
+    << StrErr{text: text}
+}
+
+pub struct WrapErr {
+    pub text string
+    pub cause string
+}
+
+pub fn (w WrapErr) msg() string {
+    << w.text + ": " + w.cause
+}
+
+pub fn wrap(text string, err Error) WrapErr {
+    << WrapErr{text: text, cause: err.msg()}
+}
+
+pub fn (w WrapErr) cause() string {
+    << w.cause
+}
+
+fn has_wrap_suffix(got string, want string) bool {
+    if got == want {
+        << true
+    }
+    if want.len == 0 {
+        << false
+    }
+    n := want.len + 2
+    if got.len < n {
+        << false
+    }
+    i := got.len - want.len
+    if (got[i - 2] & 255) != 58 {
+        << false
+    }
+    if (got[i - 1] & 255) != 32 {
+        << false
+    }
+    mut j := 0
+    while j < want.len {
+        if (got[i + j] & 255) != (want[j] & 255) {
+            << false
+        }
+        j = j + 1
+    }
+    << true
+}
+
+pub fn is_err(err Error, target Error) bool {
+    << has_wrap_suffix(err.msg(), target.msg())
+}
+
+// join is Go errors.Join for two errors (no variadic). Empty messages
+// are dropped; both empty yields "".
+pub fn join(a Error, b Error) StrErr {
+    am := a.msg()
+    bm := b.msg()
+    if am.len == 0 {
+        << new(bm)
+    }
+    if bm.len == 0 {
+        << new(am)
+    }
+    << new(am + "\n" + bm)
+}
+
+// unwrap is Go errors.Unwrap on the message chain: the text after the
+// last ": " (WrapErr.msg format). No wrap suffix yields "".
+pub fn unwrap(err Error) string {
+    m := err.msg()
+    mut i := m.len - 1
+    while i >= 1 {
+        if (m[i] & 255) == 32 && (m[i - 1] & 255) == 58 {
+            << m[(i + 1):m.len] + ""
+        }
+        i = i - 1
+    }
+    << ""
+}
