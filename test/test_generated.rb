@@ -96,6 +96,10 @@ class TestGenerated < Minitest::Test
     # pnpm lockfile
     generated_sample_without_loading_data("Dummy/pnpm-lock.yaml")
 
+    # aube lockfile
+    generated_without_loading_data("aube-lock.yaml")
+    generated_sample_without_loading_data("Dummy/aube-lock.yaml")
+
     # Bun lockfile
     generated_sample_without_loading_data("JSON/filenames/bun.lock")
 

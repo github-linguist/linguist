@@ -160,6 +160,14 @@ class TestBlob < Minitest::Test
     # Cargo generated Cargo.lock file
     assert sample_blob_memory("TOML/filenames/Cargo.lock").generated?
 
+    # aube generated aube-lock.yaml file
+    assert Linguist::Blob.new("aube-lock.yaml", "").generated?
+    assert Linguist::Blob.new("project/aube-lock.yaml", "").generated?
+    refute Linguist::Blob.new("not-aube-lock.yaml", "").generated?
+    refute Linguist::Blob.new("aube-lock.yaml.bak", "").generated?
+    refute Linguist::Blob.new("aube-lock.yml", "").generated?
+    refute Linguist::Blob.new("aube-lock.yaml/child", "").generated?
+
     # Composer generated composer.lock file
     assert sample_blob_memory("JSON/filenames/composer.lock").generated?
 
