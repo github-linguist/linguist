@@ -1,0 +1,71 @@
+// AENS tests
+contract AENSTest =
+
+  // Name resolution
+
+  stateful entrypoint resolve_word(name : string, key : string) : option(address) =
+    AENS.resolve(name, key)
+
+  stateful entrypoint resolve_string(name : string, key : string) : option(string) =
+    AENS.resolve(name, key)
+
+  // Transactions
+
+  stateful entrypoint preclaim(addr  : address,     // Claim on behalf of this account (can be Contract.address)
+                             chash : hash) : unit = // Commitment hash
+    AENS.preclaim(addr, chash)
+
+  stateful entrypoint signedPreclaim(addr  : address, // Claim on behalf of this account (can be Contract.address)
+                                   chash : hash,             // Commitment hash
+                                   sign  : signature) : unit = // Signed by addr (if not Contract.address)
+    AENS.preclaim(addr, chash, signature = sign)
+
+  stateful entrypoint claim(addr : address,
+                          name : string,
+                          salt : int,
+                          name_fee : int) : unit =
+    AENS.claim(addr, name, salt, name_fee)
+
+  stateful entrypoint signedClaim(addr : address,
+                                name : string,
+                                salt : int,
+                                name_fee : int,
+                                sign : signature) : unit =
+    AENS.claim(addr, name, salt, name_fee, signature = sign)
+
+
+  stateful entrypoint update(owner      : address,
+                             name       : string,
+                             ttl        : option(Chain.ttl),
+                             client_ttl : option(int),
+                             pointers   : option(map(string, AENS.pointee))) : unit =
+    AENS.update(owner, name, ttl, client_ttl, pointers)
+
+  stateful entrypoint signedUpdate(owner      : address,
+                                   name       : string,
+                                   ttl        : option(Chain.ttl),
+                                   client_ttl : option(int),
+                                   pointers   : option(map(string, AENS.pointee)),
+                                   sign       : signature) : unit =
+    AENS.update(owner, name, ttl, client_ttl, pointers, signature = sign)
+
+
+  stateful entrypoint transfer(owner     : address,
+                             new_owner : address,
+                             name      : string) : unit =
+    AENS.transfer(owner, new_owner, name)
+
+  stateful entrypoint signedTransfer(owner     : address,
+                                     new_owner : address,
+                                     name      : string,
+                                     sign      : signature) : unit =
+    AENS.transfer(owner, new_owner, name, signature = sign)
+
+  stateful entrypoint revoke(owner     : address,
+                           name      : string) : unit =
+    AENS.revoke(owner, name)
+
+  stateful entrypoint signedRevoke(owner     : address,
+                                   name      : string,
+                                   sign      : signature) : unit =
+    AENS.revoke(owner, name, signature = sign)

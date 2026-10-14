@@ -1,0 +1,82 @@
+// Try to cover all syntactic constructs.
+@compiler > 0
+@compiler =< 10.1.1.1.1.1.2.3.4
+
+
+namespace Ns =
+  datatype d('a) = D | S(int) | M('a, list('a), int)
+  private function fff() = 123
+
+  stateful entrypoint
+    f (1, x) = (_) => x
+
+payable contract AllSyntaxType =
+  /** Multi-
+    * line
+    * comment
+    */
+  stateful function foo : _
+  entrypoint bar : int => (int * 'a)
+
+
+contract AllSyntax =
+
+  datatype mickiewicz = Adam | Mickiewicz
+  record goethe('a, 'b) = {
+    johann : int,
+    wolfgang : 'a,
+    von : 'a * 'b * int,
+    goethe : unit
+    }
+  type dante = Ns.d(int)
+  type shakespeare('a) = goethe('a, 'a)
+
+  type state = shakespeare(int)
+
+  entrypoint init() = {
+    johann = 1000,
+    wolfgang = -10,
+
+/* TODO: This does not compile because of bug in the parser tester.
+    von = (2 + 2, 0, List.sum([x | k <- [1,2,3]
+                                 , let l = k + 1
+                                 , if(l < 10)
+                                 , let f(x) = x + 100
+                                 , Adam <- [Adam, Mickiewicz]
+                                 , let x = f(l)
+                                 ])),
+*/
+    von = (2 + 2, 0, List.sum([1,2,3,4])),
+    goethe = () }
+
+  function f() =
+     let kp = "nietzsche"
+     // let p = "Пушкин" // TODO: this also doesn't do right round_trip...
+     let k(x : bytes(8)) : bytes(8) = Bytes.to_int(#fedcba9876543210)
+
+     let f : () => address = () => ak_2gx9MEFxKvY9vMG5YnqnXWv1hCsX7rgnfvBLJS4aQurustR1rt
+     if(Bits.test(Bits.all, 10))
+       abort("ohno")
+     if(true && false)
+       require(true, "ohyes")
+     elif(false || 2 == 2)
+       ()
+     else
+       ()
+     if(true) f(1,2)((1,2))
+     else switch(1::[1,2,3])
+       [] => 1
+       a::b => 123
+       1::2::3 => 123123
+       [2,3,4] => 1
+       _ => 13
+       1::[2] => 2138
+     put(state{johann = 1})
+     
+     let m = {["foo"] = 19, /*hey wanna talk about inlined comments?*/ ["bar"] = 42}
+     let n = {}
+     m{ ["x" = 0] @ z = z + state.johann }
+
+     let sh : shakespeare(shakespeare(int)) =
+       {wolfgang = state}
+     sh{wolfgang.wolfgang = sh.wolfgang} // comment

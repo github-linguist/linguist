@@ -1,0 +1,51 @@
+// A comprehensive Sophia feature sample
+contract Token =
+  record point('a) = {x : 'a, y : 'a}
+  datatype shape('a) = Circle(point('a), 'a) | Rect(point('a), point('a))
+
+  type int_shape = shape(int)
+
+  /* Nested block comment
+     /* inner comment */
+     still inside */
+  entrypoint init(val : int) = val
+
+  function add (x : int, y : int) : int = x + y
+
+  stateful entrypoint pay(to : address) =
+    Chain.spend(to, Call.value)
+
+  function switch_demo(f : 'a => option('a)) =
+    switch(f(1))
+      None => 0
+      Some(y) =>
+        if(y > 10)
+          "too big"
+        elif(y < 3)
+          "too small"
+        else
+          "just right"
+
+  function bool_logic(a : bool, b : bool) : bool =
+    (a && b) || !a
+
+  function nothing() : unit = ()
+
+  function literals() =
+    let hex = 0xff
+    let dec = 1_000_000
+    let bytes = #00abc123
+    let s = "escapes: \n \t \x41 \e"
+    let c = '%'
+    let addr = ak_2MGLPW2CHNrv8p3RRkLY6AeghntBkm37XXNDshZsy3nfeXPt5S
+    let ct = ct_2gPSDYNRzFTjCE5p7kbKmMxNjSFVQNeVDSMJoU3pfaqGBhBeDX
+    let ok = ok_2ePqvoiBHqf7wCQFgGTvVonww37ANAvdcqbehyMoBUajeqecTJ
+    let oq = oq_2hcecXYY4VvjvUECuUNFtE9XSZW8PyBM9piVuaEC9ChyHVnwam
+    let comp = [k | x <- [1..10], if (x mod 2 == 0), let k = x * x]
+    let rec = {x = 0, y = 1}
+    let lst = [1, 2, 3] ++ [4]
+    let cons = 1 :: lst
+    let lam = (x) => x + 1
+    let proj = rec.x
+    let ann : int = 5
+    hex + dec
