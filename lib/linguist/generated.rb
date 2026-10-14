@@ -76,6 +76,7 @@ module Linguist
       npm_shrinkwrap_or_package_lock? ||
       pnpm_lock? ||
       bun_lock? ||
+      apm_lock? ||
       terraform_lock? ||
       generated_yarn_plugnplay? ||
       godeps? ||
@@ -528,6 +529,13 @@ module Linguist
     # Returns true or false.
     def bun_lock?
       !!name.match(/(?:^|\/)bun\.lockb?$/)
+    end
+
+    # Internal: Is the blob a generated APM (Agent Package Manager) lockfile?
+    #
+    # Returns true or false.
+    def apm_lock?
+      !!name.match(/(?:^|\/)apm\.lock\.yaml$/)
     end
 
     # Internal: Is the blob a generated Yarn Plug'n'Play?
