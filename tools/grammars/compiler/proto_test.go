@@ -10,77 +10,77 @@ import (
 
 func TestConvertProtoScopeName(t *testing.T) {
 	tests := []struct {
-		name    string
-		scope   string
-		invalid bool
+		name  string
+		scope string
+		valid bool
 	}{
-		{"dotted scope", "source.go", false},
-		{"plus signs", "source.c++", false},
-		{"nested dotted scope", "source.c++.qt", false},
-		{"hyphen and plus signs", "source.cuda-c++", false},
-		{"consecutive dots", "source.foo..bar", false},
-		{"single dot", ".", false},
-		{"two dots", "..", false},
-		{"reserved word after dot", "source.CON", false},
-		{"reserved port after dot", "source.COM1", false},
-		{"reserved name prefix", "CONsole", false},
-		{"reserved name suffix", "xAUX", false},
-		{"reserved port prefix", "COM1suffix", false},
-		{"COM without number", "COM", false},
-		{"LPT without number", "LPT", false},
-		{"COM zero", "COM0", false},
-		{"LPT zero", "LPT0", false},
-		{"COM two digits", "COM10", false},
-		{"LPT two digits", "LPT10", false},
-		{"COM unreserved superscript", "COM⁴", false},
-		{"LPT unreserved superscript", "LPT⁴", false},
-		{"reserved AUX", "AUX", true},
-		{"reserved CON", "CON", true},
-		{"reserved NUL", "NUL", true},
-		{"reserved PRN", "PRN", true},
-		{"reserved COM1", "COM1", true},
-		{"reserved COM2", "COM2", true},
-		{"reserved COM3", "COM3", true},
-		{"reserved COM4", "COM4", true},
-		{"reserved COM5", "COM5", true},
-		{"reserved COM6", "COM6", true},
-		{"reserved COM7", "COM7", true},
-		{"reserved COM8", "COM8", true},
-		{"reserved COM9", "COM9", true},
-		{"reserved LPT1", "LPT1", true},
-		{"reserved LPT2", "LPT2", true},
-		{"reserved LPT3", "LPT3", true},
-		{"reserved LPT4", "LPT4", true},
-		{"reserved LPT5", "LPT5", true},
-		{"reserved LPT6", "LPT6", true},
-		{"reserved LPT7", "LPT7", true},
-		{"reserved LPT8", "LPT8", true},
-		{"reserved LPT9", "LPT9", true},
-		{"reserved COM superscript one", "COM¹", true},
-		{"reserved COM superscript two", "COM²", true},
-		{"reserved COM superscript three", "COM³", true},
-		{"reserved LPT superscript one", "LPT¹", true},
-		{"reserved LPT superscript two", "LPT²", true},
-		{"reserved LPT superscript three", "LPT³", true},
-		{"reserved lowercase name", "aux", true},
-		{"reserved mixed case name", "cOn", true},
-		{"reserved lowercase port", "com1", true},
-		{"reserved mixed case port", "lPt9", true},
-		{"reserved name with extension", "NUL.txt", true},
-		{"reserved name with multiple extensions", "prn.tar.gz", true},
-		{"reserved port with extension", "COM1.source", true},
-		{"reserved superscript port with extension", "lpt².source", true},
-		{"reserved name with trailing dot", "AUX.", true},
-		{"reported traversal", "../.devcontainer/devcontainer", true},
-		{"nested traversal", "nested/../../outside", true},
-		{"nested path", "source/nested", true},
-		{"rooted path", "/outside", true},
-		{"trailing slash", "source.go/", true},
-		{"backslash traversal", `..\outside`, true},
-		{"backslash path", `source\nested`, true},
-		{"drive path", `C:\outside`, true},
-		{"UNC path", `\\server\share\outside`, true},
-		{"mixed separators", `nested\../outside`, true},
+		{"dotted scope", "source.go", true},
+		{"plus signs", "source.c++", true},
+		{"nested dotted scope", "source.c++.qt", true},
+		{"hyphen and plus signs", "source.cuda-c++", true},
+		{"consecutive dots", "source.foo..bar", true},
+		{"single dot", ".", true},
+		{"two dots", "..", true},
+		{"reserved word after dot", "source.CON", true},
+		{"reserved port after dot", "source.COM1", true},
+		{"reserved name prefix", "CONsole", true},
+		{"reserved name suffix", "xAUX", true},
+		{"reserved port prefix", "COM1suffix", true},
+		{"COM without number", "COM", true},
+		{"LPT without number", "LPT", true},
+		{"COM zero", "COM0", true},
+		{"LPT zero", "LPT0", true},
+		{"COM two digits", "COM10", true},
+		{"LPT two digits", "LPT10", true},
+		{"COM unreserved superscript", "COM⁴", true},
+		{"LPT unreserved superscript", "LPT⁴", true},
+		{"reserved AUX", "AUX", false},
+		{"reserved CON", "CON", false},
+		{"reserved NUL", "NUL", false},
+		{"reserved PRN", "PRN", false},
+		{"reserved COM1", "COM1", false},
+		{"reserved COM2", "COM2", false},
+		{"reserved COM3", "COM3", false},
+		{"reserved COM4", "COM4", false},
+		{"reserved COM5", "COM5", false},
+		{"reserved COM6", "COM6", false},
+		{"reserved COM7", "COM7", false},
+		{"reserved COM8", "COM8", false},
+		{"reserved COM9", "COM9", false},
+		{"reserved LPT1", "LPT1", false},
+		{"reserved LPT2", "LPT2", false},
+		{"reserved LPT3", "LPT3", false},
+		{"reserved LPT4", "LPT4", false},
+		{"reserved LPT5", "LPT5", false},
+		{"reserved LPT6", "LPT6", false},
+		{"reserved LPT7", "LPT7", false},
+		{"reserved LPT8", "LPT8", false},
+		{"reserved LPT9", "LPT9", false},
+		{"reserved COM superscript one", "COM¹", false},
+		{"reserved COM superscript two", "COM²", false},
+		{"reserved COM superscript three", "COM³", false},
+		{"reserved LPT superscript one", "LPT¹", false},
+		{"reserved LPT superscript two", "LPT²", false},
+		{"reserved LPT superscript three", "LPT³", false},
+		{"reserved lowercase name", "aux", false},
+		{"reserved mixed case name", "cOn", false},
+		{"reserved lowercase port", "com1", false},
+		{"reserved mixed case port", "lPt9", false},
+		{"reserved name with extension", "NUL.txt", false},
+		{"reserved name with multiple extensions", "prn.tar.gz", false},
+		{"reserved port with extension", "COM1.source", false},
+		{"reserved superscript port with extension", "lpt².source", false},
+		{"reserved name with trailing dot", "AUX.", false},
+		{"reported traversal", "../.devcontainer/devcontainer", false},
+		{"nested traversal", "nested/../../outside", false},
+		{"nested path", "source/nested", false},
+		{"rooted path", "/outside", false},
+		{"trailing slash", "source.go/", false},
+		{"backslash traversal", `..\outside`, false},
+		{"backslash path", `source\nested`, false},
+		{"drive path", `C:\outside`, false},
+		{"UNC path", `\\server\share\outside`, false},
+		{"mixed separators", `nested\../outside`, false},
 	}
 	formats := []struct {
 		ext     string
@@ -100,24 +100,24 @@ func TestConvertProtoScopeName(t *testing.T) {
 				}
 				path := "grammar" + format.ext
 				rule, unknown, err := ConvertProto(path, format.ext, data)
-				if tt.invalid {
-					invalid, ok := err.(*InvalidScopeError)
-					if !ok {
-						t.Fatalf("got error %T (%v), want *InvalidScopeError", err, err)
+				if tt.valid {
+					if err != nil {
+						t.Fatal(err)
 					}
-					if rule != nil || unknown != nil {
-						t.Errorf("rejected grammar returned a rule or unused keys: %v, %v", rule, unknown)
-					}
-					if invalid.Path != path || invalid.Scope != tt.scope {
-						t.Errorf("invalid scope error = %#v, want path %q and scope %q", invalid, path, tt.scope)
+					if rule == nil || rule.ScopeName != tt.scope {
+						t.Errorf("got rule %v, want scope %q unchanged", rule, tt.scope)
 					}
 					return
 				}
-				if err != nil {
-					t.Fatal(err)
+				invalid, ok := err.(*InvalidScopeError)
+				if !ok {
+					t.Fatalf("got error %T (%v), want *InvalidScopeError", err, err)
 				}
-				if rule == nil || rule.ScopeName != tt.scope {
-					t.Errorf("got rule %v, want scope %q unchanged", rule, tt.scope)
+				if rule != nil || unknown != nil {
+					t.Errorf("rejected grammar returned a rule or unused keys: %v, %v", rule, unknown)
+				}
+				if invalid.Path != path || invalid.Scope != tt.scope {
+					t.Errorf("invalid scope error = %#v, want path %q and scope %q", invalid, path, tt.scope)
 				}
 			})
 		}
