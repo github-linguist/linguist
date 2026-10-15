@@ -267,6 +267,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **HIP:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **HLSL:** [tgjones/shaders-tmLanguage](https://github.com/tgjones/shaders-tmLanguage)
 - **HOCON:** [jacobwgillespie/language-hocon](https://github.com/jacobwgillespie/language-hocon)
+- **HSP:** [honobonosun/vscode-language-hsp3](https://github.com/honobonosun/vscode-language-hsp3)
 - **HTML:** [tree-sitter/tree-sitter-html](https://github.com/tree-sitter/tree-sitter-html) 🐌
 - **HTML+ECR:** [atom-crystal/language-crystal](https://github.com/atom-crystal/language-crystal)
 - **HTML+EEX:** [elixir-lang/elixir-tmbundle](https://github.com/elixir-lang/elixir-tmbundle)
