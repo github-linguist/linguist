@@ -1,0 +1,73 @@
+dml 1.4;
+
+device sample_device;
+
+param desc = "A sample DML device";
+
+param documentation = "This is a sample DML device intended as a sample for"
+    + " the Linguist project";
+
+import "sample-interface.dml";
+
+attribute n_regs_written is (pseudo_attr, uint64_attr) "" {
+    method get() -> (attr_value_t) {
+        local uint8 n_written_regs = 0;
+        foreach reg in (each register_written in (regs)) {
+            if (reg.has_been_written())
+                n_written_regs += 1;
+        }
+        return SIM_make_attr_uint64(n_written_regs);
+    }
+
+    method set(attr_value_t val) throws {
+        if (SIM_attr_integer(val) != 0) {
+            log error: "n_regs_written can be only set to 0 to reset written"
+                + " status on all registers in the 'regs' bank";
+            throw;
+        }
+
+        foreach reg in (each register_written in (regs)) {
+            reg.reset_written();
+        }
+    }
+}
+
+implement sample {
+    saved int arg_sum = 0;
+    method simple_method(int arg) {
+        arg_sum += arg;
+    }
+}
+
+template register_written is (register, write) {
+    saved bool written;
+
+    method write(uint64 value) default {
+        this.written = true;
+        default(value);
+    }
+
+    shared method has_been_written() -> (bool) {
+        return this.written;
+    }
+
+    shared method reset_written() {
+        this.written = false;
+    }
+}
+
+bank regs {
+    param desc = dev.desc + "custom desc";
+    register r1 size 4 @ 0x0000 is (read, register_written) {
+        method read() -> (uint64) {
+            log info, 3: "read from r1";
+            return 42 + sample.arg_sum;
+        }
+    }
+    register r2 size 4 @ 0x0004 is (write, register_written) {
+        method write(uint64 value) {
+            log info, 3: "wrote %d to r2", value;
+            default(value);
+        }
+    }
+}
