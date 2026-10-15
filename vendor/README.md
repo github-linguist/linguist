@@ -482,6 +482,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **PDDL:** [jan-dolejsi/vscode-pddl](https://github.com/jan-dolejsi/vscode-pddl)
 - **PEG.js:** [peggyjs/code-peggy-language](https://github.com/peggyjs/code-peggy-language)
 - **PHP:** [tree-sitter/tree-sitter-php](https://github.com/tree-sitter/tree-sitter-php) 🐌
+- **PL/I:** [spgennard/vscode_cobol](https://github.com/spgennard/vscode_cobol)
 - **PLpgSQL:** [textmate/sql.tmbundle](https://github.com/textmate/sql.tmbundle)
 - **POV-Ray SDL:** [c-lipka/language-povray](https://github.com/c-lipka/language-povray)
 - **Pact:** [kadena-io/pact-atom](https://github.com/kadena-io/pact-atom)
