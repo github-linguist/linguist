@@ -16,6 +16,8 @@
 #                       Pattern can be a string with a single regular expression
 #                       or an array of strings that will be merged in a single
 #                       regular expression (with union).
+#                       Run `script/check-regex-compatibility
+#                       lib/linguist/heuristics.yml` after changing patterns.
 # and                 - An and block merges multiple rules and checks that all of
 #                       them must match.
 # negative_pattern    - Same as pattern, but checks for absence of matches.
@@ -345,6 +347,17 @@ disambiguations:
   - language: Frege
     pattern: '^\s*(import|module|package|data|type) '
   - language: Text
+- extensions: ['.frag']
+  rules:
+  - language: GLSL
+    # A version directive belongs at the start of a shader.
+    pattern: '\A[ \t\r\n]*#[ \t]*version[ \t]+[0-9]{3}(?:[ \t]+(?:core|compatibility|es))?[ \t]*(?://[^\r\n]*)?(?:\r?\n|\z)'
+  - language: GLSL
+    and:
+    # Require both a typed interface declaration and fragment output, rather
+    # than claiming JavaScript fragments from one shader-like token.
+    - pattern: '^[ \t]*(?:uniform|varying)[ \t]+(?:(?:lowp|mediump|highp)[ \t]+)?(?:[biud]?vec[234]|d?mat[234](?:x[234])?|float|double|int|uint|bool|[iu]?sampler[A-Za-z0-9_]*)[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:[ \t]*\[[^\]\r\n]*\])?[ \t]*;'
+    - pattern: '^[ \t]*gl_FragColor[ \t]*='
 - extensions: ['.frm']
   rules:
   - language: VBA
@@ -382,6 +395,16 @@ disambiguations:
     pattern: '^(?:<|[a-zA-Z-][a-zA-Z0-9_-]+[ \t]+\w)|\$\{\w+[^\r\n]*?\}|^[ \t]*(?:<#--.*?-->|<#(?:[a-z]+)\s[^>]*>.*?</#(?:[a-z]+)>|\[#--.*?--\]|\[#(?:[a-z]+)\s[^\]]*\].*?\[#(?:[a-z]+)\])'
   - language: Fluent
     pattern: '^-?[a-zA-Z][a-zA-Z0-9_-]* *=|\{\$-?[a-zA-Z][-\w]*(?:\.[a-zA-Z][-\w]*)?\}'
+- extensions: ['.fx']
+  rules:
+  - language: HLSL
+    pattern:
+    - '^[ \t]*technique(?:10|11)?[ \t]+\w+[ \t\r\n]*\{'
+    - '^[ \t]*(?:float|half|int|uint|bool)(?:[1-4](?:x[1-4])?)?[ \t]+\w+[ \t]*:[ \t]*(?i:POSITION|NORMAL|TEXCOORD|COLOR|SV_[a-z_]+)[0-9]*\b'
+  - language: FLUX
+    # Identifier characters follow FLUX's shared lexer token, including '*'.
+    # https://github.com/emeryberger/flux/blob/28ba8dc3a46fb4a4a904ca6c2d1107720b56dac8/src/edu/umass/cs/flux/grammar.lex#L42-L43
+    pattern: '^[ \t]*source[ \t]+[A-Za-z_*][A-Za-z0-9_*]*[ \t]*=>[ \t]*[A-Za-z_*][A-Za-z0-9_*]*[ \t]*;'
 - extensions: ['.g']
   rules:
   - language: GAP
@@ -563,13 +586,24 @@ disambiguations:
   - language: MUF
     pattern: '^: '
   - language: M
-    pattern: '^\s*;'
+    pattern:
+    - '^\s*;'
+    # Dot-indented commands, global assignments, and WRITE newline controls.
+    - '(?i)^[ \t]+(?:\.[ \t]+)+(?:d(?:o)?|f(?:or)?|i(?:f)?|n(?:ew)?|q(?:uit)?|s(?:et)?|w(?:rite)?)[ \t:]'
+    - '(?i)^[ \t]+s(?:et)?[ \t]+\^[%a-z][a-z0-9]*(?:\(|=)'
+    # A formatting delimiter after ! distinguishes WRITE from w != value.
+    - '(?i)^[ \t]+w(?:rite)?[ \t]+(?:!|[^;\r\n]*,!)(?:[,!#?]|[ \t]*(?:;|\r?$))'
   - language: Wolfram Language
     and:
       - pattern: '\(\*'
       - pattern: '\*\)$'
+  # Keep comments separate to avoid slow Regexp.union matches on blank lines.
   - language: MATLAB
     pattern: '^\s*%'
+  - language: MATLAB
+    pattern:
+    - '^[ \t]*function[ \t]+(?:\[[^\]\r\n]*\][ \t]*=[ \t]*|[A-Za-z]\w*[ \t]*=[ \t]*)?[A-Za-z]\w*[ \t]*\('
+    - '^[ \t]*classdef[ \t]+(?:\([^\r\n)]*\)[ \t]*)?[A-Za-z]\w*'
   - language: Limbo
     pattern: '^\w+\s*:\s*module\s*\{'
 - extensions: ['.m4']
@@ -720,9 +754,7 @@ disambiguations:
 - extensions: ['.pkl']
   rules:
     - language: Pkl
-      pattern:
-      - '^\s*(module|import|amends|extends|local|const|fixed|abstract|open|class|typealias|@\w+)\b'
-      - '^\s*[a-zA-Z0-9_$]+\s*(=|{|:)|^\s*`[^`]+`\s*(=|{|:)|for\s*\(|when\s*\('
+      pattern: '\A[ \t-\r]*(?:(?://[^\r\n]*(?:\r\n?|\n)|/\*(?:[^*]|\*+[^*/])*\*+/)[ \t-\r]*)*(?:(?:module|import|amends|extends|class|typealias|function|external|abstract|open|local|hidden|fixed|const)\b|@|(?:[a-z_$][A-Za-z0-9_$]*|`[^`\r\n]+`)[ \t-\r]*(?:=|\{|:))'
     - language: Pickle
 - extensions: ['.pl']
   rules:
@@ -809,7 +841,9 @@ disambiguations:
   - language: Rebol
     pattern: '(?i:\bRebol\b)'
   - language: Rez
-    pattern: '(#include\s+["<](Types\.r|Carbon\/Carbon\.r)[">])|((resource|data|type)\s+''[A-Za-z0-9]{4}''\s+((\(.*\)\s+){0,1}){)'
+    pattern:
+    - '(?:\A|[\r\n])[ \t]*(?:resource|data|type)[ \t]+''[^''\r\n]{4}''[ \t\r\n]*(?:\([^\r\n]*\)[ \t\r\n]*)?\{'
+    - '(?:\A|[\r\n])[ \t]*#[ \t]*include[ \t]+["<](?:Types\.r|Carbon/Carbon\.r)[">]'
   - language: R
     pattern: '<-|^\s*#'
 - extensions: ['.re']
@@ -858,6 +892,12 @@ disambiguations:
     pattern: '#include|#pragma\s+(rs|version)|__attribute__'
   - language: XML
     pattern: '^\s*<\?xml'
+- extensions: ['.rsc']
+  rules:
+  - language: Rascal
+    pattern: '^[ \t]*module[ \t]+\w+(?:::\w+)*[ \t]*\r?$'
+  - language: RouterOS Script
+    pattern: '^[ \t]*:(?:local|global)[ \t]+[A-Za-z0-9]+(?:[ \t;]|\r?$)'
 - extensions: ['.s']
   rules:
   - language: Unix Assembly
@@ -879,6 +919,12 @@ disambiguations:
   - language: Markdown
     # Markdown syntax for scdoc
     pattern: '^#+\s+(NAME|SYNOPSIS|DESCRIPTION)'
+- extensions: ['.sch']
+  rules:
+  - language: KiCad Schematic
+    pattern:
+    - '\AEESchema Schematic File Version[ \t]+[0-9]+[ \t]*(?:\r?\n|\r|\z)'
+    - '\Av[ \t]+[0-9]{8}[ \t]+[0-9]+[ \t]*(?:\r?\n|\r|\z)'
 - extensions: ['.scm']
   rules:
   - language: Tree-sitter Query
@@ -902,6 +948,14 @@ disambiguations:
   rules:
   - language: Vespa Schema Definition
     pattern: '^[ \t]*(?:schema|search|document)[ \t]+[\w.\/-]+[ \t]*(?:inherits[ \t][^{\n]*)?\{'
+- extensions: ['.shader']
+  rules:
+  - language: ShaderLab
+    # Match the ShaderLab wrapper, not the shader code embedded inside it.
+    pattern: '(?i)^[ \t]*(?:Shader[ \t]+"[^"\r\n]+"|SubShader)[ \t\r\n]*\{'
+  - language: GLSL
+    # Only a leading directive: don't claim embedded GLSL or commented examples.
+    pattern: '\A[ \t\r\n]*#[ \t]*version[ \t]+[0-9]{3}(?:[ \t]+(?:core|compatibility|es))?[ \t]*(?://[^\r\n]*)?(?:\r?\n|\z)'
 - extensions: ['.sip']
   rules:
   - language: Quartus Simulation IP
@@ -913,6 +967,14 @@ disambiguations:
     pattern: '\bpragma\s+solidity\b|\b(?:abstract\s+)?contract\s+[a-zA-Z$_][a-zA-Z0-9$_]*(?:\s+is\s+(?:[a-zA-Z0-9$_][^\{]*?)?)?\s*\{'
   - language: Gerber Image
     pattern: '^[DGMT][0-9]{2}\*(?:\r?\n|\r)'
+- extensions: ['.spec']
+  rules:
+  - language: RPM Spec
+    and:
+    # Headers may be reordered or separated by macros and conditionals.
+    - pattern: '^[ \t]*(?i:Name):[ \t]*[^ \t\r\n]'
+    - pattern: '^[ \t]*(?i:Version|Release):[ \t]*[^ \t\r\n]'
+    - pattern: '^[ \t]*%(?:description|prep|build|install|files|changelog)(?:[ \t]|\r?$)'
 - extensions: ['.sql']
   rules:
    # Postgres
@@ -1007,6 +1069,12 @@ disambiguations:
     pattern: '\{\{-?\s*(\`?\"\\?\"?|\/\*\s|\w*)\b'
   - language: Smarty
     pattern: '(\A|[^{])\{(\*\s|\$|\/)?\w*\b'
+- extensions: ['.trigger']
+  rules:
+  - language: Apex
+    pattern:
+    - '(?i)^[ \t]*trigger\s+[a-z_][a-z0-9_]*\s+on\s+[a-z_][a-z0-9_]*\s*\(\s*(?:before|after)\s+(?:insert|update|delete|undelete)\b'
+    - '(?i)^[ \t]*(?:public|global)\s+(?:with|without|inherited)\s+sharing\s+class\s+[a-z_][a-z0-9_]*\b'
 - extensions: ['.ts']
   rules:
   - language: XML
@@ -1031,59 +1099,10 @@ disambiguations:
   - language: TSX
 - extensions: ['.txt']
   rules:
-    # The following RegExp is simply a collapsed and simplified form of the
-    # VIM_MODELINE pattern in `./lib/linguist/strategy/modeline.rb`.
-  - language: Vim Help File
-    pattern: '(?:(?:^|[ \t])(?:vi|Vi(?=m))(?:m[<=>]?[0-9]+|m)?|[ \t]ex)(?=:(?=[ \t]*set?[ \t][^\r\n:]+:)|:(?![ \t]*set?[ \t]))(?:(?:[ \t]*:[ \t]*|[ \t])\w*(?:[ \t]*=(?:[^\\\s]|\\.)*)?)*[ \t:](?:filetype|ft|syntax)[ \t]*=(help)(?=$|\s|:)'
   - language: Hosts File
-    pattern: |-
-      (?xi) ^
-
-      # IPv4 address
-      (?<ipv4>
-        (?!\.)
-        (?:\.?
-          (?: 25[0-5]  # 250-255
-          |   2[0-4]\d # 200-249
-          |   1\d\d    # 100-199
-          |   [1-9]?\d # 0-99
-          )\b
-      ){4})
-
-      # CIDR notation: /[0-32]
-      (?<cidr>/(3[0-2]|[12]?\d)\b)?
-
-      # Domains list
-      (?<domains>
-        [ \t]+
-        \w[-\w]* (?:\.\w[-\w]*)*
-        (?<!-)\b
-      )*+
-
-      (?:$|\s)
+    pattern: '^(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(?:\.(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}(?:/(?:3[0-2]|[12]?[0-9]))?(?:[ \t]+[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?(?:\.[A-Za-z0-9_](?:[A-Za-z0-9_-]*[A-Za-z0-9_])?)*)+(?:[ \t]|$)'
   - language: Adblock Filter List
-    pattern: |-
-      (?x)\A
-      \[
-      (?<version>
-        (?:
-          [Aa]d[Bb]lock
-          (?:[ \t][Pp]lus)?
-          |
-          u[Bb]lock
-          (?:[ \t][Oo]rigin)?
-          |
-          [Aa]d[Gg]uard
-        )
-        (?:[ \t] \d+(?:\.\d+)*+)?
-      )
-      (?:
-        [ \t]?;[ \t]?
-        \g<version>
-      )*+
-      \]
-    # HACK: This is a contrived use of heuristics needed to address
-    # an unusual edge-case. See https://git.io/JULye for discussion.
+    pattern: '\A\[(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?(?:[ \t]?;[ \t]?(?:[Aa]d[Bb]lock(?:[ \t][Pp]lus)?|u[Bb]lock(?:[ \t][Oo]rigin)?|[Aa]d[Gg]uard)(?:[ \t][0-9]+(?:\.[0-9]+)*)?)*\]'
   - language: Text
 - extensions: ['.typ']
   rules:
