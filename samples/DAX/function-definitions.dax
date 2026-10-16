@@ -1,0 +1,50 @@
+// User-defined functions with typed parameters, defaults and doc comments,
+// followed by a parameterised query that calls them.
+DEFINE
+    /// Applies a tax rate to an amount.
+    /// @param {SCALAR NUMERIC} amount - the pre-tax amount
+    /// @param {SCALAR NUMERIC} [rate] - tax rate, defaults to 10 %
+    /// @returns the amount including tax
+    FUNCTION Finance.AddTax = ( amount : SCALAR NUMERIC VAL, rate : SCALAR NUMERIC VAL = 0.1 ) =>
+        amount * ( 1 + rate )
+
+    /// Safe ratio that treats a zero or blank denominator as blank.
+    FUNCTION Finance.Ratio = ( numerator : SCALAR, denominator : SCALAR, alternate : SCALAR = BLANK () ) =>
+        IF ( ISBLANK ( denominator ) || denominator = 0, alternate, numerator / denominator )
+
+    /// Sum of a measure over the rows of a table expression, evaluated lazily.
+    FUNCTION Util.SumOver = ( t : TABLE EXPR, m : MEASUREREF ) =>
+        SUMX ( t, m )
+
+    /// Year-to-date over a calendar reference (calendar-based time intelligence).
+    FUNCTION Fiscal.Ytd = ( m : MEASUREREF, cal : CALENDARREF ) =>
+        CALCULATE ( m, DATESYTD ( cal ) )
+
+    FUNCTION Util.Pick = ( which : ANYVAL VAL, a : ANYREF, b : ANYREF = BLANK () ) =>
+        SWITCH ( TRUE (), which = 1, a, which = 2, b, BLANK () )
+
+    FUNCTION Util.Nothing = () => BLANK ()
+
+    MPARAMETER SelectedYears = { 2024, 2025 }
+
+    MEASURE Sales[Sales incl Tax] = Finance.AddTax ( [Sales Amount] )
+    MEASURE Sales[Margin %] = Finance.Ratio ( [Sales Amount] - [Total Cost], [Sales Amount] )
+    MEASURE Sales[Sales YTD] = Fiscal.Ytd ( [Sales Amount], 'Fiscal Calendar' )
+
+    VAR _years = TREATAS ( SelectedYears, 'Date'[Year] )
+
+EVALUATE
+    SUMMARIZECOLUMNS (
+        'Date'[Year],
+        'Product'[Category],
+        _years,
+        "Sales incl Tax", [Sales incl Tax],
+        "Margin %", [Margin %],
+        "YTD", [Sales YTD],
+        "Rate 15 %", Finance.AddTax ( [Sales Amount], 0.15 ),
+        "Over products", Util.SumOver ( VALUES ( 'Product'[Product] ), [Sales Amount] )
+    )
+ORDER BY
+    'Date'[Year] DESC,
+    'Product'[Category] ASC
+START AT @StartYear, @StartCategory

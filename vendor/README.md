@@ -155,6 +155,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **D:** [textmate/d.tmbundle](https://github.com/textmate/d.tmbundle)
 - **D-ObjDump:** [nanoant/assembly.tmbundle](https://github.com/nanoant/assembly.tmbundle)
 - **D2:** [terrastruct/d2-vscode](https://github.com/terrastruct/d2-vscode)
+- **DAX:** [andrjohns/dax-grammar](https://github.com/andrjohns/dax-grammar)
 - **DM:** [spacestation13/dm-syntax](https://github.com/spacestation13/dm-syntax)
 - **DNS Zone:** [sixty4k/st2-zonefile](https://github.com/sixty4k/st2-zonefile)
 - **DTrace:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)

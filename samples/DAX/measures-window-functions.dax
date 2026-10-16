@@ -1,0 +1,120 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// DAX WINDOW FUNCTIONS (2024+)
+// INDEX, OFFSET, WINDOW, RANK, ROWNUMBER
+// 
+// These functions enable row navigation over sorted and partitioned tables
+// Key concept: "Apply Semantics" - functions return tables that modify CALCULATE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ───────────────────────────────────────────────────────────────────────────────
+// OFFSET - Return row relative to current position
+// Syntax: OFFSET(delta, relation, orderBy, [blanks], [partitionBy])
+// ───────────────────────────────────────────────────────────────────────────────
+
+// Previous Month Value
+Sales Previous Month = 
+CALCULATE(
+    [Sales Amount],
+    OFFSET(
+        -1,                                    -- Go back 1 row
+        ALLSELECTED('Date'[Year], 'Date'[Month]),
+        ORDERBY('Date'[Year], ASC, 'Date'[Month], ASC)
+    )
+)
+
+// Previous Year Same Month
+Sales PYSM = 
+CALCULATE(
+    [Sales Amount],
+    OFFSET(
+        -12,
+        ALLSELECTED('Date'[Year], 'Date'[Month]),
+        ORDERBY('Date'[Year], ASC, 'Date'[Month], ASC)
+    )
+)
+
+// Next Month Value (Lead)
+Sales Next Month = 
+CALCULATE(
+    [Sales Amount],
+    OFFSET(
+        1,
+        ALLSELECTED('Date'[Year], 'Date'[Month]),
+        ORDERBY('Date'[Year], ASC, 'Date'[Month], ASC)
+    )
+)
+
+// Month-over-Month Change using OFFSET
+Sales MoM Change OFFSET = 
+VAR CurrentSales = [Sales Amount]
+VAR PreviousSales = [Sales Previous Month]
+RETURN
+    CurrentSales - PreviousSales
+
+// MoM % Change
+Sales MoM % OFFSET = 
+VAR CurrentSales = [Sales Amount]
+VAR PreviousSales = [Sales Previous Month]
+RETURN
+    DIVIDE(CurrentSales - PreviousSales, PreviousSales)
+
+// Previous Value within Category (Partitioned)
+Sales Previous Month by Category = 
+CALCULATE(
+    [Sales Amount],
+    OFFSET(
+        -1,
+        ALLSELECTED('Date'[Year], 'Date'[Month], 'Product'[Category]),
+        ORDERBY('Date'[Year], ASC, 'Date'[Month], ASC),
+        DEFAULT,
+        PARTITIONBY('Product'[Category])      -- Reset for each category
+    )
+)
+
+// ───────────────────────────────────────────────────────────────────────────────
+// INDEX - Return specific row by position
+// Syntax: INDEX(position, relation, orderBy, [blanks], [partitionBy])
+// ───────────────────────────────────────────────────────────────────────────────
+
+// First Month Sales (in selection)
+Sales First Month = 
+CALCULATE(
+    [Sales Amount],
+    INDEX(
+        1,                                     -- First row
+        ALLSELECTED('Date'[Year], 'Date'[Month]),
+        ORDERBY('Date'[Year], ASC, 'Date'[Month], ASC)
+    )
+)
+
+// Last Month Sales (in selection)
+Sales Last Month = 
+CALCULATE(
+    [Sales Amount],
+    INDEX(
+        -1,                                    -- Last row (negative = from end)
+        ALLSELECTED('Date'[Year], 'Date'[Month]),
+        ORDERBY('Date'[Year], ASC, 'Date'[Month], ASC)
+    )
+)
+
+// Growth from First Month
+Sales Growth from Start = 
+VAR CurrentSales = [Sales Amount]
+VAR FirstSales = [Sales First Month]
+RETURN
+    DIVIDE(CurrentSales - FirstSales, FirstSales)
+
+// First Month of Each Year (Partitioned)
+Sales First Month of Year = 
+CALCULATE(
+    [Sales Amount],
+    INDEX(
+        1,
+        ALLSELECTED('Date'[Year], 'Date'[Month]),
+        ORDERBY('Date'[Month], ASC),
+        DEFAULT,
+        PARTITIONBY('Date'[Year])             -- Reset for each year
+    )
+)
+
