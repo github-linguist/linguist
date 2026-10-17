@@ -119,6 +119,7 @@ class TestGenerated < Minitest::Test
 
     # MySQL View Definition Format (INI)
     generated_sample_loading_data("INI/metrics.frm")
+    refute Generated.generated?("empty.frm", "")
 
     # JavaScript with source-maps
     generated_sample_loading_data("JavaScript/namespace.js")
