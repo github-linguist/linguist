@@ -1,0 +1,15 @@
+// #target: macos-x64
+
+module test;
+
+
+fn int main()
+{
+	var $foo = double::typeid;
+	$Typefrom($foo) a = 123.0;
+	return (int)a;
+}
+
+/* #expect: test.ll
+
+  %a = alloca double, align 8
