@@ -1,0 +1,30 @@
+<Configuration>
+  <MemoryInMB>4096</MemoryInMB>
+  <vGPU>Default</vGPU>
+  <Networking>Default</Networking>
+  <AudioInput>Default</AudioInput>
+  <VideoInput>Default</VideoInput>
+  <ProtectedClient>Default</ProtectedClient>
+  <PrinterRedirection>Default</PrinterRedirection>
+  <ClipboardRedirection>Default</ClipboardRedirection>
+
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>%ProgramFiles(x86)%\Sysinternals</HostFolder>
+      <SandboxFolder>%ProgramFiles(x86)%\Sysinternals</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+
+    <MappedFolder>
+      <HostFolder>%DOTFILES%</HostFolder>
+      <SandboxFolder>%USERPROFILE%\dotfiles</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+
+    <MappedFolder>
+      <HostFolder>%DOTFILES%\posh</HostFolder>
+      <SandboxFolder>%USERPROFILE%\Documents\WindowsPowerShell</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+</Configuration>
