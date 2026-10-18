@@ -50,6 +50,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Asymptote:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **AutoHotkey:** [ahkscript/SublimeAutoHotkey](https://github.com/ahkscript/SublimeAutoHotkey)
 - **AutoIt:** [AutoIt/SublimeAutoItScript](https://github.com/AutoIt/SublimeAutoItScript)
+- **AviSynth:** [Purfview/avisynth-textmate](https://github.com/Purfview/avisynth-textmate)
 - **Avro IDL:** [Jason3S/avro.tmLanguage](https://github.com/Jason3S/avro.tmLanguage)
 - **Awk:** [github-linguist/awk-sublime](https://github.com/github-linguist/awk-sublime)
 - **B:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
