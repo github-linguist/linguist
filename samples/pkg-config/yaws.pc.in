@@ -1,0 +1,15 @@
+##
+##  yaws.pc: pkg-config(1) specification
+##
+
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib/yaws/ebin
+includedir=${prefix}/lib/yaws/include
+
+Name: yaws
+Description: Yet Another Web Server
+Version: @YAWS_VSN@
+URL: https://erlyaws.github.io/
+Libs: -pa ${libdir}
+Cflags: -I${includedir}

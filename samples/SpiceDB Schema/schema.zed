@@ -1,0 +1,482 @@
+definition hbi/host {
+	permission update = t_workspace->inventory_host_update
+	permission view = t_workspace->inventory_host_view
+	permission workspace = t_workspace
+	relation t_workspace: rbac/workspace
+}
+
+definition notifications/integration {
+	permission delete = t_workspace->notifications_integration_delete
+	permission disable = t_workspace->notifications_integration_disable
+	permission edit = t_workspace->notifications_integration_edit
+	permission enable = t_workspace->notifications_integration_enable
+	permission test = t_workspace->notifications_integration_test
+	permission view = t_workspace->notifications_integration_view
+	permission view_history = t_workspace->notifications_integration_view_history
+	permission workspace = t_workspace
+	relation t_workspace: rbac/workspace
+}
+
+definition rbac/group {
+	permission member = t_member
+	relation t_member: rbac/principal | rbac/group#member
+	permission owner = t_owner
+	relation t_owner: rbac/tenant
+}
+
+definition rbac/platform {
+	permission binding = t_binding
+	relation t_binding: rbac/role_binding
+	permission inventory_host_update = t_binding->inventory_host_update
+	permission inventory_host_view = t_binding->inventory_host_view
+	permission notifications_applications_view = t_binding->notifications_applications_view
+	permission notifications_behavior_groups_edit = t_binding->notifications_behavior_groups_edit
+	permission notifications_behavior_groups_view = t_binding->notifications_behavior_groups_view
+	permission notifications_bundles_view = t_binding->notifications_bundles_view
+	permission notifications_daily_digest_preference_edit = t_binding->notifications_daily_digest_preference_edit
+	permission notifications_daily_digest_preference_view = t_binding->notifications_daily_digest_preference_view
+	permission notifications_event_log_view = t_binding->notifications_event_log_view
+	permission notifications_event_types_view = t_binding->notifications_event_types_view
+	permission notifications_integration_create = t_binding->notifications_integration_create
+	permission notifications_integration_delete = t_binding->notifications_integration_delete
+	permission notifications_integration_disable = t_binding->notifications_integration_disable
+	permission notifications_integration_edit = t_binding->notifications_integration_edit
+	permission notifications_integration_enable = t_binding->notifications_integration_enable
+	permission notifications_integration_subscribe_drawer = t_binding->notifications_integration_subscribe_drawer
+	permission notifications_integration_subscribe_email = t_binding->notifications_integration_subscribe_email
+	permission notifications_integration_test = t_binding->notifications_integration_test
+	permission notifications_integration_view = t_binding->notifications_integration_view
+	permission notifications_integration_view_history = t_binding->notifications_integration_view_history
+}
+
+definition rbac/principal {}
+
+definition rbac/role {
+	permission advisor_all_all = t_advisor_all_all
+	relation t_advisor_all_all: rbac/principal:*
+	permission advisor_all_read = t_advisor_all_read
+	relation t_advisor_all_read: rbac/principal:*
+	permission advisor_disable_recommendations_write = t_advisor_disable_recommendations_write
+	relation t_advisor_disable_recommendations_write: rbac/principal:*
+	permission advisor_exports_read = t_advisor_exports_read
+	relation t_advisor_exports_read: rbac/principal:*
+	permission advisor_recommendation_results_read = t_advisor_recommendation_results_read
+	relation t_advisor_recommendation_results_read: rbac/principal:*
+	permission advisor_weekly_email_read = t_advisor_weekly_email_read
+	relation t_advisor_weekly_email_read: rbac/principal:*
+	permission all_all_all = t_all_all_all
+	relation t_all_all_all: rbac/principal:*
+	permission ansible_wisdom_admin_dashboard_chart_active_users_read = t_ansible_wisdom_admin_dashboard_chart_active_users_read
+	relation t_ansible_wisdom_admin_dashboard_chart_active_users_read: rbac/principal:*
+	permission ansible_wisdom_admin_dashboard_chart_module_usage_read = t_ansible_wisdom_admin_dashboard_chart_module_usage_read
+	relation t_ansible_wisdom_admin_dashboard_chart_module_usage_read: rbac/principal:*
+	permission ansible_wisdom_admin_dashboard_chart_recommendations_read = t_ansible_wisdom_admin_dashboard_chart_recommendations_read
+	relation t_ansible_wisdom_admin_dashboard_chart_recommendations_read: rbac/principal:*
+	permission ansible_wisdom_admin_dashboard_chart_user_sentiment_read = t_ansible_wisdom_admin_dashboard_chart_user_sentiment_read
+	relation t_ansible_wisdom_admin_dashboard_chart_user_sentiment_read: rbac/principal:*
+	permission automation_analytics_all_all = t_automation_analytics_all_all
+	relation t_automation_analytics_all_all: rbac/principal:*
+	permission automation_analytics_all_read = t_automation_analytics_all_read
+	relation t_automation_analytics_all_read: rbac/principal:*
+	permission automation_analytics_all_write = t_automation_analytics_all_write
+	relation t_automation_analytics_all_write: rbac/principal:*
+	permission child = t_child
+	relation t_child: rbac/role
+	permission compliance_all_all = t_compliance_all_all
+	relation t_compliance_all_all: rbac/principal:*
+	permission compliance_policy_create = t_compliance_policy_create
+	relation t_compliance_policy_create: rbac/principal:*
+	permission compliance_policy_delete = t_compliance_policy_delete
+	relation t_compliance_policy_delete: rbac/principal:*
+	permission compliance_policy_read = t_compliance_policy_read
+	relation t_compliance_policy_read: rbac/principal:*
+	permission compliance_policy_update = t_compliance_policy_update
+	relation t_compliance_policy_update: rbac/principal:*
+	permission compliance_policy_write = t_compliance_policy_write
+	relation t_compliance_policy_write: rbac/principal:*
+	permission compliance_report_delete = t_compliance_report_delete
+	relation t_compliance_report_delete: rbac/principal:*
+	permission compliance_report_read = t_compliance_report_read
+	relation t_compliance_report_read: rbac/principal:*
+	permission compliance_system_read = t_compliance_system_read
+	relation t_compliance_system_read: rbac/principal:*
+	permission config_manager_activation_keys_all = t_config_manager_activation_keys_all
+	relation t_config_manager_activation_keys_all: rbac/principal:*
+	permission config_manager_activation_keys_read = t_config_manager_activation_keys_read
+	relation t_config_manager_activation_keys_read: rbac/principal:*
+	permission config_manager_activation_keys_write = t_config_manager_activation_keys_write
+	relation t_config_manager_activation_keys_write: rbac/principal:*
+	permission config_manager_state_changes_read = t_config_manager_state_changes_read
+	relation t_config_manager_state_changes_read: rbac/principal:*
+	permission config_manager_state_read = t_config_manager_state_read
+	relation t_config_manager_state_read: rbac/principal:*
+	permission config_manager_state_write = t_config_manager_state_write
+	relation t_config_manager_state_write: rbac/principal:*
+	permission content_sources_all_all = t_content_sources_all_all
+	relation t_content_sources_all_all: rbac/principal:*
+	permission content_sources_repositories_read = t_content_sources_repositories_read
+	relation t_content_sources_repositories_read: rbac/principal:*
+	permission content_sources_repositories_upload = t_content_sources_repositories_upload
+	relation t_content_sources_repositories_upload: rbac/principal:*
+	permission content_sources_repositories_write = t_content_sources_repositories_write
+	relation t_content_sources_repositories_write: rbac/principal:*
+	permission content_sources_templates_read = t_content_sources_templates_read
+	relation t_content_sources_templates_read: rbac/principal:*
+	permission content_sources_templates_write = t_content_sources_templates_write
+	relation t_content_sources_templates_write: rbac/principal:*
+	permission cost_management_all_all = t_cost_management_all_all
+	relation t_cost_management_all_all: rbac/principal:*
+	permission cost_management_aws_account_all = t_cost_management_aws_account_all
+	relation t_cost_management_aws_account_all: rbac/principal:*
+	permission cost_management_aws_account_read = t_cost_management_aws_account_read
+	relation t_cost_management_aws_account_read: rbac/principal:*
+	permission cost_management_aws_organizational_unit_all = t_cost_management_aws_organizational_unit_all
+	relation t_cost_management_aws_organizational_unit_all: rbac/principal:*
+	permission cost_management_aws_organizational_unit_read = t_cost_management_aws_organizational_unit_read
+	relation t_cost_management_aws_organizational_unit_read: rbac/principal:*
+	permission cost_management_azure_subscription_guid_all = t_cost_management_azure_subscription_guid_all
+	relation t_cost_management_azure_subscription_guid_all: rbac/principal:*
+	permission cost_management_azure_subscription_guid_read = t_cost_management_azure_subscription_guid_read
+	relation t_cost_management_azure_subscription_guid_read: rbac/principal:*
+	permission cost_management_cost_model_all = t_cost_management_cost_model_all
+	relation t_cost_management_cost_model_all: rbac/principal:*
+	permission cost_management_cost_model_read = t_cost_management_cost_model_read
+	relation t_cost_management_cost_model_read: rbac/principal:*
+	permission cost_management_cost_model_write = t_cost_management_cost_model_write
+	relation t_cost_management_cost_model_write: rbac/principal:*
+	permission cost_management_gcp_account_all = t_cost_management_gcp_account_all
+	relation t_cost_management_gcp_account_all: rbac/principal:*
+	permission cost_management_gcp_account_read = t_cost_management_gcp_account_read
+	relation t_cost_management_gcp_account_read: rbac/principal:*
+	permission cost_management_gcp_project_all = t_cost_management_gcp_project_all
+	relation t_cost_management_gcp_project_all: rbac/principal:*
+	permission cost_management_gcp_project_read = t_cost_management_gcp_project_read
+	relation t_cost_management_gcp_project_read: rbac/principal:*
+	permission cost_management_oci_payer_tenant_id_all = t_cost_management_oci_payer_tenant_id_all
+	relation t_cost_management_oci_payer_tenant_id_all: rbac/principal:*
+	permission cost_management_oci_payer_tenant_id_read = t_cost_management_oci_payer_tenant_id_read
+	relation t_cost_management_oci_payer_tenant_id_read: rbac/principal:*
+	permission cost_management_openshift_cluster_all = t_cost_management_openshift_cluster_all
+	relation t_cost_management_openshift_cluster_all: rbac/principal:*
+	permission cost_management_openshift_cluster_read = t_cost_management_openshift_cluster_read
+	relation t_cost_management_openshift_cluster_read: rbac/principal:*
+	permission cost_management_openshift_node_all = t_cost_management_openshift_node_all
+	relation t_cost_management_openshift_node_all: rbac/principal:*
+	permission cost_management_openshift_node_read = t_cost_management_openshift_node_read
+	relation t_cost_management_openshift_node_read: rbac/principal:*
+	permission cost_management_openshift_project_all = t_cost_management_openshift_project_all
+	relation t_cost_management_openshift_project_all: rbac/principal:*
+	permission cost_management_openshift_project_read = t_cost_management_openshift_project_read
+	relation t_cost_management_openshift_project_read: rbac/principal:*
+	permission cost_management_settings_all = t_cost_management_settings_all
+	relation t_cost_management_settings_all: rbac/principal:*
+	permission cost_management_settings_read = t_cost_management_settings_read
+	relation t_cost_management_settings_read: rbac/principal:*
+	permission cost_management_settings_write = t_cost_management_settings_write
+	relation t_cost_management_settings_write: rbac/principal:*
+	permission hybrid_committed_spend_reports_read = t_hybrid_committed_spend_reports_read
+	relation t_hybrid_committed_spend_reports_read: rbac/principal:*
+	permission idmsvc_all_all = t_idmsvc_all_all
+	relation t_idmsvc_all_all: rbac/principal:*
+	permission idmsvc_domains_create = t_idmsvc_domains_create
+	relation t_idmsvc_domains_create: rbac/principal:*
+	permission idmsvc_domains_delete = t_idmsvc_domains_delete
+	relation t_idmsvc_domains_delete: rbac/principal:*
+	permission idmsvc_domains_list = t_idmsvc_domains_list
+	relation t_idmsvc_domains_list: rbac/principal:*
+	permission idmsvc_domains_read = t_idmsvc_domains_read
+	relation t_idmsvc_domains_read: rbac/principal:*
+	permission idmsvc_domains_update = t_idmsvc_domains_update
+	relation t_idmsvc_domains_update: rbac/principal:*
+	permission idmsvc_token_create = t_idmsvc_token_create
+	relation t_idmsvc_token_create: rbac/principal:*
+	permission integrations_all_all = t_integrations_all_all
+	relation t_integrations_all_all: rbac/principal:*
+	permission integrations_all_read = t_integrations_all_read
+	relation t_integrations_all_read: rbac/principal:*
+	permission integrations_all_write = t_integrations_all_write
+	relation t_integrations_all_write: rbac/principal:*
+	permission integrations_endpoints_all = t_integrations_endpoints_all
+	relation t_integrations_endpoints_all: rbac/principal:*
+	permission integrations_endpoints_read = t_integrations_endpoints_read
+	relation t_integrations_endpoints_read: rbac/principal:*
+	permission integrations_endpoints_write = t_integrations_endpoints_write
+	relation t_integrations_endpoints_write: rbac/principal:*
+	permission inventory_all_all = t_inventory_all_all
+	relation t_inventory_all_all: rbac/principal:*
+	permission inventory_all_read = t_inventory_all_read
+	relation t_inventory_all_read: rbac/principal:*
+	permission inventory_all_write = t_inventory_all_write
+	relation t_inventory_all_write: rbac/principal:*
+	permission inventory_groups_all = t_inventory_groups_all
+	relation t_inventory_groups_all: rbac/principal:*
+	permission inventory_groups_read = t_inventory_groups_read
+	relation t_inventory_groups_read: rbac/principal:*
+	permission inventory_groups_write = t_inventory_groups_write
+	relation t_inventory_groups_write: rbac/principal:*
+	permission inventory_host_update = inventory_hosts_write + inventory_hosts_all + inventory_all_write + inventory_all_all + all_all_all + t_child->inventory_host_update
+	permission inventory_host_view = inventory_hosts_read + inventory_hosts_all + inventory_all_read + inventory_all_all + all_all_all + t_child->inventory_host_view
+	permission inventory_hosts_all = t_inventory_hosts_all
+	relation t_inventory_hosts_all: rbac/principal:*
+	permission inventory_hosts_read = t_inventory_hosts_read
+	relation t_inventory_hosts_read: rbac/principal:*
+	permission inventory_hosts_write = t_inventory_hosts_write
+	relation t_inventory_hosts_write: rbac/principal:*
+	permission malware_detection_acknowledgements_write = t_malware_detection_acknowledgements_write
+	relation t_malware_detection_acknowledgements_write: rbac/principal:*
+	permission malware_detection_all_all = t_malware_detection_all_all
+	relation t_malware_detection_all_all: rbac/principal:*
+	permission malware_detection_all_read = t_malware_detection_all_read
+	relation t_malware_detection_all_read: rbac/principal:*
+	permission notifications_all_all = t_notifications_all_all
+	relation t_notifications_all_all: rbac/principal:*
+	permission notifications_all_read = t_notifications_all_read
+	relation t_notifications_all_read: rbac/principal:*
+	permission notifications_all_write = t_notifications_all_write
+	relation t_notifications_all_write: rbac/principal:*
+	permission notifications_applications_view = notifications_notifications_read + notifications_notifications_all + notifications_all_read + notifications_all_all + all_all_all + t_child->notifications_applications_view
+	permission notifications_behavior_groups_edit = notifications_notifications_write + notifications_notifications_all + notifications_all_write + notifications_all_all + all_all_all + t_child->notifications_behavior_groups_edit
+	permission notifications_behavior_groups_view = notifications_notifications_read + notifications_notifications_all + notifications_all_read + notifications_all_all + all_all_all + t_child->notifications_behavior_groups_view
+	permission notifications_bundles_view = notifications_notifications_read + notifications_notifications_all + notifications_all_read + notifications_all_all + all_all_all + t_child->notifications_bundles_view
+	permission notifications_daily_digest_preference_edit = notifications_notifications_write + notifications_notifications_all + notifications_all_write + notifications_all_all + all_all_all + t_child->notifications_daily_digest_preference_edit
+	permission notifications_daily_digest_preference_view = notifications_notifications_read + notifications_notifications_all + notifications_all_read + notifications_all_all + all_all_all + t_child->notifications_daily_digest_preference_view
+	permission notifications_event_log_view = notifications_events_read + notifications_events_all + notifications_all_read + notifications_all_all + all_all_all + t_child->notifications_event_log_view
+	permission notifications_event_types_view = notifications_notifications_read + notifications_notifications_all + notifications_all_read + notifications_all_all + all_all_all + t_child->notifications_event_types_view
+	permission notifications_events_all = t_notifications_events_all
+	relation t_notifications_events_all: rbac/principal:*
+	permission notifications_events_read = t_notifications_events_read
+	relation t_notifications_events_read: rbac/principal:*
+	permission notifications_integration_create = integrations_endpoints_write + integrations_endpoints_all + integrations_all_write + integrations_all_all + all_all_all + t_child->notifications_integration_create
+	permission notifications_integration_delete = integrations_endpoints_write + integrations_endpoints_all + integrations_all_write + integrations_all_all + all_all_all + t_child->notifications_integration_delete
+	permission notifications_integration_disable = integrations_endpoints_write + integrations_endpoints_all + integrations_all_write + integrations_all_all + all_all_all + t_child->notifications_integration_disable
+	permission notifications_integration_edit = integrations_endpoints_write + integrations_endpoints_all + integrations_all_write + integrations_all_all + all_all_all + t_child->notifications_integration_edit
+	permission notifications_integration_enable = integrations_endpoints_write + integrations_endpoints_all + integrations_all_write + integrations_all_all + all_all_all + t_child->notifications_integration_enable
+	permission notifications_integration_subscribe_drawer = integrations_endpoints_read + integrations_endpoints_all + integrations_all_read + integrations_all_all + all_all_all + t_child->notifications_integration_subscribe_drawer
+	permission notifications_integration_subscribe_email = integrations_endpoints_read + integrations_endpoints_all + integrations_all_read + integrations_all_all + all_all_all + t_child->notifications_integration_subscribe_email
+	permission notifications_integration_test = integrations_endpoints_write + integrations_endpoints_all + integrations_all_write + integrations_all_all + all_all_all + t_child->notifications_integration_test
+	permission notifications_integration_view = integrations_endpoints_read + integrations_endpoints_all + integrations_all_read + integrations_all_all + all_all_all + t_child->notifications_integration_view
+	permission notifications_integration_view_history = integrations_endpoints_read + integrations_endpoints_all + integrations_all_read + integrations_all_all + all_all_all + t_child->notifications_integration_view_history
+	permission notifications_notifications_all = t_notifications_notifications_all
+	relation t_notifications_notifications_all: rbac/principal:*
+	permission notifications_notifications_read = t_notifications_notifications_read
+	relation t_notifications_notifications_read: rbac/principal:*
+	permission notifications_notifications_write = t_notifications_notifications_write
+	relation t_notifications_notifications_write: rbac/principal:*
+	permission ocp_advisor_all_all = t_ocp_advisor_all_all
+	relation t_ocp_advisor_all_all: rbac/principal:*
+	permission ocp_advisor_exports_read = t_ocp_advisor_exports_read
+	relation t_ocp_advisor_exports_read: rbac/principal:*
+	permission ocp_advisor_recommendation_results_read = t_ocp_advisor_recommendation_results_read
+	relation t_ocp_advisor_recommendation_results_read: rbac/principal:*
+	permission ocp_advisor_toggle_recommendations_write = t_ocp_advisor_toggle_recommendations_write
+	relation t_ocp_advisor_toggle_recommendations_write: rbac/principal:*
+	permission patch_all_all = t_patch_all_all
+	relation t_patch_all_all: rbac/principal:*
+	permission patch_all_read = t_patch_all_read
+	relation t_patch_all_read: rbac/principal:*
+	permission patch_all_write = t_patch_all_write
+	relation t_patch_all_write: rbac/principal:*
+	permission patch_system_write = t_patch_system_write
+	relation t_patch_system_write: rbac/principal:*
+	permission patch_template_write = t_patch_template_write
+	relation t_patch_template_write: rbac/principal:*
+	permission playbook_dispatcher_run_read = t_playbook_dispatcher_run_read
+	relation t_playbook_dispatcher_run_read: rbac/principal:*
+	permission playbook_dispatcher_run_write = t_playbook_dispatcher_run_write
+	relation t_playbook_dispatcher_run_write: rbac/principal:*
+	permission policies_all_all = t_policies_all_all
+	relation t_policies_all_all: rbac/principal:*
+	permission policies_policies_read = t_policies_policies_read
+	relation t_policies_policies_read: rbac/principal:*
+	permission policies_policies_write = t_policies_policies_write
+	relation t_policies_policies_write: rbac/principal:*
+	permission provisioning_all_all = t_provisioning_all_all
+	relation t_provisioning_all_all: rbac/principal:*
+	permission provisioning_pubkey_all = t_provisioning_pubkey_all
+	relation t_provisioning_pubkey_all: rbac/principal:*
+	permission provisioning_pubkey_read = t_provisioning_pubkey_read
+	relation t_provisioning_pubkey_read: rbac/principal:*
+	permission provisioning_pubkey_write = t_provisioning_pubkey_write
+	relation t_provisioning_pubkey_write: rbac/principal:*
+	permission provisioning_reservation_all = t_provisioning_reservation_all
+	relation t_provisioning_reservation_all: rbac/principal:*
+	permission provisioning_reservation_aws_all = t_provisioning_reservation_aws_all
+	relation t_provisioning_reservation_aws_all: rbac/principal:*
+	permission provisioning_reservation_aws_read = t_provisioning_reservation_aws_read
+	relation t_provisioning_reservation_aws_read: rbac/principal:*
+	permission provisioning_reservation_aws_write = t_provisioning_reservation_aws_write
+	relation t_provisioning_reservation_aws_write: rbac/principal:*
+	permission provisioning_reservation_azure_all = t_provisioning_reservation_azure_all
+	relation t_provisioning_reservation_azure_all: rbac/principal:*
+	permission provisioning_reservation_azure_read = t_provisioning_reservation_azure_read
+	relation t_provisioning_reservation_azure_read: rbac/principal:*
+	permission provisioning_reservation_azure_write = t_provisioning_reservation_azure_write
+	relation t_provisioning_reservation_azure_write: rbac/principal:*
+	permission provisioning_reservation_gcp_all = t_provisioning_reservation_gcp_all
+	relation t_provisioning_reservation_gcp_all: rbac/principal:*
+	permission provisioning_reservation_gcp_read = t_provisioning_reservation_gcp_read
+	relation t_provisioning_reservation_gcp_read: rbac/principal:*
+	permission provisioning_reservation_gcp_write = t_provisioning_reservation_gcp_write
+	relation t_provisioning_reservation_gcp_write: rbac/principal:*
+	permission provisioning_reservation_read = t_provisioning_reservation_read
+	relation t_provisioning_reservation_read: rbac/principal:*
+	permission provisioning_reservation_write = t_provisioning_reservation_write
+	relation t_provisioning_reservation_write: rbac/principal:*
+	permission provisioning_source_all = t_provisioning_source_all
+	relation t_provisioning_source_all: rbac/principal:*
+	permission provisioning_source_read = t_provisioning_source_read
+	relation t_provisioning_source_read: rbac/principal:*
+	permission rbac_all_all = t_rbac_all_all
+	relation t_rbac_all_all: rbac/principal:*
+	permission rbac_principal_read = t_rbac_principal_read
+	relation t_rbac_principal_read: rbac/principal:*
+	permission remediations_all_all = t_remediations_all_all
+	relation t_remediations_all_all: rbac/principal:*
+	permission remediations_all_read = t_remediations_all_read
+	relation t_remediations_all_read: rbac/principal:*
+	permission remediations_all_write = t_remediations_all_write
+	relation t_remediations_all_write: rbac/principal:*
+	permission remediations_remediation_execute = t_remediations_remediation_execute
+	relation t_remediations_remediation_execute: rbac/principal:*
+	permission remediations_remediation_read = t_remediations_remediation_read
+	relation t_remediations_remediation_read: rbac/principal:*
+	permission remediations_remediation_write = t_remediations_remediation_write
+	relation t_remediations_remediation_write: rbac/principal:*
+	permission ros_all_all = t_ros_all_all
+	relation t_ros_all_all: rbac/principal:*
+	permission ros_all_read = t_ros_all_read
+	relation t_ros_all_read: rbac/principal:*
+	permission sources_all_all = t_sources_all_all
+	relation t_sources_all_all: rbac/principal:*
+	permission staleness_staleness_all = t_staleness_staleness_all
+	relation t_staleness_staleness_all: rbac/principal:*
+	permission staleness_staleness_read = t_staleness_staleness_read
+	relation t_staleness_staleness_read: rbac/principal:*
+	permission staleness_staleness_write = t_staleness_staleness_write
+	relation t_staleness_staleness_write: rbac/principal:*
+	permission subscriptions_all_all = t_subscriptions_all_all
+	relation t_subscriptions_all_all: rbac/principal:*
+	permission subscriptions_cloud_access_read = t_subscriptions_cloud_access_read
+	relation t_subscriptions_cloud_access_read: rbac/principal:*
+	permission subscriptions_cloud_access_write = t_subscriptions_cloud_access_write
+	relation t_subscriptions_cloud_access_write: rbac/principal:*
+	permission subscriptions_manifests_read = t_subscriptions_manifests_read
+	relation t_subscriptions_manifests_read: rbac/principal:*
+	permission subscriptions_manifests_write = t_subscriptions_manifests_write
+	relation t_subscriptions_manifests_write: rbac/principal:*
+	permission subscriptions_organization_read = t_subscriptions_organization_read
+	relation t_subscriptions_organization_read: rbac/principal:*
+	permission subscriptions_organization_write = t_subscriptions_organization_write
+	relation t_subscriptions_organization_write: rbac/principal:*
+	permission subscriptions_products_read = t_subscriptions_products_read
+	relation t_subscriptions_products_read: rbac/principal:*
+	permission subscriptions_products_write = t_subscriptions_products_write
+	relation t_subscriptions_products_write: rbac/principal:*
+	permission subscriptions_reports_read = t_subscriptions_reports_read
+	relation t_subscriptions_reports_read: rbac/principal:*
+	permission tasks_all_all = t_tasks_all_all
+	relation t_tasks_all_all: rbac/principal:*
+	permission vulnerability_advanced_report_read = t_vulnerability_advanced_report_read
+	relation t_vulnerability_advanced_report_read: rbac/principal:*
+	permission vulnerability_all_all = t_vulnerability_all_all
+	relation t_vulnerability_all_all: rbac/principal:*
+	permission vulnerability_all_read = t_vulnerability_all_read
+	relation t_vulnerability_all_read: rbac/principal:*
+	permission vulnerability_all_write = t_vulnerability_all_write
+	relation t_vulnerability_all_write: rbac/principal:*
+	permission vulnerability_cve_business_risk_and_status_write = t_vulnerability_cve_business_risk_and_status_write
+	relation t_vulnerability_cve_business_risk_and_status_write: rbac/principal:*
+	permission vulnerability_report_and_export_read = t_vulnerability_report_and_export_read
+	relation t_vulnerability_report_and_export_read: rbac/principal:*
+	permission vulnerability_system_cve_status_write = t_vulnerability_system_cve_status_write
+	relation t_vulnerability_system_cve_status_write: rbac/principal:*
+	permission vulnerability_system_opt_out_read = t_vulnerability_system_opt_out_read
+	relation t_vulnerability_system_opt_out_read: rbac/principal:*
+	permission vulnerability_system_opt_out_write = t_vulnerability_system_opt_out_write
+	relation t_vulnerability_system_opt_out_write: rbac/principal:*
+	permission vulnerability_toggle_cves_without_errata_write = t_vulnerability_toggle_cves_without_errata_write
+	relation t_vulnerability_toggle_cves_without_errata_write: rbac/principal:*
+	permission vulnerability_vulnerability_results_read = t_vulnerability_vulnerability_results_read
+	relation t_vulnerability_vulnerability_results_read: rbac/principal:*
+}
+
+definition rbac/role_binding {
+	permission inventory_host_update = (subject & t_role->inventory_host_update)
+	permission inventory_host_view = (subject & t_role->inventory_host_view)
+	permission notifications_applications_view = (subject & t_role->notifications_applications_view)
+	permission notifications_behavior_groups_edit = (subject & t_role->notifications_behavior_groups_edit)
+	permission notifications_behavior_groups_view = (subject & t_role->notifications_behavior_groups_view)
+	permission notifications_bundles_view = (subject & t_role->notifications_bundles_view)
+	permission notifications_daily_digest_preference_edit = (subject & t_role->notifications_daily_digest_preference_edit)
+	permission notifications_daily_digest_preference_view = (subject & t_role->notifications_daily_digest_preference_view)
+	permission notifications_event_log_view = (subject & t_role->notifications_event_log_view)
+	permission notifications_event_types_view = (subject & t_role->notifications_event_types_view)
+	permission notifications_integration_create = (subject & t_role->notifications_integration_create)
+	permission notifications_integration_delete = (subject & t_role->notifications_integration_delete)
+	permission notifications_integration_disable = (subject & t_role->notifications_integration_disable)
+	permission notifications_integration_edit = (subject & t_role->notifications_integration_edit)
+	permission notifications_integration_enable = (subject & t_role->notifications_integration_enable)
+	permission notifications_integration_subscribe_drawer = (subject & t_role->notifications_integration_subscribe_drawer)
+	permission notifications_integration_subscribe_email = (subject & t_role->notifications_integration_subscribe_email)
+	permission notifications_integration_test = (subject & t_role->notifications_integration_test)
+	permission notifications_integration_view = (subject & t_role->notifications_integration_view)
+	permission notifications_integration_view_history = (subject & t_role->notifications_integration_view_history)
+	permission role = t_role
+	relation t_role: rbac/role
+	permission subject = t_subject
+	relation t_subject: rbac/principal | rbac/group#member
+}
+
+definition rbac/tenant {
+	permission binding = t_binding
+	relation t_binding: rbac/role_binding
+	permission inventory_host_update = t_binding->inventory_host_update + t_platform->inventory_host_update
+	permission inventory_host_view = t_binding->inventory_host_view + t_platform->inventory_host_view
+	permission notifications_applications_view = t_binding->notifications_applications_view + t_platform->notifications_applications_view
+	permission notifications_behavior_groups_edit = t_binding->notifications_behavior_groups_edit + t_platform->notifications_behavior_groups_edit
+	permission notifications_behavior_groups_view = t_binding->notifications_behavior_groups_view + t_platform->notifications_behavior_groups_view
+	permission notifications_bundles_view = t_binding->notifications_bundles_view + t_platform->notifications_bundles_view
+	permission notifications_daily_digest_preference_edit = t_binding->notifications_daily_digest_preference_edit + t_platform->notifications_daily_digest_preference_edit
+	permission notifications_daily_digest_preference_view = t_binding->notifications_daily_digest_preference_view + t_platform->notifications_daily_digest_preference_view
+	permission notifications_event_log_view = t_binding->notifications_event_log_view + t_platform->notifications_event_log_view
+	permission notifications_event_types_view = t_binding->notifications_event_types_view + t_platform->notifications_event_types_view
+	permission notifications_integration_create = t_binding->notifications_integration_create + t_platform->notifications_integration_create
+	permission notifications_integration_delete = t_binding->notifications_integration_delete + t_platform->notifications_integration_delete
+	permission notifications_integration_disable = t_binding->notifications_integration_disable + t_platform->notifications_integration_disable
+	permission notifications_integration_edit = t_binding->notifications_integration_edit + t_platform->notifications_integration_edit
+	permission notifications_integration_enable = t_binding->notifications_integration_enable + t_platform->notifications_integration_enable
+	permission notifications_integration_subscribe_drawer = t_binding->notifications_integration_subscribe_drawer + t_platform->notifications_integration_subscribe_drawer
+	permission notifications_integration_subscribe_email = t_binding->notifications_integration_subscribe_email + t_platform->notifications_integration_subscribe_email
+	permission notifications_integration_test = t_binding->notifications_integration_test + t_platform->notifications_integration_test
+	permission notifications_integration_view = t_binding->notifications_integration_view + t_platform->notifications_integration_view
+	permission notifications_integration_view_history = t_binding->notifications_integration_view_history + t_platform->notifications_integration_view_history
+	permission platform = t_platform
+	relation t_platform: rbac/platform
+}
+
+definition rbac/workspace {
+	permission binding = t_binding
+	relation t_binding: rbac/role_binding
+	permission inventory_host_update = t_binding->inventory_host_update + t_parent->inventory_host_update
+	permission inventory_host_view = t_binding->inventory_host_view + t_parent->inventory_host_view
+	permission notifications_applications_view = t_binding->notifications_applications_view + t_parent->notifications_applications_view
+	permission notifications_behavior_groups_edit = t_binding->notifications_behavior_groups_edit + t_parent->notifications_behavior_groups_edit
+	permission notifications_behavior_groups_view = t_binding->notifications_behavior_groups_view + t_parent->notifications_behavior_groups_view
+	permission notifications_bundles_view = t_binding->notifications_bundles_view + t_parent->notifications_bundles_view
+	permission notifications_daily_digest_preference_edit = t_binding->notifications_daily_digest_preference_edit + t_parent->notifications_daily_digest_preference_edit
+	permission notifications_daily_digest_preference_view = t_binding->notifications_daily_digest_preference_view + t_parent->notifications_daily_digest_preference_view
+	permission notifications_event_log_view = t_binding->notifications_event_log_view + t_parent->notifications_event_log_view
+	permission notifications_event_types_view = t_binding->notifications_event_types_view + t_parent->notifications_event_types_view
+	permission notifications_integration_create = t_binding->notifications_integration_create + t_parent->notifications_integration_create
+	permission notifications_integration_delete = t_binding->notifications_integration_delete + t_parent->notifications_integration_delete
+	permission notifications_integration_disable = t_binding->notifications_integration_disable + t_parent->notifications_integration_disable
+	permission notifications_integration_edit = t_binding->notifications_integration_edit + t_parent->notifications_integration_edit
+	permission notifications_integration_enable = t_binding->notifications_integration_enable + t_parent->notifications_integration_enable
+	permission notifications_integration_subscribe_drawer = t_binding->notifications_integration_subscribe_drawer + t_parent->notifications_integration_subscribe_drawer
+	permission notifications_integration_subscribe_email = t_binding->notifications_integration_subscribe_email + t_parent->notifications_integration_subscribe_email
+	permission notifications_integration_test = t_binding->notifications_integration_test + t_parent->notifications_integration_test
+	permission notifications_integration_view = t_binding->notifications_integration_view + t_parent->notifications_integration_view
+	permission notifications_integration_view_history = t_binding->notifications_integration_view_history + t_parent->notifications_integration_view_history
+	permission parent = t_parent
+	relation t_parent: rbac/workspace | rbac/tenant
+}
