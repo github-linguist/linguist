@@ -1,1 +1,0 @@
-MESSAGE "Hello, world!".

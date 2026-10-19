@@ -1,0 +1,225 @@
+#ifndef  ORA_PROC
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#endif
+
+
+#define SQLCA_STORAGE_CLASS extern
+#include <sqlca.h>
+
+
+#include "../../SeisMgr/dbselect/dbDefaults.h"
+
+
+#define BUF_LEN 30
+#define TAB_DNE -942
+#define INDX_DNE -1418
+#define NO_DATA  1403
+#define TOO_MANY -2112
+
+EXEC SQL BEGIN DECLARE SECTION;
+
+static char TheDataBase[50]="";
+static VARCHAR TheSID[20];
+static double NCALPER  = -999.0;
+static double NCALIB   = -999.0;
+static double CALPER   = -999.0;
+static double CALRATIO = -999.0;
+EXEC SQL END DECLARE SECTION;
+
+
+
+
+void getSensorInstrumentCalibInfo(double* ncalper, double* ncalib, double* calper, double* calratio )
+{
+   *ncalper  = NCALPER;
+   *ncalib   = NCALIB;
+   *calper   = CALPER;
+   *calratio = CALRATIO;
+
+   NCALPER  = -999.0;
+   NCALIB   = -999.0;
+   CALPER   = -999.0;
+   CALRATIO = -999.0;
+}
+/* ---------------------------------------------------------- */
+
+
+
+
+
+
+static int ConnectedToOracle(void)
+{
+   int result = 1;
+   EXEC SQL DECLARE TestCursor CURSOR FOR
+      SELECT * FROM SYS.DUAL;
+
+   EXEC SQL OPEN TestCursor;
+   if( sqlca.sqlcode < 0 ) result = 0;
+
+   EXEC SQL CLOSE TestCursor;
+
+   return result;
+}
+/* ---------------------------------------------------------- */
+
+
+
+
+
+void DisconnectFromOracleTransfer(void)
+{
+   if( ! ConnectedToOracle() ) return;
+
+    EXEC SQL COMMIT WORK RELEASE;
+    printf("Disconnected from Oracle.\n");
+}
+/* ---------------------------------------------------------- */
+
+
+
+
+
+static int  ConnectToOracleForResponseInfo(void)
+{
+EXEC SQL BEGIN DECLARE SECTION;
+    VARCHAR     username[BUF_LEN]; 
+    VARCHAR     password[BUF_LEN];
+EXEC SQL END DECLARE SECTION;
+
+ 
+    strcpy( (char*)username.arr, dbGetQueryLogin());
+    username.len = strlen( (char*) username.arr);
+ 
+    strcpy( (char*)password.arr, dbGetQueryPasswd() );
+    password.len = strlen( (char*) password.arr);
+
+    printf("Connecting to database...\n");
+    strcpy((char*)TheSID.arr, Sid());
+    TheSID.len = strlen( (char*)TheSID.arr);
+    EXEC SQL CONNECT :username IDENTIFIED BY :password USING :TheSID; 
+    if(sqlca.sqlcode < 0){
+        printf("%s\n",sqlca.sqlerrm.sqlerrmc);
+        printf("\nCould not connect to Oracle for response information.\n");
+        printf("Connection was attempted using Username: %s\n",(char*)username.arr);
+        return 0;
+    }
+    return 1;
+ }
+/* ---------------------------------------------------------- */
+
+
+
+
+
+
+char *GetFileNameSelectString(char *station, char *component, double EpochTime)
+{
+    char fmt[] = "SELECT DIR, DFILE, RSPTYPE, NCALPER, NCALIB, CALPER, CALRATIO FROM %s I, %s S \n"
+                 "WHERE I.INID = S.INID AND STA = '%s' AND CHAN = '%s' \n"
+                 "AND  %14.3f BETWEEN S.TIME AND S.ENDTIME" ;
+
+    char *CompleteSelect ;
+
+    int length ;
+
+    length  = strlen( fmt ) + 14 + 14 + 1 ;  /* 14s for the floating points,
+						and 1 for terminator */
+    length += strlen( dbGetInstrumentTableName() ) ;
+    length += strlen( dbGetSensorTableName() ) ;
+    length += strlen( station ) ;
+    length += strlen( component ) ;
+
+    CompleteSelect = (char *) malloc( length * sizeof( char ) ) ;
+
+    sprintf( CompleteSelect , fmt , dbGetInstrumentTableName() ,
+             dbGetSensorTableName() , station , component , EpochTime ) ;
+    
+   
+    return CompleteSelect;
+}    
+/* ---------------------------------------------------------- */
+
+
+
+
+char *GetRESPfileNameFromDB(char *station, char *component, char *locid,
+                            double EpochTime , char * rtypeOut )
+{
+   
+   int StatementLen;
+   struct stat status;
+   char *FileName = 0;
+   EXEC SQL BEGIN DECLARE SECTION;
+      char *CompleteSelect;
+      VARCHAR dir[256];
+      VARCHAR dfile[64];
+      VARCHAR rsptype[ 7 ] ;
+   EXEC SQL END DECLARE SECTION;
+
+
+
+   if( !ConnectedToOracle() )
+      if(! ConnectToOracleForResponseInfo() ) return 0;
+
+
+   CompleteSelect = GetFileNameSelectString(station, component, EpochTime);
+
+   EXEC SQL DECLARE S STATEMENT;
+   EXEC SQL PREPARE S FROM :CompleteSelect;
+   EXEC SQL DECLARE RESP_CURSOR CURSOR FOR S;
+   EXEC SQL OPEN RESP_CURSOR;
+
+   while( 1 ) {
+      EXEC SQL FETCH RESP_CURSOR INTO :dir, :dfile, :rsptype, :NCALPER, :NCALIB, :CALPER, :CALRATIO; 
+      if( sqlca.sqlcode == 0 ){
+         char *pDfile = 0 ;
+
+         dir.arr[dir.len] = '\0';
+         dfile.arr[dfile.len] = '\0';
+         rsptype.arr[rsptype.len] = '\0';
+
+         if( locid && *locid && strcmp( locid, "*" ) ) {
+            pDfile = strrchr( (char *) dfile.arr , '.' ) ;
+            if( *( --pDfile ) == '.' )
+               continue ;
+
+            --pDfile ;
+
+            if( strncmp( pDfile, locid, 2 ) )
+               continue ;
+         }
+         
+         
+         FileName = (char *) malloc( dir.len + dfile.len + 2);
+         strcpy(FileName, (char*)dir.arr );
+         strcat(FileName, "/" );
+         strcat(FileName,  (char*)dfile.arr );
+         break ;
+      }
+      else if( sqlca.sqlcode < 0 ){
+         printf("%s\n",sqlca.sqlerrm.sqlerrmc);
+         printf("SQL is:\n %s \n\n", CompleteSelect);
+         break ;
+      }
+      else
+         break ;
+   }
+   
+   EXEC SQL CLOSE RESP_CURSOR;
+   free(CompleteSelect);
+
+   if( ! FileName )return 0;
+
+   if( stat( FileName, &status ) == -1){
+      printf("Problem: Response file: (%s) not found!\n", FileName);
+      free( FileName );
+      FileName = 0;
+   }
+   strcpy ( rtypeOut ,  (char*)rsptype.arr ) ;
+   return FileName;
+ }
+/* ---------------------------------------------------------- */

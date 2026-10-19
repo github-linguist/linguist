@@ -1,0 +1,66 @@
+table 'Current page'
+	lineageTag: 317c4b30-0e3d-409e-b641-9a2b0b2c5cdc
+
+	measure 'Selected page' =
+			
+			SELECTEDVALUE('Current page'[Current page])
+		lineageTag: bbd1bf37-eaa0-4f37-af26-1e585f2a5508
+
+	measure 'Drill through button text' =
+			
+			VAR Selection = [Selected page]
+			VAR Filtered =
+			    ISFILTERED ( Operation[ReportId] )
+			VAR Result =
+			    IF (
+			        Filtered
+			            = TRUE (),
+			        "Drillthrough to " & Selection,
+			        "Make a filter selection"
+			    )
+			RETURN
+			    Result
+		lineageTag: 0a985b29-d0c7-43eb-a648-d1b317848fce
+
+	measure 'Drillthrough tooltip' =
+			
+			"Click to drillthrough to the "
+			    & SELECTEDVALUE ( 'Current page'[Current page] ) & " page"
+		lineageTag: 92d91d28-1712-4f28-be0a-46be6c77b459
+
+	measure 'Drill through button text 2' =
+			
+			VAR Selection = [Selected page]
+			VAR Filtered =
+			    ISFILTERED ( User[Executing User] )
+			VAR Result =
+			    IF (
+			        Filtered
+			            = TRUE (),
+			        "Drillthrough to " & Selection,
+			        "Make a filter selection"
+			    )
+			RETURN
+			    Result
+		lineageTag: d24ed271-638f-433c-9498-189ac29d857f
+
+	column 'Current page'
+		dataType: string
+		lineageTag: de51263c-8e9e-484f-908e-7d9fc4b0e497
+		summarizeBy: none
+		sourceColumn: Current page
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Current page-54f895c2-3a22-44b8-ab08-aa3463e5ff77' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("bY7BCsIwEER/JeTsZ9gPEBQPoYclju2iTcruVujfK2laKnp9M8ybEPwZiZI5nYaBZPbtIfhrloeOFPFFm9RxgqNo/GJb2JGMnOAu0B5a0EUha4krO02Q2amRsRrHBTYiWfTftLvBiJ+6KRS2Wmq2m/0B/UeS6+nyZtcoUjdSh422bw==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Current page" = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Current page", type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","Engine activity","Engine activities",Replacer.ReplaceText,{"Current page"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_ResultType = Table
+
