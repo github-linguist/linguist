@@ -1,0 +1,238 @@
+bazel_dep(name = "hermetic_cc_toolchain", version = "3.1.0")
+
+bazel_dep(name = "toolchains_llvm", version = "1.2.0", dev_dependency = True)
+single_version_override(
+    module_name = "toolchains_llvm",
+    patch_strip = 1,
+    patches = [
+        "//patches:toolchains_llvm.patch",
+        "//patches:toolchains_llvm_libc++.patch",
+    ],
+)
+
+toolchains = use_extension("@hermetic_cc_toolchain//toolchain:ext.bzl", "toolchains")
+use_repo(toolchains, "zig_sdk")
+
+register_toolchains(
+    "@zig_sdk//toolchain/...",
+    "@zig_sdk//libc_aware/toolchain/...",
+)
+
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+llvm.toolchain(
+    name = "llvm_base",
+    llvm_versions = {
+        "linux-x86_64": "20.1.1",
+        "linux-aarch64": "20.1.1",
+    },
+    sha256 = {
+        "linux-x86_64": "2096e63a41887a860199aec0f046f82e6469b2cd5ae4e4245a7a111bff4abe5b",
+        "linux-aarch64": "a71d6686edfb32e455717a1befb013b580a52042915a49f21fc25f83fff59e20",
+    },
+    urls = {
+        "linux-x86_64": ["https://github.com/dzbarsky/static-clang/releases/download/v20.1.1-4/linux_amd64.tar.zst"],
+        "linux-aarch64": ["https://github.com/dzbarsky/static-clang/releases/download/v20.1.1-4/linux_arm64.tar.zst"],
+    },
+)
+llvm.toolchain(
+    name = "llvm_libcxx",
+    cxx_flags = {
+        "linux-x86_64": [
+            "-iwithsysroot/usr/lib/llvm-20/include/c++/v1",
+        ],
+        "linux-aarch64": [
+            "-iwithsysroot/usr/lib/llvm-20/include/c++/v1",
+        ],
+    },
+    libclang_rt = {
+        "@llvm_sysroot_linux_amd64_libcxx//:usr/lib/llvm-20/lib/clang/20/lib/linux/libclang_rt.builtins-x86_64.a": "x86_64-unknown-linux-gnu/libclang_rt.builtins.a",
+        "@llvm_sysroot_linux_arm64_libcxx//:usr/lib/llvm-20/lib/clang/20/lib/linux/libclang_rt.builtins-aarch64.a": "aarch64-unknown-linux-gnu/libclang_rt.builtins.a",
+    },
+    llvm_versions = {
+        "linux-x86_64": "20.1.1",
+        "linux-aarch64": "20.1.1",
+    },
+    stdlib = {
+        "linux-aarch64": "libc++",
+        "linux-x86_64": "libc++",
+    },
+)
+llvm.toolchain_root(
+    name = "llvm_libcxx",
+    label = "@llvm_base_llvm//:BUILD",
+)
+llvm.sysroot(
+    name = "llvm_libcxx",
+    label = "@llvm_sysroot_linux_amd64_libcxx//:sysroot",
+    targets = ["linux-x86_64"],
+)
+llvm.sysroot(
+    name = "llvm_libcxx",
+    label = "@llvm_sysroot_linux_arm64_libcxx//:sysroot",
+    targets = ["linux-aarch64"],
+)
+llvm.extra_target_compatible_with(
+    name = "llvm_libcxx",
+    constraints = ["@//platform:libc++"],
+)
+llvm.toolchain(
+    name = "llvm_libstdcxx",
+    cxx_flags = {
+        "linux-x86_64": [
+            "-iwithsysroot/usr/include/c++/14",
+            "-iwithsysroot/usr/include/x86_64-linux-gnu/c++/14/",
+        ],
+        "linux-aarch64": [
+            "-iwithsysroot/usr/include/c++/14",
+            "-iwithsysroot/usr/include/aarch64-linux-gnu/c++/14/",
+        ],
+    },
+    libclang_rt = {
+        "@llvm_sysroot_linux_amd64_libstdcxx//:usr/lib/llvm-20/lib/clang/20/lib/linux/libclang_rt.builtins-x86_64.a": "x86_64-unknown-linux-gnu/libclang_rt.builtins.a",
+        "@llvm_sysroot_linux_arm64_libstdcxx//:usr/lib/llvm-20/lib/clang/20/lib/linux/libclang_rt.builtins-aarch64.a": "aarch64-unknown-linux-gnu/libclang_rt.builtins.a",
+    },
+    llvm_versions = {
+        "linux-x86_64": "20.1.1",
+        "linux-aarch64": "20.1.1",
+    },
+    stdlib = {
+        "linux-aarch64": "stdc++",
+        "linux-x86_64": "stdc++",
+    },
+)
+llvm.toolchain_root(
+    name = "llvm_libstdcxx",
+    label = "@llvm_base_llvm//:BUILD",
+)
+llvm.sysroot(
+    name = "llvm_libstdcxx",
+    label = "@llvm_sysroot_linux_amd64_libstdcxx//:sysroot",
+    targets = ["linux-x86_64"],
+)
+llvm.sysroot(
+    name = "llvm_libstdcxx",
+    label = "@llvm_sysroot_linux_arm64_libstdcxx//:sysroot",
+    targets = ["linux-aarch64"],
+)
+llvm.extra_target_compatible_with(
+    name = "llvm_libstdcxx",
+    constraints = ["@//platform:libstdc++"],
+)
+use_repo(llvm, "llvm_base_llvm", "llvm_libcxx", "llvm_libstdcxx")
+
+register_toolchains(
+    "@llvm_libcxx//:all",
+    dev_dependency = True,
+)
+
+register_toolchains(
+    "@llvm_libstdcxx//:all",
+    dev_dependency = True,
+)
+
+pull_blob_archive = use_repo_rule("@rules_img//img/private/repository_rules:pull_blob.bzl", "pull_blob_archive")
+
+SYSROOT_DIGESTS = {
+    "amd64": {
+        "libc++": "sha256:11a8a41980d1bf8d7d5b7b279d251b6e851d383b80553e2ecc97523d644acc28",
+        "libstdc++": "sha256:dacc1586eec2b990dd9e2837ac0ff482ec2eb79805d9bf71eddf1520908ce7f5",
+    },
+    "arm64": {
+        "libc++": "sha256:b4b6fe951373fc41456f8af25b7afa130b9d27f6eede1aef00218db5f820a4ba",
+        "libstdc++": "sha256:5faf55afb23fb3278194c3ac27d4b7e1edf633f21ff11fa0301b90bb47b9141f",
+    },
+}
+
+pull_blob_archive(
+    name = "llvm_sysroot_linux_amd64_libcxx",
+    build_file_content = """
+filegroup(
+  name = "sysroot",
+  srcs = glob(["*/**"]),
+  visibility = ["//visibility:public"],
+)
+""",
+    digest = SYSROOT_DIGESTS["amd64"]["libc++"],
+    registry = "ghcr.io",
+    repository = "malt3/sysroots/libcxx",
+    type = "tzst",
+)
+
+pull_blob_archive(
+    name = "llvm_sysroot_linux_amd64_libstdcxx",
+    build_file_content = """
+filegroup(
+  name = "sysroot",
+  srcs = glob(["*/**"]),
+  visibility = ["//visibility:public"],
+)
+""",
+    digest = SYSROOT_DIGESTS["amd64"]["libstdc++"],
+    registry = "ghcr.io",
+    repository = "malt3/sysroots/libstdcxx",
+    type = "tzst",
+)
+
+pull_blob_archive(
+    name = "llvm_sysroot_linux_arm64_libcxx",
+    build_file_content = """
+filegroup(
+  name = "sysroot",
+  srcs = glob(["*/**"]),
+  visibility = ["//visibility:public"],
+)
+""",
+    digest = SYSROOT_DIGESTS["arm64"]["libc++"],
+    registry = "ghcr.io",
+    repository = "malt3/sysroots/libcxx",
+    type = "tzst",
+)
+
+pull_blob_archive(
+    name = "llvm_sysroot_linux_arm64_libstdcxx",
+    build_file_content = """
+filegroup(
+  name = "sysroot",
+  srcs = glob(["*/**"]),
+  visibility = ["//visibility:public"],
+)
+""",
+    digest = SYSROOT_DIGESTS["arm64"]["libstdc++"],
+    registry = "ghcr.io",
+    repository = "malt3/sysroots/libstdcxx",
+    type = "tzst",
+)
+
+pull_blob_file = use_repo_rule("@rules_img//img/private/repository_rules:pull_blob.bzl", "pull_blob_file")
+
+pull_blob_file(
+    name = "base_image_arm64_libcxx",
+    digest = SYSROOT_DIGESTS["arm64"]["libc++"],
+    downloaded_file_path = "sysroot.tzst",
+    registry = "ghcr.io",
+    repository = "malt3/sysroots/libcxx",
+)
+
+pull_blob_file(
+    name = "base_image_arm64_libstdcxx",
+    digest = SYSROOT_DIGESTS["arm64"]["libstdc++"],
+    downloaded_file_path = "sysroot.tzst",
+    registry = "ghcr.io",
+    repository = "malt3/sysroots/libstdcxx",
+)
+
+pull_blob_file(
+    name = "base_image_amd64_libcxx",
+    digest = SYSROOT_DIGESTS["amd64"]["libc++"],
+    downloaded_file_path = "sysroot.tzst",
+    registry = "ghcr.io",
+    repository = "malt3/sysroots/libcxx",
+)
+
+pull_blob_file(
+    name = "base_image_amd64_libstdcxx",
+    digest = SYSROOT_DIGESTS["amd64"]["libstdc++"],
+    downloaded_file_path = "sysroot.tzst",
+    registry = "ghcr.io",
+    repository = "malt3/sysroots/libstdcxx",
+)
