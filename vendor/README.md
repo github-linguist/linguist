@@ -213,6 +213,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **FreeMarker:** [freemarker/FreeMarker.tmbundle](https://github.com/freemarker/FreeMarker.tmbundle)
 - **Frege:** [atom-haskell/language-haskell](https://github.com/atom-haskell/language-haskell)
 - **Futhark:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
+- **G#:** [DavidObando/gsharp-tmlanguage](https://github.com/DavidObando/gsharp-tmlanguage)
 - **G-code:** [appliedengdesign/vscode-gcode-syntax](https://github.com/appliedengdesign/vscode-gcode-syntax)
 - **GAP:** [dhowden/gap-tmbundle](https://github.com/dhowden/gap-tmbundle)
 - **GCC Machine Description:** [textmate/lisp.tmbundle](https://github.com/textmate/lisp.tmbundle)

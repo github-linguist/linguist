@@ -34,7 +34,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the he MIT License (MIT).
  *
- * Author: 
+ * Author:
  *      bruce davidson
  */
 uses Gee
