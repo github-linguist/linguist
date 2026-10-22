@@ -425,6 +425,10 @@ disambiguations:
     pattern: '^uses (java|gw)\.'
   - language: Genie
     pattern: '^\[indent=[0-9]+\]'
+  - language: G#
+    and:
+    - pattern: '^[ \t]*package[ \t]+[A-Za-z_][A-Za-z0-9_.]*[ \t]*\r?$'
+    - pattern: '^[ \t]*(?:(?:public|internal|private|protected|override|abstract|async|shared)[ \t]+)*func[ \t]+[A-Za-z_][A-Za-z0-9_]*(?:\[[^\r\n]*\])?[ \t]*\('
 - extensions: ['.gsc']
   rules:
   - language: GSC

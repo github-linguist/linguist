@@ -567,10 +567,26 @@ class TestHeuristics < Minitest::Test
       "GLSL" => all_fixtures("GLSL", "*.gs"),
       "Genie" => all_fixtures("Genie", "*.gs") - ambiguous,
       "Gosu" => all_fixtures("Gosu", "*.gs"),
+      "G#" => all_fixtures("G#", "*.gs"),
     })
     assert_heuristics({
       nil => all_fixtures("JavaScript")
     }, alt_name="test.gs")
+  end
+
+  def test_gsharp_requires_package_and_function
+    candidates = Language.find_by_extension(".gs")
+    [
+      "package Example\nclass Example {}\n",
+      "func example() {}\n",
+      "// package Example\n// func example() {}\n",
+      "var package = 'Example';\nfunction example() {}\n",
+    ].each do |source|
+      assert_empty Heuristics.call(Blob.new("example.gs", source), candidates)
+    end
+
+    source = "package Example\r\ninternal func example[T any](value T) T {\r\n  return value\r\n}\r\n"
+    assert_equal [Language["G#"]], Heuristics.call(Blob.new("example.gs", source), candidates)
   end
 
   def test_gsc_by_heuristics

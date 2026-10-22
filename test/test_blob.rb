@@ -329,6 +329,18 @@ class TestBlob < Minitest::Test
     end
   end
 
+  def test_gs_language_detection
+    ["G#", "GLSL", "Genie", "Gosu", "JavaScript"].each do |language|
+      paths = Dir.glob(File.join(samples_path, language, "*.gs"))
+      assert_operator paths.length, :>=, 2, "Expected two .gs samples for #{language}"
+      paths.each do |path|
+        assert_equal Language[language], sample_blob_memory(path).language, path
+      end
+    end
+    assert_equal Language["G#"], Language.find_by_alias("gsharp")
+    refute_includes Language.find_by_extension(".gsproj"), Language["G#"]
+  end
+
   def test_minified_files_not_safe_to_highlight
     assert !sample_blob_memory("JavaScript/jquery-1.6.1.min.js").safe_to_colorize?
   end
