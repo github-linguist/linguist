@@ -1,0 +1,75 @@
+context: tony-format/context
+  
+signature:
+  name: tony-base
+define:
+  bool: !irtype true
+  "null": !irtype null
+  number: !irtype 1
+  # int and float are the one distinction no pattern over a value can make: both
+  # are Number nodes, and there is one Number type.  !ir asks the node instead,
+  # where Int64 and Float64 are separate fields.  Saying what the field HOLDS
+  # rather than that it is there is what makes this insensitive to how a view
+  # renders a field the node does not have.
+  int: !ir
+    int: .[number]
+  float: !ir
+    float: .[number]
+  string: !irtype ""
+  array: !irtype []
+  # A type parameter stands for a match, so it goes where a match goes: as the
+  # value !all is written over, not as a component of its tag.  !all.t null read
+  # as though it applied t to each element, and did not: t has no spelling as a
+  # tag component, so the element check disappeared and array(int) accepted a
+  # list of anything.  !all t substitutes the whole definition and composes,
+  # giving !all.ir {int: ...} for array(int) and !all {name: ...} for
+  # array(person).
+  array(t): !and
+  - .[array]
+  - !all t
+  # a sparse array is an object whose keys are integers.  !all.field.type 0 said
+  # that and did not: !field hands over the key's NAME, a string, which is never
+  # a number, so sparsearray accepted nothing.  The keys themselves are in the
+  # node, where !ir reaches them, with their types intact.
+  sparsearray: !and
+  - !irtype {}
+  - !ir
+    fields: !all .[int]
+  sparsearray(t): !and
+  - .[sparsearray]
+  - !all t
+  object: !irtype {}
+  object(t): !and
+  - .[object]
+  - !all t
+  nullable(t): !or
+  - !irtype null
+  - t
+  # keyed lists
+  key(p): !and
+  - !irtype []
+  - !all.has-path p
+  field: !or
+  - .[string]
+  - .[int]
+  - .[null]
+  # The IR encoding of a document, written out: what json.Marshal of an ir.Node
+  # gives, described in terms of itself.  !ir asks a NODE about its own
+  # representation, which is the other question -- a document shaped like this
+  # one is an ordinary object to it.
+  #
+  # tag and comment are fields ir.Node serializes and this left out, so the
+  # description was short of the thing it describes (p4tzbzx7h12kr6tkhxn0).
+  _ir:
+    type: !or [ Comment Null Bool Number String Array Object ]
+    fields: .[array(field)]
+    values: .[array(ir)]
+    tag: .[string]
+    string: .[string]
+    int: .[int]
+    float: .[float]
+    number: .[string]
+    bool: .[bool]
+    lines: .[array(string)]
+    comment: .[ir]
+  ir: .[nullable(_ir)]

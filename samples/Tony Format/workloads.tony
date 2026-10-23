@@ -1,0 +1,116 @@
+- if: '.[ workloads.front == "fork" ]'
+  match: null
+  patch:
+    spec:
+      forks: !key(name)
+      - name: front
+        forkOf:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: frontend
+- if: '.[ workloads.front == "virtual" ]'
+  match: null
+  patch:
+    spec:
+      virtual: !key(name)
+      - name: front
+        workload:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: frontend
+- if: '.[ workloads.front == "local" ]'
+  match: null
+  patch:
+    spec:
+      local: !key(name)
+      - name: front
+        from:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: frontend
+        mappings:
+        - port: 8080
+          toLocal: ":9998"
+- if: '.[ workloads.loc == "fork" ]'
+  match: null
+  patch:
+    spec:
+      forks: !key(name)
+      - name: loc
+        forkOf:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: location
+- if: '.[ workloads.loc == "virtual" ]'
+  match: null
+  patch:
+    spec:
+      virtual: !key(name)
+      - name: loc
+        workload:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: location
+- if: '.[ workloads.loc == "local" ]'
+  match: null
+  patch:
+    spec:
+      local: !key(name)
+      - name: loc
+        from:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: location
+        mappings:
+        - port: 8081
+          toLocal: ":9999"
+- if: '.[ workloads.route == "fork" ]'
+  match: null
+  patch:
+    spec:
+      forks: !key(name)
+      - name: route
+        forkOf:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: route
+- if: '.[ workloads.route == "virtual" ]'
+  match: null
+  patch:
+    spec:
+      virtual: !key(name)
+      - name: route
+        workload:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: route
+- if: '.[ workloads.route == "local" ]'
+  match: null
+  patch:
+    spec:
+      local: !key(name)
+      - name: route
+        from:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: route
+- if: '.[ workloads.driver == "fork" ]'
+  match: null
+  patch:
+    spec:
+      forks: !key(name)
+      - name: driver
+        forkOf:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: driver
+- if: '.[ workloads.driver == "local" ]'
+  match: null
+  patch:
+    spec:
+      local: !key(name)
+      - name: driver
+        from:
+          kind: Deployment
+          namespace: hotrod-$[mesh]
+          name: driver

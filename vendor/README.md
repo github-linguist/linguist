@@ -667,6 +667,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Thrift:** [textmate/thrift.tmbundle](https://github.com/textmate/thrift.tmbundle)
 - **Toit:** [toitware/ide-tools](https://github.com/toitware/ide-tools)
 - **Tolk:** [ton-blockchain/ton-language-server](https://github.com/ton-blockchain/ton-language-server)
+- **Tony Format:** [signadot/tony-format](https://github.com/signadot/tony-format)
 - **Tor Config:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **Tree-sitter Query:** [mkatychev/vscode-tree-sitter-query](https://github.com/mkatychev/vscode-tree-sitter-query)
 - **Turing:** [Alhadis/language-turing](https://github.com/Alhadis/language-turing)
