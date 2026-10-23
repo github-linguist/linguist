@@ -1,0 +1,280 @@
+
+#--------------------------------------------------------
+#Configuration
+variables:
+    AuctionPrefix = "&6&lAuction »" #Change the prefix in chat
+    
+options:
+    #Colors
+    MainColor: &6&l
+    SecondColor: &e
+    BorderColor: &8
+    #Values
+    ExpireCD: 3 days
+    MinPrice: 0
+    MaxPrice: 1000000000
+    #Functions
+    MessageSeller: true #Message the player when someone buys their item (if they are online)
+    AuctionPermission: false #Set to true if you only want players with a permission to use the auction house
+    AuctionUse: ah.Usage #If the previous option is true this will be the permission required to use the auction house
+    AuctionLimit: false #Set to true if you want to limit the amount of items a player can auction based on a permission. The permission is ah.limit.<amount> (For example ah.limit.10)
+    AuctionLimitDefault: 1 #If the previous option is true this will be the amount of items a player can auction without the permission
+    AuctionLimitBypass: false #Set to true if you want players with the permission ah.bypass to have no auction limit (if AuctionLimit is true)
+    #Permissions
+    AuctionAdmin: ah.admin
+
+function Aunction_GetID(lore: strings) :: integer:
+    loop {_lore::*}:
+        loop-value contains "ID":
+            set {_temp::*} to loop-value parsed as "ID: %integer%"
+            return "%first element of {_temp::*}%" parsed as integer
+
+
+function Auction_HasLimit(p: player) :: integer:
+    loop {_p}'s permissions:
+        if loop-value contains "ah.limit":
+            set {_temp::*} to loop-value parsed as "ah.limit.%integer%"
+            if {_limit} ? 1 < {_temp::1}:
+                set {_limit} to {_temp::1}
+
+    return {_limit} ? {@AuctionLimitDefault}
+
+
+function Auction_Open(p: player, page: integer):
+    set {_u} to uuid of {_p}
+    set {_menu} to chest inventory with 6 rows named "Auction House ##%{_page}%"
+    set slot (integers from 0 to 8) of {_menu} to black glass pane named " "
+    set slot (integers from 46 to 52) of {_menu} to black glass pane named " "
+    set slot 45 of {_menu} to poisonous potato named "&6Expired Items"
+    set slot 53 of {_menu} to diamond named "&bAuctioned Items"
+    set slot 49 of {_menu} to red glass pane named "&cClose"
+    if {_page} > 1:
+        set slot 48 of {_menu} to arrow named "&ePrevious Page"
+    set {_slot} to 8
+    set {_need} to ({_page} - 1) * 36
+    loop {auction::open::*}:
+        add 1 to {_num}
+        if {_num} > {_need}:
+            add 1 to {_slot}
+            if {_slot} > 44:
+                set {_c} to true
+                exit loop
+            set {_id} to loop-value
+            set {_wait} to difference between now and {auction::info::%{_id}%::expire}
+            if {_wait} < {@ExpireCD}:
+                set {_item} to {auction::info::%{_id}%::item} 
+                if {auction::info::%{_id}%::player} is player:
+                    set {_info} to "{@SecondColor}Click to cancel"
+                else:
+                    set {_info} to "{@SecondColor}Click to purchase"
+                set slot {_slot} of {_menu} to {_item} with lore lore of {_item}, "{@BorderColor}----------------------------", "{@MainColor}ID: {@SecondColor}%{_id}%" , "{@MainColor}Price: {@SecondColor}%{auction::info::%{_id}%::price}%$", "{@MainColor}Seller: {@SecondColor}%{auction::info::%{_id}%::player}%", "{@MainColor}Expire: {@SecondColor}%difference between {_wait} and {@ExpireCD}%", " ", {_info} and "{@BorderColor}----------------------------"
+            else:
+                Auction_ExpireDelete({auction::%{_id}%::player}, {_id})
+    if {_c} is true:
+        set slot 50 of {_menu} to arrow named "&eNext Page"
+    open {_menu} to {_p}
+    set {inventory::%{_u}%} to "auction.main/%{_page}%"
+
+
+function Auction_ExpireDelete(p: player, id: integer):
+    set {_u} to uuid of {_p}
+    add {_id} to {auction::expire::%{_u}%::*}
+    remove {_id} from {auction::current::%{_u}%::*}
+    remove {_id} from {auction::open::*}
+
+function Auction_ExpireMenu(p: player, page: integer):
+    set {_u} to uuid of {_p}
+    set {_menu} to chest inventory with 6 rows named "Expired ##%{_page}%"
+    set slot (integers from 0 to 8) of {_menu} to black glass pane named " "
+    set slot (integers from 45 to 54) of {_menu} to black glass pane named " "
+    set slot 49 of {_menu} to red glass pane named "&cBack"
+    if {_page} > 1:
+        set slot 48 of {_menu} to arrow named "&ePrevious Page"
+    set {_slot} to 8
+    loop {auction::expire::%{_u}%::*}:
+        add 1 to {_num}
+        if {_num} > ({_page} - 1) * 36:
+            add 1 to {_slot}
+            if {_slot} > 44:
+                set {_c} to true
+                exit loop
+            set {_id} to loop-value
+            set {_item} to {auction::info::%{_id}%::item}
+            set slot {_slot} of {_menu} to {_item} with lore lore of {_item}, "{@BorderColor}----------------------------", "{@MainColor}ID: {@SecondColor}%{_id}%", " " and "{@SecondColor}Click to redeem"
+    if {_c} is true:
+        set slot 50 of {_menu} to arrow named "&eNext Page"
+    open {_menu} to {_p}
+    set {inventory::%{_u}%} to "auction.expire/%{_page}%"
+
+function Auction_AuctionedMenu(p: player, page: integer):
+    set {_u} to uuid of {_p}
+    set {_menu} to chest inventory with 6 rows named "Auctioned ##%{_page}%"
+    set slot (integers from 0 to 8) of {_menu} to black glass pane named " "
+    set slot (integers from 45 to 54) of {_menu} to black glass pane named " "
+    set slot 49 of {_menu} to red glass pane named "&cBack"
+    if {_page} > 1:
+        set slot 48 of {_menu} to arrow named "&ePrevious Page"
+    set {_slot} to 8
+    loop {auction::current::%{_u}%::*}:
+        add 1 to {_num}
+        if {_num} > ({_page} - 1) * 36:
+            add 1 to {_slot}
+            if {_slot} > 44:
+                set {_c} to true
+                exit loop
+            set {_id} to loop-value
+            set {_item} to {auction::info::%{_id}%::item}
+            set {_wait} to difference between now and {auction::info::%{_id}%::expire}
+            set slot {_slot} of {_menu} to {_item} with lore lore of {_item}, "{@BorderColor}----------------------------", "{@MainColor}ID: {@SecondColor}%{_id}%" , "{@MainColor}Price: {@SecondColor}%{auction::info::%{_id}%::price}%$", "{@MainColor}Expire: {@SecondColor}%difference between {_wait} and {@ExpireCD}%", " ", "{@SecondColor}Click to cancel" and "{@BorderColor}----------------------------"
+    if {_c} is true:
+        set slot 50 of {_menu} to arrow named "&eNext Page"
+    open {_menu} to {_p}
+    set {inventory::%{_u}%} to "auction.auctioned/%{_page}%"
+
+command /auction [<text = "open">] [<integer>]:
+    aliases: /ah
+    trigger:
+        if {@AuctionPermission} is true:
+            if player doesn't have permission "{@AuctionUse}":
+                send "%{AuctionPrefix}% {@SecondColor}You don't have permission to use this command"
+                stop
+        if arg-1 is "sell":
+            if arg-2 is set:
+                if player's tool isn't air:
+                    if arg-2 > {@MinPrice}:
+                        if arg-2 < {@MaxPrice}:
+                            if {@AuctionLimit} is true:
+                                if player doesn't have permission "ah.bypass":
+                                    set {_limit} to Auction_HasLimit(player)
+                                    set {_current} to size of {auction::current::%uuid of player%::*} ? 0
+                                    set {_expired} to size of {auction::expire::%uuid of player%::*} ? 0
+                                    if {_limit} <= {_current} + {_expired}:
+                                        send colored "%{AuctionPrefix}% {@SecondColor}You can't have more than %{_limit}% items in the auction house at once (Including expired items)"
+                                        stop
+                            add 1 to {auction.id}
+                            set {auction::info::%{auction.id}%::item} to player's tool
+                            set {auction::info::%{auction.id}%::price} to arg-2
+                            set {auction::info::%{auction.id}%::player} to player
+                            set {auction::info::%{auction.id}%::expire} to now
+                            add {auction.id} to {auction::open::*}
+                            add {auction.id} to {auction::current::%uuid of player%::*}
+                            send "%{AuctionPrefix}% {@SecondColor}Your item is now in the auction house"
+                            delete player's tool
+                        else:
+                            send "%{AuctionPrefix}% {@SecondColor}The price needs to be lower than {@MinPrice}"
+                    else:
+                        send "%{AuctionPrefix}% {@SecondColor}The price needs to be higher than {@MinPrice}"
+                else:
+                    send "%{AuctionPrefix}% {@SecondColor}You can't auction air, or can you?"
+            else:
+                send "%{AuctionPrefix}% &cIncorrect Usage: &7/auction sell <price>"  
+        else if arg-1 is "open":
+            set {_page} to arg-2 ? 1
+            Auction_Open(player, {_page})
+        else if arg-1 is "expired":
+            set {_page} to arg-2 ? 1
+            Auction_ExpireMenu(player, {_page})
+        else if arg-1 is "auctioned":
+            set {_page} to arg-2 ? 1
+            Auction_AuctionedMenu(player, {_page})
+        else if arg-1 is "clear":
+            player has permission "{@AuctionAdmin}"
+            if arg-2 is 0:
+                clear {auction::open::*}
+                clear {auction::expire::*}
+                clear {auction::info::*}
+                clear {auction::current::*}
+                set {auction.id} to 0
+                send "%{AuctionPrefix}% {@SecondColor}Auction House cleared"
+            else:
+                clear {auction::info::%arg-2%::*}
+                remove arg-2 from {auction::open::*}
+                remove arg-2 from {auction::expire::*}
+                send colored "%{AuctionPrefix}% {@SecondColor}Auction House cleared from %arg-2%"
+        else if arg-1 is "help":
+            send "{@BorderColor}----------------------------------------"
+            send "{@SecondColor}/auction &7Opens the auction house"
+            send "{@SecondColor}/auction expired &7Opens the expired items menu"
+            send "{@SecondColor}/auction sell <price> &7Auctions the item in your hand"
+            if player has permission "{@AuctionAdmin}":
+                send "{@SecondColor}/auction clear <id> &7Removes the item with that id from the auction house (using 0 clears all items)"
+            send "{@BorderColor}----------------------------------------"
+
+
+on inventory click:
+    if {inventory::%player's uuid%} contains "auction":
+        cancel event
+        if {inventory::%player's uuid%} contains "main":
+            if index of event-slot is 45:
+                Auction_ExpireMenu(player, 1)
+            else if index of event-slot is 53:
+                Auction_AuctionedMenu(player, 1)
+            else if index of event-slot is 49:
+                close player's inventory
+            else if index of event-slot is 48 or 50:
+                if event-slot is an arrow:
+                    set {_temp::*} to {inventory::%player's uuid%} split at "/"
+                    set {_num} to {_temp::2} parsed as integer
+                    if index of event-slot is 48:
+                        remove 1 from {_num}
+                    else:
+                        add 1 to {_num}
+                    Auction_Open(player, {_num})
+            else if event-slot isn't air or black glass pane named " ":
+                set {_id} to Aunction_GetID(uncolored lore of event-slot)
+                set {_seller} to {auction::info::%{_id}%::player}
+                if {_seller} isn't player:
+                    set {_price} to {auction::info::%{_id}%::price}
+                    if player's balance >= {_price}:
+                        remove {_price} from player's balance
+                        add {_price} to {_seller}'s balance
+                        if {@MessageSeller} is true:
+                            if {_seller} is online:
+                                send colored "%{AuctionPrefix}% {@SecondColor} %player% bought your auction with ID %{_id}%" to {_seller}
+                        remove {_id} from {auction::open::*}
+                        send "%{AuctionPrefix}% {@SecondColor} Successfully made a purchase"
+                        give player {auction::info::%{_id}%::item}
+                        Auction_Open(player, 1)
+                    else:
+                        send colored "%{AuctionPrefix}% {@SecondColor} You need %{_price}%$ in order to buy this item"
+                else:
+                    Auction_ExpireDelete(player, {_id})
+                    send "%{AuctionPrefix}% {@SecondColor} Successfully canceled the auction"
+                    Auction_Open(player, 1)
+        else if {inventory::%player's uuid%} contains "expire":
+            if index of event-slot is 49:
+                Auction_Open(player, 1)
+            else if index of event-slot is 48 or 50:
+                if event-slot is an arrow:
+                    set {_temp::*} to {inventory::%player's uuid%} split at "/"
+                    set {_num} to {_temp::2} parsed as integer
+                    if index of event-slot is 48:
+                        remove 1 from {_num}
+                    else:
+                        add 1 to {_num}
+                    Auction_ExpireMenu(player, {_num})
+            else if event-slot isn't air or black glass pane named " ":
+                set {_id} to Aunction_GetID(uncolored lore of event-slot)
+                remove {_id} from {auction::expire::%uuid of player%::*}
+                give player {auction::info::%{_id}%::item}
+                Auction_ExpireMenu(player, 1)
+        else if {inventory::%player's uuid%} contains "auctioned":
+            if index of event-slot is 49:
+                Auction_Open(player, 1)
+            else if index of event-slot is 48 or 50:
+                if event-slot is an arrow:
+                    set {_temp::*} to {inventory::%player's uuid%} split at "/"
+                    set {_num} to {_temp::2} parsed as integer
+                    if index of event-slot is 48:
+                        remove 1 from {_num}
+                    else:
+                        add 1 to {_num}
+                    Auction_AuctionedMenu(player, {_num})
+            else if event-slot isn't air or black glass pane named " ":
+                set {_id} to Aunction_GetID(uncolored lore of event-slot)
+                Auction_ExpireDelete(player, {_id})
+                send "%{AuctionPrefix}% {@SecondColor} Successfully canceled the auction"
+                Auction_AuctionedMenu(player, 1)
+
+on inventory close:
+    delete {inventory::%player's uuid%}

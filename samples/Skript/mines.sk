@@ -1,0 +1,337 @@
+#
+#
+# Script developed by @Adxm#1343
+# Released on SpigotMC.org
+#
+#
+
+options:
+
+  version: 2.1
+  P: &8[&3Mines&8]&7
+
+#
+# MAIN COMMANDS
+#
+
+
+command /mines [<text>] [<text>]:
+  aliases: m, mine
+  permission: mines.use
+  permission message: "{@P} No permission."
+  trigger:
+    if arg-1 is not set:
+      send ""
+      send "{@P} Help Commands"
+      send "&c> &3/m info"
+      send ""
+      send "&c> &3/m list"
+      send "&c> &3/m wand"
+      send "&c> &3/m create [mine-name]"
+      send "&c> &3/m edit [mine-name]"
+      send "&c> &3/m reset [mine-name]"
+      send "&c> &3/m clear [mine-name]"
+      send "&c> &3/m lobby [mine-name]"
+      send ""
+    else if arg-1 is "info":
+      send ""
+      send "{@P} This script was created by skAdam (@Adxm##1343)."
+      send ""
+      send "&c> &7Version: &3{@version}"
+      send ""
+    else if arg-1 is "list":
+      set {_G} to chest inventory with 5 rows named "{@P} &8List"
+      set {_S} to 0
+      loop {mine::list::*}:
+        set slot {_S} of {_G} to name tag named "&3%loop-value%" with lore "&7Click to enter &3%loop-value%&7's properties gui." and "" and "&7Blocks: &3%{mine::%loop-value%::blocks::*}%" and "&7Reset Delay: &3%{mine::%loop-value%::resetdelay}%" and "&7Announce on Reset: &3%{mine::%loop-value%::broadcastOnReset}%"
+        add 1 to {_S}
+      open {_G} to player
+      set metadata "mines-gui" of player to "list"
+    else if arg-1 is "create":
+      if arg-2 is set:
+        if (amount of {mine::list::*}) < 40: # changing this will BREAK the code.
+          if {mine::setup::location-1} and {mine::setup::location-2} is set: 
+            if {mine::list::*} does not contain arg-2:
+              add arg-2 to {mine::list::*}
+              set {mine::%arg-2%::loc-1} to {mine::setup::location-1}
+              set {mine::%arg-2%::loc-2} to {mine::setup::location-2}
+              set {mine::%arg-2%::setblockdelay} to 0
+              set {mine::%arg-2%::setblockdelay-display} to "None"
+              set {mine::%arg-2%::resetdelay} to 1
+              set {mine::%arg-2%::broadcastOnReset} to true
+              set {mine::%arg-2%::blocks::*} to "stone"
+              console command "mines reset %arg-2%"
+              send ""
+              send "{@P} Mine &3%arg-2%&7 created."
+              send "&c> &7The default block has been set to &3stone&7, to edit this and other properties, use &3/mines edit %arg-2%&7."
+              send ""
+            else:
+              send "{@P} This mine is already set."
+          else:
+            send "{@P} Mine location[s] are not set. Set them using the &3/mines wand&7."
+        else:
+          send "{@P} You have too many mines, please delete some. (This can be done easily with &3/mines list&7)"
+      else:
+        send "{@P} Enter a mine name."
+    else if arg-1 is "edit":
+      if arg-2 is set:
+        if {mine::%arg-2%::loc-1} is set:
+          if metadata "mines-inProcess" of player is not true:
+            set {_G} to chest inventory with 5 rows named "{@P} &3%arg-2%&8's properties."
+            set slot 4 of {_G} to barrier named "&c&lDelete Mine" with lore "&7&oDelete the mine."
+            set slot 10 of {_G} to diamond ore named "&c&lBlock List" with lore "&7&oChange mine's blocks."
+            set slot 12 of {_G} to oak sign named "&c&lAnnouncement" with lore "&7&oToggle announce on reset." and "&7Current Value: &3%{mine::%arg-2%::broadcastOnReset}%"
+            set slot 14 of {_G} to ender pearl named "&c&lLobby" with lore "&7&oSet mine's lobby location."
+            set slot 16 of {_G} to oak button named "&c&lReset" with lore "&7&oReset the mine."  
+            set slot 28 of {_G} to painting named "&c&lHologram" with lore "&7&oSet the mine's hologram to your current location." 
+            set slot 30 of {_G} to clock named "&c&lReset Delay" with lore "&7&oToggle how often the mine resets. [1, 5, 10 minutes]"   and "&7Current Value: &3%{mine::%arg-2%::resetdelay}%"
+            set slot 32 of {_G} to clock named "&c&lBlock Set Delay" with lore "&7&oToggle the delay when setting blocks." and "&7&o[None = Instant, 1 = 1 tick per block]" and "&7Current Value: &3%{mine::%arg-2%::setblockdelay-display}%"
+            set slot 34 of {_G} to ice named "&c&lClear" with lore "&7&oClear the mine." 
+            open {_G} to player
+            set metadata "mines-gui" of player to "properties"
+            set metadata "mines-mine" of player to arg-2
+          else:
+            send "{@P} Unable to enter the edit gui, are you in the process of another setup?"
+            send "&c> &7If this is a mistake, leave and rejoin."
+        else:
+          send "{@P} This mine is not set. 1 Create it by using &3/mines create %arg-2%&7."
+      else:
+        send "{@P} Enter a mine name."
+    else if arg-1 is "lobby":
+      if arg-2 is set:
+        if {mine::%arg-2%::loc-1} is set:
+          if {mine::%arg-2%::lobby} is set:
+            if player has permission "mines.lobby.%arg-2%":
+              teleport player to {mine::%arg-2%::lobby}
+              send "{@P} Going to &3%arg-2%&7's lobby."
+            else:
+              send "{@P} Invalid permissions!"
+          else:
+            send "{@P} The mine &3%arg-2%&7 does not have a lobby set. One can be set using &3/mines edit %arg-2%&7."
+        else:
+          send "{@P} This mine is not set. Create it by using &3/mines create %arg-2%&7."
+      else:
+        send "{@P} Enter a mine name."
+    else if arg-1 is "reset":
+      if arg-2 is set:
+        if {mine::%arg-2%::loc-1} is set:
+          if {mine::%arg-2%::broadcastOnReset} is true:
+            broadcast ""  
+            broadcast "{@P} Mine &3%arg-2%&7 has been reset!"
+            broadcast ""
+            set {_D} to {mine::%arg-2%::setblockdelay}
+          if {mine::%arg-2%::lobby} is set:
+            loop all players:
+              if minesPlayerbetween(loop-player, {mine::%arg-2%::loc-1}, {mine::%arg-2%::loc-2}) is true:
+                player command "mines lobby %arg-2%"
+          loop all blocks within {mine::%arg-2%::loc-1} and {mine::%arg-2%::loc-2}:
+            if {_D} = 1:
+              wait 1 tick
+            set {_block} to random element out of {mine::%arg-2%::blocks::*}
+            set loop-block to {_block} parsed as material
+        else:
+          send "{@P} This mine is not set. Create it by using &3/mines create %arg-2%&7."
+      else:
+        send "{@P} Enter a mine name."
+    else if arg-1 is "clear":
+      if arg-2 is set:
+        if {mine::%arg-2%::loc-1} is set:
+          if {mine::%arg-2%::broadcastOnReset} is true:
+            broadcast ""  
+            broadcast "{@P} Mine &3%arg-2%&7 has been cleared!"
+            broadcast ""
+            set {_D} to {mine::%arg-2%::setblockdelay}
+          if {mine::%arg-2%::lobby} is set:
+            loop all players:
+              if minesPlayerbetween(loop-player, {mine::%arg-2%::loc-1}, {mine::%arg-2%::loc-2}) is true:
+                player command "mines lobby %arg-2%"
+          loop all blocks within {mine::%arg-2%::loc-1} and {mine::%arg-2%::loc-2}:
+            if {_D} = 1:
+              wait 1 tick
+            set loop-block to air
+        else:
+          send "{@P} This mine is not set. Create it by using &3/mines create %arg-2%&7."
+      else:
+        send "{@P} Enter a mine name."
+    else if arg-1 is "wand":
+      give player stone axe named "{@P} &7Setup Wand"
+      send ""
+      send "{@P} You have been given your setup wand."
+      send "&c> &3Gamemode creative is required!"
+      send "&c> &7Right click to set location 1, and left click to set location 2."
+      send ""
+
+
+on inventory click:
+  if metadata "mines-gui" of player is "properties":
+    clear metadata "mines-gui" of player
+    cancel event
+    if clicked slot is 4:
+      set {_M} to metadata "mines-mine" of player
+      delete {mine::%{_M}%::*}
+      remove {_M} from {mine::list::*}
+      close player's inventory
+      send ""
+      send "{@P} Mine &3%{_M}%&7 has been deleted."
+      send ""
+      clear metadata "mines-gui" of player
+      clear metadata "mines-mine" of player
+    if clicked slot is 10:
+      set {_M} to metadata "mines-mine" of player
+      set {_G} to chest inventory with 5 rows named "{@P} &3%{_M}%&8's blocks."
+      set slot 4 of {_G} to redstone block named "&c&lADD BLOCKS" with lore "&7&oThis will clear all the blocks and all blocks + the new ones will need to be added."
+      set {_S} to 9
+      loop {mine::%{_M}%::blocks::*}:
+        set slot {_S} of {_G} to loop-value parsed as material named "&3%loop-value%"
+        add 1 to {_S}
+      open {_G} to player
+      set metadata "mines-gui" of player to "blocks"
+    if clicked slot is 12:
+      set {_M} to metadata "mines-mine" of player
+      if {mine::%{_M}%::broadcastOnReset} is true:
+        delete {mine::%{_M}%::broadcastOnReset}
+        send "{@P} Mine &3%{_M}%&7 will no longer announce on reset."
+      else:
+        set {mine::%{_M}%::broadcastOnReset} to true
+        send "{@P} Mine &3%{_M}%&7 will now announce on reset."
+      player command "mines edit %{_M}%"
+    if clicked slot is 14:
+      set {_M} to metadata "mines-mine" of player
+      set {mine::%{_M}%::lobby} to player's location
+      send "{@P} Lobby location of mine &3%{_M}%&7 has been set."
+      send "&c> &7Players need the permission &3mines.lobby.%{_M}%&7 to warp to it."
+    if clicked slot is 16:
+      set {_M} to metadata "mines-mine" of player
+      console command "mines reset %{_M}%"
+    if clicked slot is 28:
+      set {_M} to metadata "mines-mine" of player
+      set {_L} to player's location
+      add 2 to y-loc of {_L}
+      send "{@P} Mine &3%{_M}%&7's hologram has been set to your location!"
+      if {mine::%{_M}%::holo} is set:
+        delete hologram {mine::%{_M}%::holo}
+      create a new hologram with lines "{@P} &3Information" and "&7Mine: &3&l%{_M}%", "&7Reset Delay: &3every &l%{mine::%{_M}%::resetdelay}%&3 minutes" and "&7Blocks: &3&l%{mine::%{_M}%::blocks::*}%" at {_L} and store in {mine::%{_M}%::holo}
+    if clicked slot is 30:
+      set {_M} to metadata "mines-mine" of player
+      if {mine::%{_M}%::resetdelay} is 1:
+        set {mine::%{_M}%::resetdelay} to 5
+        send "{@P} Reset delay for mine &3%{_M}%&7 has been set to 5 minutes."
+      else if {mine::%{_M}%::resetdelay} is 5:
+        set {mine::%{_M}%::resetdelay} to 10
+        send "{@P} Reset delay for mine &3%{_M}%&7 has been set to 10 minutes."
+      else if {mine::%{_M}%::resetdelay} is 10:
+        set {mine::%{_M}%::resetdelay} to 1
+        send "{@P} Reset delay for mine &3%{_M}%&7 has been set to 1 minutes."
+      player command "mines edit %{_M}%"
+    if clicked slot is 32:
+      set {_M} to metadata "mines-mine" of player
+      if {mine::%{_M}%::setblockdelay} is 0:
+        set {mine::%{_M}%::setblockdelay} to 1
+        set {mine::%{_M}%::setblockdelay-display} to 1
+        send "{@P} Mine &3%{_M}%&7's set block on reset delay is now 1 tick."
+      else if {mine::%{_M}%::setblockdelay} is 1:
+        set {mine::%{_M}%::setblockdelay} to 0
+        set {mine::%{_M}%::setblockdelay-display} to "None"
+        send "{@P} Mine &3%{_M}%&7's set block on reset delay is now 0 ticks (none)."
+      player command "mines edit %{_M}%"
+    if clicked slot is 34:
+      set {_M} to metadata "mines-mine" of player
+      console command "mine clear %{_M}%"
+  if metadata "mines-gui" of player is "blocks":
+    cancel event
+    if clicked slot is 4:
+      close player's inventory
+      set {_M} to metadata "mines-mine" of player
+      set metadata "mines-inProcess" of player to true
+      set metadata "mines-blockSetup" of player to true
+      send ""
+      send "{@P} Enter in chat what block types you want in mine &3%{_M}%&7."
+      send "&c> &7Don't use spaces to seperate them, use "";"" (eg ""stone;grass block"")"
+      send ""
+  if metadata "mines-gui" of player is "list":
+    cancel event
+    set {_N} to clicked slot's name
+    if {_N} is set:
+      replace all "&3" with "" in {_N}
+      player command "/mines edit %{_N}%"
+    clear metadata "mines-gui" of player
+    clear metadata "mines-properties" of player
+
+every 1 minute:
+  loop {mine::list::*}:
+    if {mine::%loop-value%::resetdelay} is 1:
+      console command "mines reset %loop-value%"
+every 5 minutes:
+  loop {mine::list::*}:
+    if {mine::%loop-value%::resetdelay} is 5:
+      console command "mines reset %loop-value%"
+every 10 minutes:
+  loop {mine::list::*}:
+    if {mine::%loop-value%::resetdelay} is 10:
+      console command "mines reset %loop-value%"
+      
+on chat:
+  if metadata "mines-blockSetup" of player is true:
+    cancel event
+    set {_blocks} to message
+    set {_S::*} to split {_blocks} at ";"
+    if amount of {_S::*} < 35:
+      clear metadata "mines-blockSetup" of player
+      clear metadata "mines-inProcess" of player
+      set {_M} to metadata "mines-mine" of player
+      set {_blocks} to message
+      set {mine::%{_M}%::blocks::*} to split {_blocks} at ";"
+      console command "mines reset %{_M}%"
+      send ""
+      send "{@P} Mine &3%{_M}%&7's blocks have been set to &3%{mine::%{_M}%::blocks::*}%&7, and the mine has been reset."
+      send ""
+      clear metadata "mines-mine" of player
+    else:
+      send ""
+      send "{@P} Error, there is a maximum of 35 blocks allowed in each mine."
+      send ""
+
+on join:
+  clear metadata "mines-inProcess" of player
+  clear metadata "mines-mine" of player
+  clear metadata "mines-blockSetup" of player
+  clear metadata "mines-gui" of player
+#
+# SETUPWAND: RIGHT CLICK
+#
+
+on right click with stone axe:
+  if name of player's held item is "{@P} &7Setup Wand":
+    if player has permission "mines.wand":
+      cancel event
+      set {mine::setup::location-1} to location of event-block
+    send "{@P} Location 1 set to &3%{mine::setup::location-1}%"
+
+#
+# SETUPWAND: LEFT CLICK
+#
+
+on break:
+  if held item is stone axe:
+    if name of player's held item is "{@P} &7Setup Wand":
+      if player has permission "mines.wand":
+        cancel event
+        set {mine::setup::location-2} to location of event-block
+        send "{@P} Location 2 set to &3%{mine::setup::location-2}%"
+
+
+#
+#
+#
+
+function minesPlayerbetweenCheck(a: number, b: number, c: number) :: boolean:
+    if {_a} is between {_b} and {_c}:
+        return true
+    else if {_a} is between {_c} and {_b}:
+        return true
+
+function minesPlayerbetween(p: player, l1: location, l2: location) :: boolean:
+    if minesPlayerbetweenCheck(x coord of location of {_p}, x coord of {_l1}, x coord of {_l2}) = true:
+        if minesPlayerbetweenCheck(y coord of location of {_p}, y coord of {_l1}, y coord of {_l2}) = true:
+            if minesPlayerbetweenCheck(z coord of location of {_p}, z coord of {_l1}, z coord of {_l2}) = true:
+                return true
