@@ -65,8 +65,8 @@ class TestLanguage < Minitest::Test
     assert_equal Language['Tree-sitter Query'], Language.find_by_alias('tsq')
     assert_equal Language['TSX'], Language.find_by_alias('typescriptreact')
     assert_equal Language['TypeScript'], Language.find_by_alias('ts')
-    assert_equal Language['Vim Script'], Language.find_by_alias('vim')
-    assert_equal Language['Vim Script'], Language.find_by_alias('viml')
+    assert_equal Language['Vim script'], Language.find_by_alias('vim')
+    assert_equal Language['Vim script'], Language.find_by_alias('viml')
     assert_equal Language['reStructuredText'], Language.find_by_alias('rst')
     assert_equal Language['X BitMap'], Language.find_by_alias('xbm')
     assert_equal Language['X PixMap'], Language.find_by_alias('xpm')
@@ -217,7 +217,9 @@ class TestLanguage < Minitest::Test
       "python2" => "Python",
       "python3" => "Python",
       "sbcl" => "Common Lisp",
-      "sclang" => "SuperCollider"
+      "sclang" => "SuperCollider",
+      "node" => ["JavaScript", "TypeScript"],
+      "nodejs" => "JavaScript",
     }.each do |interpreter, language|
       languages = Array(language).map { |lang| Language[lang] }
       assert_equal languages, Language.find_by_interpreter(interpreter)
