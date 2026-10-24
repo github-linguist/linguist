@@ -1,0 +1,13 @@
+{
+	"plugins": [
+		["maven",
+		{
+			"mavenCommand": "mvn",
+			"mavenOptions": ["-DinteractiveMode=false", "-DskipTests", "-P release"],
+			"mavenReleaseGoals": ["deploy"]
+		}]
+	],
+	"repo": "https://github.com/graph-quilt/graphql-service-adapters",
+	"onlyPublishWithReleaseLabel": false,
+	"email": "graphquilt@gmail.com"
+}
