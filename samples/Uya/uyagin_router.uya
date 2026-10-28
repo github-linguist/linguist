@@ -1,0 +1,797 @@
+// lib/std/http/uyagin_router.uya — UyaGin 路由表（方法分表 + 段级 radix tree）
+//
+// 模块路径：use std.http.uyagin_router
+
+use std.http.types;
+
+export const UYAGIN_ROUTER_MAX_ROUTES: i32 = 1024;
+const UYAGIN_ROUTER_MAX_NODES: i32 = 8192;
+const UYAGIN_ROUTER_METHOD_COUNT: i32 = 7;
+const UYAGIN_ROUTER_MAX_REQ_SEGMENTS: i32 = 128;
+
+const UYAGIN_SEGMENT_STATIC: byte = 1 as byte;
+const UYAGIN_SEGMENT_PARAM: byte = 2 as byte;
+const UYAGIN_SEGMENT_WILDCARD: byte = 3 as byte;
+
+const UYAGIN_NODE_ROOT: byte = 0 as byte;
+const UYAGIN_NODE_STATIC: byte = 1 as byte;
+const UYAGIN_NODE_PARAM: byte = 2 as byte;
+const UYAGIN_NODE_WILDCARD: byte = 3 as byte;
+
+struct UyaginPatternSegment {
+    start: usize,
+    end: usize,
+    kind: byte,
+    hash: u32,
+}
+
+struct UyaginRequestSegment {
+    start: usize,
+    end: usize,
+    hash: u32,
+}
+
+export struct UyaginRouteMeta {
+    method: Method,
+    pattern: [byte: MAX_URI_LENGTH],
+    pattern_len: i32,
+    segment_count: i32,
+    param_names: [byte: MAX_URI_LENGTH],
+    param_name_bytes_len: i32,
+    param_name_offsets: [i32: MAX_PATH_PARAMS],
+    param_name_lens: [i32: MAX_PATH_PARAMS],
+    param_segment_indexes: [i32: MAX_PATH_PARAMS],
+    param_kinds: [byte: MAX_PATH_PARAMS],
+    param_count: i32,
+}
+
+struct UyaginRouterNode {
+    kind: byte,
+    owner_route_idx: i32,
+    owner_segment_start: usize,
+    owner_segment_len: usize,
+    literal_hash: u32,
+    route_idx: i32,
+    first_static_child: i32,
+    next_sibling: i32,
+    param_child: i32,
+    wildcard_child: i32,
+}
+
+export struct UyaginRouter {
+    roots: [i32: UYAGIN_ROUTER_METHOD_COUNT],
+    nodes: [UyaginRouterNode: UYAGIN_ROUTER_MAX_NODES],
+    node_count: i32,
+    route_count: i32,
+}
+
+fn uyagin_router_method_index(method: Method) i32 {
+    if method == Method.GET { return 0; }
+    if method == Method.POST { return 1; }
+    if method == Method.PUT { return 2; }
+    if method == Method.PATCH { return 3; }
+    if method == Method.DELETE { return 4; }
+    if method == Method.OPTIONS { return 5; }
+    return 6;
+}
+
+fn uyagin_router_hash_bytes(base: &byte, len: usize) u32 {
+    var h: u32 = 2166136261u32;
+    var i: usize = 0;
+    while i < len {
+        h = (h ^ (base[i] as u32)) * 16777619u32;
+        i = i + 1;
+    }
+    return h;
+}
+
+fn uyagin_router_hash_slice_bytes(s: &[byte]) u32 {
+    if s.len == 0 {
+        return 0u32;
+    }
+    return uyagin_router_hash_bytes(s.ptr as &byte, s.len);
+}
+
+fn uyagin_router_next_pattern_segment(pattern: &[byte], cursor: &usize, out: &UyaginPatternSegment) bool {
+    var i: usize = *cursor;
+    while i < pattern.len && pattern.ptr[i] == '/' as byte {
+        i = i + 1;
+    }
+    if i >= pattern.len {
+        *cursor = i;
+        return false;
+    }
+    const start: usize = i;
+    while i < pattern.len && pattern.ptr[i] != '/' as byte {
+        i = i + 1;
+    }
+    out.start = start;
+    out.end = i;
+    out.hash = 0u32;
+    if pattern.ptr[start] == ':' as byte {
+        out.kind = UYAGIN_SEGMENT_PARAM;
+    } else if pattern.ptr[start] == '*' as byte {
+        out.kind = UYAGIN_SEGMENT_WILDCARD;
+    } else {
+        out.kind = UYAGIN_SEGMENT_STATIC;
+        out.hash = uyagin_router_hash_slice_bytes(pattern[start: i - start]);
+    }
+    *cursor = i;
+    return true;
+}
+
+fn uyagin_router_next_request_segment(req: &Request, path_len: usize, cursor: &usize, out: &UyaginRequestSegment) bool {
+    const path_cap: usize = @len(req.path);
+    var i: usize = *cursor;
+    while i < path_len && i < path_cap && req.path[i] == '/' as byte {
+        i = i + 1;
+    }
+    if i >= path_len || i >= path_cap {
+        *cursor = i;
+        return false;
+    }
+    const start: usize = i;
+    while i < path_len && i < path_cap && req.path[i] != '/' as byte {
+        i = i + 1;
+    }
+    out.start = start;
+    out.end = i;
+    out.hash = uyagin_router_hash_bytes(@ptr_from_usize(@usize_from_ptr(&req.path[0] as &void) + start) as &byte, i - start);
+    *cursor = i;
+    return true;
+}
+
+fn uyagin_request_segment_ptr(base: &UyaginRequestSegment, idx: i32) &UyaginRequestSegment {
+    if base == null || idx < 0 || idx >= UYAGIN_ROUTER_MAX_REQ_SEGMENTS {
+        return null;
+    }
+    return @ptr_from_usize(@usize_from_ptr(base as &void) + (idx as usize) * @size_of(UyaginRequestSegment)) as &UyaginRequestSegment;
+}
+
+fn uyagin_router_route_meta_ptr(base: &UyaginRouteMeta, idx: i32) &UyaginRouteMeta {
+    if base == null || idx < 0 || idx >= UYAGIN_ROUTER_MAX_ROUTES {
+        return null;
+    }
+    return @ptr_from_usize(@usize_from_ptr(base as &void) + (idx as usize) * @size_of(UyaginRouteMeta)) as &UyaginRouteMeta;
+}
+
+fn uyagin_router_node_ptr(router: &UyaginRouter, idx: i32) &UyaginRouterNode {
+    if router == null || idx < 0 || idx >= UYAGIN_ROUTER_MAX_NODES {
+        return null;
+    }
+    return @ptr_from_usize(@usize_from_ptr(&router.nodes[0] as &void) + (idx as usize) * @size_of(UyaginRouterNode)) as &UyaginRouterNode;
+}
+
+fn uyagin_router_root_ptr(router: &UyaginRouter, idx: i32) &i32 {
+    if router == null || idx < 0 || idx >= UYAGIN_ROUTER_METHOD_COUNT {
+        return null;
+    }
+    return @ptr_from_usize(@usize_from_ptr(&router.roots[0] as &void) + (idx as usize) * @size_of(i32)) as &i32;
+}
+
+fn uyagin_route_meta_i32_ptr(base: &i32, idx: i32, cap: i32) &i32 {
+    if base == null || idx < 0 || idx >= cap {
+        return null;
+    }
+    return @ptr_from_usize(@usize_from_ptr(base as &void) + (idx as usize) * @size_of(i32)) as &i32;
+}
+
+fn uyagin_route_meta_byte_ptr(base: &byte, idx: i32, cap: i32) &byte {
+    if base == null || idx < 0 || idx >= cap {
+        return null;
+    }
+    return @ptr_from_usize(@usize_from_ptr(base as &void) + (idx as usize) * @size_of(byte)) as &byte;
+}
+
+fn uyagin_route_meta_copy_pattern(meta: &UyaginRouteMeta, pattern: &[byte]) !void {
+    if pattern.len > MAX_URI_LENGTH as usize {
+        return error.URITooLong;
+    }
+    meta.pattern_len = pattern.len as i32;
+    var i: usize = 0;
+    while i < pattern.len {
+        meta.pattern[i] = pattern.ptr[i];
+        i = i + 1;
+    }
+}
+
+fn uyagin_route_meta_append_param(meta: &UyaginRouteMeta, seg_index: i32, seg: &UyaginPatternSegment, pattern: &[byte]) !void {
+    if meta.param_count < 0 || meta.param_count >= MAX_PATH_PARAMS {
+        return error.TooManyParams;
+    }
+    if seg == null || seg.end <= seg.start + 1 {
+        return error.InvalidRequest;
+    }
+    const name_len: usize = seg.end - seg.start - 1;
+    const dst_off: usize = meta.param_name_bytes_len as usize;
+    if dst_off + name_len > MAX_URI_LENGTH as usize {
+        return error.URITooLong;
+    }
+    var i: usize = 0;
+    while i < name_len {
+        meta.param_names[dst_off + i] = pattern.ptr[seg.start + 1 + i];
+        i = i + 1;
+    }
+    const idx: i32 = meta.param_count;
+    if !(idx >= 0 && idx < MAX_PATH_PARAMS) {
+        return error.TooManyParams;
+    }
+    const off_slot: &i32 = uyagin_route_meta_i32_ptr(&meta.param_name_offsets[0] as &i32, idx, MAX_PATH_PARAMS);
+    const len_slot: &i32 = uyagin_route_meta_i32_ptr(&meta.param_name_lens[0] as &i32, idx, MAX_PATH_PARAMS);
+    const seg_slot: &i32 = uyagin_route_meta_i32_ptr(&meta.param_segment_indexes[0] as &i32, idx, MAX_PATH_PARAMS);
+    const kind_slot: &byte = uyagin_route_meta_byte_ptr(&meta.param_kinds[0] as &byte, idx, MAX_PATH_PARAMS);
+    if off_slot == null || len_slot == null || seg_slot == null || kind_slot == null {
+        return error.TooManyParams;
+    }
+    *off_slot = dst_off as i32;
+    *len_slot = name_len as i32;
+    *seg_slot = seg_index;
+    *kind_slot = seg.kind;
+    meta.param_name_bytes_len = (dst_off + name_len) as i32;
+    meta.param_count = idx + 1;
+}
+
+export fn uyagin_route_meta_init(meta: &UyaginRouteMeta, method: Method, pattern: &[byte]) !void {
+    if meta == null {
+        return error.InvalidRequest;
+    }
+    meta.method = method;
+    meta.segment_count = 0;
+    meta.param_count = 0;
+    meta.param_name_bytes_len = 0;
+    try uyagin_route_meta_copy_pattern(meta, pattern);
+
+    var cursor: usize = 0;
+    var seg_index: i32 = 0;
+    var seg: UyaginPatternSegment = UyaginPatternSegment{ start: 0, end: 0, kind: 0 as byte, hash: 0u32 };
+    while uyagin_router_next_pattern_segment(pattern, &cursor, &seg) {
+        if seg.kind == UYAGIN_SEGMENT_WILDCARD {
+            var probe_cursor: usize = cursor;
+            var probe: UyaginPatternSegment = UyaginPatternSegment{ start: 0, end: 0, kind: 0 as byte, hash: 0u32 };
+            if uyagin_router_next_pattern_segment(pattern, &probe_cursor, &probe) {
+                return error.RouteWildcardNotTail;
+            }
+        }
+        if seg.kind == UYAGIN_SEGMENT_PARAM || seg.kind == UYAGIN_SEGMENT_WILDCARD {
+            try uyagin_route_meta_append_param(meta, seg_index, &seg, pattern);
+        }
+        seg_index = seg_index + 1;
+    }
+    meta.segment_count = seg_index;
+}
+
+fn uyagin_router_reset_node(node: &UyaginRouterNode, kind: byte, owner_route_idx: i32, owner_segment_start: usize, owner_segment_len: usize, literal_hash: u32) void {
+    node.kind = kind;
+    node.owner_route_idx = owner_route_idx;
+    node.owner_segment_start = owner_segment_start;
+    node.owner_segment_len = owner_segment_len;
+    node.literal_hash = literal_hash;
+    node.route_idx = -1;
+    node.first_static_child = -1;
+    node.next_sibling = -1;
+    node.param_child = -1;
+    node.wildcard_child = -1;
+}
+
+fn uyagin_router_new_node(router: &UyaginRouter, kind: byte, owner_route_idx: i32, owner_segment_start: usize, owner_segment_len: usize, literal_hash: u32) !i32 {
+    if router == null {
+        return error.InvalidRequest;
+    }
+    if router.node_count < 0 || router.node_count >= UYAGIN_ROUTER_MAX_NODES {
+        return error.RouterFull;
+    }
+    const idx: i32 = router.node_count;
+    const node: &UyaginRouterNode = uyagin_router_node_ptr(router, idx);
+    if node == null {
+        return error.RouterFull;
+    }
+    uyagin_router_reset_node(node, kind, owner_route_idx, owner_segment_start, owner_segment_len, literal_hash);
+    router.node_count = idx + 1;
+    return idx;
+}
+
+export fn uyagin_router_new() UyaginRouter {
+    var router: UyaginRouter = UyaginRouter{
+        roots: [],
+        nodes: [],
+        node_count: 0,
+        route_count: 0,
+    };
+    var i: i32 = 0;
+    while i < UYAGIN_ROUTER_METHOD_COUNT {
+        const idx: i32 = i;
+        const root_slot: &i32 = uyagin_router_root_ptr(&router, i);
+        if root_slot != null {
+            *root_slot = idx;
+        }
+        uyagin_router_reset_node(&router.nodes[idx], UYAGIN_NODE_ROOT, -1, 0usize, 0usize, 0u32);
+        i = i + 1;
+    }
+    router.node_count = UYAGIN_ROUTER_METHOD_COUNT;
+    return router;
+}
+
+fn uyagin_pattern_segment_static_eq(meta_base: &UyaginRouteMeta, existing_node: &UyaginRouterNode, pattern: &[byte], seg: &UyaginPatternSegment) bool {
+    if meta_base == null || existing_node == null || seg == null {
+        return false;
+    }
+    if existing_node.owner_segment_len != (seg.end - seg.start) {
+        return false;
+    }
+    if existing_node.literal_hash != seg.hash {
+        return false;
+    }
+    const owner_meta: &UyaginRouteMeta = uyagin_router_route_meta_ptr(meta_base, existing_node.owner_route_idx);
+    if owner_meta == null {
+        return false;
+    }
+    var i: usize = 0;
+    while i < existing_node.owner_segment_len {
+        if owner_meta.pattern[existing_node.owner_segment_start + i] != pattern.ptr[seg.start + i] {
+            return false;
+        }
+        i = i + 1;
+    }
+    return true;
+}
+
+fn uyagin_pattern_segment_param_name_eq(meta_base: &UyaginRouteMeta, existing_node: &UyaginRouterNode, pattern: &[byte], seg: &UyaginPatternSegment) bool {
+    if meta_base == null || existing_node == null || seg == null {
+        return false;
+    }
+    if existing_node.owner_segment_len == 0usize || seg.end <= seg.start + 1 {
+        return false;
+    }
+    const owner_meta: &UyaginRouteMeta = uyagin_router_route_meta_ptr(meta_base, existing_node.owner_route_idx);
+    if owner_meta == null {
+        return false;
+    }
+    const existing_name_len: usize = existing_node.owner_segment_len - 1usize;
+    const new_name_len: usize = seg.end - seg.start - 1usize;
+    if existing_name_len != new_name_len {
+        return false;
+    }
+    var i: usize = 0;
+    while i < existing_name_len {
+        if owner_meta.pattern[existing_node.owner_segment_start + 1usize + i] != pattern.ptr[seg.start + 1usize + i] {
+            return false;
+        }
+        i = i + 1;
+    }
+    return true;
+}
+
+fn uyagin_router_find_static_child(router: &UyaginRouter, meta_base: &UyaginRouteMeta, parent: &UyaginRouterNode, pattern: &[byte], seg: &UyaginPatternSegment) i32 {
+    if router == null || parent == null {
+        return -1;
+    }
+    var child_idx: i32 = parent.first_static_child;
+    while child_idx >= 0 {
+        const child: &UyaginRouterNode = uyagin_router_node_ptr(router, child_idx);
+        if child != null && uyagin_pattern_segment_static_eq(meta_base, child, pattern, seg) {
+            return child_idx;
+        }
+        if child == null {
+            break;
+        }
+        child_idx = child.next_sibling;
+    }
+    return -1;
+}
+
+fn uyagin_router_attach_static_child(parent: &UyaginRouterNode, child_idx: i32) void {
+    if parent == null {
+        return;
+    }
+    parent.first_static_child = child_idx;
+}
+
+export fn uyagin_router_add(router: &UyaginRouter, meta_base: &UyaginRouteMeta, route_idx: i32, meta: &UyaginRouteMeta) !void {
+    if router == null || meta_base == null || meta == null {
+        return error.InvalidRequest;
+    }
+    if route_idx < 0 || route_idx >= UYAGIN_ROUTER_MAX_ROUTES {
+        return error.RouterFull;
+    }
+    if router.route_count < 0 || router.route_count >= UYAGIN_ROUTER_MAX_ROUTES {
+        return error.RouterFull;
+    }
+
+    const method_idx: i32 = uyagin_router_method_index(meta.method);
+    if !(method_idx >= 0 && method_idx < UYAGIN_ROUTER_METHOD_COUNT) {
+        return error.InvalidRequest;
+    }
+    const root_slot: &i32 = uyagin_router_root_ptr(router, method_idx);
+    if root_slot == null {
+        return error.InvalidRequest;
+    }
+    const root_idx: i32 = *root_slot;
+    const root: &UyaginRouterNode = uyagin_router_node_ptr(router, root_idx);
+    if root == null {
+        return error.InvalidRequest;
+    }
+
+    if meta.segment_count == 0 {
+        if root.route_idx >= 0 {
+            return error.RouteConflict;
+        }
+        root.route_idx = route_idx;
+        router.route_count = router.route_count + 1;
+        return;
+    }
+
+    var parent_idx: i32 = root_idx;
+    var cursor: usize = 0;
+    var seg: UyaginPatternSegment = UyaginPatternSegment{ start: 0, end: 0, kind: 0 as byte, hash: 0u32 };
+    while uyagin_router_next_pattern_segment(uyagin_route_meta_pattern_slice(meta), &cursor, &seg) {
+        const parent: &UyaginRouterNode = uyagin_router_node_ptr(router, parent_idx);
+        if parent == null {
+            return error.InvalidRequest;
+        }
+        if seg.kind == UYAGIN_SEGMENT_STATIC {
+            var child_idx: i32 = uyagin_router_find_static_child(router, meta_base, parent, uyagin_route_meta_pattern_slice(meta), &seg);
+            if child_idx < 0 {
+                child_idx = try uyagin_router_new_node(router, UYAGIN_NODE_STATIC, route_idx, seg.start, seg.end - seg.start, seg.hash);
+                const child: &UyaginRouterNode = uyagin_router_node_ptr(router, child_idx);
+                if child == null {
+                    return error.RouterFull;
+                }
+                child.next_sibling = parent.first_static_child;
+                uyagin_router_attach_static_child(parent, child_idx);
+            }
+            parent_idx = child_idx;
+            continue;
+        }
+        if seg.kind == UYAGIN_SEGMENT_PARAM {
+            if parent.param_child >= 0 {
+                const child: &UyaginRouterNode = uyagin_router_node_ptr(router, parent.param_child);
+                if child == null {
+                    return error.InvalidRequest;
+                }
+                if !uyagin_pattern_segment_param_name_eq(meta_base, child, uyagin_route_meta_pattern_slice(meta), &seg) {
+                    return error.RouteParamConflict;
+                }
+                parent_idx = parent.param_child;
+                continue;
+            }
+            const child_idx: i32 = try uyagin_router_new_node(router, UYAGIN_NODE_PARAM, route_idx, seg.start, seg.end - seg.start, 0u32);
+            parent.param_child = child_idx;
+            parent_idx = child_idx;
+            continue;
+        }
+        if seg.kind == UYAGIN_SEGMENT_WILDCARD {
+            if parent.wildcard_child >= 0 {
+                const child: &UyaginRouterNode = uyagin_router_node_ptr(router, parent.wildcard_child);
+                if child == null {
+                    return error.InvalidRequest;
+                }
+                if !uyagin_pattern_segment_param_name_eq(meta_base, child, uyagin_route_meta_pattern_slice(meta), &seg) {
+                    return error.RouteParamConflict;
+                }
+                parent_idx = parent.wildcard_child;
+                continue;
+            }
+            const child_idx: i32 = try uyagin_router_new_node(router, UYAGIN_NODE_WILDCARD, route_idx, seg.start, seg.end - seg.start, 0u32);
+            parent.wildcard_child = child_idx;
+            parent_idx = child_idx;
+            continue;
+        }
+        return error.InvalidRequest;
+    }
+
+    const leaf: &UyaginRouterNode = uyagin_router_node_ptr(router, parent_idx);
+    if leaf == null {
+        return error.InvalidRequest;
+    }
+    if leaf.route_idx >= 0 {
+        return error.RouteConflict;
+    }
+    leaf.route_idx = route_idx;
+    router.route_count = router.route_count + 1;
+}
+
+fn uyagin_collect_request_segments(req: &Request, out: &UyaginRequestSegment, cap: i32) !i32 {
+    if req == null {
+        return error.InvalidRequest;
+    }
+    if req.path_len < 0 || req.path_len > MAX_URI_LENGTH {
+        return error.InvalidRequest;
+    }
+    var cursor: usize = 0;
+    var count: i32 = 0;
+    const path_len: usize = req.path_len as usize;
+    var seg: UyaginRequestSegment = UyaginRequestSegment{ start: 0usize, end: 0usize, hash: 0u32 };
+    while uyagin_router_next_request_segment(req, path_len, &cursor, &seg) {
+        if count < 0 || count >= cap {
+            return error.URITooLong;
+        }
+        const dst: &UyaginRequestSegment = uyagin_request_segment_ptr(out, count);
+        if dst == null {
+            return error.InvalidRequest;
+        }
+        dst.start = seg.start;
+        dst.end = seg.end;
+        dst.hash = seg.hash;
+        count = count + 1;
+    }
+    return count;
+}
+
+fn uyagin_router_static_node_matches(router: &UyaginRouter, meta_base: &UyaginRouteMeta, node: &UyaginRouterNode, req: &Request, seg: &UyaginRequestSegment) bool {
+    if router == null || meta_base == null || node == null || req == null || seg == null {
+        return false;
+    }
+    if node.literal_hash != seg.hash {
+        return false;
+    }
+    if node.owner_segment_len != (seg.end - seg.start) {
+        return false;
+    }
+    const owner_meta: &UyaginRouteMeta = uyagin_router_route_meta_ptr(meta_base, node.owner_route_idx);
+    if owner_meta == null {
+        return false;
+    }
+    var i: usize = 0;
+    while i < node.owner_segment_len {
+        if owner_meta.pattern[node.owner_segment_start + i] != req.path[seg.start + i] {
+            return false;
+        }
+        i = i + 1;
+    }
+    return true;
+}
+
+fn uyagin_router_match_node(
+    router: &UyaginRouter,
+    meta_base: &UyaginRouteMeta,
+    req: &Request,
+    seg_base: &UyaginRequestSegment,
+    seg_count: i32,
+    node_idx: i32,
+    seg_idx: i32
+) i32 {
+    const node: &UyaginRouterNode = uyagin_router_node_ptr(router, node_idx);
+    if node == null {
+        return -1;
+    }
+    if seg_idx >= seg_count {
+        return node.route_idx;
+    }
+
+    var child_idx: i32 = node.first_static_child;
+    while child_idx >= 0 {
+        const child: &UyaginRouterNode = uyagin_router_node_ptr(router, child_idx);
+        const req_seg: &UyaginRequestSegment = uyagin_request_segment_ptr(seg_base, seg_idx);
+        if child != null && req_seg != null && uyagin_router_static_node_matches(router, meta_base, child, req, req_seg) {
+            const static_match: i32 = uyagin_router_match_node(router, meta_base, req, seg_base, seg_count, child_idx, seg_idx + 1);
+            if static_match >= 0 {
+                return static_match;
+            }
+        }
+        if child == null {
+            break;
+        }
+        child_idx = child.next_sibling;
+    }
+
+    if node.param_child >= 0 {
+        const param_match: i32 = uyagin_router_match_node(router, meta_base, req, seg_base, seg_count, node.param_child, seg_idx + 1);
+        if param_match >= 0 {
+            return param_match;
+        }
+    }
+
+    if node.wildcard_child >= 0 {
+        const wildcard_node: &UyaginRouterNode = uyagin_router_node_ptr(router, node.wildcard_child);
+        if wildcard_node != null && wildcard_node.route_idx >= 0 {
+            return wildcard_node.route_idx;
+        }
+    }
+    return -1;
+}
+
+fn uyagin_router_try_match_single_static_segment_request(router: &UyaginRouter, meta_base: &UyaginRouteMeta, method: Method, req: &Request) i32 {
+    if router == null || meta_base == null || req == null {
+        return -1;
+    }
+    if req.path_len < 0 || req.path_len > MAX_URI_LENGTH {
+        return -1;
+    }
+    const path_len: usize = req.path_len as usize;
+    const path_cap: usize = @len(req.path);
+    var start: usize = 0;
+    while start < path_len && start < path_cap && req.path[start] == '/' as byte {
+        start = start + 1;
+    }
+    const method_idx: i32 = uyagin_router_method_index(method);
+    if method_idx < 0 || method_idx >= UYAGIN_ROUTER_METHOD_COUNT {
+        return -1;
+    }
+    const root_slot: &i32 = uyagin_router_root_ptr(router, method_idx);
+    if root_slot == null {
+        return -1;
+    }
+    const root: &UyaginRouterNode = uyagin_router_node_ptr(router, *root_slot);
+    if root == null {
+        return -1;
+    }
+    if start >= path_len || start >= path_cap {
+        return root.route_idx;
+    }
+    var end: usize = start;
+    while end < path_len && end < path_cap && req.path[end] != '/' as byte {
+        end = end + 1;
+    }
+    var tail: usize = end;
+    while tail < path_len && tail < path_cap && req.path[tail] == '/' as byte {
+        tail = tail + 1;
+    }
+    if tail < path_len && tail < path_cap {
+        return -1;
+    }
+    const seg_len: usize = end - start;
+    const seg_hash: u32 = uyagin_router_hash_bytes(@ptr_from_usize(@usize_from_ptr(&req.path[0] as &void) + start) as &byte, seg_len);
+    var child_idx: i32 = root.first_static_child;
+    while child_idx >= 0 {
+        const child: &UyaginRouterNode = uyagin_router_node_ptr(router, child_idx);
+        if child == null {
+            break;
+        }
+        if child.literal_hash == seg_hash && child.owner_segment_len == seg_len {
+            const owner_meta: &UyaginRouteMeta = uyagin_router_route_meta_ptr(meta_base, child.owner_route_idx);
+            if owner_meta != null {
+                var i: usize = 0;
+                var matched: bool = true;
+                while i < seg_len {
+                    if owner_meta.pattern[child.owner_segment_start + i] != req.path[start + i] {
+                        matched = false;
+                        break;
+                    }
+                    i = i + 1;
+                }
+                if matched && child.route_idx >= 0 {
+                    return child.route_idx;
+                }
+            }
+        }
+        child_idx = child.next_sibling;
+    }
+    return -1;
+}
+
+export fn uyagin_router_match_method_request(router: &UyaginRouter, meta_base: &UyaginRouteMeta, method: Method, req: &Request) i32 {
+    if router == null || meta_base == null || req == null {
+        return -1;
+    }
+    const single_static: i32 = uyagin_router_try_match_single_static_segment_request(router, meta_base, method, req);
+    if single_static >= 0 {
+        return single_static;
+    }
+    var segs: [UyaginRequestSegment: UYAGIN_ROUTER_MAX_REQ_SEGMENTS] = [];
+    const seg_count_res: !i32 = uyagin_collect_request_segments(req, &segs[0] as &UyaginRequestSegment, UYAGIN_ROUTER_MAX_REQ_SEGMENTS);
+    const seg_count: i32 = seg_count_res catch {
+        return -1;
+    };
+    const method_idx: i32 = uyagin_router_method_index(method);
+    if method_idx < 0 || method_idx >= UYAGIN_ROUTER_METHOD_COUNT {
+        return -1;
+    }
+    const root_slot: &i32 = uyagin_router_root_ptr(router, method_idx);
+    if root_slot == null {
+        return -1;
+    }
+    const root_idx: i32 = *root_slot;
+    return uyagin_router_match_node(router, meta_base, req, &segs[0] as &UyaginRequestSegment, seg_count, root_idx, 0);
+}
+
+export fn uyagin_router_find_route_request(router: &UyaginRouter, meta_base: &UyaginRouteMeta, method: Method, req: &Request) i32 {
+    const hit: i32 = uyagin_router_match_method_request(router, meta_base, method, req);
+    if hit >= 0 {
+        return hit;
+    }
+    var i: i32 = 0;
+    while i < UYAGIN_ROUTER_METHOD_COUNT {
+        const probe_method: Method = uyagin_router_method_from_index(i);
+        if probe_method != method && uyagin_router_match_method_request(router, meta_base, probe_method, req) >= 0 {
+            return -2;
+        }
+        i = i + 1;
+    }
+    return -1;
+}
+
+fn uyagin_router_method_from_index(idx: i32) Method {
+    if idx == 0 { return Method.GET; }
+    if idx == 1 { return Method.POST; }
+    if idx == 2 { return Method.PUT; }
+    if idx == 3 { return Method.PATCH; }
+    if idx == 4 { return Method.DELETE; }
+    if idx == 5 { return Method.OPTIONS; }
+    return Method.HEAD;
+}
+
+export fn uyagin_router_allow_mask(router: &UyaginRouter, meta_base: &UyaginRouteMeta, req: &Request) u32 {
+    if router == null || meta_base == null || req == null {
+        return 0u32;
+    }
+    var mask: u32 = 0u32;
+    var i: i32 = 0;
+    while i < UYAGIN_ROUTER_METHOD_COUNT {
+        const method: Method = uyagin_router_method_from_index(i);
+        if uyagin_router_match_method_request(router, meta_base, method, req) >= 0 {
+            mask = mask | (1u32 << i);
+        }
+        i = i + 1;
+    }
+    return mask;
+}
+
+fn uyagin_route_meta_param_name_slice(meta: &UyaginRouteMeta, idx: i32) &[byte] {
+    const base: &byte = &meta.param_names[0] as &byte;
+    if meta == null || idx < 0 || idx >= meta.param_count || idx >= MAX_PATH_PARAMS {
+        return base[0: 0];
+    }
+    const off_slot: &i32 = uyagin_route_meta_i32_ptr(&meta.param_name_offsets[0] as &i32, idx, MAX_PATH_PARAMS);
+    const len_slot: &i32 = uyagin_route_meta_i32_ptr(&meta.param_name_lens[0] as &i32, idx, MAX_PATH_PARAMS);
+    if off_slot == null || len_slot == null {
+        return base[0: 0];
+    }
+    return base[(*off_slot) as usize: (*len_slot) as usize];
+}
+
+export fn uyagin_route_meta_bind_params_request(meta: &UyaginRouteMeta, req: &Request) !void {
+    if meta == null || req == null {
+        return error.InvalidRequest;
+    }
+    req.path_param_count = 0;
+    if meta.param_count == 0 {
+        return;
+    }
+
+    var segs: [UyaginRequestSegment: UYAGIN_ROUTER_MAX_REQ_SEGMENTS] = [];
+    const seg_count: i32 = try uyagin_collect_request_segments(req, &segs[0] as &UyaginRequestSegment, UYAGIN_ROUTER_MAX_REQ_SEGMENTS);
+    if req.path_len < 0 || req.path_len > MAX_URI_LENGTH {
+        return error.InvalidRequest;
+    }
+    const path_len: usize = req.path_len as usize;
+    const path_base: &byte = &req.path[0] as &byte;
+
+    var i: i32 = 0;
+    while i < meta.param_count && i < MAX_PATH_PARAMS {
+        const seg_slot: &i32 = uyagin_route_meta_i32_ptr(&meta.param_segment_indexes[0] as &i32, i, MAX_PATH_PARAMS);
+        const kind_slot: &byte = uyagin_route_meta_byte_ptr(&meta.param_kinds[0] as &byte, i, MAX_PATH_PARAMS);
+        if seg_slot == null || kind_slot == null {
+            return error.InvalidRequest;
+        }
+        const seg_idx: i32 = *seg_slot;
+        if seg_idx < 0 || seg_idx >= seg_count {
+            return error.InvalidRequest;
+        }
+        const req_seg: &UyaginRequestSegment = uyagin_request_segment_ptr(&segs[0] as &UyaginRequestSegment, seg_idx);
+        if req_seg == null {
+            return error.InvalidRequest;
+        }
+        const key: &[byte] = uyagin_route_meta_param_name_slice(meta, i);
+        var value: &[byte] = path_base[0: 0];
+        if *kind_slot == UYAGIN_SEGMENT_WILDCARD {
+            var capture_start: usize = req_seg.start;
+            if capture_start > 0usize {
+                capture_start = capture_start - 1usize;
+            }
+            value = path_base[capture_start: path_len - capture_start];
+        } else {
+            value = path_base[req_seg.start: req_seg.end - req_seg.start];
+        }
+        req.path_params[i] = HttpKvSlice{ key: key, value: value };
+        req.path_param_count = i + 1;
+        i = i + 1;
+    }
+}
+
+export fn uyagin_route_meta_pattern_slice(meta: &UyaginRouteMeta) &[byte] {
+    const base: &byte = &meta.pattern[0] as &byte;
+    if meta == null || meta.pattern_len <= 0 {
+        return base[0: 0];
+    }
+    return base[0: meta.pattern_len as usize];
+}

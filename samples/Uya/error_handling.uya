@@ -1,0 +1,51 @@
+error FileError;
+error ParseError;
+
+extern "libc" fn printf(fmt: *byte, ...) i32;
+
+struct ParsedFile {
+    size: i32
+}
+
+fn read_virtual_file(name: &[byte]) !ParsedFile {
+    if name.len == 0 {
+        return error.FileError;
+    }
+    if name.ptr[0] == 33 as byte {
+        return error.ParseError;
+    }
+    return ParsedFile{ size: 128 };
+}
+
+fn read_file(name: &[byte]) !i32 {
+    defer {
+        printf("File operation completed\n");
+    }
+    errdefer {
+        printf("Error occurred, cleaning up\n");
+    }
+
+    const parsed: ParsedFile = try read_virtual_file(name);
+    return parsed.size;
+}
+
+fn main() i32 {
+    const input: &[byte] = &"demo.txt"[0: 8];
+    const result: i32 = read_file(input) catch |err| {
+        if err == error.FileError {
+            printf("File error occurred\n");
+        } else if err == error.ParseError {
+            printf("Parse error occurred\n");
+        }
+        return 1;
+    };
+
+    printf("Read %d bytes\n", result);
+    return 0;
+}
+
+
+
+
+
+

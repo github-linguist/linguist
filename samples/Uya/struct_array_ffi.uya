@@ -1,0 +1,32 @@
+extern "libc" fn printf(fmt: *byte, ...) i32;
+
+struct Mat4 {
+  m: [f32: 16]
+}
+
+fn print_mat(mat: &Mat4) void {
+  var i: i32 = 0;
+  while i < 16 {
+    printf("%f ", mat.m[i]);
+    i = i + 1;
+    if (i % 4) == 0 {
+      printf("\n");
+    }
+  }
+}
+
+fn main() i32 {
+  var m: Mat4 = Mat4{ m: [0.0: 16] };
+  m.m[0] = 1.0;
+  m.m[5] = 1.0;
+  m.m[10] = 1.0;
+  m.m[15] = 1.0;
+  print_mat(&m);
+  return 0;
+}
+
+
+
+
+
+

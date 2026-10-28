@@ -1,0 +1,147 @@
+// lib/std/collections/vec.uya - 动态数组 Vec<T>
+// 版本：v0.1.0
+// 说明：创建时传入 IAllocator；方法操作；**drop** 释放整块缓冲区（与 hashmap 同风格）
+// 模块路径：lib/std/collections/vec.uya → use std.collections.vec;
+
+use std.mem.allocator.IAllocator;
+
+error VecIndexOutOfBounds;
+error VecEmpty;
+
+export struct Vec<T> {
+    allocator: IAllocator,
+    data: &T,
+    _len: usize,
+    _cap: usize,
+
+    fn grow_if_needed(self: &Self) !void {
+        if self._len < self._cap {
+            return;
+        }
+        var sample: [T: 1] = [];
+        const esz: usize = @size_of(sample[0]) as usize;
+        var new_cap: usize = self._cap;
+        if new_cap == 0 {
+            new_cap = 8;
+        } else {
+            new_cap = self._cap * 2;
+        }
+        const new_bytes: usize = new_cap * esz;
+        if self.data == null {
+            const ar: !&byte = self.allocator.alloc(new_bytes);
+            var p: &byte = try ar;
+            self.data = p as &T;
+            self._cap = new_cap;
+            return;
+        }
+        const old_ptr: &byte = self.data as &byte;
+        const rr: !&byte = self.allocator.realloc(old_ptr, new_bytes);
+        var np: &byte = try rr;
+        self.data = np as &T;
+        self._cap = new_cap;
+    },
+
+    fn try_reserve(self: &Self, additional: usize) !void {
+        const need: usize = self._len + additional;
+        if self._cap >= need {
+            return;
+        }
+        var sample: [T: 1] = [];
+        const esz: usize = @size_of(sample[0]) as usize;
+        var new_cap: usize = self._cap;
+        if new_cap == 0 {
+            new_cap = 8;
+        }
+        while new_cap < need {
+            new_cap = new_cap * 2;
+        }
+        const new_bytes: usize = new_cap * esz;
+        if self.data == null {
+            const ar: !&byte = self.allocator.alloc(new_bytes);
+            var p: &byte = try ar;
+            self.data = p as &T;
+            self._cap = new_cap;
+            return;
+        }
+        const old_ptr: &byte = self.data as &byte;
+        const rr: !&byte = self.allocator.realloc(old_ptr, new_bytes);
+        var np: &byte = try rr;
+        self.data = np as &T;
+        self._cap = new_cap;
+    },
+
+    fn push(self: &Self, value: T) !void {
+        try self.grow_if_needed();
+        const buf: &T = self.data;
+        buf[self._len] = value;
+        self._len = self._len + 1;
+    },
+
+    fn pop(self: &Self) !T {
+        if self._len == 0 {
+            return error.VecEmpty;
+        }
+        self._len = self._len - 1;
+        const buf: &T = self.data;
+        return buf[self._len];
+    },
+
+    /// 按下标读元素（按值返回；需可拷贝的 T）。注：`!&T` 当前 C 后端不完整，故不用 `at() !&T`。
+    fn get(self: &Self, i: usize) !T {
+        if i >= self._len {
+            return error.VecIndexOutOfBounds;
+        }
+        const buf: &T = self.data;
+        return buf[i];
+    },
+
+    /// 调用方保证 `i < len`（用于嵌套容器等无法传播 `!` 的路径）。
+    fn elem_ref(self: &Self, i: usize) &T {
+        const buf: &T = self.data;
+        return &buf[i];
+    },
+
+    fn set(self: &Self, i: usize, value: T) !void {
+        if i >= self._len {
+            return error.VecIndexOutOfBounds;
+        }
+        const buf: &T = self.data;
+        buf[i] = value;
+    },
+
+    /// 仅释放 `data` 缓冲区（`data == null` 时不操作）；不调用元素 `drop`。供复合容器按序销毁内层缓冲。
+    fn free_storage(self: &Self) void {
+        if self.data == null {
+            return;
+        }
+        self.allocator.dealloc(self.data as &byte);
+    },
+
+    fn len(self: &Self) usize {
+        return self._len;
+    },
+
+    fn cap(self: &Self) usize {
+        return self._cap;
+    },
+
+    fn clear(self: &Self) void {
+        self._len = 0;
+    },
+
+    fn drop(self: Vec<T>) void {
+        if self.data == null {
+            return;
+        }
+        self.allocator.dealloc(self.data as &byte);
+    },
+}
+
+export fn vec_new<T>(allocator: IAllocator) Vec<T> {
+    return Vec<T>{
+        allocator: allocator,
+        data: null,
+        _len: 0,
+        _cap: 0,
+    };
+}

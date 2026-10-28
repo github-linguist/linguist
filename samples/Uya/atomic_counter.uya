@@ -1,0 +1,29 @@
+interface IIncrement {
+  fn inc(self: &Self) i32;
+}
+
+struct Counter : IIncrement {
+  value: atomic i32,
+
+  fn inc(self: &Self) i32 {
+    self.value += 1;
+    return self.value;
+  }
+}
+
+fn main() i32 {
+  var counter: Counter = Counter{ value: 0 };
+  const incrementer: IIncrement = counter;
+  const value: i32 = incrementer.inc();
+  if value != 1 {
+    return 1;
+  }
+  if counter.value != 1 {
+    return 2;
+  }
+  return 0;
+}
+
+
+
+
