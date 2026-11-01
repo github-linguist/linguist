@@ -1,0 +1,29 @@
+Inject SysMode
+
+
+
+using name "help"
+vidwrite 0xB8000 "\n"
+vidread 0xB8000
+vidwrite 0xB8000 "LegacyKernel (BOX-DOS REBERTH Kernel in a future) \n"
+vidread 0xB8000
+
+
+
+
+using name "kernel" main
+using enc [ascii]
+using device ps2keyb
+memw 0x5000 "help"
+vidwrite 0xB8000 cls
+vidread 0xB8000
+do true
+	vidwrite 0xB8000 "legacykernel v0.1 >"
+	vidread 0xB8000
+	wfkeyinp 0x3000 dyn
+	memw 0x3000
+	vidwrite 0x3000 0xB8000
+	if 0x3000 == 0x5000
+		call help
+
+

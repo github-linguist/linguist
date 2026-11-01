@@ -1,0 +1,12 @@
+Inject X+
+
+var num "x"
+var num "y"
+
+block "main"
+    set x = 7 * (2 + 1)
+    set y = x / 2
+    printext "x=" x " y=" y
+    printext x + y
+	end
+end

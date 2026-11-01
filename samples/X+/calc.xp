@@ -1,0 +1,39 @@
+Inject X+
+
+var num "num1"
+var num "num2"
+var str "operator"
+
+block "main"
+	do 1000
+		printstr "calculator. select operator: "
+		inputstr operator
+		if operator == "+"
+			printext "num1: "
+			inputnum num1
+			printext "num2: "
+			inputnum num2
+			printext num1 + num2
+		else if operator == "-"
+			printext "num1: "
+			inputnum num1
+			printext "num2: "
+			inputnum num2
+			printext num1 - num2
+		else if operator == "*"
+			printext "num1: "
+			inputnum num1
+			printext "num2: "
+			inputnum num2
+			printext num1 * num2
+		else if operator == "/"
+			printext "num1: "
+			inputnum num1
+			printext "num2: "
+			inputnum num2
+			printext num1 / num2
+			end if
+		end
+	end
+end	
+	

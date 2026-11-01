@@ -1,0 +1,18 @@
+Inject X+
+
+var str "select"
+
+block "hello"
+	printstr "hello world"
+	inputstr select
+	if select == "hello"
+		printstr "hello X+"
+	else
+		exit
+		end if
+	end
+
+block "main"
+	func hello
+	end
+end
