@@ -291,6 +291,18 @@ disambiguations:
     - '^\s*(?:across|deferred|elseif|ensure|feature|from|inherit|inspect|invariant|note|once|require|undefine|variant|when)\s*$'
   - language: Euphoria
     named_pattern: euphoria
+- extensions: ['.ec']
+  rules:
+  - language: EasyCrypt
+    pattern:
+    - '^[ \t]*(?:from[ \t]+\w+[ \t]+)?require[ \t]+(?:import|export|\(\*|[A-Z])'
+    - '^[ \t]*(?:local[ \t]+|declare[ \t]+)?(?:lemma|equiv|hoare|phoare|axiom)[ \t]+\w'
+    - '^[ \t]*(?:proof|qed|realize)\b[ \t]*\.'
+    - '^[ \t]*(?:abstract[ \t]+)?theory[ \t]+\w+[ \t]*\.'
+    - '^[ \t]*clone[ \t]+(?:import[ \t]+|include[ \t]+|export[ \t]+)?\w'
+    - '^[ \t]*(?:op|pred|type)[ \t]+[\w(''\["][^;{}\n]*\.[ \t]*$'
+    - '^[ \t]*module[ \t]+type[ \t]+\w+[^;\n]*='
+  - language: eC
 - extensions: ['.ecl']
   rules:
   - language: ECLiPSe
