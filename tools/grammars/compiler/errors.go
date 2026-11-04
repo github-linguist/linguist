@@ -1,7 +1,9 @@
 package compiler
 
-import "fmt"
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type ConversionError struct {
 	Path string
@@ -11,7 +13,8 @@ type ConversionError struct {
 func (err *ConversionError) Error() string {
 	return fmt.Sprintf(
 		"Grammar conversion failed. File `%s` failed to parse: %s",
-		err.Path, err.Err)
+		err.Path, err.Err,
+	)
 }
 
 type DuplicateScopeError struct {
@@ -22,7 +25,8 @@ type DuplicateScopeError struct {
 func (err *DuplicateScopeError) Error() string {
 	return fmt.Sprintf(
 		"Duplicate scope in repository: scope `%s` was already defined in %s",
-		err.Duplicate, err.Original)
+		err.Duplicate, err.Original,
+	)
 }
 
 type MissingScopeError struct {
@@ -32,7 +36,8 @@ type MissingScopeError struct {
 func (err *MissingScopeError) Error() string {
 	return fmt.Sprintf(
 		"Missing scope in repository: `%s` is listed in grammars.yml but cannot be found",
-		err.Scope)
+		err.Scope,
+	)
 }
 
 type UnexpectedScopeError struct {
@@ -43,7 +48,8 @@ type UnexpectedScopeError struct {
 func (err *UnexpectedScopeError) Error() string {
 	return fmt.Sprintf(
 		"Unexpected scope in repository: `%s` declared in %s was not listed in grammars.yml",
-		err.Scope, err.File)
+		err.Scope, err.File,
+	)
 }
 
 type MissingIncludeError struct {
@@ -54,7 +60,8 @@ type MissingIncludeError struct {
 func (err *MissingIncludeError) Error() string {
 	return fmt.Sprintf(
 		"Missing include in grammar: %s attempts to include `%s` but the scope cannot be found",
-		err.File, err.Include)
+		err.File, err.Include,
+	)
 }
 
 type UnknownKeysError struct {
@@ -70,7 +77,8 @@ func (err *UnknownKeysError) Error() string {
 
 	return fmt.Sprintf(
 		"Unknown keys in grammar: %s contains invalid keys (%s)",
-		err.File, strings.Join(keys, ", "))
+		err.File, strings.Join(keys, ", "),
+	)
 }
 
 type InvalidRegexError struct {
@@ -81,7 +89,8 @@ type InvalidRegexError struct {
 func (err *InvalidRegexError) Error() string {
 	return fmt.Sprintf(
 		"Invalid regex in grammar: %s contains a malformed regex (%s)",
-		err.File, err.Err)
+		err.File, err.Err,
+	)
 }
 
 type UndeclaredScopeError struct {
@@ -91,5 +100,18 @@ type UndeclaredScopeError struct {
 func (err *UndeclaredScopeError) Error() string {
 	return fmt.Sprintf(
 		"Undeclared scope in grammar: `%s` has no scope name",
-		err.Path)
+		err.Path,
+	)
+}
+
+type InvalidScopeError struct {
+	Path  string
+	Scope string
+}
+
+func (err *InvalidScopeError) Error() string {
+	return fmt.Sprintf(
+		"Invalid scope in grammar: `%s` has scope name %q with a path separator or reserved Windows filename",
+		err.Path, err.Scope,
+	)
 }
