@@ -269,6 +269,9 @@ You can test the classifier locally with:
 bundle exec script/cross-validation --test
 ```
 
+With `--test`, successful sample results are hidden; failed samples and the error count summary are still shown.
+Omit `--test` to see every sample result.
+
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
 It's okay: be lazy and let [GitHub Actions](https://github.com/features/actions) run the tests for you.
 Just open a pull request and the bot will start cranking away.

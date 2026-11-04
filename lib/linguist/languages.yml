@@ -524,6 +524,20 @@ AutoIt:
   tm_scope: source.autoit
   ace_mode: autohotkey
   language_id: 27
+AviSynth:
+  type: programming
+  color: "#6C5D95"
+  aliases:
+  - avisynth+
+  - avisynthplus
+  - avs
+  - avsplus
+  extensions:
+  - ".avs"
+  - ".avsi"
+  tm_scope: source.avisynth
+  ace_mode: text
+  language_id: 781893374
 Avro IDL:
   type: data
   color: "#0040FF"
@@ -1976,6 +1990,14 @@ Earthly:
   filenames:
   - Earthfile
   language_id: 963512632
+EasyCrypt:
+  type: programming
+  color: "#2a5db0"
+  extensions:
+  - ".ec"
+  tm_scope: source.easycrypt
+  ace_mode: text
+  language_id: 1032978328
 Easybuild:
   type: data
   color: "#069406"
@@ -3488,6 +3510,7 @@ Ignore List:
   - ".npmignore"
   - ".prettierignore"
   - ".rgignore"
+  - ".stow-local-ignore"
   - ".stylelintignore"
   - ".vercelignore"
   - ".vscodeignore"
@@ -4665,6 +4688,14 @@ MDX:
   - ".mdx"
   tm_scope: source.mdx
   language_id: 512838272
+METAFONT:
+  type: programming
+  color: "#8a4a2b"
+  extensions:
+  - ".mf"
+  tm_scope: source.metafont
+  ace_mode: text
+  language_id: 1058854440
 MLIR:
   type: programming
   color: "#5EC8DB"
@@ -4889,6 +4920,14 @@ Meson:
   tm_scope: source.meson
   ace_mode: text
   language_id: 799141244
+MetaPost:
+  type: programming
+  color: "#2b6cb0"
+  extensions:
+  - ".mp"
+  tm_scope: source.metapost
+  ace_mode: text
+  language_id: 330845793
 Metal:
   type: programming
   color: "#8f14e9"
@@ -6163,6 +6202,8 @@ Power Query:
   type: programming
   aliases:
   - powerquery
+  - m language
+  - m formula language
   extensions:
   - ".pq"
   tm_scope: source.powerquery
@@ -6394,6 +6435,7 @@ Python:
   - ".rpy"
   - ".spec"
   - ".tac"
+  - ".vpy"
   - ".wsgi"
   - ".xpy"
   filenames:
@@ -8038,6 +8080,14 @@ TSQL:
   ace_mode: sql
   tm_scope: source.tsql
   language_id: 918334941
+TSRX:
+  type: programming
+  color: "#6f00ff"
+  extensions:
+  - ".tsrx"
+  tm_scope: source.tsrx
+  ace_mode: text
+  language_id: 647519071
 TSV:
   type: data
   color: "#237346"
@@ -8411,6 +8461,14 @@ Typst:
   tm_scope: source.typst
   ace_mode: text
   language_id: 704730682
+Uiua:
+  type: programming
+  color: "#c87dff"
+  extensions:
+  - ".ua"
+  tm_scope: source.uiua
+  ace_mode: text
+  language_id: 52486065
 Unified Parallel C:
   type: programming
   color: "#4e3617"
@@ -8749,6 +8807,14 @@ WDL:
   tm_scope: source.wdl
   ace_mode: text
   language_id: 374521672
+WESL:
+  type: programming
+  color: "#0391e3"
+  extensions:
+  - ".wesl"
+  tm_scope: source.wesl
+  ace_mode: text
+  language_id: 858810660
 WGSL:
   type: programming
   color: "#1a5e9a"
