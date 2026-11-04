@@ -3,8 +3,8 @@
 ###
 ###  (25-02-2022) by Dogway
 ###
-### With help from Gavino and Didée             (https://forum.doom9.org/showthread.php?t=160285)
-### Watermark code adapted from:Didée's Ylevels (https://forum.doom9.org/showthread.php?p=525465#post525465)
+### With help from Gavino and DidÃ©e             (https://forum.doom9.org/showthread.php?t=160285)
+### Watermark code adapted from:DidÃ©e's Ylevels (https://forum.doom9.org/showthread.php?p=525465#post525465)
 ###
 ### -It is a fast and handy function for adding logos or other type of elements upfront the video image in YV12 space.
 ### -It will stack on the video using a mask if the image has alpha. Moreover you can blend it using a blending mode.
