@@ -808,9 +808,6 @@ vendor/grammars/language-pyret:
 - source.arr
 vendor/grammars/language-qasm:
 - source.qasm
-vendor/grammars/language-reason:
-- source.reason
-- source.reason.hover.type
 vendor/grammars/language-reg:
 - source.reg
 vendor/grammars/language-regexp:
@@ -981,11 +978,6 @@ vendor/grammars/objective-c.tmbundle:
 - source.objc++
 - source.objc.platform
 - source.strings
-vendor/grammars/ocaml.tmbundle:
-- source.camlp4.ocaml
-- source.ocaml
-- source.ocamllex
-- source.ocamlyacc
 vendor/grammars/omnetpp-textmate-msg:
 - source.msg
 vendor/grammars/omnetpp-textmate-ned:
@@ -1314,8 +1306,6 @@ vendor/grammars/vscode-curry:
 - markdown.curry.codeblock
 - source.curry
 - source.icurry
-vendor/grammars/vscode-dune:
-- source.dune
 vendor/grammars/vscode-euphoria:
 - source.euphoria
 vendor/grammars/vscode-fastly-vcl:
@@ -1406,6 +1396,29 @@ vendor/grammars/vscode-nginx:
 - source.nginx
 vendor/grammars/vscode-noir:
 - source.nr
+vendor/grammars/vscode-ocaml-platform:
+- markdown.ocaml.codeblock
+- markdown.reason.codeblock
+- source.action.menhir
+- source.atd
+- source.cram
+- source.dune
+- source.dune-project
+- source.dune-workspace
+- source.ocaml
+- source.ocaml.META
+- source.ocaml.interface
+- source.ocaml.menhir
+- source.ocaml.merlin
+- source.ocaml.mlx
+- source.ocaml.oasis
+- source.ocaml.ocamlbuild
+- source.ocaml.ocamldoc
+- source.ocaml.ocamlformat
+- source.ocaml.ocamllex
+- source.ocaml.opam
+- source.ocaml.opam-install
+- source.reason
 vendor/grammars/vscode-opa:
 - markdown.rego.codeblock
 - source.rego
@@ -1449,7 +1462,7 @@ vendor/grammars/vscode-teal:
 vendor/grammars/vscode-tmdl:
 - source.tmdl
 vendor/grammars/vscode-tree-sitter-query:
-- source.scm
+- source.tsq
 vendor/grammars/vscode-vba:
 - source.vb6
 - source.vba
