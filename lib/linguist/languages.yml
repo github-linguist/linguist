@@ -3379,6 +3379,14 @@ IDL:
   codemirror_mode: idl
   codemirror_mime_type: text/x-idl
   language_id: 161
+IFC:
+  type: data
+  group: STEP
+  extensions:
+  - ".ifc"
+  tm_scope: source.ifc
+  ace_mode: text
+  language_id: 423304113
 IGOR Pro:
   type: programming
   color: "#0000cc"
@@ -7344,6 +7352,17 @@ STAR:
   tm_scope: source.star
   ace_mode: text
   language_id: 424510560
+STEP:
+  type: data
+  aliases:
+  - iso-10303-21
+  - p21
+  extensions:
+  - ".step"
+  - ".stp"
+  tm_scope: source.ifc
+  ace_mode: text
+  language_id: 32760317
 STL:
   type: data
   color: "#373b5e"
