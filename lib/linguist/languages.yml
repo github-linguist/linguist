@@ -2135,6 +2135,7 @@ Emacs Lisp:
   - eask
   - elisp
   - emacs
+  - lisp data
   filenames:
   - ".abbrev_defs"
   - ".emacs"
@@ -2149,6 +2150,7 @@ Emacs Lisp:
   - abbrev_defs
   extensions:
   - ".el"
+  - ".eld"
   - ".emacs"
   - ".emacs.desktop"
   ace_mode: lisp
@@ -3432,6 +3434,7 @@ INI:
   - ".url"
   filenames:
   - ".buckconfig"
+  - ".codespellrc"
   - ".coveragerc"
   - ".flake8"
   - ".gitreview"
@@ -3492,15 +3495,20 @@ Ignore List:
   - ".gitignore"
   filenames:
   - ".agignore"
+  - ".aiexclude"
+  - ".aiignore"
   - ".atomignore"
   - ".babelignore"
   - ".bzrignore"
   - ".ckignore"
+  - ".clang-format-ignore"
   - ".coffeelintignore"
+  - ".cursorignore"
   - ".cvsignore"
   - ".dockerignore"
   - ".easignore"
   - ".eleventyignore"
+  - ".elpaignore"
   - ".eslint-ignore"
   - ".eslintignore"
   - ".gitignore"
@@ -3508,6 +3516,7 @@ Ignore List:
   - ".markdownlintignore"
   - ".nodemonignore"
   - ".npmignore"
+  - ".nxignore"
   - ".prettierignore"
   - ".rgignore"
   - ".stow-local-ignore"
@@ -3704,6 +3713,7 @@ JSON:
   - ".all-contributorsrc"
   - ".arcconfig"
   - ".auto-changelog"
+  - ".autorc"
   - ".c8rc"
   - ".htmlhintrc"
   - ".imgbotconfig"
@@ -5742,6 +5752,7 @@ Option List:
   - ackrc
   filenames:
   - ".ackrc"
+  - ".ert-runner"
   - ".rspec"
   - ".yardopts"
   - ackrc
@@ -8268,7 +8279,10 @@ Text:
   wrap: true
   aliases:
   - fundamental
+  - indented text
   - plain text
+  - paragraph indent text
+  - parindent
   extensions:
   - ".txt"
   - ".fr"
