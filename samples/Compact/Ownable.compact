@@ -1,0 +1,346 @@
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Compact Contracts v0.5.0-alpha.1 (access/Ownable.compact)
+
+pragma language_version >= 0.26.0;
+
+/**
+ * @module Ownable
+ * @description An unshielded Ownable library.
+ * This module provides a basic access control mechanism, where there is an owner
+ * that can be granted exclusive access to specific circuits.
+ * This approach is perfectly reasonable for contracts that have a single administrative user.
+ *
+ * Authorization is based on a witness-derived identity scheme. The owner proves knowledge
+ * of a secret key by injecting it via the `wit_OwnableSK` witness. The module computes
+ * an account identifier as `persistentHash(secretKey)` which is a commitment that hides the key
+ * while providing a stable, pseudonymous on-chain identity.
+ *
+ * Because the account identifier is `H(secretKey)` with no per-deployment salt or domain
+ * separator, the same secret key produces the same identity across all contracts. This is
+ * intentional. It provides a linkable pseudonymous identity analogous to Solidity's
+ * `msg.sender`. Users who desire cross-contract unlinkability can use different secret keys
+ * per contract at the wallet layer.
+ *
+ * The initial owner must be set by using the `initialize` circuit during construction.
+ * This can later be changed with `transferOwnership`.
+ *
+ * @notice Ownership can only be transferred to Bytes<32> account identifiers
+ * through the main transfer circuits (`transferOwnership` and `_transferOwnership`).
+ * In other words, ownership transfers to contract addresses are disallowed through these
+ * circuits.
+ * This is because Compact currently does not support contract-to-contract calls which means
+ * if a contract is granted ownership, the owner contract cannot directly call the protected
+ * circuit.
+ *
+ * @notice This module does offer experimental circuits that allow ownership to be granted
+ * to contract addresses (`_unsafeTransferOwnership` and `_unsafeUncheckedTransferOwnership`).
+ * Note that the circuit names are very explicit ("unsafe") with these experimental circuits.
+ * Until contract-to-contract calls are supported, there is no direct way for a contract
+ * to authenticate as an owner.
+ *
+ * @notice The unsafe circuits are planned to become deprecated once contract-to-contract calls
+ * are supported.
+ *
+ * @dev Migration plan (safe -> C2C-capable ownership transfers)
+ *
+ * The owner type is the final `Either<Bytes<32>, ContractAddress>` from day one, in both circuit
+ * signatures and the `_owner` ledger field. This is deliberate. Midnight's upgrade mechanism, the
+ * Contract Maintenance Authority (CMA), can rotate a circuit's verifier key but cannot migrate
+ * ledger state (there is no state-rewrite primitive; see the `updatability` tutorial). Fixing the
+ * type now makes the future migration a pure verifier-key rotation with zero ledger-state change,
+ * which is the only kind of upgrade the CMA supports. Widening the type later would instead force
+ * a ledger-layout rewrite, which the CMA cannot perform.
+ *
+ * When C2C lands, an already-deployed contract migrates without changing its address or ledger
+ * state:
+ *
+ * - Minor release: mark `_unsafeTransferOwnership` (and `_unsafeUncheckedTransferOwnership`)
+ *   deprecated (and emit a warning if possible); keep their implementation intact so existing
+ *   callers continue to work.
+ * - Major release: ship `transferOwnership` / `_transferOwnership` with the `isContract` guard
+ *   removed and drop the `_unsafe` variants. Operators adopt the new logic by signing a CMA
+ *   `MaintenanceUpdate` that rotates the affected verifier keys (`VerifierKeyRemove` +
+ *   `VerifierKeyInsert` for each guarded circuit, and a `VerifierKeyRemove` for each `_unsafe`
+ *   variant). The contract address and all ledger state are preserved. Because the CMA allows
+ *   multiple active VK versions per operation, old and new keys can coexist during a transition
+ *   window so in-flight proofs still verify. By this point, anyone using the `_unsafe` variants
+ *   should have migrated to the now C2C-capable circuits.
+ *
+ * @dev Canonicalization
+ * All `Either<Bytes<32>, ContractAddress>` values are canonicalized before being written
+ * to the `_owner` ledger field. Canonicalization zeroes out the inactive branch of the Either,
+ * ensuring consistent storage regardless of what data the inactive branch carries.
+ * The single write point is `_unsafeUncheckedTransferOwnership`, through which all
+ * ownership changes flow.
+ *
+ * @dev Security Considerations:
+ * - The `secretKey` must be kept private. Loss of the key prevents the owner
+ *   from proving ownership. Key exposure allows impersonation.
+ * - It is strongly recommended to use cryptographically secure random values for the secret key
+ *   (e.g., `crypto.getRandomValues()`). Weak or predictable keys can be brute-forced.
+ * - The `secretKey` is provided via the `wit_OwnableSK` witness. As with all witnesses,
+ *   the contract must not assume that the witness implementation matches the developer's code.
+ *   Any DApp may provide any implementation. The ZK proof system constrains what values
+ *   can produce valid proofs.
+ */
+module Ownable {
+  import CompactStandardLibrary;
+  import "../utils/Utils" prefix Utils_;
+
+  /**
+   * @description Initialization flag, tracked per-module to avoid the compiler's
+   * shared transitive-dependency state bug (LFDT-Minokawa/compact#270). See the
+   * Initializable module for rationale.
+   */
+  export ledger _isInitialized: Boolean;
+
+  /**
+   * @description The current owner, canonicalized on write. A `left` holds an
+   * account identifier, stored as supplied and never checked against the secret
+   * key it should derive from; a `right` holds a contract address. The zero
+   * value means ownership has been renounced.
+   */
+  export ledger _owner: Either<Bytes<32>, ContractAddress>;
+
+  /**
+   * @witness wit_OwnableSK
+   * @description Returns the caller's secret key used in deriving the account identifier.
+   *
+   * The same key produces the same account identifier across all contracts. Users who
+   * desire cross-contract unlinkability should use different keys per contract.
+   *
+   * @returns {Bytes<32>} secretKey - A 32-byte cryptographically secure random value.
+   */
+  witness wit_OwnableSK(): Bytes<32>;
+
+  /**
+   * @description Initializes the contract by setting the `initialOwner`.
+   * This must be called in the contract's constructor.
+   *
+   * @constraints k=10, rows=626
+   *
+   * Requirements:
+   *
+   * - Contract is not already initialized.
+   * - `initialOwner` is not a ContractAddress.
+   * - `initialOwner` is not the zero address.
+   *
+   * @param {Either<Bytes<32>, ContractAddress>} initialOwner - The initial owner of the contract.
+   * @returns {[]} Empty tuple.
+   */
+  export circuit initialize(initialOwner: Either<Bytes<32>, ContractAddress>): [] {
+    assertNotInitialized();
+    _isInitialized = true;
+    assert(!Utils_isTargetZero(initialOwner), "Ownable: invalid initial owner");
+    _transferOwnership(initialOwner);
+  }
+
+  /**
+   * @description Asserts that the contract has been initialized, throwing an error if not.
+   *
+   * Requirements:
+   *
+   * - Contract must be initialized.
+   *
+   * @return {[]} - Empty tuple.
+   */
+  circuit assertInitialized(): [] {
+    assert(_isInitialized, "Ownable: contract not initialized");
+  }
+
+  /**
+   * @description Asserts that the contract has not been initialized, throwing an error if it has.
+   *
+   * Requirements:
+   *
+   * - Contract must not be initialized.
+   *
+   * @return {[]} - Empty tuple.
+   */
+  circuit assertNotInitialized(): [] {
+    assert(!_isInitialized, "Ownable: contract already initialized");
+  }
+
+  /**
+   * @description Returns the current contract owner.
+   *
+   * @constraints k=7, rows=74
+   *
+   * Requirements:
+   *
+   * - Contract is initialized.
+   *
+   * @returns {Either<Bytes<32>, ContractAddress>} - The contract owner.
+   */
+  export circuit owner(): Either<Bytes<32>, ContractAddress> {
+    assertInitialized();
+    return _owner;
+  }
+
+  /**
+   * @description Transfers ownership of the contract to `newOwner`.
+   *
+   * @notice Ownership transfers to contract addresses are currently disallowed until contract-to-contract
+   * interactions are supported in Compact.
+   * This restriction prevents permanently disabling access to a circuit.
+   *
+   * @constraints k=13, rows=2947
+   *
+   * Requirements:
+   *
+   * - Contract is initialized.
+   * - The caller is the current contract owner.
+   * - `newOwner` is not a ContractAddress.
+   * - `newOwner` is not the zero address.
+   *
+   * @param {Either<Bytes<32>, ContractAddress>} newOwner - The new owner.
+   * @returns {[]} Empty tuple.
+   */
+  export circuit transferOwnership(newOwner: Either<Bytes<32>, ContractAddress>): [] {
+    assertInitialized();
+    const isContractAddr = !newOwner.is_left;
+    assert(!isContractAddr, "Ownable: unsafe ownership transfer");
+    _unsafeTransferOwnership(newOwner);
+  }
+
+  /**
+   * @description Unsafe variant of `transferOwnership`.
+   *
+   * @warning Ownership transfers to contract addresses are considered unsafe because contract-to-contract
+   * calls are not currently supported.
+   * Ownership privileges sent to a contract address may become uncallable.
+   * Once contract-to-contract calls are supported, this circuit may be deprecated.
+   *
+   * @constraints k=13, rows=2944
+   *
+   * Requirements:
+   *
+   * - Contract is initialized.
+   * - The caller is the current contract owner.
+   * - `newOwner` is not the zero address.
+   *
+   * @param {Either<Bytes<32>, ContractAddress>} newOwner - The new owner.
+   * @returns {[]} Empty tuple.
+   */
+  export circuit _unsafeTransferOwnership(newOwner: Either<Bytes<32>, ContractAddress>): [] {
+    assertInitialized();
+    assertOnlyOwner();
+    assert(!Utils_isTargetZero(newOwner), "Ownable: invalid new owner");
+    _unsafeUncheckedTransferOwnership(newOwner);
+  }
+
+  /**
+   * @description Leaves the contract without an owner.
+   * It will not be possible to call `assertOnlyOwner` circuits anymore.
+   * Can only be called by the current owner.
+   *
+   * @constraints k=13, rows=2353
+   *
+   * Requirements:
+   *
+   * - Contract is initialized.
+   * - The caller is the current contract owner.
+   *
+   * @returns {[]} Empty tuple.
+   */
+  export circuit renounceOwnership(): [] {
+    assertInitialized();
+    assertOnlyOwner();
+
+    // We use `left` here because `assertOnlyOwner` would return a misleading
+    // error msg (c2c is not currently supported)
+    const zero = Either<Bytes<32>, ContractAddress> {
+      is_left: true, left: default<Bytes<32>>, right: default<ContractAddress>
+    };
+    _unsafeUncheckedTransferOwnership(zero);
+  }
+
+  /**
+   * @description Throws if called by any account other than the owner.
+   * Use this to restrict access of specific circuits to the owner.
+   *
+   * In the case of an external (non-contract) caller, the caller’s identity is
+   * derived from the `wit_OwnableSK` witness as `persistentHash(secretKey)`.
+   *
+   * @constraints k=13, rows=2349
+   *
+   * Requirements:
+   *
+   * - Contract is initialized.
+   * - The caller is the current contract owner.
+   *
+   * @returns {[]} Empty tuple.
+   */
+  export circuit assertOnlyOwner(): [] {
+    assertInitialized();
+    if (_owner.is_left) {
+      assert(_computeAccountId() == _owner.left, "Ownable: caller is not the owner");
+    } else {
+      assert(false, "Ownable: contract address owner authentication is not yet supported");
+    }
+  }
+
+  /**
+   * @description Transfers ownership of the contract to `newOwner` without
+   * enforcing permission checks on the caller.
+   *
+   * @notice Ownership transfers to contract addresses are currently disallowed until contract-to-contract
+   * interactions are supported in Compact.
+   * This restriction prevents circuits from being inadvertently locked in contracts.
+   *
+   * @constraints k=10, rows=598
+   *
+   * Requirements:
+   *
+   * - Contract is initialized.
+   * - `newOwner` is not a ContractAddress.
+   *
+   * @param {Either<Bytes<32>, ContractAddress>} newOwner - The new owner.
+   * @returns {[]} Empty tuple.
+   */
+  export circuit _transferOwnership(newOwner: Either<Bytes<32>, ContractAddress>): [] {
+    assertInitialized();
+    const isContractAddr = !newOwner.is_left;
+    assert(!isContractAddr, "Ownable: unsafe ownership transfer");
+    _unsafeUncheckedTransferOwnership(newOwner);
+  }
+
+  /**
+   * @description Unsafe variant of `_transferOwnership`.
+   *
+   * @warning Ownership transfers to contract addresses are considered unsafe because contract-to-contract
+   * calls are not currently supported.
+   * Ownership privileges sent to a contract address may become uncallable.
+   * Once contract-to-contract calls are supported, this circuit may be deprecated.
+   *
+   * @constraints k=10, rows=595
+   *
+   * Requirements:
+   *
+   * - Contract is initialized.
+   *
+   * @param {Either<Bytes<32>, ContractAddress>} newOwner - The new owner.
+   * @returns {[]} Empty tuple.
+   */
+  export circuit _unsafeUncheckedTransferOwnership(
+                   newOwner: Either<Bytes<32>, ContractAddress>
+                   ): [] {
+    assertInitialized();
+    const canonAcct = Utils_canonicalize<Bytes<32>, ContractAddress>(newOwner);
+    _owner = disclose(canonAcct);
+  }
+
+  /**
+   * @description Computes the caller's account identifier from the `wit_OwnableSK` witness.
+   *
+   * ## ID Derivation
+   * `accountId = persistentHash(secretKey)`
+   *
+   * The result is a 32-byte commitment that uniquely identifies the caller.
+   *
+   * @returns {Bytes<32>} accountId - The computed account identifier.
+   */
+  circuit _computeAccountId(): Bytes<32> {
+    return Utils_computeAccountId(wit_OwnableSK());
+  }
+}

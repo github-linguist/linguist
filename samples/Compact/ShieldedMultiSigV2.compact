@@ -1,0 +1,289 @@
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Compact Contracts v0.5.0-alpha.1 (multisig/presets/ShieldedMultiSigV2.compact)
+
+pragma language_version >= 0.26.0;
+
+/**
+ * @module ShieldedMultiSigV2
+ * @description Privacy-preserving threshold multisig contract.
+ *
+ * Signer identities are stored as commitments: hashes of ECDSA public
+ * keys combined with an instance salt and domain separator. Signature
+ * verification happens in a single transaction with no multi-step
+ * proposal lifecycle. The contract enforces threshold authorization
+ * and replay protection. All other coordination (signature collection,
+ * coin selection) happens off-chain.
+ *
+ * `t` is the approval width and the threshold: `execute` verifies exactly
+ * `t` distinct signers. Import as `"../presets/ShieldedMultiSigV2"<t>`; the
+ * implementing contract fixes the signer count `n` at `initialize`. Import
+ * one width per contract: two widths share one signer registry, see
+ * `Secp256k1EcdsaMultisig`.
+ *
+ * Treasury is fully stateless meaning coin data is not stored on the public ledger.
+ * Deposits call receiveShielded only. The operator discovers coin indices
+ * through ZswapOutput events from the indexer, constructs QualifiedShieldedCoinInfo
+ * off-chain, and provides it as a circuit parameter for spending.
+ *
+ * @notice Requires ZKIR v3: `keccak256` is unavailable on the v2 backend.
+ *
+ * @notice Implementing contracts register the signer set from their
+ * constructor by calling this module's `initialize`, and MUST NOT import
+ * `Signer` or `Secp256k1EcdsaMultisig` directly.
+ */
+module ShieldedMultiSigV2<#t> {
+  import CompactStandardLibrary;
+
+  import "../Secp256k1EcdsaMultisig"<t> prefix Secp256k1EcdsaMultisig_;
+  import "../../crypto/Eip712" prefix Eip712_;
+  import "../../utils/EvmAbi" prefix EvmAbi_;
+  import "../ProposalManager" prefix Proposal_;
+  import "../ShieldedTreasuryStateless" prefix Treasury_;
+
+  // Implementing contracts need this for the re-exported `execute` signature.
+  // Importing `ProposalManager` again instead would give them a second,
+  // unwritten copy of its state.
+  export { Proposal_Recipient };
+
+  /**
+   * @description Monotonic operation counter. `execute` reads it as that
+   * operation's nonce and then increments, so no two executions share one.
+   */
+  ledger _nonce: Counter;
+
+  /**
+   * @description The EIP-712 domain separator every `execute` digest is built
+   * under, derived from `(name, version, instanceSalt)`. Set once at
+   * construction.
+   */
+  export sealed ledger _domainSeparator: Bytes<32>;
+
+  /**
+   * @description Registers the signer set at threshold `t` and fixes the
+   * EIP-712 domain separator.
+   *
+   * @notice Call from the implementing contract's constructor only. It writes
+   * the `sealed` `_domainSeparator`, so implementing contracts MUST NOT expose
+   * `initialize` as a post-deploy circuit.
+   *
+   * The EIP-712 domain fixed here is `(name, version, salt)`. `chainId` and
+   * `verifyingContract` are absent: no network identifier is available
+   * in-circuit, and a 32-byte Midnight address does not fit
+   * `verifyingContract`'s `address` type.
+   *
+   * Replay protection comes from `execute` binding `kernel.self()` in its
+   * struct rather than from the domain. The ledger randomizes a contract's
+   * address at deployment, so no two deployments share one on any network.
+   * A signature for one cannot authorize another.
+   *
+   * `instanceSalt` also keys the signer commitments, so a fresh value per
+   * deployment keeps one public key from producing the same commitment in two
+   * deployments which would link the signer set across them.
+   *
+   * Requirements:
+   *
+   * - `instanceSalt` should be cryptographically random.
+   * - `signerCommitments` must not contain duplicates.
+   * - `n` must be at least `t`.
+   *
+   * @param {Bytes<32>} instanceSalt - Per-deployment salt for commitment derivation.
+   * @param {Vector<n, Bytes<32>>} signerCommitments - Hashed signer identities.
+   * @returns {[]} Empty tuple.
+   */
+  export circuit initialize<#n>(
+    instanceSalt: Bytes<32>,
+    signerCommitments: Vector<n, Bytes<32>>
+  ): [] {
+    Secp256k1EcdsaMultisig_initialize<n>(instanceSalt, signerCommitments);
+
+    const hashedName = keccak256<Bytes<18>>(pad(18, "ShieldedMultiSigV2"));
+    const hashedVersion = keccak256<Bytes<1>>(pad(1, "1"));
+    _domainSeparator = Eip712_domainSeparator(
+      hashedName,
+      hashedVersion,
+      disclose(instanceSalt)
+    );
+  }
+
+  /**
+   * @description `keccak256` of the `Execute` type string:
+   * `Execute(bytes32 contractAddress,uint256 nonce,uint8 recipientKind,bytes32 recipient,bytes32 coinColor,uint256 amount)`
+   *
+   * @dev Written as a literal word. `compactc` emits a full keccak
+   * permutation even for a constant argument, so hashing the type string
+   * in-circuit would add ~4.2k rows to every `execute`. The spec checks this
+   * word against the type string above.
+   *
+   * @returns {Bytes<32>} The `Execute` type hash.
+   */
+  pure circuit EXECUTE_TYPEHASH(): Bytes<32> {
+    const typeHash: Vector<32, Uint<8>> = [
+      0x8e, 0x36, 0xc9, 0x78, 0xf2, 0x00, 0x15, 0xe8,
+      0x1d, 0x7a, 0x53, 0xef, 0xc3, 0x2e, 0x2b, 0x08,
+      0xf1, 0x24, 0x97, 0xa5, 0x05, 0x7c, 0x70, 0x20,
+      0x7f, 0x8b, 0xc4, 0xb7, 0xc6, 0xcf, 0x5e, 0x15
+    ];
+
+    return typeHash as Bytes<32>;
+  }
+
+  /**
+   * @description Receives a shielded coin into the multisig treasury.
+   *
+   * No access control which allows anyone to deposit. The coin is claimed at the
+   * protocol level through receiveShielded. No coin data is stored on the
+   * public ledger, preserving full balance privacy.
+   *
+   * The operator discovers the coin's Merkle tree index by subscribing
+   * to ZswapOutput events via the indexer, filtering by contract address,
+   * and extracting mt_index. Combined with the known ShieldedCoinInfo,
+   * this produces the QualifiedShieldedCoinInfo needed for spending.
+   *
+   * @constraints k=13, rows=5898 (zkir-v3)
+   *
+   * @param {ShieldedCoinInfo} coin - The incoming shielded coin.
+   */
+  export circuit deposit(coin: ShieldedCoinInfo): [] {
+    receiveShielded(disclose(coin));
+  }
+
+  /**
+   * @description Executes a shielded send authorized by threshold signatures.
+   *
+   * The circuit reads the current nonce from the ledger, increments it,
+   * then reconstructs the EIP-712 digest that signers must have signed
+   * off-chain: the `Execute` struct (contract address, nonce, recipient kind,
+   * recipient, coin color, amount) hashed under this deployment's domain
+   * separator. The digest is bound to the contract instance and the full recipient (kind and
+   * address), so a signature authorizes exactly one operation on one instance.
+   *
+   * Approvals are checked by `Secp256k1EcdsaMultisig`, which derives each
+   * signer's commitment from their public key and the instance salt and
+   * rejects duplicates. Constraints below are measured at `t = 2`.
+   *
+   * @notice `to` must be a `ShieldedUser`. A contract-addressed coin would be
+   * unclaimable, making the transaction malformed.
+   *
+   * @constraints k=17, rows=98969 (zkir-v3)
+   *
+   * Requirements:
+   *
+   * - No two entries may be the same signer.
+   * - Every public key must hash to a registered signer commitment.
+   * - Every signature must be valid over the message hash and use the low-s
+   *   encoding.
+   * - `to.kind` must be `ShieldedUser`.
+   * - Coin value must be >= amount.
+   *
+   * @param {Proposal_Recipient} to - The recipient.
+   * @param {Uint<128>} amount - The amount to send.
+   * @param {QualifiedShieldedCoinInfo} coin - The coin to spend (from operator's pool).
+   * @param {Vector<t, Secp256k1Point>} pubkeys - Public keys of approving signers.
+   * @param {Vector<t, Secp256k1EcdsaSignature>} signatures - ECDSA signatures over the operation.
+   *
+   * @returns {ShieldedSendResult} The send result including any change.
+   */
+  export circuit execute(
+    to: Proposal_Recipient,
+    amount: Uint<128>,
+    coin: QualifiedShieldedCoinInfo,
+    pubkeys: Vector<t, Secp256k1Point>,
+    signatures: Vector<t, Secp256k1EcdsaSignature>
+  ): ShieldedSendResult {
+    // Increment nonce
+    const currentNonce = _nonce;
+    _nonce.increment(1);
+
+    // Construct message hash
+    const msgHash = Eip712_hashTypedData(_domainSeparator, keccak256<Vector<7, Bytes<32>>>([
+      EXECUTE_TYPEHASH(),
+      // Binds the digest to this deployment. The domain cannot carry the
+      // address, so removing this word removes cross-instance replay
+      // protection.
+      kernel.self().bytes,
+      EvmAbi_uint64Word(currentNonce),
+      EvmAbi_uint8Word(to.kind as Uint<8>),
+      to.address,
+      coin.color,
+      EvmAbi_uint128Word(amount)
+    ]));
+
+    Secp256k1EcdsaMultisig_assertApprovals(msgHash, pubkeys, signatures);
+
+    assert(
+      to.kind == Proposal_RecipientKind.ShieldedUser,
+      "ShieldedMultiSigV2: recipient must be a coin public key"
+    );
+    const recipient = left<ZswapCoinPublicKey, ContractAddress>(
+      ZswapCoinPublicKey { bytes: to.address }
+    );
+    return Treasury__send(coin, recipient, amount);
+  }
+
+  /**
+   * @description Computes a signer commitment from a secp256k1 public key,
+   * as `persistentHash(pkX, pkY, salt, "Secp256k1EcdsaMultisig:signer")`.
+   *
+   * Pure, so the deployer can derive constructor commitments off-chain.
+   *
+   * Requirements:
+   *
+   * - `pk` must not be the secp256k1 identity point, which has no coordinates.
+   *
+   * @param {Secp256k1Point} pk - The secp256k1 public key.
+   * @param {Bytes<32>} salt - The instance salt.
+   *
+   * @returns {Bytes<32>} The signer commitment.
+   */
+  export pure circuit _calculateSignerId(
+    pk: Secp256k1Point,
+    salt: Bytes<32>
+  ): Bytes<32> {
+    return Secp256k1EcdsaMultisig_calculateSignerId(pk, salt);
+  }
+
+  /**
+   * @description Returns the nonce the next `execute` digest will bind to.
+   *
+   * @constraints k=6, rows=34 (zkir-v3)
+   *
+   * @returns {Uint<64>} The current nonce.
+   */
+  export circuit getNonce(): Uint<64> {
+    return _nonce;
+  }
+
+  /**
+   * @description Returns the number of registered signers.
+   *
+   * @constraints k=6, rows=34 (zkir-v3)
+   *
+   * @returns {Uint<8>} The signer count.
+   */
+  export circuit getSignerCount(): Uint<8> {
+    return Secp256k1EcdsaMultisig_getSignerCount();
+  }
+
+  /**
+   * @description Returns the approval threshold.
+   *
+   * @constraints k=6, rows=34 (zkir-v3)
+   *
+   * @returns {Uint<8>} The threshold.
+   */
+  export circuit getThreshold(): Uint<8> {
+    return Secp256k1EcdsaMultisig_getThreshold();
+  }
+
+  /**
+   * @description Returns whether the given commitment is a registered signer.
+   *
+   * @constraints k=8, rows=129 (zkir-v3)
+   *
+   * @param {Bytes<32>} commitment - The signer commitment to check.
+   * @returns {Boolean} True if registered.
+   */
+  export circuit isSigner(commitment: Bytes<32>): Boolean {
+    return Secp256k1EcdsaMultisig_isSigner(commitment);
+  }
+}
