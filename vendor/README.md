@@ -178,6 +178,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **EQ:** [dotnet/csharp-tmLanguage](https://github.com/dotnet/csharp-tmLanguage)
 - **Eagle:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
 - **Earthly:** [earthly/earthfile-grammar](https://github.com/earthly/earthfile-grammar)
+- **EasyCrypt:** [nirapod-labs/easycrypt-vscode](https://github.com/nirapod-labs/easycrypt-vscode)
 - **Easybuild:** [MagicStack/MagicPython](https://github.com/MagicStack/MagicPython)
 - **Ecere Projects:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Ecmarkup:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
