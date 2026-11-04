@@ -665,6 +665,15 @@ Befunge:
   tm_scope: source.befunge
   ace_mode: text
   language_id: 30
+Bend:
+  type: programming
+  aliases:
+  - bend2
+  extensions:
+  - ".bend"
+  tm_scope: source.bend
+  ace_mode: text
+  language_id: 571794812
 Berry:
   type: programming
   extensions:
@@ -2057,7 +2066,7 @@ Eiffel:
   language_id: 99
 Elixir:
   type: programming
-  color: "#6e4a7e"
+  color: "#8847B9"
   extensions:
   - ".ex"
   - ".exs"
@@ -4219,7 +4228,7 @@ LLVM TableGen:
   tm_scope: source.tablegen
   ace_mode: text
   color: "#6E8B3D"
-  aliases: 
+  aliases:
   - tablegen
   language_id: 184265095
 LOLCODE:
@@ -5037,6 +5046,9 @@ MoonBit:
   color: "#b92381"
   extensions:
   - ".mbt"
+  filenames:
+  - moon.mod
+  - moon.pkg
   tm_scope: source.moonbit
   ace_mode: text
   language_id: 181453007
@@ -8292,14 +8304,16 @@ Tor Config:
   - torrc
   language_id: 1016912802
 Tree-sitter Query:
-  type: programming
+  type: data
   color: "#8ea64c"
   aliases:
   - tsq
   extensions:
   - ".scm"
-  tm_scope: source.scm
-  ace_mode: text
+  tm_scope: source.tsq
+  ace_mode: scheme
+  codemirror_mode: scheme
+  codemirror_mime_type: text/x-scheme
   language_id: 436081647
 Turing:
   type: programming
