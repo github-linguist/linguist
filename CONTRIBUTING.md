@@ -73,6 +73,12 @@ On Ubuntu:
 apt-get install cmake pkg-config libicu-dev docker.io ruby ruby-dev zlib1g-dev build-essential libssl-dev
 ```
 
+On Ubuntu 26.04, also install Rugged's static OpenSSL dependencies:
+
+```bash
+apt-get install libjitterentropy3-dev libzstd-dev
+```
+
 The latest version of Bundler can be installed with `gem install bundler`.
 
 #### Getting started
