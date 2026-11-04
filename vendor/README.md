@@ -337,6 +337,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **KFramework:** [LucianCumpata/K-VSCode](https://github.com/LucianCumpata/K-VSCode)
 - **Kaitai Struct:** [atom/language-yaml](https://github.com/atom/language-yaml)
 - **KakouneScript:** [kakoune-editor/language-kak](https://github.com/kakoune-editor/language-kak)
+- **KerML:** [Open-MBEE/sysml-v2-textmate](https://github.com/Open-MBEE/sysml-v2-textmate)
 - **KerboScript:** [KSP-KOS/language-kerboscript](https://github.com/KSP-KOS/language-kerboscript)
 - **KiCad Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
 - **KiCad Legacy Layout:** [Alhadis/language-pcb](https://github.com/Alhadis/language-pcb)
@@ -641,6 +642,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Sway:** [FuelLabs/sway-vscode-plugin](https://github.com/FuelLabs/sway-vscode-plugin)
 - **Sweave:** [textmate/sweave.tmbundle](https://github.com/textmate/sweave.tmbundle)
 - **Swift:** [alex-pinkus/tree-sitter-swift](https://github.com/alex-pinkus/tree-sitter-swift) 🐌
+- **SysML:** [Open-MBEE/sysml-v2-textmate](https://github.com/Open-MBEE/sysml-v2-textmate)
 - **SystemVerilog:** [TheClams/SystemVerilog](https://github.com/TheClams/SystemVerilog)
 - **TI Program:** [TIny-Hacker/language-ti-basic](https://github.com/TIny-Hacker/language-ti-basic)
 - **TL-Verilog:** [adamint/tlv-vscode](https://github.com/adamint/tlv-vscode)
