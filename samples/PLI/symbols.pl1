@@ -1,0 +1,259 @@
+/*
+ * symbols.pl1 -- Symbol table manager for Ghu.
+ *
+ * Chip Morningstar
+ * Lucasfilm Ltd.
+ * 31-March-1987
+ *
+ * The symbol table is maintained as an array of hash buckets containing
+ * linked lists of symbol table entries, ordered lexically by symbol name.
+ * Eventually we may want to use trees instead of linear chains, but I didn't
+ * feel like coding tree balancing algorithms this week.
+ *
+ * Each symbol table entry contains a pointer to a string holding name of the
+ * of the symbol, a pointer to the next entry in the list, the symbol's data
+ * type (initially SYM$UNDEFINED, so we can detect typos and such), and the
+ * symbol's value (if any).  There are actually two value fields, one a
+ * bin(31) and the other a pointer, with an additional string value declared
+ * based on the pointer, so symbols can have values that can be pretty much
+ * anything.
+ *
+ * There are three external routines for accessing the symbol table.  Each
+ * takes a string containing the symbol name and returns a pointer to the
+ * symbol's entry in the table:
+ *
+ *     lookup_or_install_symbol -- always succeeds, either returning an
+ *          existing symbol or adding a new one if it has to.
+ *
+ *     lookup_symbol -- returns a symbol entry if there is one, or null() if
+ *          there is not.
+ *
+ *     install_symbol -- adds a new entry to the table and returns it.  The
+ *          symbol had better not already be in the table, 'cause it'll just
+ *          get entered again!
+ *
+ */
+
+%include 'ghu.incl.pl1';
+%include 'symbol_struct.incl.pl1';
+%include 'stdio.incl.pl1';
+%include 'command.incl.pl1';
+
+%replace SYMBOL_TABLE_SIZE by 511;
+
+declare symbol_table(SYMBOL_TABLE_SIZE) pointer static external
+          init((SYMBOL_TABLE_SIZE) null());
+
+lookup_or_install_symbol: procedure(symbol) returns(pointer);
+     declare symbol character(*) varying;
+     declare result pointer;
+
+     result = lookup_symbol(symbol);
+     if (result = null()) then
+          result = install_symbol(symbol);
+     return(result);
+end lookup_or_install_symbol;
+
+lookup_symbol: procedure(symbol) returns(pointer);
+     declare symbol character(*) varying;
+     declare 1 chaser based(chaserptr) like symbol_table_entry;
+     declare chaserptr pointer;
+
+     chaserptr = symbol_table(hash_string(symbol));
+     do while (true);
+          if (chaserptr = null()) then
+               return(null());
+          else if (chaser.symbol_nameptr->symbol_name = symbol) then
+               return(chaserptr);
+          else if (chaser.symbol_nameptr->symbol_name < symbol) then
+               chaserptr = chaser.next_symbol;
+          else
+               return(null());
+     end;
+end lookup_symbol;
+
+hash_string: procedure(string) returns(binary(31));
+     declare string character(*) varying;
+     declare stringc(-1:256) character(1) defined(string);
+     declare result binary(31);
+     declare i binary(15);
+
+     /* I sincerely hope the PL/1 compiler is smart enough to recognize that
+        these multiplies and divides are just shifts!  The way PL/1 handles
+        integers is just *too* stupid. */
+     result = 0;
+     do i=1 to length(string);
+          result = result * 2 + rank(stringc(i));
+     end;
+     result =        result                +
+              divide(result,      256, 31) +
+              divide(result,    65536, 31) +
+              divide(result, 16777216, 31);
+     result = mod(abs(result), SYMBOL_TABLE_SIZE) + 1;
+     return(result);
+end hash_string;
+
+install_symbol: procedure(symbol) returns(pointer);
+     declare symbol character(*) varying;
+     declare index binary(15);
+     declare chaserptr pointer;
+     declare 1 chaser based(chaserptr) like symbol_table_entry;
+     declare oldchaserptr pointer;
+     declare 1 oldchaser based(oldchaserptr) like symbol_table_entry;
+
+     index = hash_string(symbol);
+     oldchaserptr = null();
+     chaserptr = symbol_table(index);
+     do while (chaserptr ^= null());
+          if (chaser.symbol_nameptr->symbol_name > symbol) then goto end_loop;
+          oldchaserptr = chaserptr;
+          chaserptr = chaser.next_symbol;
+     end;
+end_loop:
+     if (oldchaserptr = null()) then do;
+          symbol_table(index) = new_symbol(symbol, chaserptr);
+          return(symbol_table(index));
+     end; else do;
+          oldchaser.next_symbol = new_symbol(symbol, chaserptr);
+          return(oldchaser.next_symbol);
+     end;
+end install_symbol;
+
+new_symbol: procedure(name, next) returns(pointer);
+     declare name character(*) varying;
+     declare next pointer;
+     declare result pointer;
+     declare 1 symbol based(result) like symbol_table_entry;
+
+     result = alloc(size(symbol_table_entry), 20);
+     symbol.symbol_nameptr = copy_string(name);
+     symbol.symbol_type = SYM$UNDEFINED;
+     symbol.next_symbol = next;
+     symbol.symbol_value = 0;
+     symbol.symbol_persistent = false;
+     return(result);
+end new_symbol;
+
+define_symbol: procedure(name, type, value, persistent) returns(pointer);
+     declare name character(*) varying;
+     declare type binary(15);
+     declare value binary(31);
+     declare persistent bit(1);
+     declare symbolptr pointer;
+     declare 1 symbol based(symbolptr) like symbol_table_entry;
+
+     symbolptr = lookup_or_install_symbol(name);
+     symbol.symbol_type = type;
+     symbol.symbol_value = value;
+     symbol.symbol_persistent = persistent;
+     return(symbolptr);
+end define_symbol;
+
+%replace DUMP$NAMES   by 1;
+%replace DUMP$MACROS  by 2;
+%replace DUMP$ALIASES by 3;
+
+dump_names: procedure;
+     call dump_symbol_table(DUMP$NAMES);
+end dump_names;
+
+dump_macros: procedure;
+     call dump_symbol_table(DUMP$MACROS);
+end dump_macros;
+
+dump_aliases: procedure;
+     call dump_symbol_table(DUMP$ALIASES);
+end dump_aliases;
+
+dump_symbol_table: procedure(dump_what);
+     declare dump_what binary(15);
+     declare i binary(15);
+     declare symbolptr pointer;
+     declare 1 symbol based(symbolptr) like symbol_table_entry;
+     declare testptr pointer;
+     declare 1 test based(testptr) like symbol_table_entry;
+     declare hit binary(15);
+     declare chase_ptrs(SYMBOL_TABLE_SIZE) pointer;
+     declare null_count binary(15);
+
+     do i=1 to SYMBOL_TABLE_SIZE;
+          chase_ptrs(i) = symbol_table(i);
+     end;
+     null_count = 0;
+     do while (null_count < SYMBOL_TABLE_SIZE & ^user_break_flag);
+          symbolptr = null();
+          null_count = 0;
+          do i=1 to SYMBOL_TABLE_SIZE;
+               if (chase_ptrs(i) = null()) then
+                    null_count = null_count + 1;
+               else if (symbolptr = null()) then do;
+                    hit = i;
+                    symbolptr = chase_ptrs(i);
+               end; else do;
+                    testptr = chase_ptrs(i);
+                    if (symbol.symbol_nameptr->symbol_name > test.symbol_nameptr->
+                              symbol_name) then do;
+                         hit = i;
+                         symbolptr = testptr;
+                    end;
+               end;
+          end;
+          if (symbolptr ^= null()) then do;
+               chase_ptrs(hit) = chase_ptrs(hit)->symbol_table_entry.
+                    next_symbol;
+               if (dump_what = DUMP$NAMES) then do;
+                    if (symbol.symbol_type ^= SYM$UNDEFINED &
+                              symbol.symbol_type ^= SYM$NAME &
+                              symbol.symbol_type ^= SYM$MACRO &
+                              symbol.symbol_type ^= SYM$ALIAS &
+                              symbol.symbol_type ^= SYM$FIELD &
+                              symbol.symbol_type ^= SYM$ARRAY &
+                              symbol.symbol_type ^= SYM$OBJECT_CONTENTS &
+                              symbol.symbol_type ^= SYM$AVATAR_CONTENTS &
+                              symbol.symbol_type ^= SYM$PARAMETER) then do;
+                         call putstr(symbol.symbol_nameptr->symbol_name);
+                         if (symbol.symbol_persistent) then
+                              call putstr(' *= ');
+                         else
+                              call putstr(' = ');
+                         if (symbol.symbol_type = SYM$STRING) then
+                              call putline('"' || i2p(symbol.symbol_value)->
+                                   symbol_value_str || '"');
+                         else if (symbol.symbol_type = SYM$AVA_NAME) then
+                              call putline('a "' || i2p(symbol.symbol_value)->
+                                   symbol_value_str || '"');
+                         else if (symbol.symbol_type = SYM$BITSTRING) then
+                              call putline('''' || ltrim(i2p(symbol.
+                                   symbol_value)->symbol_value_bitstr) ||
+                                   '''b');
+                         else if (symbol.symbol_type = SYM$INTEGER) then
+                              call putline(ltrim(symbol.symbol_value));
+                         else if (symbol.symbol_type = SYM$AVATAR) then
+                              call putline('a '|| ltrim(symbol.symbol_value));
+                         else if (symbol.symbol_type = SYM$OBJECT) then
+                              call putline('o '|| ltrim(symbol.symbol_value));
+                         else if (symbol.symbol_type = SYM$REGION) then
+                              call putline('r '|| ltrim(symbol.symbol_value));
+                    end;
+               end; else if (dump_what = DUMP$MACROS) then
+                    if (symbol.symbol_type = SYM$MACRO) then
+                         call putline('  ' || symbol.symbol_nameptr->
+                              symbol_name);
+               else /* if (dump_what = DUMP$ALIASES) then */
+                    call dump_an_alias(symbolptr, false);
+          end;
+     end;
+end dump_symbol_table;
+
+dump_an_alias: procedure(symbolptr, verbose_flag);
+     declare symbolptr pointer;
+     declare 1 symbol based(symbolptr) like symbol_table_entry;
+     declare verbose_flag bit(1);
+
+     if (symbol.symbol_type = SYM$ALIAS) then
+          call putline(symbol.symbol_nameptr->symbol_name || ' = ''' ||
+               i2p(symbol.symbol_value)->symbol_value_str || '''');
+     else if (verbose_flag) then
+          call putline(symbol.symbol_nameptr->symbol_name ||
+               ' is not a currently defined alias.');
+end dump_an_alias;
