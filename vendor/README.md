@@ -137,6 +137,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ColdFusion CFC:** [SublimeText/ColdFusion](https://github.com/SublimeText/ColdFusion)
 - **Common Lisp:** [qingpeng9802/common-lisp-tmlanguage](https://github.com/qingpeng9802/common-lisp-tmlanguage)
 - **Common Workflow Language:** [manabuishii/language-cwl](https://github.com/manabuishii/language-cwl)
+- **Compact:** [LFDT-Minokawa/compact](https://github.com/LFDT-Minokawa/compact)
 - **Component Pascal:** [textmate/pascal.tmbundle](https://github.com/textmate/pascal.tmbundle)
 - **Cooklang:** [cooklang/CookVSCode](https://github.com/cooklang/CookVSCode)
 - **Cool:** [anunayk/cool-tmbundle](https://github.com/anunayk/cool-tmbundle)

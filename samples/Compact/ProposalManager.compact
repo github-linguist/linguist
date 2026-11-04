@@ -1,0 +1,534 @@
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Compact Contracts v0.5.0-alpha.1 (multisig/ProposalManager.compact)
+
+pragma language_version >= 0.26.0;
+
+/**
+ * @module ProposalManager
+ * @description Token-agnostic proposal lifecycle management for multisig
+ * governance contracts.
+ *
+ * Supports shielded and unshielded proposals through a unified
+ * Recipient type with a RecipientKind tag. Typed helper circuits
+ * provide safe construction of recipients without exposing the
+ * internal Bytes<32> representation to consumers.
+ *
+ * @warning PROPOSALS ARE PUBLIC. `_proposals` is exported ledger state, so
+ * every proposal's recipient address, token color, amount, and state is
+ * readable off-chain, and `_nextProposalId` reveals how many have been created.
+ * This holds regardless of which treasury a consumer composes: pairing this
+ * module with `ShieldedTreasuryStateless` still publishes the full intent of
+ * every transfer, even though the transfer itself is shielded. The transfer is
+ * private; the plan is not.
+ *
+ * @notice `RecipientKind` is the only thing distinguishing what a recipient's
+ * 32 bytes mean, the same value is read as a Zswap coin public key, a contract
+ * address, or a user address depending on the tag. `Contract` is accepted by
+ * both `toShieldedRecipient` and `toUnshieldedRecipient`, so the tag alone does
+ * not determine the rail; a consumer composing both treasuries could route the
+ * same proposal either way.
+ */
+module ProposalManager {
+  import CompactStandardLibrary;
+
+  // ─── Types ──────────────────────────────────────────────────────
+
+  /**
+   * @description Proposal lifecycle states, derived from `Proposal.state` by
+   * `getProposalStatus`. Not stored on the ledger.
+   *
+   * - `Inactive`: no proposal with that id exists.
+   * - `Active`: `state` is an expiry in the future.
+   * - `Executed`: `state` is `executedState()`.
+   * - `Cancelled`: `state` is `cancelledState()`.
+   * - `Expired`: `state` is an expiry at or before the current block time.
+   */
+  export enum ProposalStatus {
+    Inactive,
+    Active,
+    Executed,
+    Cancelled,
+    Expired
+  }
+
+  /**
+   * @description What a `Recipient`'s bytes are and which rail accepts them.
+   *
+   * - `ShieldedUser`: a Zswap coin public key. `toShieldedRecipient` only.
+   * - `UnshieldedUser`: a user address. `toUnshieldedRecipient` only.
+   * - `Contract`: a contract address. Accepted by both.
+   *
+   * @warning `toShieldedRecipient` rejects `UnshieldedUser` and
+   * `toUnshieldedRecipient` rejects `ShieldedUser`, both at execution rather
+   * than at creation. That mismatch is the hazard noted in `_createProposal`.
+   */
+  export enum RecipientKind {
+    ShieldedUser,
+    UnshieldedUser,
+    Contract
+  }
+
+  /**
+   * @description A transfer target.
+   *
+   * @warning `address` is raw 32 bytes. `kind` alone decides whether they are
+   * read as a Zswap coin public key, a user address, or a contract address.
+   */
+  export struct Recipient {
+    kind: RecipientKind,
+    address: Bytes<32>
+  }
+
+  /**
+   * @description A proposal. `state` holds both the lifecycle stage and the
+   * expiry in a single field:
+   *
+   * - `executedState()` (1): executed.
+   * - `cancelledState()` (2): cancelled.
+   * - any greater value: the expiry, as seconds since the Unix epoch. The
+   *   proposal is active while the block time is below it and expired
+   *   afterwards.
+   *
+   * `_createProposal` rejects an `expiry` in the reserved range, so a proposal
+   * that has not reached a terminal state always has `state` greater than
+   * `cancelledState()`. Note that `Expired` is NOT terminal: a lapsed proposal
+   * still carries its original deadline, which is what tells a reader when it
+   * lapsed.
+   *
+   * @warning In the deadline range, `state` marks when a proposal STOPS being
+   * executable, not when it starts: it is executable while `blockTime < state`
+   * and inert once `blockTime >= state`.
+   *
+   * @notice This module implements no execution delay. `expiry` bounds how long
+   * a proposal stays valid; it does not impose a minimum wait before it may be
+   * executed. A consumer that needs a delay must compose one.
+   *
+   * @notice Off-chain readers decode `state` themselves, applying the sentinel
+   * checks and the deadline comparison above. `_proposals` is exported ledger
+   * state and readable without a proof. `executedState` and
+   * `cancelledState` are pure, so a reader can obtain the sentinel values without
+   * hardcoding them. A state-reading accessor will be revisited once contract-to-contract
+   * interactions are available.
+   */
+  export struct Proposal {
+    to: Recipient,
+    color: Bytes<32>,
+    amount: Uint<128>,
+    state: Uint<64>
+  }
+
+  // ─── State ──────────────────────────────────────────────────────
+
+  /**
+   * @description Monotonic source of proposal ids. `_createProposal` increments
+   * it and reads the new value back to key `_proposals` so an id is never
+   * reused.
+   *
+   * @notice Reading the counter back is what serializes concurrent creates. The
+   * increment on its own would commute, but using the result as a map key turns
+   * creation into a pinned read-modify-write. Thus two creates landing in the same
+   * block cannot both succeed and the loser is rejected.
+   *
+   * @notice Readable off-chain without a proof and it discloses how many
+   * proposals the contract has ever created.
+   */
+  export ledger _nextProposalId: Counter;
+
+  /**
+   * @description Proposals by id, keyed by the value `_nextProposalId` produced
+   * at creation. Each entry carries the recipient, token color, amount, and the
+   * overlaid lifecycle/expiry encoding documented on `Proposal`.
+   * @type {Uint<64>} id - The proposal identifier, issued by `_nextProposalId`.
+   * @type {Proposal} proposal - The proposal record.
+   * @type {Map<id, proposal>}
+   * @type {Map<Uint<64>, Proposal>} _proposals
+   *
+   * @notice Entries are never deleted. Reaching a terminal state overwrites
+   * `state` in place so the map only grows, and no circuit here prunes it.
+   * A consumer that needs cleanup must compose its own.
+   *
+   * @notice Readable off-chain without a proof so integrators read this map
+   * directly rather than calling a circuit. Decoding `state` is the reader's
+   * job. See `Proposal`
+   */
+  export ledger _proposals: Map<Uint<64>, Proposal>;
+
+  // ─── State Sentinels ────────────────────────────────────────────
+
+  /**
+   * @description The `Proposal.state` value marking a proposal as executed.
+   *
+   * @returns {Uint<64>} 1.
+   */
+  export pure circuit executedState(): Uint<64> {
+    return 1;
+  }
+
+  /**
+   * @description The `Proposal.state` value marking a proposal as cancelled.
+   *
+   * @returns {Uint<64>} 2.
+   */
+  export pure circuit cancelledState(): Uint<64> {
+    return 2;
+  }
+
+  // ─── Recipient Helpers ──────────────────────────────────────────
+
+  /**
+   * @description Constructs a shielded user recipient.
+   *
+   * @param {ZswapCoinPublicKey} key - The shielded recipient's public key.
+   *
+   * @returns {Recipient} The typed recipient.
+   */
+  export circuit shieldedUserRecipient(key: ZswapCoinPublicKey): Recipient {
+    return Recipient { kind: RecipientKind.ShieldedUser, address: key.bytes };
+  }
+
+  /**
+   * @description Constructs an unshielded user recipient.
+   *
+   * @param {UserAddress} addr - The unshielded recipient's address.
+   *
+   * @returns {Recipient} The typed recipient.
+   */
+  export circuit unshieldedUserRecipient(addr: UserAddress): Recipient {
+    return Recipient { kind: RecipientKind.UnshieldedUser, address: addr.bytes };
+  }
+
+  /**
+   * @description Constructs a contract recipient.
+   *
+   * @param {ContractAddress} addr - The contract address.
+   *
+   * @returns {Recipient} The typed recipient.
+   */
+  export circuit contractRecipient(addr: ContractAddress): Recipient {
+    return Recipient { kind: RecipientKind.Contract, address: addr.bytes };
+  }
+
+  /**
+   * @description Converts a Recipient to a shielded send recipient.
+   * Handles both ShieldedUser and Contract kinds.
+   *
+   * Requirements:
+   *
+   * - Recipient kind must be ShieldedUser or Contract.
+   *
+   * @param {Recipient} r - The recipient.
+   *
+   * @returns {Either<ZswapCoinPublicKey, ContractAddress>} The shielded recipient.
+   */
+  export circuit toShieldedRecipient(r: Recipient): Either<ZswapCoinPublicKey, ContractAddress> {
+    if (r.kind == RecipientKind.ShieldedUser) {
+      return left<ZswapCoinPublicKey, ContractAddress>(
+        ZswapCoinPublicKey { bytes: r.address }
+      );
+    }
+    assert(r.kind == RecipientKind.Contract, "ProposalManager: invalid shielded recipient");
+    return right<ZswapCoinPublicKey, ContractAddress>(
+      ContractAddress { bytes: r.address }
+    );
+  }
+
+  /**
+   * @description Converts a Recipient to an unshielded send recipient.
+   * Handles both UnshieldedUser and Contract kinds.
+   *
+   * Requirements:
+   *
+   * - Recipient kind must be UnshieldedUser or Contract.
+   *
+   * @param {Recipient} r - The recipient.
+   *
+   * @returns {Either<ContractAddress, UserAddress>} The unshielded recipient.
+   */
+  export circuit toUnshieldedRecipient(r: Recipient): Either<ContractAddress, UserAddress> {
+    if (r.kind == RecipientKind.Contract) {
+      return left<ContractAddress, UserAddress>(
+        ContractAddress { bytes: r.address }
+      );
+    }
+    assert(r.kind == RecipientKind.UnshieldedUser, "ProposalManager: invalid unshielded recipient");
+    return right<ContractAddress, UserAddress>(
+      UserAddress { bytes: r.address }
+    );
+  }
+
+  // ─── Guards ─────────────────────────────────────────────────────
+
+  /**
+   * @description Asserts that a proposal exists.
+   *
+   * Requirements:
+   *
+   * - Proposal with `id` must have been created.
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {[]} Empty tuple.
+   */
+  export circuit assertProposalExists(id: Uint<64>): [] {
+    assert(
+      _proposals.member(disclose(id)),
+      "ProposalManager: proposal not found"
+    );
+  }
+
+  /**
+   * @description Asserts that a proposal exists and is still executable. The two
+   * checks are separate: a terminal `state` (executed or cancelled) fails the
+   * first, and a deadline that has passed fails the second, so the error message
+   * distinguishes the two.
+   *
+   * @notice Expiry is terminal, unlike a conflicting read. A tx rejected
+   * for a stale read succeeds once rebuilt against fresh state. Rebuilding
+   * cannot help here: block time only moves forward, so an expired proposal
+   * stays expired. Check the proposal's status before re-proving.
+   *
+   * Requirements:
+   *
+   * - Proposal must exist.
+   * - Proposal must not be executed or cancelled.
+   * - Proposal must not have expired.
+   *
+   * @constraints k=9, rows=129
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {[]} Empty tuple.
+   */
+  export circuit assertProposalActive(id: Uint<64>): [] {
+    assertProposalExists(id);
+
+    const state = _proposals.lookup(disclose(id)).state;
+    assert(
+      state > cancelledState(),
+      "ProposalManager: proposal not active"
+    );
+    assert(
+      blockTimeLt(state),
+      "ProposalManager: proposal expired"
+    );
+  }
+
+  // ─── Proposal Lifecycle ─────────────────────────────────────────
+
+  /**
+   * @description Creates a new proposal.
+   *
+   * @warning The recipient is NOT validated beyond being well-typed. Two
+   * consequences the consumer must handle:
+   *
+   * - A `kind` the execution rail cannot accept (an `UnshieldedUser` recipient
+   *   on a shielded treasury, say) creates a proposal that passes here and then
+   *   reverts in `toShieldedRecipient` at execution. It stays `Active` and
+   *   unexecutable on that rail until `_cancelProposal` retires it or its
+   *   `expiry` lapses.
+   * - A zero or otherwise unspendable `address` is accepted, and funds sent to
+   *   it on execution are unrecoverable.
+   *
+   * @notice `_nextProposalId` is incremented and then read back for the map key,
+   * making this a pinned read-modify-write. The `increment` alone would commute,
+   * but reading it back to key the map reintroduces the conflict, so two
+   * proposals created in the same block serialize and the loser is rejected.
+   *
+   * @notice `expiry` is mandatory and is only checked against the present: a
+   * proposal cannot be born expired. There is deliberately NO maximum horizon
+   * here, because the module cannot know what a sensible one is for a given
+   * deployment. A caller may therefore pass an effectively unreachable expiry,
+   * reintroducing the immortal proposal this field exists to prevent. Consuming
+   * contracts that need a bounded lifetime must impose their own cap.
+   *
+   * @notice `expiry` is also rejected if it falls in the sentinel range, keeping
+   * the two domains `state` overlays disjoint. That check is enforced here rather
+   * than left to the future check, so disjointness holds for whatever block time
+   * the executing environment reports.
+   *
+   * @notice Access control is NOT enforced here.
+   * The consuming contract must gate this behind its own
+   * authorization policy.
+   *
+   * Requirements:
+   *
+   * - `amount` must be greater than 0.
+   * - `expiry` must be greater than `cancelledState()`.
+   * - `expiry` must be in the future.
+   *
+   * @constraints k=10, rows=913
+   *
+   * @param {Recipient} to - The recipient (constructed via helper circuits).
+   * @param {Bytes<32>} color - The token color.
+   * @param {Uint<128>} amount - The amount to transfer.
+   * @param {Uint<64>} expiry - Seconds since the Unix epoch, at and after which
+   * the proposal is inert.
+   *
+   * @returns {Uint<64>} The new proposal ID.
+   */
+  export circuit _createProposal(
+    to: Recipient,
+    color: Bytes<32>,
+    amount: Uint<128>,
+    expiry: Uint<64>
+  ): Uint<64> {
+    assert(amount > 0, "ProposalManager: zero amount");
+    assert(
+      expiry > cancelledState(),
+      "ProposalManager: expiry in reserved range"
+    );
+    assert(
+      blockTimeLt(disclose(expiry)),
+      "ProposalManager: expiry not in the future"
+    );
+
+    _nextProposalId.increment(1);
+    const id = _nextProposalId;
+    // Defense in depth
+    assert(!_proposals.member(id), "ProposalManager: id already used");
+
+    _proposals.insert(id, disclose(Proposal {
+      to: to,
+      color: color,
+      amount: amount,
+      state: expiry
+    }));
+
+    return id;
+  }
+
+  /**
+   * @description Cancels a proposal, retiring it before its expiry.
+   *
+   * @notice Access control is NOT enforced here.
+   * The consuming contract must gate this behind its own
+   * authorization policy.
+   *
+   * Requirements:
+   *
+   * - Proposal must be active.
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {[]} Empty tuple.
+   */
+  export circuit _cancelProposal(id: Uint<64>): [] {
+    assertProposalActive(id);
+
+    const proposal = _proposals.lookup(disclose(id));
+    _proposals.insert(disclose(id), Proposal {
+      to: proposal.to,
+      color: proposal.color,
+      amount: proposal.amount,
+      state: cancelledState()
+    });
+  }
+
+  /**
+   * @description Marks a proposal as executed.
+   *
+   * @notice Access control is NOT enforced here.
+   * The consuming contract must gate this behind its own
+   * authorization policy.
+   *
+   * Requirements:
+   *
+   * - Proposal must be active.
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {[]} Empty tuple.
+   */
+  export circuit _markExecuted(id: Uint<64>): [] {
+    assertProposalActive(id);
+
+    const proposal = _proposals.lookup(disclose(id));
+    _proposals.insert(disclose(id), Proposal {
+      to: proposal.to,
+      color: proposal.color,
+      amount: proposal.amount,
+      state: executedState()
+    });
+  }
+
+  // ─── View ───────────────────────────────────────────────────────
+
+  /**
+   * @description Returns the full proposal data. The returned `state` is the
+   * raw encoded field. See `Proposal` for how to read it, and prefer
+   * `getProposalStatus` when the lifecycle stage is what is wanted.
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {Proposal} The proposal.
+   */
+  export circuit getProposal(id: Uint<64>): Proposal {
+    assertProposalExists(id);
+    return _proposals.lookup(disclose(id));
+  }
+
+  /**
+   * @description Returns the recipient of a proposal.
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {Recipient} The recipient.
+   */
+  export circuit getProposalRecipient(id: Uint<64>): Recipient {
+    assertProposalExists(id);
+    return _proposals.lookup(disclose(id)).to;
+  }
+
+  /**
+   * @description Returns the amount of a proposal.
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {Uint<128>} The amount.
+   */
+  export circuit getProposalAmount(id: Uint<64>): Uint<128> {
+    assertProposalExists(id);
+    return _proposals.lookup(disclose(id)).amount;
+  }
+
+  /**
+   * @description Returns the token color of a proposal.
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {Bytes<32>} The token color.
+   */
+  export circuit getProposalColor(id: Uint<64>): Bytes<32> {
+    assertProposalExists(id);
+    return _proposals.lookup(disclose(id)).color;
+  }
+
+  /**
+   * @description Derives the lifecycle status of a proposal from its `state`
+   * field and the current block time. Returns `Inactive` for an id that was
+   * never created rather than failing.
+   *
+   * @constraints k=9, rows=252
+   *
+   * @param {Uint<64>} id - The proposal ID.
+   *
+   * @returns {ProposalStatus} The proposal status.
+   */
+  export circuit getProposalStatus(id: Uint<64>): ProposalStatus {
+    if (!_proposals.member(disclose(id))) {
+      return ProposalStatus.Inactive;
+    }
+
+    const state = _proposals.lookup(disclose(id)).state;
+    if (state == executedState()) {
+      return ProposalStatus.Executed;
+    }
+    if (state == cancelledState()) {
+      return ProposalStatus.Cancelled;
+    }
+    if (blockTimeLt(state)) {
+      return ProposalStatus.Active;
+    }
+    return ProposalStatus.Expired;
+  }
+}
