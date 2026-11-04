@@ -1,0 +1,826 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+module Array;
+
+// A contiguous, fixed-size list/array-like type.
+mutable native class .Array<+T>
+  extends Sequence<T>
+  uses
+    IntoIterator<T>,
+    FromIterator<T>,
+    Show[T: readonly Show],
+    Hashable[T: Hashable],
+    Orderable[T: Orderable],
+    Equality[T: Equality],
+   {
+  // # (Private) Native Methods
+
+  @intrinsic
+  native private static fun unsafe_make(Int): mutable Array<T>;
+
+  @intrinsic
+  native private readonly fun sizeImpl(): Int;
+
+  @intrinsic
+  native private mutable fun unsafe_set(Int, T): void;
+
+  @intrinsic
+  native private readonly fun unsafe_get(index: Int): T;
+
+  // # Creating an Array
+
+  static fun createFromItems<I: readonly Sequence<T>>(items: I): this {
+    unsafe_chill_trust_me(Array::mcreateFromItems(items))
+  }
+
+  static fun mcreateFromItems<I: readonly Sequence<T>>(items: I): mutable this {
+    result = Array::unsafe_make(items.size());
+    items.eachWithIndex((index, element) -> {
+      result.unsafe_set(index, element)
+    });
+    result
+  }
+
+  static fun createFromIterator<I: mutable Iterator<T>>(items: I): this {
+    items.collect(Vector).toArray();
+  }
+
+  static fun mcreateFromIterator<I: mutable Iterator<T>>(
+    items: I,
+  ): mutable this {
+    static::mcreateFromItems(Vector::mcreateFromIterator(items));
+  }
+
+  static fun fill(count: Int, filler: T): Array<T> {
+    invariant(count >= 0, "Called Array::fill with negative count.");
+    static::fillBy(count, _ -> filler)
+  }
+
+  static fun mfill(count: Int, filler: T): mutable Array<T> {
+    invariant(count >= 0, "Called Array::mfill with negative count.");
+    static::mfillBy(count, _ -> filler)
+  }
+
+  static fun fillBy(size: Int, f: Int -> T): Array<T> {
+    unsafe_chill_trust_me(static::mfillBy(size, f))
+  }
+
+  static fun mfillBy(size: Int, f: Int -> T): mutable Array<T> {
+    invariant(size >= 0, "Called Array::mfillBy with negative number");
+    vec = Array::unsafe_make(size);
+    for (idx in Range(0, size)) vec.unsafe_set(idx, f(idx));
+    vec
+  }
+
+  // # Copying an Array
+
+  readonly fun clone(): mutable Array<T> {
+    static::mfillBy(this.size(), i -> this.unsafe_get(i))
+  }
+
+  @intrinsic
+  native readonly fun chill(): this;
+
+  // # Sizing
+
+  @no_inline
+  readonly fun size(): Int {
+    this.sizeImpl();
+  }
+
+  readonly fun isEmpty(): Bool {
+    this.sizeImpl() == 0
+  }
+
+  // # Accessing/Modifying Items
+
+  readonly fun get(index: Int): T {
+    if (index.uge(this.size())) throwOutOfBounds();
+    this.unsafe_get(index)
+  }
+
+  readonly fun maybeGet(i: Int): ?T {
+    if (i.uge(this.size())) None() else Some(this.unsafe_get(i))
+  }
+
+  readonly fun maybeFirst(): ?T {
+    this.maybeGet(0)
+  }
+
+  readonly fun maybeLast(): ?T {
+    this.maybeGet(this.size() - 1)
+  }
+
+  readonly fun first(): T {
+    this[0]
+  }
+
+  readonly fun last(): T {
+    this[this.size() - 1]
+  }
+
+  mutable fun set(i: Int, value: T): void {
+    if (i.uge(this.size())) throwOutOfBounds();
+    this.unsafe_set(i, value)
+  }
+
+  // # Reordering Items
+
+  mutable fun reverse(): void {
+    size = this.size();
+    for (leftIndex in Range(0, size.ushr(1))) {
+      rightIndex = size - 1 - leftIndex;
+      leftValue = this.unsafe_get(leftIndex);
+      rightValue = this.unsafe_get(rightIndex);
+      this.unsafe_set(leftIndex, rightValue);
+      this.unsafe_set(rightIndex, leftValue)
+    }
+  }
+
+  // Sorts the items in place using their default ordering.
+  // To sort a collection of non-Orderable items, use sortBy().
+  mutable fun sort[T: readonly Orderable](
+    compare: (T, T) ~> Order = (x, y) ~> x.compare(y),
+  ): void {
+    this.sortBy(id, compare)
+  }
+
+  // Sorts the items in place, using the given predicate to determine ordering.
+  // To sort a collection of non-Orderable items, use Orderable.create():
+  //
+  //    a: Array<NonOrderable> = Array[...];
+  //    compareFn = (a: NonOrderable, b: NonOrderable): Order ~> { ... };
+  //    b = a.sortBy(x ~> Orderable.create(x, compareFn));
+  mutable fun sortBy<K: readonly Orderable>(
+    selector: T ~> K,
+    compare: (K, K) ~> Order = (x, y) ~> x.compare(y),
+  ): void {
+    sz = this.size();
+    // Sort from a copy into the existing storage
+    dest = this;
+    src = static::unsafe_make(sz);
+    dest.unsafeMoveSlice(0, sz, src, 0);
+    this.sortSplit(selector, compare, src, 0, sz, dest);
+  }
+
+  // # Trait Implementations
+
+  // Lexicographical comparison of two Vectors.
+  readonly fun compare<U: Orderable>[T: U](other: Array<U>): Order {
+    this.compareLoop(0, min(this.size(), other.size()), other) match {
+    | EQ() -> compare(this.size(), other.size())
+    | c -> c
+    }
+  }
+
+  readonly fun <<U: Orderable>[T: U](other: Array<U>): Bool {
+    this.compare(other) == LT()
+  }
+
+  readonly fun ><U: Orderable>[T: U](other: Array<U>): Bool {
+    this.compare(other) == GT()
+  }
+
+  readonly fun <=<U: Orderable>[T: U](other: Array<U>): Bool {
+    this.compare(other) != GT()
+  }
+
+  readonly fun >=<U: Orderable>[T: U](other: Array<U>): Bool {
+    this.compare(other) != LT()
+  }
+
+  readonly fun ==<U: Equality>[T: U](other: readonly Array<U>): Bool {
+    size = this.size();
+    size == other.size() &&
+      for (i in Range(0, size)) {
+        if ((this.unsafe_get(i) : U) != other.unsafe_get(i)) break false
+      } else {
+        true
+      }
+  }
+
+  readonly fun !=<U: Equality>[T: U](other: readonly Array<U>): Bool {
+    !(this == other)
+  }
+
+  readonly fun eqBy<U>[T: U](
+    other: readonly Array<U>,
+    eq: (U, U) -> Bool,
+  ): Bool {
+    size = this.size();
+    size == other.size() &&
+      for (i in Range(0, size)) {
+        if (!eq(this.unsafe_get(i), other.unsafe_get(i))) break false
+      } else {
+        true
+      }
+  }
+
+  readonly fun toString[T: readonly Show](): String {
+    "Array[" + this.join(", ") + "]"
+  }
+
+  readonly fun hash[T: Hashable](): Int {
+    this.foldl((seed, v) -> Hashable.combine(seed, v.hash()), -1)
+  }
+
+  readonly fun hashBy(hash: T -> Int, seed: Int): Int {
+    this.foldl((seed, v) -> Hashable.combine(seed, hash(v)), seed)
+  }
+
+  readonly fun inspect(): Inspect {
+    InspectVector("Array", this.map(e -> inspect(e)))
+  }
+
+  // # Selecting Portions of a Sequence
+
+  readonly fun slice(start: Int, end: Int = Int::max): this {
+    sz = this.size();
+    if (start < 0) {
+      !start = max(0, sz + start);
+    };
+    if (end < 0) {
+      !end = max(0, sz + end);
+    };
+    !start = min(sz, start);
+    !end = min(sz, end);
+    if (end <= start) {
+      Array[]
+    } else {
+      capacity = end - start;
+      static::fillBy(capacity, i -> this.unsafe_get(start + i))
+    }
+  }
+
+  // # Aggregation
+
+  readonly fun indexOf<S: Equality>[T: S](v: S): ?Int {
+    this.indexOfLoop(v, 0, this.size())
+  }
+
+  readonly fun contains<S: Equality>[T: S](v: S): Bool {
+    this.indexOf(v).isSome()
+  }
+
+  readonly fun foldl<Tresult>(
+    f: (Tresult, T) -> Tresult,
+    init: Tresult,
+  ): Tresult {
+    this.foldlImpl((res, _, v) -> f(res, v), init, 0)
+  }
+
+  readonly fun find(p: T -> Bool): ?T {
+    for (i in Range(0, this.size())) {
+      x = this.unsafe_get(i);
+      if (p(x)) break Some(x);
+    } else {
+      None()
+    }
+  }
+
+  readonly fun all(p: T -> Bool): Bool {
+    for (x in this) {
+      if (!p(x)) break false
+    } else {
+      true
+    }
+  }
+
+  readonly fun any(p: T -> Bool): Bool {
+    for (x in this) {
+      if (p(x)) break true
+    } else {
+      false
+    }
+  }
+
+  readonly fun join[T: readonly Show](separator: String): String {
+    this.size() match {
+    | 0 -> ""
+    | 1 -> this.unsafe_get(0).toString()
+    | size ->
+      concatStringArray(
+        if (separator.isEmpty()) {
+          // TODO: It would be nice to specalize this for Array<String>
+          this.map(x -> x.toString())
+        } else {
+          Array::fillBy(size * 2 - 1, i -> {
+            if (i.and(1) == 0) {
+              this.unsafe_get(i.ushr(1)).toString()
+            } else {
+              separator
+            }
+          })
+        },
+      )
+    }
+  }
+
+  // # Composition
+
+  readonly fun map<T2>(f: T -> T2): Array<T2> {
+    Array::fillBy(this.size(), i -> f(this.unsafe_get(i)))
+  }
+
+  frozen fun parallelMap<T2>(f: T ~> T2): Array<T2> {
+    unsafe_chill_trust_me(
+      Parallel.tabulate(this.size(), i ~> f(this.unsafe_get(i))),
+    )
+  }
+
+  readonly fun mapWithIndex<T2>(f: (Int, T) -> T2): Array<T2> {
+    Array::fillBy(this.size(), i -> f(i, this.unsafe_get(i)))
+  }
+
+  readonly fun mapAcc<R, U>(f: (R, T) -> (R, U), acc: R): (R, Array<U>) {
+    new = Array::fillBy(this.size(), i -> {
+      (!acc, u) = f(acc, this.unsafe_get(i));
+      u
+    });
+    (acc, new)
+  }
+
+  readonly fun filter(p: T -> Bool): Array<T> {
+    v = Array::mfillBy(this.size(), _ -> 0);
+    (indices, count) = this.packIndex(p, v, 0, 0);
+    static::fillBy(count, i -> this[indices[i]])
+  }
+
+  readonly fun zip<U, S: readonly Sequence<U>>(second: S): Array<(T, U)> {
+    this.zipWith(second, (v1, v2) -> (v1, v2));
+  }
+
+  readonly fun zipWith<U, V, S: readonly Sequence<U>>(
+    second: S,
+    s: (T, U) -> V,
+  ): Array<V> {
+    iterator = second.values();
+    Array::fillBy(min(this.size(), second.size()), i ->
+      s(
+        this.unsafe_get(i),
+        iterator
+          .next()
+          .fromSome("Expected sequence values() to yield size() items"),
+      )
+    )
+  }
+
+  readonly fun unzip<T1, T2>[T: (T1, T2)](): (Array<T1>, Array<T2>) {
+    this.unzipWith(id)
+  }
+
+  readonly fun unzipWith<T1, T2>(f: T -> (T1, T2)): (Array<T1>, Array<T2>) {
+    sz = this.size();
+    v0 = Vector::mcreate(sz);
+    v1 = Vector::mcreate(sz);
+    for (x in this) {
+      p = f(x);
+      v0.push(p.i0);
+      v1.push(p.i1);
+    };
+    (v0.toArray(), v1.toArray())
+  }
+
+  readonly fun take(num: Int): Array<T> {
+    !num = max(0, min(num, this.size()));
+    static::fillBy(num, i -> this[i])
+  }
+
+  readonly fun drop(num: Int): Array<T> {
+    !num = max(0, num);
+    if (num >= this.size()) {
+      Array[]
+    } else {
+      static::fillBy(this.size() - num, i -> this[num + i])
+    }
+  }
+
+  readonly fun filterNone<U>[T: ?U](): Array<U> {
+    result = Vector::mcreate(0);
+    this.each(value ->
+      value match {
+      | Some(x) -> result.push(x)
+      | None() -> void
+      }
+    );
+    result.toArray();
+  }
+
+  readonly fun flatMap<U>(s: T -> Sequence<U>): Array<U> {
+    this.map(s).flatten();
+  }
+
+  readonly fun flatten<U>[T: Sequence<U>](): Array<U> {
+    // Calculate total size in order to allocate the result Array
+    sz = this.reduce((acc, items) -> acc + items.size(), 0);
+    result: mutable Array<U> = Array::unsafe_make(sz);
+    index = 0;
+    this.each(items -> {
+      items.each(item -> {
+        invariant(
+          index.ult(sz),
+          "Array.flatten(): Expected each sequence to yield exactly size() items.",
+        );
+        result.unsafe_set(index, item);
+        !index = index + 1;
+      });
+    });
+    unsafe_chill_trust_me(result)
+  }
+
+  readonly fun concat<T2>[T: T2](other: Array<T2>): Array<T2> {
+    n = this.size();
+    m = other.size();
+    (static : Concrete<Array<T2>>)::fillBy(n + m, i ->
+      if (i < n) (this : readonly Array<T2>)[i] else other[i - n]
+    )
+  }
+
+  readonly fun reversed(): Array<T> {
+    size = this.size();
+    static::fillBy(size, i -> this.unsafe_get(size - i - 1))
+  }
+
+  // Returns a new collection representing the items of this collection in sorted
+  // order, using their default ordering.
+  // To sort a collection of non-Orderable items, use sortedBy().
+  readonly fun sorted[T: readonly Orderable](
+    compare: (T, T) ~> Order = (x, y) ~> x.compare(y),
+  ): Array<T> {
+    this.sortedBy(id, compare)
+  }
+
+  // Returns a new collection representing the items of this collection in sorted
+  // order, using the given predicate to determine ordering.
+  // To sort a collection of non-Orderable items, use Orderable.create():
+  //
+  //    a: Array<NonOrderable> = Array[...];
+  //    compareFn = (a: NonOrderable, b: NonOrderable): Order ~> { ... };
+  //    b = a.sortedBy(x ~> Orderable.create(x, compareFn));
+  readonly fun sortedBy<K: readonly Orderable>(
+    selector: T ~> K,
+    compare: (K, K) ~> Order = (x, y) ~> x.compare(y),
+  ): Array<T> {
+    sz = this.size();
+    if (sz == 0) {
+      Array[]
+    } else if (sz == 1) {
+      Array[this[0]];
+    } else {
+      // Sort from/to minimally sized copies of internal storage: one copy (dest)
+      // is for the result, the other (src) is the temporary storage required by
+      // merge sort
+      src = static::unsafe_make(sz);
+      this.unsafeMoveSlice(0, sz, src, 0);
+      dest = src.clone();
+      this.sortSplit(selector, compare, src, 0, sz, dest);
+      unsafe_chill_trust_me(dest)
+    }
+  }
+
+  // # Other
+
+  readonly fun split(num: Int): (this, this) {
+    (this.take(num), this.drop(num))
+  }
+
+  // # Async
+
+  async fun gen<U: frozen>[T: ^U](): ^Array<U> {
+    handles = List::tabulate(this.size(), index -> this.unsafe_get(index));
+    result = Array::mcreateFromItems(await handles.genReverse());
+    result.reverse();
+    unsafe_chill_trust_me(result)
+  }
+
+  async frozen fun genMap<U: frozen>(s: T ~> ^U): ^Array<U> {
+    await ASIO.genFillBy(this.size(), index ~> s(this.unsafe_get(index)));
+  }
+
+  async frozen fun genFilter(p: T ~> ^Bool): ^Array<T> {
+    // Asynchronously map each item to whether it passes the predicate or not
+    sz = this.size();
+    predicates = await ASIO.genFillBy(sz, index ~> p(this.unsafe_get(index)));
+    // Count the number of matching items to allocate a single exactly sized Array
+    nextSz = predicates.reduce(
+      (sum, predicate) -> if (predicate) sum + 1 else sum,
+      0,
+    );
+    // Insert items into a return Array for which the predicate returned true
+    result = Unsafe.array_make(nextSz);
+    fromIndex = 0;
+    toIndex = 0;
+    // NOTE: The check for `fromIndex.ult(sz)` is skipped here because there
+    // are guaranteed to be `nextSz` items in `inner` for which the predicate
+    // passes and that cause `toIndex` to be incremented.
+    while (toIndex.ult(nextSz)) {
+      if (predicates.unsafe_get(fromIndex)) {
+        result.unsafe_set(toIndex, this.unsafe_get(fromIndex));
+        !toIndex = toIndex + 1;
+      };
+      !fromIndex = fromIndex + 1;
+    };
+    unsafe_chill_trust_me(result)
+  }
+
+  // # Iteration
+
+  readonly fun each(f: T -> void): void {
+    for (x in this) {
+      f(x)
+    };
+  }
+
+  readonly fun eachWithIndex(f: (Int, T) -> void): void {
+    for (x in this.items()) {
+      f(x.i0, x.i1)
+    };
+  }
+
+  // # Iterators
+
+  readonly fun items(): mutable Iterator<(Int, T)> {
+    ItemsIterator::make(this)
+  }
+
+  readonly fun keys(): mutable Iterator<Int> {
+    KeysIterator::make(this)
+  }
+
+  readonly fun values(): mutable Iterator<T> {
+    ValuesIterator::make(this)
+  }
+
+  readonly fun reversedValues(): mutable Iterator<T> {
+    ReversedValuesIterator::make(this)
+  }
+
+  // # Private Methods
+
+  // Merge sort using O(n) extra space: sorts the items from src into dest,
+  // guarding against concurrent modification of this vector by the comparison
+  // function.
+  // Note that src and dest should be identical in the range [start, end)
+  private readonly fun sortSplit<K: readonly Orderable, U>[T: U](
+    selector: U ~> K,
+    compare: (K, K) -> Order,
+    src: mutable .Array<U>,
+    start: Int,
+    end: Int,
+    dest: mutable .Array<U>,
+  ): void {
+    if (end - start > 1) {
+      middle = (end + start).ushr(1);
+      this.sortSplit(selector, compare, dest, start, middle, src);
+      this.sortSplit(selector, compare, dest, middle, end, src);
+      this.sortMerge(selector, compare, src, start, middle, end, dest);
+    };
+  }
+
+  private readonly fun sortMerge<K: readonly Orderable, U>[T: U](
+    selector: U ~> K,
+    compare: (K, K) -> Order,
+    src: mutable .Array<U>,
+    start: Int,
+    middle: Int,
+    end: Int,
+    dest: mutable .Array<U>,
+  ): void {
+    left = start;
+    right = middle;
+    index = start;
+    while ({
+      if (left >= middle) {
+        // All items from the left portion have been merged, copy remaining
+        // items from right.
+        src.unsafeMoveSlice(right, end, dest, index);
+        false
+      } else if (right >= end) {
+        // All items from the right portion have been merged, copy remaining
+        // items from the left.
+        src.unsafeMoveSlice(left, middle, dest, index);
+        false
+      } else {
+        // Compare the left/right sides, take the lower value and advance the
+        // index of that side
+        leftValue = src.unsafe_get(left);
+        leftKey = selector(leftValue);
+        rightValue = src.unsafe_get(right);
+        rightKey = selector(rightValue);
+        lte = compare(leftKey, rightKey).isLTE();
+        if (lte) {
+          dest.unsafe_set(index, leftValue);
+          !left = left + 1;
+        } else {
+          dest.unsafe_set(index, rightValue);
+          !right = right + 1;
+        };
+        !index = index + 1;
+        index.ult(end)
+      }
+    }) void;
+  }
+
+  private readonly fun compareLoop<U: Orderable>[T: U](
+    i: Int,
+    size: Int,
+    other: Array<U>,
+  ): Order {
+    if (i == size) {
+      EQ()
+    } else {
+      compare(this.unsafe_get(i), other.unsafe_get(i)) match {
+      | EQ() -> this.compareLoop(i + 1, size, other)
+      | c -> c
+      }
+    }
+  }
+
+  // Internal helper for indexOf().
+  private readonly fun indexOfLoop<S: Equality>[T: S](
+    v: S,
+    i: Int,
+    sz: Int,
+  ): ?Int {
+    if (i >= sz) {
+      None()
+    } else if (v == this.unsafe_get(i)) {
+      Some(i)
+    } else {
+      this.indexOfLoop(v, i + 1, sz)
+    }
+  }
+
+  private readonly fun packIndex(
+    p: T -> Bool,
+    indices: mutable Array<Int>,
+    i: Int,
+    count: Int,
+  ): (Array<Int>, Int) {
+    if (i >= this.size()) {
+      (indices.chill(), count)
+    } else if (p(this[i])) {
+      indices.set(count, i);
+      this.packIndex(p, indices, i + 1, count + 1)
+    } else {
+      this.packIndex(p, indices, i + 1, count)
+    }
+  }
+
+  private readonly fun foldlImpl<Tresult>(
+    f: (Tresult, Int, T) -> Tresult,
+    init: Tresult,
+    i: Int,
+  ): Tresult {
+    if (i.uge(this.size())) {
+      init
+    } else {
+      this.foldlImpl(f, f(init, i, this.unsafe_get(i)), i + 1)
+    }
+  }
+
+  // Copy a slice (inclusive start, exclusive end) from this to dest, optionally
+  // shifting elements by the given amount. this and dest may be the same array,
+  // in which case this function only shifts elements (and is a no-op if
+  // srcStart == destStart).
+  private readonly fun unsafeMoveSlice<U>[T: U](
+    srcStart: Int,
+    srcEnd: Int,
+    dest: mutable .Array<U>,
+    destStart: Int,
+  ): void {
+    shift = destStart - srcStart;
+    if (shift > 0) {
+      // Shifting right: start from the right and pull from the left
+      srcBase = srcEnd - 1;
+      destBase = srcBase + shift;
+      for (offset in Range(0, srcEnd - srcStart)) {
+        v = this.unsafe_get(srcBase - offset);
+        dest.unsafe_set(destBase - offset, v)
+      }
+    } else {
+      // Shifting left: start from the left and pull from the right
+      // Note that items must be shifted even when shift == 0 because
+      // src/dest may be different vectors.
+      for (offset in Range(0, srcEnd - srcStart)) {
+        v = this.unsafe_get(srcStart + offset);
+        dest.unsafe_set(destStart + offset, v)
+      }
+    }
+  }
+}
+
+private trait ArrayIterator<+T, +V>(
+  protected v: readonly Array<V>,
+  protected mutable i: Int,
+  protected sz: Int,
+) {
+  readonly fun sizeHint(): ?Int {
+    Some(this.sz - this.i)
+  }
+
+  @always_inline
+  mutable fun next(): ?T {
+    i = this.i;
+    if (i.ult(this.sz)) {
+      this.!i = i + 1;
+      Some(this.getItemValue(i));
+    } else {
+      None()
+    }
+  }
+
+  protected readonly fun getItemValue(index: Int): T;
+}
+
+private mutable class KeysIterator<V>
+  extends Iterator<Int>
+  uses ArrayIterator<Int, V> {
+  @always_inline
+  static fun make(v: readonly Array<V>): mutable this {
+    mutable static(v, 0, v.size())
+  }
+
+  readonly fun sizeHint from ArrayIterator;
+
+  @always_inline
+  protected readonly fun getItemValue(index: Int): Int {
+    index
+  }
+}
+
+private mutable class ValuesIterator<V>
+  extends Iterator<V>
+  uses ArrayIterator<V, V> {
+  @always_inline
+  static fun make(v: readonly Array<V>): mutable this {
+    mutable static(v, 0, v.size())
+  }
+
+  readonly fun sizeHint from ArrayIterator;
+
+  @always_inline
+  protected readonly fun getItemValue(index: Int): V {
+    Unsafe.array_get(this.v, index)
+  }
+}
+
+private mutable class ItemsIterator<V>
+  extends Iterator<(Int, V)>
+  uses ArrayIterator<(Int, V), V> {
+  @always_inline
+  static fun make(v: readonly Array<V>): mutable this {
+    mutable static(v, 0, v.size())
+  }
+
+  readonly fun sizeHint from ArrayIterator;
+
+  @always_inline
+  protected readonly fun getItemValue(index: Int): (Int, V) {
+    (index, Unsafe.array_get(this.v, index))
+  }
+}
+
+private mutable class ReversedValuesIterator<V>
+  extends Iterator<V>
+  uses ArrayIterator<V, V> {
+  @always_inline
+  static fun make(v: readonly Array<V>): mutable this {
+    mutable static(v, 0, v.size())
+  }
+
+  readonly fun sizeHint from ArrayIterator;
+
+  @always_inline
+  protected readonly fun getItemValue(index: Int): V {
+    !index = this.sz - index - 1; // reverse the ordering
+    Unsafe.array_get(this.v, index)
+  }
+}
+
+@cpp_runtime
+@may_alloc // XXX weird. for SKIP_Array_concatStringArray
+private fun concatStringArray(v: readonly Array<String>): String {
+  // Count characters.
+  numChars = 0;
+  for (i in Range(0, v.size())) !numChars = numChars + v[i].length();
+  buf = Array::mfill(numChars, '\0');
+
+  // Fill the buffer.
+  out = 0;
+  v.each(s ->
+    s.each(c -> {
+      buf.set(out, c);
+      !out = out + 1
+    })
+  );
+
+  String::fromChars(buf)
+}
+
+module end;

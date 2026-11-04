@@ -1,0 +1,14 @@
+# Teleport command example.
+# Written for the Linguist PR; licensed under the MIT license.
+
+command /tp <player>:
+    permission: server.teleport
+    permission message: &cYou do not have permission.
+    trigger:
+        set {_target} to arg-1
+        if {_target} is not set:
+            send "&cUsage: /tp <player>"
+            stop
+        teleport player to {_target}
+        add 1 to {teleport_count}
+        send "&aTeleported to %{_target}%!"
