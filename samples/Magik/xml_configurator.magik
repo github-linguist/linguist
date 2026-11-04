@@ -1,0 +1,160 @@
+_package logback4m
+
+def_slotted_exemplar(
+	:xml_configurator,
+	{
+		{:appenders, property_list.new()}
+	},
+	{})
+$
+
+_pragma(classify_level=restricted, topic={logger})
+_private _method xml_configurator.new()
+	## Function        : Private constructor, singleton
+	## Parameters      : 
+	## Returns         : 
+	
+_endmethod
+$
+
+_pragma(classify_level=restricted, topic={logger})
+_private _method xml_configurator.configuration_file_path
+	## Function        : Get the configuration file path
+	## Parameters      : 
+	## Returns         : string
+	_local l_method << _self.method(:configuration_file_path)
+	_local l_module << l_method.source_module
+	_local l_module_directory << l_module.full_directory
+	_local l_config_file << system.pathname_down(l_module_directory, "resources", "config.xml")
+	_return l_config_file
+_endmethod
+$
+
+_private _method xml_configurator.read_appender_configuration(p_xml_element)
+	## Function        : Read the appender configuration
+	## Parameters      : p_xml_element: xml element containing the appender configuration
+	## Returns         :
+	_local l_attributes << p_xml_element.attributes
+	 
+	# encoder/layout
+	_local l_encoder_element << p_xml_element.get_element(:encoder)
+	_local l_layout << _self.read_encoder_configuration(l_encoder_element)
+	 
+	# appender
+	_local l_appender_name << l_attributes[:name].as_symbol()
+	_local l_appender_class << l_attributes[:class].as_symbol()
+	_local l_properties << property_list.new()
+	_for i_element _over p_xml_element.elements.fast_elements()
+	_loop
+		_local l_name << i_element.type
+		_local l_value << i_element.get_element_contents()
+		l_properties[l_name] << l_value
+	_endloop
+	
+	.appenders[l_appender_name] << !current_package![l_appender_class].new(l_properties, l_layout)
+_endmethod
+$
+
+_private _method xml_configurator.read_encoder_configuration(p_xml_element)
+	## Function        : Read the encoder/layout configuration
+	## Parameters      : p_xml_element: xml element containing the appender configuration
+	## Returns         :
+	_local l_layout_element << p_xml_element.elements.an_element()
+	_local l_layout_name << l_layout_element.type
+	_local l_layout_params << l_layout_element.type
+	_return !current_package![l_layout_name].new(l_layout_params)
+_endmethod
+$
+
+_pragma(classify_level=restricted, topic={logger})
+_private _method xml_configurator.read_logger_configuration(p_xml_element)
+	## Function        : Read the logger configuration
+	## Parameters      : p_xml_element: xml element containing the logger configuration
+	## Returns         :
+	_local l_attributes << p_xml_element.attributes
+
+	# logger name
+	_local l_logger_name << l_attributes[:name].as_symbol()
+	_local l_logger << logger_factory.get_logger(l_logger_name)
+
+	# log level
+	_local l_logger_level << l_attributes[:level]
+	l_logger.level << _self.levels[l_logger_level]
+
+	# appeners
+	_for i_appender_ref_element _over p_xml_element.elements_matching_name(:|appender-ref|)
+	_loop
+		_local l_appender_ref_attributes << i_appender_ref_element.attributes
+		_local l_appender_name << l_appender_ref_attributes[:ref].as_symbol()
+		_local l_appender << .appenders[l_appender_name]
+		l_logger.add_appender(l_appender)
+	_endloop
+_endmethod
+$
+
+_pragma(classify_level=restricted, topic={logger})
+_private _method xml_configurator.read_root_logger_configuration(p_xml_element)
+	## Function        : Read the root logger configuration
+	## Parameters      : p_xml_element: xml element containing the root logger configuration
+	## Returns         : 
+	_local l_root_attributes << p_xml_element.attributes
+
+	# log level
+	_local l_level << l_root_attributes[:level]
+	logger_factory.root_level << _self.levels[l_level]
+
+	# appender
+	_for i_appender_ref_element _over p_xml_element.elements_matching_name(:|appender-ref|)
+	_loop
+		_local l_appender_ref_attributes << i_appender_ref_element.attributes
+		_local l_appender_name << l_appender_ref_attributes[:ref].as_symbol()
+		_local l_appender << .appenders[l_appender_name]
+		logger_factory.add_root_appender(l_appender)
+	_endloop
+_endmethod
+$
+
+xml_configurator.define_shared_constant(
+	:levels,
+	equality_hash_table.new_with(
+		"TRACE", logger.TRACE,
+		"DEBUG", logger.DEBUG,
+		"INFO", logger.INFO,
+		"WARN", logger.WARN,
+		"ERROR", logger.ERROR,
+		"OFF",  logger.OFF),
+	:private)
+$
+
+_pragma(classify_level=restricted, topic={logger})
+_private _method xml_configurator.parse_configuration(p_config_file)
+	## Function        : 
+	## Parameters      : 
+	## Returns         : 
+	_local l_xml << simple_xml.read_document_file(p_config_file)
+	_local l_config_element << l_xml.elements.an_element()
+	 
+	_for i_appender_element _over l_config_element.elements_matching_name(:appender)
+	_loop
+		_self.read_appender_configuration(i_appender_element)
+	_endloop
+	 
+	_for i_logger_element _over l_config_element.elements_matching_name(:logger)
+	_loop
+		_self.read_logger_configuration(i_logger_element)
+	_endloop
+	 
+	_local l_root_element << l_config_element.get_element(:root)
+	_self.read_root_logger_configuration(l_root_element)
+_endmethod
+$
+
+_pragma(classify_level=restricted, topic={logger})
+_method xml_configurator.read_configuration()
+	## Function        : Read the configuration and configure the logger_factory
+	## Parameters      : 
+	## Returns         : 
+	_local l_config_file << _self.configuration_file_path
+	_self.parse_configuration(l_config_file)
+_endmethod
+$
