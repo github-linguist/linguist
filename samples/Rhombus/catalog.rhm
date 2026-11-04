@@ -1,0 +1,59 @@
+#lang rhombus/static
+import:
+  lib("pkg/dirs-catalog.rkt") as pkg
+  rhombus/version.Version
+  lib("distro-build/repackage.rkt")
+  "merge-catalog.rkt".#{merge-dir-catalog}
+
+export:
+  build_catalog
+
+fun build_catalog(racket_version, rhombus_version :~ String, config_file):
+  def base_dir = Path("compiled/repackage").to_absolute_path()
+  println("Output for " +& racket_version +& " to " +& base_dir)
+  def local_catalog_dir = base_dir +/ "local-catalog"
+  def local_no_ffi_catalog_dir = base_dir +/ "local-catalog-no-ffi"
+
+  def src_dir = Path.current_directory()
+
+  unless filesystem.directory_exists(src_dir +/ "rhombus-lib" +/ "rhombus")
+  | error("current directory needs to be a Rhombus checkout")
+  when filesystem.directory_exists(src_dir +/ "rhombus-lib" +/ "rhombus" +/ "compiled")
+  | error("current directory needs to be a fresh checkout without compiled libraries")
+
+  def local_packages:
+    for List (f in filesystem.files(src_dir)):
+      skip_when f == Path("no-ffi")
+      skip_when !filesystem.file_exists(src_dir +/ f +/ "info.rkt")
+      to_string(f)
+
+  pkg.#{create-dirs-catalog}(
+    local_catalog_dir,
+    ~#{immediate?}: #true,
+    for PairList (p in local_packages):
+      src_dir +/ p
+  )
+
+  pkg.#{create-dirs-catalog}(
+    local_no_ffi_catalog_dir,
+    PairList[src_dir +/ "no-ffi"]
+  )
+
+  for (version in ["9.0", "9.1"]):
+    #{merge-dir-catalog}(version, local_catalog_dir, local_no_ffi_catalog_dir)
+
+  repackage.#{build-catalog}(
+    ~version: racket_version,
+    ~packages: PairList[& local_packages],
+    ~catalogs: PairList[local_catalog_dir],
+    ~#{remove-catalogs}: PairList["https://download.rhombus-lang.org/releases/current/catalog/"],
+    ~#{check-package-implies}: "main-distribution",
+    ~#{original-template}: "https://github.com/racket/rhombus.git?path=~a",
+    ~#{default-author}: "mflatt@racket-lang.org",
+    ~config: config_file,
+    ~#{config-mode}: "release=" ++ rhombus_version
+  )
+
+module main:
+  import "cmdline.rhm"
+  cmdline.parse(build_catalog, ~no_config: #true)
