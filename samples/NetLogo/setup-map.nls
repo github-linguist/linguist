@@ -1,0 +1,105 @@
+; __includes ["check-gis.nls" "lookup-series-color.nls"]
+; extensions [gis]
+
+; globals [
+;   data-series
+;   series-color
+;   background-color
+;   black-min
+;   black-value
+;   white-max
+;   white-value
+; ]
+
+to setup-map
+  assert-gis dataset
+
+  let #envelope gis:envelope-of dataset
+
+  ifelse ((item 0 #envelope < -150) or (item 1 #envelope > 150)) [
+    gis:set-world-envelope-ds #envelope
+  ] [
+    gis:set-world-envelope #envelope
+  ]
+
+  gis:apply-raster dataset value
+
+  ; Convert `NaN` values to `false`.
+  ask patches [set value ifelse-value (is-nan? value) [false] [value]]
+
+  if (reduce [[#i #j] -> not-empty? #i or not-empty? #j] world-bleed) [
+    remove-world-bleed 0.25 1
+  ]
+
+  let #max-value max [value] of patches with [not is-false? value]
+  let #min-value min [value] of patches with [not is-false? value]
+
+  ; Correct inflated values.
+  if ((#max-value - #min-value) > (10 ^ 6)) [
+    let #extreme-values unique-outliers
+      [value] of patches with [not is-false? value]
+      10
+
+    ask patches with [member? value #extreme-values] [set value false]
+
+    set #max-value max [value] of patches with [not is-false? value]
+    set #min-value min [value] of patches with [not is-false? value]
+  ]
+
+  let #min-pcolor-value 0
+  let #max-pcolor-value 0
+
+  if (black-value >= white-value) [set white-value black-value + 50]
+  if (white-value <= black-value) [set black-value white-value - 50]
+
+  ifelse (black-min = true) [
+    set #min-pcolor-value #min-value
+  ] [
+    set #min-pcolor-value black-value
+  ]
+
+  ifelse (white-max = true) [
+    set #max-pcolor-value #max-value
+  ] [
+    set #max-pcolor-value white-value
+  ]
+
+  ask (patches) [
+    ifelse (not is-false? value) [
+      set pcolor (
+        scale-color series-color value #min-pcolor-value #max-pcolor-value
+      )
+
+      (ifelse ((index = 0) or (is-false? value-12)) [
+        set value-12 (list value)
+        set value-12ma false
+      ] ((length value-12) < 12) [
+        set value-12 lput value value-12
+      ] [
+        set value-12 but-first (lput value value-12)
+      ])
+
+      if ((length value-12) = 12) [
+        set value-12ma mean value-12
+      ]
+    ] [
+      set pcolor background-color
+      set value-12 false
+      set value-12ma false
+    ]
+
+    let #patch-envelope gis:envelope-of self
+    set latitude sublist #patch-envelope 2 4
+    set longitude sublist #patch-envelope 0 2
+  ]
+
+  set cell-size
+    mean
+    remove-duplicates
+    map [i -> distance-between (first i) (last i)]
+    [longitude] of patches with [not is-false? value]
+
+  if (not headless?) [
+    plot-color-bar color-bar-bins #min-pcolor-value #max-pcolor-value
+  ]
+end
