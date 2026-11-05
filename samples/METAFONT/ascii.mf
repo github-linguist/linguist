@@ -1,0 +1,291 @@
+%mode=ascii;
+
+if unknown fontsize#:
+	fontsize#=10;
+fi
+designsize:=fontsize#;
+mode_setup;
+openit;
+
+if known Xerox_world:
+    font_family "ASCII LOGO";
+    coding_scheme "ASCII LETTERS ONLY";
+fi
+
+def clear =
+  numeric x[],y[],x[]l,y[]l,x[]r,y[]r,dx[],dy[];
+  currentpicture:=nullpicture;
+enddef;
+
+def curve(suffix $,$$,$$$) =
+  fill z$l
+   if known dz$: {dz$} fi
+  .. z$$l{if known dz$$: dz$$ else: z$$$l-z$l fi}
+  .. z$$$l
+   if known dz$$$: {dz$$$} fi
+  & z$$$l..z$$$r
+  & z$$$r
+   if known dz$$$: {-dz$$$} fi
+  .. z$$r{if known dz$$: -dz$$ else: z$r-z$$$r fi}
+  .. z$r
+   if known dz$: {-dz$} fi
+  & z$r..z$l & cycle;
+enddef;
+
+vardef setpos@#(expr a,b) =
+  z@#=.5[z@#l,z@#r] enddef;
+
+def setwidth (expr x) =
+  chardx:=x;
+  numeric w; w=chardx;
+  if proofing>1:
+  for n:=0 step 2bs until chardx-1:
+  proofrule((n,-ydepth),(n,hheight)); endfor
+  proofrule((chardx,-ydepth),(chardx,hheight));
+  proofrule((0,-ydepth),(chardx,-ydepth));
+  proofrule((0,0),(chardx,0));
+  proofrule((0,xheight),(chardx,xheight));
+  proofrule((0,capheight),(chardx,capheight));
+  proofrule((0,hheight),(chardx,hheight));
+  fi
+enddef;
+
+%def labelpos(text t) =
+%  if proofing>1:
+%  forsuffixes $$=l,,r: forsuffixes $=t:
+%    makelabel(str $.$$, z$.$$); endfor endfor fi enddef;
+
+def mask(expr mx,my) =
+  cullit;
+  pix:=nullpicture;
+  unfill (0,0)..(round(mx+1)*pt,round(my+1)*pt)..cycle;
+  for r=1 step 1 until mx*pt/2: addto pix also PIX shifted (2*r*sqsize,0);
+    endfor
+  cull pix including (1,9);
+  for i:=0 step pxsize until my*pt:
+    addto currentpicture also pix shifted(0,i);
+  endfor
+  picture pix;
+enddef;
+
+  show designsize; 
+  numeric hheight,ydepth,bss,bs,f;
+  180f = designsize; 
+  hheight=140f ; ydepth=40f; 
+  bss = 140f/17.3;
+  bs = bss*pt;
+maxx=16bs;
+maxy=17.3bs;
+
+% make mask paturn
+%if designsize*mag > 30:
+%  pxsize=4;
+%  rep=round(maxx/2+1);
+%  sqsize=1;
+%  picture pix,px,PIX;
+%  px=pix=nullpicture;
+%  addto px contour unitsquare scaled sqsize;
+%  addto pix also px shifted (0,0);
+%  addto pix also px shifted (sqsize,sqsize);
+%  addto pix also px shifted (0,2sqsize);
+%  addto pix also px shifted (sqsize,3sqsize);
+%  cull pix excluding (0,0);
+%  PIX=pix;
+%  picture px,pix;
+%fi;
+
+vardef char.A =
+%   setwidth (15bs);
+   x1r:=16bs;
+   y1:=0;
+   x2r:=16bs;
+   y2:=17.3bs;
+   x3r:=6bs;
+   y3:=0;
+   x4:=12bs;
+   y4:=3.5bs;
+   x5:=7bs;
+   y5:=3.5bs;
+   penpos1(4.2bs,0);
+   penpos2(4.2bs,0);
+   penpos3(4.9bs,0);
+   penpos4(2.4bs,90);
+   penpos5(2.4bs,90);
+   penstroke z1e..z2e;
+   penstroke z2e..z3e;
+   penstroke z4e..z5e;
+   penlabels(1,2,3,4,5);
+enddef;
+
+vardef char.S =
+%   setwidth (13bs);
+   x1l:=1bs;
+   y1l:=5.5bs;
+   x2l:=1bs;
+   y2l:=3bs;
+   x3l:=1.6bs;
+   y3l:=1bs;
+   x4l:=3.7bs;
+   y4l:=0;
+   x5l:=11bs;
+   y5l:=0;
+   x6l:=13.4bs;
+   y6l:=1bs;
+   x7l:=14bs;
+   y7l:=3bs;
+   x8l:=14bs;
+   y8l:=5.6bs;
+   x9l:=13.6bs;
+   y9l:=6.6bs;
+   x10l:=13bs;
+   y10l:=7.2bs;
+   x11r:=2.2bs;
+   y11r:=10.1bs;
+%  x11l:=5.4bs;
+%  y11l:=13bs;
+   penpos1(4.25bs,0);
+   penpos2(4.3bs,7);
+   penpos3(4.4bs,28);
+   penpos4(3.7bs,48);
+   penpos5(3.4bs,126);
+   penpos6(4.4bs,152);
+   penpos7(4.25bs,174);
+   penpos8(4.5bs,200);
+   penpos9(4.55bs,208);
+   penpos10(4.4bs,215);
+   penpos11(4.2bs,215);
+%  penpos11(4.4bs,215);
+   x12r:=14bs;
+   y12r:=11.8bs;
+   x13r:=14bs;
+   y13r:=14.3bs;
+   x14r:=13.4bs;
+   y14r:=16.3bs;
+   x15r:=11.3bs;
+   y15r:=17.3bs;
+   x16r:=4bs;
+   y16r:=17.3bs;
+   x17r:=1.6bs;
+   y17r:=16.3bs;
+   x18r:=1bs;
+   y18r:=14.3bs;
+   x19r:=1bs;
+   y19r:=11.7bs;
+   x20r:=1.4bs;
+   y20r:=10.7bs;
+   x21r:=2.2bs;
+   y21r:=10.1bs;
+   x22l:=13bs;
+   y22l:=7.2bs;
+   penpos12(4.25bs,0);
+   penpos13(4.3bs,7);
+   penpos14(4.4bs,28);
+   penpos15(3.7bs,48);
+   penpos16(3.4bs,126);
+   penpos17(4.4bs,152);
+   penpos18(4.25bs,174);
+   penpos19(4.5bs,200);
+   penpos20(4.5bs,208);
+   penpos21(4.2bs,215);
+   penpos22(4.4bs,215);
+  % penstroke z1e--z2e{z2-z1}..{z5-z4}z4e--z5e{z5-z4}..{z8-z7}z7e--z8e{z8-z7}..{z11-z10}z10e--z11e;
+   penstroke z1e--z2e{z2-z1}..{z5-z4}z4e--z5e{z5-z4}..{z8-z7}z7e--z8e{z8-z7}..{z11-z10}z10e--z11e;
+   penstroke z12e--z13e{z13-z12}..{z16-z15}z15e--z16e{z16-z15}..{z19-z18}z18e--z19e{z19-z18}..{z22-z21}z21e--z22e;
+   penlabels(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21);
+enddef;
+
+
+vardef char.C =
+%   setwidth (13bs);
+   x1l:=1bs;
+   y1l:=5.5bs;
+   x2l:=1bs;
+   y2l:=3bs;
+   x3l:=1.6bs;
+   y3l:=1bs;
+   x4l:=3.7bs;
+   y4l:=0;
+   x5l:=11bs;
+   y5l:=0;
+   x6l:=13.4bs;
+   y6l:=1bs;
+   x7l:=14bs;
+   y7l:=3bs;
+   x8l:=14bs;
+   y8l:=5.5bs;
+
+   penpos1(4.3bs,0);
+   penpos2(4.3bs,7);
+   penpos3(4.4bs,28);
+   penpos4(3.7bs,48);
+   penpos5(3.4bs,126);
+   penpos6(4.4bs,152);
+   penpos7(4.3bs,174);
+   penpos8(4.3bs,180);
+
+   penstroke z1e---z2e{z2-z1}..{z5-z4}z4e---z5e{z5-z4}..{z8-z7}z7e---z8e;
+
+   x12r:=14bs;
+   y12r:=11.8bs;
+   x13r:=14bs;
+   y13r:=14.3bs;
+   x14r:=13.4bs;
+   y14r:=16.3bs;
+   x15r:=11.3bs;
+   y15r:=17.3bs;
+   x16r:=4bs;
+   y16r:=17.3bs;
+   x17r:=1.6bs;
+   y17r:=16.3bs;
+   x18r:=1bs;
+   y18r:=14.3bs;
+   x19r:=1bs;
+   y19r:=5.5bs;
+   penpos12(4.25bs,0);
+   penpos13(4.3bs,7);
+   penpos14(4.4bs,28);
+   penpos15(3.7bs,48);
+   penpos16(3.4bs,126);
+   penpos17(4.4bs,152);
+   penpos18(4.3bs,174);
+   penpos19(4.25bs,180);
+
+   penstroke z12e---z13e{z13-z12}..{z16-z15}z15e---z16e{z16-z15}..{z19-z18}z18e---z19e;
+   penlabels(1,2,3,4,5,6,7,8,12,13,14,15,16,17,18,19);
+enddef;
+
+vardef char.I =
+%   setwidth (6bs);
+   x1l:=1bs;
+   y1l:=0;
+   x2l:=1bs;
+   y2l:=17.3bs;
+   penpos1(4.2bs,0);
+   penpos2(4.2bs,0);
+   penstroke z1e..z2e;
+   penlabels(1,2);
+enddef;
+
+%vardef char.a = char.A enddef;
+%vardef char.s = char.S enddef;
+%vardef char.c = char.C enddef;
+%vardef char.i = char.I enddef;
+
+vardef make@#(expr char_w)=
+ begingroup beginchar(str@#,char_w,hheight,ydepth);
+ "the character "&str @#; char@#;
+% if (fontsize#*mag>30) and (proofing=0): mask(char_w,hheight); fi
+ endchar;
+endgroup enddef;
+
+%vardef make@#(expr char_w)=
+% begingroup beginchar(str@#,char_w,hheight,ydepth);
+% "the character "&str @#; char@#; endchar;
+%endgroup enddef;
+
+smoothing:=10;
+
+make.S(14bss);
+make.C(14bss);
+make.A(16bss);
+make.I(5.5bss);

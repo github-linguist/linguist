@@ -73,6 +73,12 @@ On Ubuntu:
 apt-get install cmake pkg-config libicu-dev docker.io ruby ruby-dev zlib1g-dev build-essential libssl-dev
 ```
 
+On Ubuntu 26.04, also install Rugged's static OpenSSL dependencies:
+
+```bash
+apt-get install libjitterentropy3-dev libzstd-dev
+```
+
 The latest version of Bundler can be installed with `gem install bundler`.
 
 #### Getting started
@@ -262,6 +268,9 @@ You can test the classifier locally with:
 ```bash
 bundle exec script/cross-validation --test
 ```
+
+With `--test`, successful sample results are hidden; failed samples and the error count summary are still shown.
+Omit `--test` to see every sample result.
 
 Sometimes getting the tests running can be too much work, especially if you don't have much Ruby experience.
 It's okay: be lazy and let [GitHub Actions](https://github.com/features/actions) run the tests for you.
