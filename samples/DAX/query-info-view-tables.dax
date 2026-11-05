@@ -1,0 +1,12 @@
+EVALUATE
+SELECTCOLUMNS(
+    INFO.VIEW.TABLES(),
+    "TableId", [ID],
+    "Table", [Name],
+    "Description", [Description],
+    "DataCategory", [DataCategory],
+    "IsHidden", [IsHidden],
+    "StorageMode", [StorageMode],
+    "LineageTag", [LineageTag]
+)
+ORDER BY [Table]

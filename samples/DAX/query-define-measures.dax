@@ -1,0 +1,77 @@
+// This query defines two measures that compute profit growth over prior month. The first is "bad" and the second is "better."
+//
+// The "bad" measure compute a result without using variables or taking advantage of optimized time intelligence functions.
+// It has a higher number of storage engine (SE) queries that slow down over loarger datasets or DirectQuery data sources.
+//
+// The "better" query uses a much cleaner pattern to produce a more efficient query plan. It uses variables and a time intelligence
+// function, and so it will scale better for larger datasets. It's also simpler to read and maintain.
+//
+DEFINE
+    MEASURE Sales[Measure (Bad)] =
+        (
+            SUMX ( Sales, Sales[Sales Amount] - Sales[Total Product Cost] )
+                - CALCULATE (
+                    SUMX ( Sales, Sales[Sales Amount] - Sales[Total Product Cost] ),
+                    FILTER (
+                        ALL ( 'Date' ),
+                        [Monthkey]
+                            = INT (
+                                IF (
+                                    MONTH ( MIN ( 'Date'[Date] ) ) = 1,
+                                    YEAR ( MIN ( 'Date'[Date] ) ) - 1,
+                                    YEAR ( MIN ( 'Date'[Date] ) )
+                                ) * 100
+                            )
+                                + IF (
+                                    MONTH ( MIN ( 'Date'[Date] ) ) = 1,
+                                    12,
+                                    MONTH ( MIN ( 'Date'[Date] ) ) - 1
+                                )
+                    )
+                )
+        )
+            / CALCULATE (
+                SUMX ( Sales, Sales[Sales Amount] - Sales[Total Product Cost] ),
+                FILTER (
+                    ALL ( 'Date' ),
+                    [Monthkey]
+                        = INT (
+                            IF (
+                                MONTH ( MIN ( 'Date'[Date] ) ) = 1,
+                                YEAR ( MIN ( 'Date'[Date] ) ) - 1,
+                                YEAR ( MIN ( 'Date'[Date] ) )
+                            ) * 100
+                        )
+                            + IF (
+                                MONTH ( MIN ( 'Date'[Date] ) ) = 1,
+                                12,
+                                MONTH ( MIN ( 'Date'[Date] ) ) - 1
+                            )
+                )
+            )
+    MEASURE Sales[Measure (Better)] =
+        VAR ThisMonth =
+            SUMX ( Sales, Sales[Sales Amount] - Sales[Total Product Cost] )
+        VAR LastMonth =
+            CALCULATE (
+                SUMX ( Sales, Sales[Sales Amount] - Sales[Total Product Cost] ),
+                PREVIOUSMONTH ( 'Date'[Date] )
+            )
+        RETURN
+            DIVIDE ( ( ThisMonth - LastMonth ), LastMonth )
+
+EVALUATE
+SUMMARIZECOLUMNS (
+    ROLLUPADDISSUBTOTAL (
+        'Date'[Fiscal Year],
+        "IsGrandTotalRowTotal",
+        ROLLUPGROUP ( 'Date'[Month], 'Date'[MonthKey] ),
+        "IsDM1Total"
+    ),
+    ROLLUPADDISSUBTOTAL ( 'Sales Territory'[Group], "IsGrandTotalColumnTotal" ),
+    "Profit Growth", Sales[Measure (Bad)]
+)
+ORDER BY
+    [Fiscal Year],
+    [Month],
+    [Group]

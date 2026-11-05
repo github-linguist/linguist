@@ -1,0 +1,87 @@
+DEFINE
+    Fi.InfoView.Model =
+		( 
+			excludeTableName : STRING,
+			showTables : BOOLEAN,
+			showColumns : BOOLEAN,
+			showMeasures : BOOLEAN,
+			showHidden : BOOLEAN,
+			showObjectsWithoutDescription : BOOLEAN
+		) =>
+
+        // Tables
+        VAR __Tables =
+            FILTER(
+                INFO.VIEW.TABLES(),
+                (NOT([IsHidden]) || showHidden)
+                && (LEN([Description])>0 || showObjectsWithoutDescription)
+                && [Name] <> excludeTableName // Exclude self
+                && showTables // Parameter toggle
+            )
+        VAR __TablesView =
+            SELECTCOLUMNS(
+                __Tables,
+                "Id", [ID],
+                "Class", "Table",
+                "Table", BLANK(),
+                "Folder", BLANK(),
+                "Name", [Name],
+                "Description", [Description],
+                "Type", [StorageMode],
+                "Data Type", IF(LEN([Expression])>1, "Calculated", "Data"),
+                "Source", IF(ISBLANK([Expression]), BLANK(), "=" & [Expression]),
+                "Format", BLANK()
+            )
+
+        // Columns
+        VAR __Columns =
+            FILTER(
+                INFO.VIEW.COLUMNS(),
+                (NOT([IsHidden]) || showHidden)
+                && (LEN([Description])>0 || showObjectsWithoutDescription)
+                && [Type] <> "RowNumber" // Exclude VertiPaq generated columns
+                && [Table] <> excludeTableName // Exclude self
+                && showColumns // Parameter toggle
+            )
+        VAR __ColumnsView =
+            SELECTCOLUMNS(
+                __Columns,
+                "Id", [ID],
+                "Class", "Column",
+                "Table", [Table],
+                "Folder", [DisplayFolder],
+                "Name", [Name],
+                "Description", [Description],
+                "Type", [Type],
+                "Data Type", [DataType],
+                "Source", IF([Type]="Data", [SourceColumn], "=" & [Expression]),
+                "Format", [FormatString]
+            )
+
+        // Measures
+        VAR __Measures =
+            FILTER(
+                INFO.VIEW.MEASURES(),
+                (NOT([IsHidden]) || showHidden)
+                && (LEN([Description])>0 || showObjectsWithoutDescription)
+                && showMeasures // Parameter toggle
+            )
+        VAR __MeasuresView =
+            SELECTCOLUMNS(
+                __Measures,
+                "Id", [ID],
+                "Class", "Measure",
+                "Table", [Table],
+                "Folder", [DisplayFolder],
+                "Name", [Name],
+                "Description", [Description],
+                "Type", "Calculated",
+                "Data Type", BLANK(), // Available, but causes a crash in 2.150.2455.0 64-bit (January 2026)
+                "Source", "=" & [Expression],
+                "Format", IF(ISBLANK([FormatStringDefinition]), [FormatString], "=" & [FormatStringDefinition])
+            )
+
+        // Output
+        VAR __Result = UNION(__TablesView, __ColumnsView, __MeasuresView)
+        RETURN
+            __Result
