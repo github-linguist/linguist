@@ -1,0 +1,30 @@
+## Lists, maps, sets, comprehensions, closures (Clipper code blocks), pipelines.
+use std.io
+
+fn main()
+    let nums = [5, 3, 8, 1, 9, 2]
+    let evens = [n for n in nums if n % 2 == 0]
+    let squares = nums.map(|n| n * n)
+    io.println("evens {evens} squares {squares}")
+
+    let sorted = nums.sorted()
+    io.println("min {sorted[0]} max {sorted[-1]} slice {sorted[1..3]}")
+
+    var counts = {"a": 0, "b": 0}
+    counts["a"] += 2
+    for (k, v) in counts
+        io.println("{k} -> {v}")
+
+    let uniq = {1, 2, 2, 3}
+    io.println("unique: {uniq.len()}")
+
+    let total = nums
+        |> filter(|n| n > 2)
+        |> map(|n| n * 10)
+        |> sum()
+    io.println("total {total}")
+
+    let greet = |who: str| -> str "hi {who}"
+    nums.each |n|
+        if n > 7
+            io.println(greet("big {n}"))

@@ -1,0 +1,37 @@
+## Traits with default methods, generic functions with bounds, dyn dispatch.
+use std.io
+
+trait Shape
+    fn area(self) -> f64
+    fn name(self) -> str
+    fn describe(self) -> str = "{self.name()} with area {self.area():.2}"
+
+type Circle = record
+    r: f64
+type Square = record
+    side: f64
+
+impl Shape for Circle
+    fn area(self) -> f64 = 3.14159 * self.r ** 2
+    fn name(self) -> str = "circle"
+
+impl Shape for Square
+    fn area(self) -> f64 = self.side ** 2
+    fn name(self) -> str = "square"
+
+fn largest[S: Shape](shapes: [S]) -> S
+    requires shapes.len() > 0
+    var best = shapes[0]
+    for s in shapes
+        if s.area() > best.area()
+            best = s
+    best
+
+fn max[T: Ord](a: T, b: T) -> T = if a > b then a else b
+
+fn main()
+    let shapes: [dyn Shape] = [Circle(r: 1.0), Square(side: 2.0)]
+    for s in shapes
+        io.println(s.describe())
+    io.println(largest([Square(side: 1.0), Square(side: 3.0)]).describe())
+    io.println("{max(3, 7)} {max("a", "b")}")
