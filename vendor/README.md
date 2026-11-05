@@ -383,6 +383,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **LoomScript:** [ambethia/Sublime-Loom](https://github.com/ambethia/Sublime-Loom)
 - **Lua:** [LuaLS/lua.tmbundle](https://github.com/LuaLS/lua.tmbundle)
 - **Luau:** [JohnnyMorganz/Luau.tmLanguage](https://github.com/JohnnyMorganz/Luau.tmLanguage)
+- **Lume:** [OmegaSoftDLL/lume.tmLanguage](https://github.com/OmegaSoftDLL/lume.tmLanguage)
 - **M3U:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **M4:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **M4Sugar:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)

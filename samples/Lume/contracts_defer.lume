@@ -1,0 +1,31 @@
+## Contracts (Ada/Eiffel), range types (Pascal), defer, using, assert.
+use std.io
+
+type Percent = int in 0..=100
+
+type Account = record
+    owner:   str
+    balance: decimal(12, 2)
+    invariant balance >= 0
+
+type Insufficient = error Funds(needed: decimal(12, 2))
+
+fn withdraw(acct: mut Account, amount: decimal(12, 2)) ! Insufficient
+    requires amount > 0
+    requires acct.balance >= amount or fail Insufficient.Funds(needed: amount - acct.balance)
+    ensures acct.balance == old(acct.balance) - amount
+    acct.balance -= amount
+
+fn discount(price: decimal(12, 2), pct: Percent) -> decimal(12, 2)
+    price - price * pct / 100
+
+fn main()
+    defer io.println("done")
+    var acct = Account(owner: "Ana", balance: 100.00)
+    withdraw(acct, 30.50) catch |e| io.println("unexpected {e}")
+    io.println("{acct.owner}: {acct.balance}")
+    match withdraw(acct, 500)
+        ok(_)                    => io.println("??")
+        err(Funds(needed))       => io.println("short by {needed}")
+    io.println("price {discount(250.00, 15)}")
+    assert acct.balance == 69.50, "balance mismatch"

@@ -1,0 +1,43 @@
+## Exercises the Stage-0 standard library: strings, lists, maps, math, higher-order functions.
+use std.io
+use std.math
+
+fn main()
+    # strings
+    let csv = "ana,bia,caio,duda"
+    let names = csv.split(",")
+    io.println("names: {names}")
+    io.println("joined: {names.join(" | ")}")
+    io.println("upper first: {names[0].upper()}")
+    io.println("has caio: {csv.contains("caio")}")
+    io.println("starts ana: {csv.starts_with("ana")}  ends duda: {csv.ends_with("duda")}")
+    io.println("index of caio: {csv.index_of("caio")}")
+    io.println("replaced: {csv.replace(",", "-")}")
+    io.println("reversed: {"lume".reverse()}")
+    io.println("dashes: {"=".repeat(10)}")
+
+    # parsing
+    let parsed = "42".parse_int() ?? 0
+    io.println("parsed + 8 = {parsed + 8}")
+
+    # lists, higher-order
+    let nums = [5, 2, 8, 1, 9, 3]
+    io.println("sorted: {nums.sorted()}  reversed: {nums.reverse()}")
+    io.println("take 3: {nums.take(3)}  drop 2: {nums.drop(2)}")
+    io.println("sum via reduce: {nums.reduce(0, |acc, x| acc + x)}")
+    io.println("any > 8: {nums.any(|x| x > 8)}  all > 0: {nums.all(|x| x > 0)}")
+    io.println("contains 8: {nums.contains(8)}  index of 8: {nums.index_of(8)}")
+    let pairs = zip(["a", "b", "c"], [1, 2, 3])
+    io.println("zip: {pairs}")
+    io.println("concat: {concat([1, 2], [3, 4], [5])}")
+
+    # maps
+    var ages = {"ana": 30, "bia": 25}
+    io.println("ana age: {ages.get("ana") ?? -1}  has zoe: {ages.has("zoe")}")
+    io.println("keys: {ages.keys().sorted()}")
+
+    # math
+    io.println("sqrt 144 = {math.sqrt(144)}")
+    io.println("floor 3.7 = {math.floor(3.7)}  ceil 3.2 = {math.ceil(3.2)}  round 3.5 = {math.round(3.5)}")
+    io.println("pow 2^10 = {math.pow(2, 10)}")
+    io.println("max {max(3, 9)}  min {min(3, 9)}  abs {abs(-7)}")
