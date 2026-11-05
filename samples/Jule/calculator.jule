@@ -1,0 +1,103 @@
+// This work is marked with CC0 1.0 Universal
+// https://creativecommons.org/publicdomain/zero/1.0
+
+// Basic integer calculator.
+// Takes expressions as arguments and prints the results.
+// Supports only addition and subtraction.
+
+use "std/conv"
+use "std/os"
+use "std/strings"
+
+fn findOperator(expr: str): int {
+	mut ranges := 0
+	mut i := len(expr) - 1
+	for i > 0; i-- {
+		b := expr[i]
+		match b {
+		| '(':
+			ranges++
+		| ')':
+			ranges--
+		| '+' | '-':
+			if ranges == 0 {
+				ret i
+			}
+		}
+	}
+	ret -1
+}
+
+fn unary(v: str, op: byte): int {
+	x := eval(v)
+	match op {
+	| '+':
+		ret +x
+	| '-':
+		ret -x
+	|:
+		println("error: invalid expression")
+		os::Exit(1)
+		ret 0 // To avoid error.
+	}
+}
+
+fn plain(expr: str): int {
+	if len(expr) == 0 {
+		println("error: invalid expression")
+		os::Exit(1)
+	}
+	match expr[0] {
+	| '(':
+		if expr[len(expr)-1] != ')' {
+			println("error: invalid expression")
+			os::Exit(1)
+			ret 0 // To avoid error.
+		}
+		ret eval(expr[1 : len(expr)-1])
+	| '+' | '-':
+		ret unary(expr[1:], expr[0])
+	|:
+		i := conv::ParseInt(expr, 10, 64) else {
+			println("error: invalid expression")
+			os::Exit(1)
+			use 0 // To avoid error.
+		}
+		ret int(i)
+	}
+}
+
+fn eval(expr: str): int {
+	i := findOperator(expr)
+	if i == -1 {
+		ret plain(expr)
+	}
+	op := expr[i]
+	l := eval(expr[:i])
+	r := eval(expr[i+1:])
+	match op {
+	| '+':
+		ret l + r
+	| '-':
+		ret l - r
+	|:
+		println("error: invalid expression")
+		os::Exit(1)
+		ret 0 // To avoid error.
+	}
+}
+
+fn main() {
+	args := os::Args()
+	if len(args) < 2 {
+		println(`Basic integer calculator.
+Takes expressions as arguments and prints the results.
+Supports only addition and subtraction.`)
+		ret
+	}
+	for (_, mut expr) in args[1:] {
+		expr = strings::Replace(expr, " ", "", -1)
+		result := eval(expr)
+		println(result)
+	}
+}
