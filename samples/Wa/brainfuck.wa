@@ -1,0 +1,66 @@
+// 凹语言/Wa-lang Brainfuck Webassembly
+// https://wa-lang.org/wa/brainfuck/
+
+func main {
+	// print hi
+	const code = "++++++++++[>++++++++++<-]>++++.+."
+	vm := NewBrainFuck(code)
+	println(string(vm.Run()))
+}
+
+func Run(code: string) => string {
+	vm := NewBrainFuck(code)
+	return string(vm.Run())
+}
+
+// BF VM
+type BrainFuck :struct {
+	mem:  [30000]byte
+	code: string
+	pos:  int
+	pc:   int
+}
+
+func NewBrainFuck(code: string) => *BrainFuck {
+	return &BrainFuck{code: code}
+}
+
+func BrainFuck.Run => []byte {
+	output := make([]byte, 0, 64)
+	for ; this.pc != len(this.code); this.pc++ {
+		switch x := this.code[this.pc]; x {
+		case '>':
+			this.pos++
+		case '<':
+			this.pos--
+		case '+':
+			this.mem[this.pos]++
+		case '-':
+			this.mem[this.pos]--
+		case '[':
+			if this.mem[this.pos] == 0 {
+				this.loop(1)
+			}
+		case ']':
+			if this.mem[this.pos] != 0 {
+				this.loop(-1)
+			}
+		case '.':
+			output = append(output, this.mem[this.pos])
+		case ',':
+			// TODO: support read byte
+		}
+	}
+	return output
+}
+
+func BrainFuck.loop(inc: int) {
+	for i := inc; i != 0; this.pc += inc {
+		switch this.code[this.pc+inc] {
+		case '[':
+			i++
+		case ']':
+			i--
+		}
+	}
+}

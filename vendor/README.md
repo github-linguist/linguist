@@ -714,6 +714,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **WDL:** [stjude-rust-labs/sprocket-vscode](https://github.com/stjude-rust-labs/sprocket-vscode)
 - **WESL:** [wgsl-analyzer/wgsl-analyzer](https://github.com/wgsl-analyzer/wgsl-analyzer)
 - **WGSL:** [wgsl-analyzer/wgsl-analyzer](https://github.com/wgsl-analyzer/wgsl-analyzer)
+- **Wa:** [wa-lang/wa-tmLanguage](https://github.com/wa-lang/wa-tmLanguage)
 - **Wavefront Material:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Wavefront Object:** [Alhadis/language-wavefront](https://github.com/Alhadis/language-wavefront)
 - **Web Ontology Language:** [textmate/xml.tmbundle](https://github.com/textmate/xml.tmbundle)
