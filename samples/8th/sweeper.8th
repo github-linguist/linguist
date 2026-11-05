@@ -1,0 +1,359 @@
+\
+\  Simple Minesweeper game for 8th
+\
+"gfx/n0.png" app:asset img:new var, zero-img
+"gfx/n1.png" app:asset img:new var, one-img
+"gfx/n2.png" app:asset img:new var, two-img
+"gfx/n3.png" app:asset img:new var, three-img
+"gfx/n4.png" app:asset img:new var, four-img
+"gfx/n5.png" app:asset img:new var, five-img
+"gfx/n6.png" app:asset img:new var, six-img
+"gfx/n7.png" app:asset img:new var, seven-img
+"gfx/n8.png" app:asset img:new var, eight-img
+"gfx/tile.png" app:asset img:new var, tile-img
+"gfx/tinted1.png" app:asset img:new var, tinted1-img
+"gfx/tinted2.png" app:asset img:new var, tinted2-img
+"gfx/explosion.png" app:asset img:new var, explosion-img
+"gfx/mine.png" app:asset img:new var, mine-img
+"gfx/flag.png" app:asset img:new var, flag-img
+
+"snd/explosion.ogg" app:asset snd:new var, explosion-snd
+"snd/zero.ogg" app:asset snd:new var, zero-snd
+
+needs nk/gui
+requires sound
+
+384 constant WIDTH
+384 constant HEIGHT
+
+true constant WAIT-VSYNC
+
+true var, handle-click
+
+var finished
+var uncovered
+var cleared
+var mines
+
+\ max number of mines
+15 constant EASY
+20 constant NORMAL
+25 constant HARD
+
+NORMAL var, difficulty
+
+0 constant EASY-MENU
+1 constant NORMAL-MENU
+2 constant HARD-MENU
+
+NORMAL-MENU var, difficulty-selection
+
+10 constant BRDSZ
+BRDSZ 2 n:+ constant BRDSZI
+
+32 constant TILESIZE
+10 constant NUMTILES
+
+0 constant UNSELECTED
+1 constant SELECTED
+
+16 constant MARKED
+32 constant MINE
+
+9  constant ZERO-IMAGE
+10 constant EXPLOSION-IMAGE
+11 constant MINE-IMAGE
+
+var state-board
+var draw-board
+
+BRDSZI BRDSZI n:* q:new var, zero-queue
+
+: rand10
+  rand-pcg n:abs 9 n:mod 1 n:+ ;
+
+: place-mine
+  rand10 rand10 2dup state-board @ mat:@ dup MINE n:band not if
+    MINE n:bor swap mat:! drop mines @ n:1+ mines !
+  else
+    2drop
+    2drop
+  then ;
+
+: init-board
+  false finished !
+  0 uncovered !
+  0 cleared !
+  0 mines !
+
+  [ 1,1,1,1,1,1,1,1,1,1,1,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,0,0,0,1,
+    1,1,1,1,1,1,1,1,1,1,1,1 ] [ ` BRDSZI ` , ` BRDSZI ` ] mat:new state-board !
+
+  [] [ ` BRDSZI ` , ` BRDSZI ` ] mat:new draw-board !
+
+  ' place-mine difficulty @ times  ;
+
+locals:
+: mines?  \ x y -- num-mines
+  "y" w:!
+  "x" w:!
+  0 "c" w:!
+  ( "row" w:! ( "row" w:@ state-board @ mat:@ nip MINE n:band if "c" w:@ n:1+ "c" w:! then ) "x" w:@ n:1- "x" w:@ n:1+ loop ) "y" w:@ n:1- "y" w:@ n:1+ loop
+  "c" w:@ ;
+
+: mine?  \ x y -- bool
+  state-board @ mat:@ nip MINE n:band if
+    true
+  else
+    false
+  then ;
+
+: selected?  \ x y -- status
+  state-board @ mat:@ nip SELECTED n:band if
+    true
+  else
+    false
+  then ;
+
+: marked?  \ x y -- status
+  state-board @ mat:@ nip MARKED n:band if
+    true
+  else
+    false
+  then ;
+
+: selected-or-marked?  \ x y -- bool
+  state-board @ mat:@ nip SELECTED MARKED n:bor n:band if
+    true
+  else
+    false
+  then ;
+
+: init-queue
+  zero-queue @ q:clear drop ;
+
+: add-queue  \ x y --
+  2 a:close zero-queue @ swap q:push drop ;
+
+: select  \ x y --
+  2dup state-board @ mat:@ nip
+  SELECTED n:bor state-board @ mat:! drop ;
+
+: set-board  \ x y value --
+  draw-board @ mat:! drop ;
+
+locals:
+: uncover-queue  \ x y --
+  "y" w:!
+  "x" w:!
+
+  ( "row" w:! ( dup "col" w:! "row" w:@ selected-or-marked? not if "col" w:@ "row" w:@ 2dup add-queue select then ) "x" w:@ n:1- "x" w:@ n:1+ loop ) "y" w:@ n:1- "y" w:@ n:1+ loop ;
+
+: cascade
+  zero-queue @
+  repeat
+    q:pop
+    a:open 2dup mines? dup >r
+    0 n:= if
+      snd:ready? or not if 
+        zero-snd @ snd:play
+      then
+      rdrop
+      2dup
+      ZERO-IMAGE draw-board @ mat:! drop
+      1 uncovered n:+!
+      uncover-queue
+    else
+      r> draw-board @ mat:! drop
+      1 uncovered n:+!
+    then
+    q:len 0 n:= if drop break then
+  again ;
+
+: mark  \ x y --
+  2dup 2dup state-board @ mat:@ nip
+  MARKED n:bor state-board @ mat:! drop
+  2dup draw-board @ mat:@ nip
+  MARKED n:bor draw-board @ mat:! drop ;
+
+: unmark \ x y --
+  2dup 2dup state-board @ mat:@ nip
+  MARKED n:bnot n:band state-board @ mat:! drop
+  2dup draw-board @ mat:@ nip
+  MARKED n:bnot n:band draw-board @ mat:! drop ;
+
+: show-mines
+  ( >r ( r@ 2dup mine? if MINE-IMAGE set-board else 2drop then ) 1 BRDSZ loop rdrop ) 1 BRDSZ loop ;
+
+: handle-mouse-input  \ expects rect on r-stack
+  finished @ if
+    rdrop ;;
+  then
+
+  nk:BUTTON_LEFT r@ false nk:clicked? if
+    handle-click @ if
+      "x" w:@ "y" w:@ 2dup selected-or-marked? not if
+        2dup
+        mine? not if
+          2dup select
+          init-queue
+          add-queue
+          cascade
+        else
+          show-mines
+          EXPLOSION-IMAGE set-board
+          explosion-snd @ snd:play
+          true finished !
+        then
+      then
+    else
+      true handle-click !
+    then
+  else
+    nk:BUTTON_RIGHT r@ false nk:clicked? if
+      "x" w:@ "y" w:@ 2dup selected-or-marked? not if
+        mark
+      else
+        2dup marked? if
+          unmark
+        then
+      then
+    then
+  then
+  rdrop
+  uncovered @ BRDSZ BRDSZ n:* mines @ n:- n:/ 100 n:* cleared !
+  uncovered @ mines @ n:+ BRDSZ BRDSZ n:* n:= if
+    show-mines
+    true finished !
+  then ;
+
+: draw-tile  \ image --
+  "x" w:@ TILESIZE n:* "y" w:@ TILESIZE n:* TILESIZE TILESIZE 4 a:close swap "white" nk:draw-image ;
+
+: draw-unselected-tile
+  "x" w:@ TILESIZE n:* "y" w:@ TILESIZE n:* TILESIZE TILESIZE 4 a:close dup >r
+  dup nk:hovered? finished @ not and if
+    tinted1-img @
+  else
+    tile-img @
+  then
+  "white" nk:draw-image
+  handle-mouse-input ;
+
+: draw-flag-tile
+  "x" w:@ TILESIZE n:* "y" w:@ TILESIZE n:* TILESIZE TILESIZE 4 a:close dup >r
+  dup nk:hovered? finished @ not and if
+    tinted2-img @
+  else
+    flag-img @
+  then
+  "white" nk:draw-image
+  handle-mouse-input ;
+
+[  ' draw-unselected-tile ,
+   ( one-img @ draw-tile ) ,
+   ( two-img @ draw-tile ) ,
+   ( three-img @ draw-tile ) ,
+   ( four-img @ draw-tile ) ,
+   ( five-img @ draw-tile ) ,
+   ( six-img @ draw-tile ) ,
+   ( seven-img @ draw-tile ) ,
+   ( eight-img @ draw-tile ) ,
+   ( zero-img @ draw-tile ) ,
+   ( explosion-img @ draw-tile ) ,
+   ( mine-img @ draw-tile ) ,
+   ' noop ,
+   ' noop ,
+   ' noop ,
+   ' noop ,
+   ' draw-flag-tile ] var, drawtable
+
+locals:
+: draw-tiles+handle-input
+  nk:BUTTON_LEFT  [ 32, 32, 320, 320 ] false nk:clicked? not nk:BUTTON_LEFT nk:released? and if
+    true handle-click !
+  then
+  ( "y" w:! ( dup "x" w:! "y" w:@ draw-board @ mat:@ nip drawtable @ swap caseof ) 1 BRDSZ loop ) 1 BRDSZ loop ;
+
+: easy-menu
+  "Difficulty" nk:TEXT_LEFT [200,200] nk:menu-begin if
+     25 1 nk:layout-row-dynamic
+     "Easy" nk:TEXT_CENTERED mine-img @ ( EASY difficulty ! init-board EASY-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-image
+     "Normal" nk:TEXT_CENTERED ( NORMAL difficulty ! init-board NORMAL-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-label
+     "Hard" nk:TEXT_CENTERED ( HARD difficulty ! init-board HARD-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-label
+   nk:menu-end then ;
+
+: normal-menu
+  "Difficulty" nk:TEXT_LEFT [200,200] nk:menu-begin if
+     25 1 nk:layout-row-dynamic
+     "Easy" nk:TEXT_CENTERED ( EASY difficulty ! init-board EASY-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-label
+     "Normal" nk:TEXT_CENTERED mine-img @ ( NORMAL difficulty ! init-board NORMAL-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-image
+     "Hard" nk:TEXT_CENTERED ( HARD difficulty ! init-board HARD-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-label
+   nk:menu-end then ;
+
+: hard-menu
+  "Difficulty" nk:TEXT_LEFT [200,200] nk:menu-begin if
+     25 1 nk:layout-row-dynamic
+     "Easy" nk:TEXT_CENTERED ( EASY difficulty ! init-board EASY-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-label
+     "Normal" nk:TEXT_CENTERED ( NORMAL difficulty ! init-board NORMAL-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-label
+     "Hard" nk:TEXT_CENTERED mine-img @ ( HARD difficulty ! init-board HARD-MENU difficulty-selection ! false handle-click ! ) nk:menu-item-image
+   nk:menu-end then ;
+
+: game-menu
+    nk:menubar-begin
+      nk:STATIC 25 3 nk:layout-row-begin
+        90 nk:layout-row-push
+          "Game" nk:TEXT_LEFT [120,200] nk:menu-begin if
+            25 1 nk:layout-row-dynamic
+              "New" nk:TEXT_LEFT ( init-board  false handle-click ! )  nk:menu-item-label
+              "Quit" nk:TEXT_LEFT ' bye nk:menu-item-label
+          nk:menu-end then
+        [ ' easy-menu , ' normal-menu , ' hard-menu ] difficulty-selection @ caseof
+        200 nk:layout-row-push
+          cleared @ "CLEARED: %3d %%" s:strfmt nk:TEXT_CENTERED "white" nk:label-colored
+    nk:menubar-end ;
+
+: new-win
+  {
+    name: "main",
+    wide: @WIDTH,
+    high: @HEIGHT,
+    bg: "palegreen",
+    fonts: {
+      font1: ` 24 font:system ` ,
+      font2: ["tahoma:24", "arial:24", "ubuntu:24"]
+    },
+    font: "font1",
+    title: "Minesweeper"
+  }
+  \ invoke nk:win to create the outermost window from the JSON definition:
+  nk:win ;
+
+: main-render
+  {
+    bg: "DimGray",
+    font: "font2",
+    padding: [0,0],
+    flags: [ @nk:WINDOW_NO_SCROLLBAR ]
+  }
+
+  nk:begin
+    game-menu
+    draw-tiles+handle-input
+  nk:end  ;
+
+: app:main
+  new-win
+  init-board
+  WAIT-VSYNC nk:vsync
+  ' main-render 0 nk:render-loop ;
