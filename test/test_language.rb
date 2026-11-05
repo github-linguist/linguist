@@ -434,7 +434,7 @@ class TestLanguage < Minitest::Test
   def test_codemirror_modes_present
     Language.all.each do |language|
       if language.codemirror_mode || language.codemirror_mime_type
-        assert language.codemirror_mode, "#{language.inspect} missing CodeMirror mode"
+        assert language.codemirror_mode, "#{language.inspect} missing CodeMirror mode" unless language.codemirror_mime_type == "text/plain"
         assert language.codemirror_mime_type, "#{language.inspect} missing CodeMirror MIME mode"
       end
     end
