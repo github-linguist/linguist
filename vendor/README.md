@@ -552,7 +552,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **ROS Interface:** [jtbandes/ros-tmlanguage](https://github.com/jtbandes/ros-tmlanguage)
 - **RPC:** [mikomikotaishi/c.tmbundle](https://github.com/mikomikotaishi/c.tmbundle)
 - **RPGLE:** [barrettotte/vscode-ibmi-languages](https://github.com/barrettotte/vscode-ibmi-languages)
-- **RPM Spec:** [waveclaw/language-rpm-spec](https://github.com/waveclaw/language-rpm-spec)
+- **RPM Spec:** [terrapkg/linguist-rpm-spec](https://github.com/terrapkg/linguist-rpm-spec)
 - **RUNOFF:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Racket:** [soegaard/racket-highlight-for-github](https://github.com/soegaard/racket-highlight-for-github)
 - **Raku:** [perl6/atom-language-perl6](https://github.com/perl6/atom-language-perl6)
