@@ -1,0 +1,98 @@
+const LIMIT = 30
+const SCALE = 1000000
+
+func fib(n: int) -> int {
+  if n < 2 {
+    return n
+  }
+  let a = 0
+  let b = 1
+  let i = 2
+  while i <= n {
+    let t = a + b
+    a = b
+    b = t
+    i += 1
+  }
+  return b
+}
+
+func is_prime(n: int) -> bool {
+  if n < 2 {
+    return false
+  }
+  let d = 2
+  while d * d <= n {
+    if n % d == 0 {
+      return false
+    }
+    d += 1
+  }
+  return true
+}
+
+func sieve(limit: int) -> [int] {
+  let flags = []
+  let i = 0
+  while i <= limit {
+    array_push(flags, true)
+    i += 1
+  }
+  let d = 2
+  while d * d <= limit {
+    if flags[d] {
+      let m = d * d
+      while m <= limit {
+        flags[m] = false
+        m += d
+      }
+    }
+    d += 1
+  }
+  let out = []
+  let k = 2
+  while k <= limit {
+    if flags[k] {
+      array_push(out, k)
+    }
+    k += 1
+  }
+  return out
+}
+
+func mean(xs: [int]) -> f64 {
+  let total = 0
+  let i = 0
+  while i < len(xs) {
+    total += xs[i]
+    i += 1
+  }
+  return total * 1.0 / len(xs)
+}
+
+func caption(tag: str, n: int) -> str {
+  return tag + " n=" + str(n)
+}
+
+func main() {
+  show(caption("fib", LIMIT) + " -> " + str(fib(LIMIT)))
+
+  let primes = sieve(100)
+  show("primes under 100: " + str(len(primes)) + " last " + str(primes[len(primes) - 1]))
+
+  let samples = [7, 11, 4, 20, 9]
+  show("mean " + str(mean(samples)))
+
+  let scaled = 355 * SCALE / 113
+  show("pi ~ " + str(scaled / SCALE) + "." + str(scaled % SCALE))
+
+  let label = ""
+  let p = 0
+  while p < 5 {
+    if is_prime(p) {
+      label = label + str(p) + " "
+    }
+    p += 1
+  }
+  show("single digit primes: " + label)
+}
