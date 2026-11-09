@@ -287,6 +287,12 @@ class TestBlob < Minitest::Test
     assert sample_blob("Go/testdata/foo.yml").vendored?
   end
 
+  def test_cedar_language
+    blob = sample_blob_memory("Cedar/document_cloud.cedar")
+    assert_equal "Cedar", blob.language.name
+    assert_equal "source.cedar", blob.language.tm_scope
+  end
+
   def test_language
     # Failures are reasonable in some cases, such as when a file is fully valid in more than one language.
     allowed_failures = {
