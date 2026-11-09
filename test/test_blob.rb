@@ -288,7 +288,7 @@ class TestBlob < Minitest::Test
   end
 
   def test_cedar_language
-    blob = sample_blob_memory("Cedar/document_cloud.cedar")
+    blob = sample_blob_memory("Cedar/jans_policy_get.cedar")
     assert_equal "Cedar", blob.language.name
     assert_equal "source.cedar", blob.language.tm_scope
   end
