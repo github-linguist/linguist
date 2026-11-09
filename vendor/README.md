@@ -115,6 +115,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Cap'n Proto:** [textmate/capnproto.tmbundle](https://github.com/textmate/capnproto.tmbundle)
 - **Carbon:** [carbon-language/carbon.tmbundle](https://github.com/carbon-language/carbon.tmbundle)
 - **CartoCSS:** [yohanboniface/carto-atom](https://github.com/yohanboniface/carto-atom)
+- **Cedar:** [dekopon-agents/cedar-tm-grammar](https://github.com/dekopon-agents/cedar-tm-grammar)
 - **Ceylon:** [jeancharles-roger/ceylon-sublimetext](https://github.com/jeancharles-roger/ceylon-sublimetext)
 - **Chapel:** [chapel-lang/chapel-tmbundle](https://github.com/chapel-lang/chapel-tmbundle)
 - **Checksums:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
