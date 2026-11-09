@@ -1,0 +1,392 @@
+const F0 = 1
+const F5 = 120
+const F10 = 3628800
+const F12 = 479001600
+const FIB_LIMIT = 90
+
+func fib_iter(n: int) -> int {
+  guard n >= 0 && n <= FIB_LIMIT else {
+    return -1
+  }
+  let a = 0
+  let b = 1
+  let i = 0
+  while i < n {
+    let t = a + b
+    a = b
+    b = t
+    i = i + 1
+  }
+  return a
+}
+
+func fib_rec(n: int) -> int {
+  if n < 2 {
+    return n
+  }
+  return fib_rec(n - 1) + fib_rec(n - 2)
+}
+
+func fib_memo_table(n: int) -> [int] {
+  let table = [0]
+  guard n >= 0 else {
+    return table
+  }
+  if n == 0 {
+    return table
+  }
+  array_push(table, 1)
+  let i = 2
+  while i <= n {
+    let next = table[i - 1] + table[i - 2]
+    array_push(table, next)
+    i = i + 1
+  }
+  return table
+}
+
+func fib_memo(n: int) -> int {
+  guard n >= 0 && n <= FIB_LIMIT else {
+    return -1
+  }
+  let table = fib_memo_table(n)
+  return table[n]
+}
+
+func fib_descending(n: int) -> int {
+  guard n >= 0 && n <= FIB_LIMIT else {
+    return -1
+  }
+  let a = 0
+  let b = 1
+  let i = n
+  while i > 0 {
+    let t = a + b
+    a = b
+    b = t
+    i = i - 1
+  }
+  return a
+}
+
+func lucas(n: int) -> int {
+  guard n >= 0 && n <= FIB_LIMIT else {
+    return -1
+  }
+  let a = 2
+  let b = 1
+  let i = 0
+  while i < n {
+    let t = a + b
+    a = b
+    b = t
+    i = i + 1
+  }
+  return a
+}
+
+func gcd(a: int, b: int) -> int {
+  let x = a
+  let y = b
+  if x < 0 {
+    x = -x
+  }
+  if y < 0 {
+    y = -y
+  }
+  while y != 0 {
+    let t = x % y
+    x = y
+    y = t
+  }
+  return x
+}
+
+func lcm(a: int, b: int) -> int {
+  guard a != 0 && b != 0 else {
+    return 0
+  }
+  let x = a
+  let y = b
+  if x < 0 {
+    x = -x
+  }
+  if y < 0 {
+    y = -y
+  }
+  let g = gcd(x, y)
+  return x / g * y
+}
+
+func fact_iter(n: int) -> int {
+  guard n >= 0 && n <= 20 else {
+    return -1
+  }
+  let acc = 1
+  let i = 2
+  while i <= n {
+    acc = acc * i
+    i = i + 1
+  }
+  return acc
+}
+
+func sieve_primes(limit: int) -> [int] {
+  let primes = []
+  guard limit >= 2 else {
+    return primes
+  }
+  let flags = []
+  let i = 0
+  while i <= limit {
+    array_push(flags, 0)
+    i = i + 1
+  }
+  let p = 2
+  while p * p <= limit {
+    if flags[p] == 0 {
+      let j = p * p
+      while j <= limit {
+        flags[j] = 1
+        j = j + p
+      }
+    }
+    p = p + 1
+  }
+  let k = 2
+  while k <= limit {
+    if flags[k] == 0 {
+      array_push(primes, k)
+    }
+    k = k + 1
+  }
+  return primes
+}
+
+func primes_line(primes: [int], count: int) -> str {
+  let limit = min(count, len(primes))
+  let parts = []
+  for i in 0..limit {
+    array_push(parts, str(primes[i]))
+  }
+  return str_join(parts, ", ")
+}
+
+func fib_table_rows() -> int {
+  show("  n        fib      lucas")
+  for n in 0..16 {
+    let f = fib_iter(n)
+    let l = lucas(n)
+    let row = str(n) + "  " + str(f)
+    while len(row) < 12 {
+      row = row + " "
+    }
+    show(row + str(l))
+  }
+  return 16
+}
+
+func fact_suite() -> int {
+  show("factorials")
+  show("F0 " + str(F0))
+  show("F5 " + str(F5))
+  show("F10 " + str(F10))
+  show("F12 " + str(F12))
+  for n in 0..11 {
+    show(str(n) + " runtime " + str(fact_iter(n)))
+  }
+  return 1
+}
+
+func gcd_suite() -> int {
+  let pairs = [[48, 18], [17, 5], [270, 192], [81, 27], [97, 89]]
+  for p in pairs {
+    let a = p[0]
+    let b = p[1]
+    let g = gcd(a, b)
+    let l = lcm(a, b)
+    show("gcd " + str(a) + " " + str(b) + " = " + str(g) + " lcm " + str(l))
+  }
+  return len(pairs)
+}
+
+func sieve_suite() -> int {
+  let primes = sieve_primes(100)
+  show("primes under 100: " + str(len(primes)))
+  show(primes_line(primes, 25))
+  let big = sieve_primes(500)
+  show("primes under 500: " + str(len(big)))
+  return len(primes)
+}
+
+func timing_suite() -> int {
+  let t0 = clock_ms()
+  let slow = fib_rec(24)
+  let t1 = clock_ms()
+  show("fib_rec 24 = " + str(slow) + " in " + str(t1 - t0) + " ms")
+  let t2 = clock_ms()
+  let fast = fib_iter(FIB_LIMIT)
+  let t3 = clock_ms()
+  show("fib_iter 90 = " + str(fast) + " in " + str(t3 - t2) + " ms")
+  let t4 = clock_ms()
+  let memo = fib_memo(FIB_LIMIT)
+  let t5 = clock_ms()
+  show("fib_memo 90 = " + str(memo) + " in " + str(t5 - t4) + " ms")
+  let t6 = clock_ms()
+  let desc = fib_descending(FIB_LIMIT)
+  let t7 = clock_ms()
+  show("fib_descending 90 = " + str(desc) + " in " + str(t7 - t6) + " ms")
+  if fast != memo || fast != desc {
+    show("MISMATCH across fib variants")
+    return 0
+  }
+  show("all fib variants agree")
+  return 1
+}
+
+func tribonacci(n: int) -> int {
+  guard n >= 0 && n <= 60 else {
+    return -1
+  }
+  let a = 0
+  let b = 0
+  let c = 1
+  let i = 0
+  while i < n {
+    let t = a + b + c
+    a = b
+    b = c
+    c = t
+    i = i + 1
+  }
+  return a
+}
+
+func pell(n: int) -> int {
+  guard n >= 0 && n <= 50 else {
+    return -1
+  }
+  let a = 0
+  let b = 1
+  let i = 0
+  while i < n {
+    let t = 2 * b + a
+    a = b
+    b = t
+    i = i + 1
+  }
+  return a
+}
+
+func catalan(n: int) -> int {
+  guard n >= 0 && n <= 30 else {
+    return -1
+  }
+  let c = 1
+  let i = 0
+  while i < n {
+    c = c * 2 * (2 * i + 1) / (i + 2)
+    i = i + 1
+  }
+  return c
+}
+
+func fib_even_sum(limit: int) -> int {
+  guard limit > 0 else {
+    return 0
+  }
+  let a = 0
+  let b = 1
+  let acc = 0
+  while b <= limit {
+    if b % 2 == 0 {
+      acc = acc + b
+    }
+    let t = a + b
+    a = b
+    b = t
+  }
+  return acc
+}
+
+func fib_sum_first(n: int) -> int {
+  guard n >= 0 else {
+    return 0
+  }
+  let a = 0
+  let b = 1
+  let acc = 0
+  let i = 0
+  while i < n {
+    acc = acc + a
+    let t = a + b
+    a = b
+    b = t
+    i = i + 1
+  }
+  return acc
+}
+
+func fib_mod(n: int, m: int) -> int {
+  guard n >= 0 && m > 1 else {
+    return -1
+  }
+  let a = 0
+  let b = 1
+  let i = 0
+  while i < n {
+    let t = (a + b) % m
+    a = b
+    b = t
+    i = i + 1
+  }
+  return a
+}
+
+func golden_pair(a: int, b: int) -> f64 {
+  guard a > 0 && b > 0 else {
+    return 0.0
+  }
+  return float(b) / float(a)
+}
+
+func fib_ratios(count: int) -> int {
+  let a = 0
+  let b = 1
+  let i = 0
+  while i < count {
+    let r = golden_pair(a, b)
+    show("ratio " + str(i) + " = " + str(r))
+    let t = a + b
+    a = b
+    b = t
+    i = i + 1
+  }
+  return count
+}
+
+func sequence_suite() -> int {
+  show("tribonacci pell catalan")
+  for n in 0..12 {
+    let row = "n " + str(n)
+    show(row + " tri " + str(tribonacci(n)) + " pell " + str(pell(n)) + " cat " + str(catalan(n)))
+  }
+  show("fib even sum to 4000000 = " + str(fib_even_sum(4000000)))
+  show("fib sum first 20 = " + str(fib_sum_first(20)))
+  show("fib 100 mod 1000000007 = " + str(fib_mod(100, 1000000007)))
+  show("fib 200 mod 1000000007 = " + str(fib_mod(200, 1000000007)))
+  return 1
+}
+
+func main() {
+  show("fibonacci lucas factorial sieve demo")
+  fib_table_rows()
+  fact_suite()
+  gcd_suite()
+  sieve_suite()
+  sequence_suite()
+  fib_ratios(12)
+  let status = timing_suite()
+  show("timing status " + str(status))
+  show("mem used " + str(mem_used()) + " peak " + str(mem_peak()))
+}
