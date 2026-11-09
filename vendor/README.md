@@ -254,6 +254,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Go Workspace:** [golang/vscode-go](https://github.com/golang/vscode-go)
 - **Godot Resource:** [godotengine/godot-vscode-plugin](https://github.com/godotengine/godot-vscode-plugin)
 - **Golo:** [TypeUnsafe/sublime-golo](https://github.com/TypeUnsafe/sublime-golo)
+- **Goose:** [aardappel/goose](https://github.com/aardappel/goose)
 - **Gosu:** [jpcamara/Textmate-Gosu-Bundle](https://github.com/jpcamara/Textmate-Gosu-Bundle)
 - **Grace:** [zmthy/grace-tmbundle](https://github.com/zmthy/grace-tmbundle)
 - **Gradle:** [alkemist/gradle.tmbundle](https://github.com/alkemist/gradle.tmbundle)
