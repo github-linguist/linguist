@@ -1,0 +1,9 @@
+FROM logs-*
+| WHERE @timestamp >= NOW() - 24h
+| STATS request_count = COUNT(*),
+        avg_duration = AVG(http.response.duration),
+        p95_duration = PERCENTILE(http.response.duration, 95)
+    BY http.response.status_code, host.name
+| WHERE request_count > 100
+| SORT p95_duration DESC
+| LIMIT 20
