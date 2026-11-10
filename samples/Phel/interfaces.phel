@@ -1,0 +1,33 @@
+(ns examples.interfaces)
+
+;; Define an interface and implement it with a struct.
+(definterface Greeter
+              (greet [this name])
+              (origin [this]))
+
+(defstruct friendly-bot [prefix channel]
+           Greeter
+           (greet [this name]
+                  (str (get this :prefix) " " name "!"))
+           (origin [this]
+                   (get this :channel)))
+
+(defstruct concierge [prefix hotel]
+           Greeter
+           (greet [this name]
+                  (str (get this :prefix) ", " name ". Welcome to " (get this :hotel)))
+           (origin [this]
+                   (str "Lobby desk @ " (get this :hotel))))
+
+(defn broadcast [greeter names]
+  (foreach [name names]
+    (println "[" (origin greeter) "]" (greet greeter name))))
+
+(defn main []
+  (let [bot (friendly-bot "Hello" "#phel")
+        host (concierge "Good evening" "Functional Resort")]
+    (println "Polymorphic greetings:")
+    (broadcast bot ["Ava" "Lee"])
+    (broadcast host ["Kai"])))
+
+(main)
