@@ -1,0 +1,33 @@
+procedure MATRIX(A, LAMBDA, N, P, S);
+  integer N, P;
+  array A, LAMBDA;
+  string S;
+begin;
+    integer I, J, A, B;
+    NLCR;
+    PRINTTEXT(S);
+    A := 1;
+    B := (if N > 6 then 6 else N);
+    NLCR;
+    AA: NLCR;
+    NLCR;
+    NLCR;
+    NLCR;
+    if P = 1 then begin;
+        for J := A step 1 until B do
+          PRINT(LAMBDA[J]);
+        NLCR;
+    end ;
+    for I := 1 step 1 until N do
+      begin;
+        NLCR;
+        for J := A step 1 until B do
+          PRINT(A[I, J]);
+    end ;
+    if B ≠ N then begin;
+        A := B + 1;
+        B := (if (B + 6) > N then N else B + 6);
+        goto AA;
+    end ;
+    NLCR;
+end MATRIX;

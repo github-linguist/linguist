@@ -85,15 +85,19 @@ disambiguations:
   - language: Perl
 - extensions: ['.alg']
   rules:
-  - language: ALGOL
+  - language: ALGOL 68
     pattern:
-    # ALGOL 60 comments
-    - '(?i)^comment\b.*(;|comment)'
-    # ALGOL 68 comments
+    # ALGOL 68 keywords and comment forms are checked before shared COMMENT comments
+    - '(?i)\b(mode|proc|op|prio|ref|heap|esac|od|fi|union|struct)\b'
     - '^#[^#\r\n]+#$'
-    # ALGOL 60/68 keywords
+    - '^\s*\{[^}\r\n]+\}'
+  - language: ALGOL 60
+    pattern:
+    # ALGOL 60 comments and declarations
+    - '(?i)^comment\b.*(;|comment)'
     - '(?i)\b(integer|real|boolean|string)\b\s+\w+\s*:=\s*'
-    - '(?i)^begin[\s\S]*^end'
+    - '(?i)\binteger\s+array\b'
+    - '(?i)\bprocedure\s+\w+\s*\('
 - extensions: ['.app']
   rules:
   - language: Erlang

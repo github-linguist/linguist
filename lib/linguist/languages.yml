@@ -117,13 +117,31 @@ AL:
 ALGOL:
   type: programming
   color: "#D1E0DB"
+  tm_scope: none
+  ace_mode: text
+  language_id: 79217948
+ALGOL 60:
+  type: programming
+  color: "#D1E0DB"
   extensions:
   - ".alg"
+  - ".a60"
   tm_scope: source.algol60
   ace_mode: pascal
   codemirror_mode: pascal
   codemirror_mime_type: text/x-pascal
-  language_id: 79217948
+  group: ALGOL
+  language_id: 757710448
+ALGOL 68:
+  type: programming
+  color: "#D1E0DB"
+  extensions:
+  - ".a68"
+  - ".alg"
+  tm_scope: source.algol68
+  ace_mode: text
+  group: ALGOL
+  language_id: 470180284
 AMPL:
   type: programming
   color: "#E6EFBB"
