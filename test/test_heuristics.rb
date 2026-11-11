@@ -483,6 +483,13 @@ class TestHeuristics < Minitest::Test
     }, alt_name="main.f")
   end
 
+  def test_fg_by_heuristics
+    assert_heuristics({
+      "Qasida" => all_fixtures("Qasida"),
+      nil => all_fixtures("Flow-Wing", "*.fg")
+    }, alt_name="main.fg")
+  end
+
   def test_for_by_heuristics
     assert_heuristics({
       "Fortran" => all_fixtures("Fortran", "*.f") + all_fixtures("Fortran", "*.for"),

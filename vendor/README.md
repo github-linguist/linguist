@@ -534,6 +534,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Q#:** [microsoft/qsharp](https://github.com/microsoft/qsharp)
 - **QML:** [skozlovf/Sublime-QML](https://github.com/skozlovf/Sublime-QML)
 - **QMake:** [textmate/cpp-qt.tmbundle](https://github.com/textmate/cpp-qt.tmbundle)
+- **Qasida:** [themythofsisyphusjayant/qasida-tmLanguage](https://github.com/themythofsisyphusjayant/qasida-tmLanguage)
 - **Qt Script:** [atom/language-javascript](https://github.com/atom/language-javascript)
 - **Quake:** [newgrammars/quake](https://github.com/newgrammars/quake)
 - **QuakeC:** [4LT/quakec-syntax](https://github.com/4LT/quakec-syntax)

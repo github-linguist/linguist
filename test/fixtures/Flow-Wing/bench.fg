@@ -1,0 +1,80 @@
+bring sys
+
+/; Newton's method rather than a library sqrt: Flow-Wing has no math module,
+/; and rolling it by hand keeps both sides running the identical algorithm
+/; instead of comparing against whatever libm ships on the host.
+fun mysqrt(x: deci) -> deci {
+  if (x <= 0.0) {
+    return 0.0
+  }
+  var g: deci = x
+  var i: int = 0
+  while (i < 20) {
+    g = (g + (x / g)) * 0.5
+    i = i + 1
+  }
+  return g
+}
+
+var steps: int = Int32(sys::getArg(1))
+var N: int = 5
+var px: deci[5]
+var py: deci[5]
+var vx: deci[5]
+var vy: deci[5]
+var mass: deci[5]
+
+var i: int = 0
+while (i < N) {
+  px[i] = (Decimal(i) * 1.5) - 3.0
+  py[i] = (Decimal(i) * 0.75) - 1.5
+  vx[i] = 0.0
+  vy[i] = 0.0
+  mass[i] = 1.0 + (Decimal(i) * 0.25)
+  i = i + 1
+}
+
+var dt: deci = 0.001
+var s: int = 0
+
+while (s < steps) {
+  var a: int = 0
+  while (a < N) {
+    var fx: deci = 0.0
+    var fy: deci = 0.0
+    var b: int = 0
+    while (b < N) {
+      if (a != b) {
+        var dx: deci = px[b] - px[a]
+        var dy: deci = py[b] - py[a]
+        var d2: deci = (dx * dx) + (dy * dy) + 0.01
+        var d: deci = mysqrt(d2)
+        var f: deci = mass[b] / (d2 * d)
+        fx = fx + (dx * f)
+        fy = fy + (dy * f)
+      }
+      b = b + 1
+    }
+    vx[a] = vx[a] + (fx * dt)
+    vy[a] = vy[a] + (fy * dt)
+    a = a + 1
+  }
+
+  var c: int = 0
+  while (c < N) {
+    px[c] = px[c] + (vx[c] * dt)
+    py[c] = py[c] + (vy[c] * dt)
+    c = c + 1
+  }
+
+  s = s + 1
+}
+
+var energy: deci = 0.0
+var k: int = 0
+while (k < N) {
+  energy = energy + ((0.5 * mass[k]) * ((vx[k] * vx[k]) + (vy[k] * vy[k])))
+  k = k + 1
+}
+
+println(Int64(energy * 1000000.0))

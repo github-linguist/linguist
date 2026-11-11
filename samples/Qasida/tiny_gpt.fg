@@ -1,0 +1,107 @@
+// Tiny GPT, trained for real in Qasida.
+// Text: "hello world hello qasida" (26 chars, 12-char vocab).
+// Model: 1 block, 1 head, d=8, hidden=16, tied head, 776 params.
+// Training: Adam (lr 0.05) on the first 6 sliding windows of
+// length 8, gradients from the autograd tape, clipped to norm 1.
+// Then greedy generation from the prompt "hello wo".
+// This is a proof, not a language model: the corpus is one
+// sentence, so success = loss falls and generation repeats
+// patterns from that sentence, not fluent English.
+import "gpt.fg";
+import "nn.fg";
+import "tokenizer.fg";
+
+fn build_tape(params: [float]) -> Ag {
+    let mut s: Ag = ag_input(tape_new(), params[0]);
+    let mut i: int = 1;
+    while i < len(params) {
+        s = ag_input(s.tape, params[i]);
+        i = i + 1;
+    }
+    return s;
+}
+
+fn gen_text(params: [float], ctx0: [int], vocab: str, steps: int, sampled: bool) -> str {
+    let mut ctx: [int] = ctx0;
+    let mut gen: str = char_decode(ctx0, vocab);
+    let mut seed: int = 123;
+    let mut step: int = 0;
+    while step < steps {
+        let tape: Ag = build_tape(params);
+        let logits: NodeVec = gpt_logits(tape, ctx, 8, 8, 16, 12);
+        let base: int = 7 * 12;
+        let mut best: int = 0;
+        if sampled {
+            let mut last_logits: [float] = [];
+            let mut v: int = 0;
+            while v < 12 {
+                push(last_logits, logits.ag.tape.vals[base + v]);
+                v = v + 1;
+            }
+            seed = rand_next(seed);
+            best = sample_temperature(last_logits, 0.8, rand_float(seed));
+        } else {
+            let mut v: int = 1;
+            while v < 12 {
+                if logits.ag.tape.vals[base + v] > logits.ag.tape.vals[base + best] {
+                    best = v;
+                }
+                v = v + 1;
+            }
+        }
+        gen = gen + substr(vocab, best, 1);
+        let mut next: [int] = [];
+        let mut i: int = 1;
+        while i < 8 {
+            push(next, ctx[i]);
+            i = i + 1;
+        }
+        push(next, best);
+        ctx = next;
+        step = step + 1;
+    }
+    return gen;
+}
+
+fn main() -> int {
+    let vocab: str = " helopwrdjai";
+    let text: str = "hello world hello qasida";
+    let ids: [int] = char_encode(text, vocab);
+    let mut st: OptimState = optim_new(gpt_init_params(42));
+    let lr: float = 0.03;
+    let mut epoch: int = 0;
+    while epoch < 20 {
+        let mut total: float = 0.0;
+        let mut w: int = 0;
+        while w < 6 {
+            let mut x: [int] = [];
+            let mut y: [int] = [];
+            let mut i: int = 0;
+            while i < 8 {
+                push(x, ids[w + i]);
+                push(y, ids[w + i + 1]);
+                i = i + 1;
+            }
+            let tape: Ag = build_tape(st.params);
+            let logits: NodeVec = gpt_logits(tape, x, 8, 8, 16, 12);
+            let loss: Ag = gpt_loss(logits.ag, logits.ids, y, 8, 12);
+            let back: Ag = ag_backward(loss, loss.last);
+            total = total + back.tape.vals[loss.last];
+            let mut grads: [float] = [];
+            i = 0;
+            while i < len(st.params) {
+                push(grads, back.tape.grads[i]);
+                i = i + 1;
+            }
+            let clipped: [float] = grad_clip(grads, 1.0);
+            st = adam_step(st, clipped, lr, 0.9, 0.999, 0.00000001);
+            w = w + 1;
+        }
+        println("epoch", epoch, "avg loss =", total / 6.0);
+        epoch = epoch + 1;
+    }
+    let ctx: [int] = char_encode("hello wo", vocab);
+    println("greedy =", gen_text(st.params, ctx, vocab, 12, false));
+    println("sampled =", gen_text(st.params, ctx, vocab, 12, true));
+    return 0;
+}

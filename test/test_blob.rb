@@ -292,6 +292,12 @@ class TestBlob < Minitest::Test
     allowed_failures = {
       "#{samples_path}/C/rpc.h" => ["C", "C++"],
       "#{samples_path}/JavaScript/js" => ["JavaScript", "TypeScript"],
+      # Flow-Wing also uses .fg, but it is not a Linguist language, so the
+      # extension strategy returns Qasida (the only .fg language) for this
+      # fixture. The .fg heuristic (test_heuristics.rb) is what distinguishes
+      # Flow-Wing content from Qasida; it takes effect if another .fg
+      # language is ever added.
+      "#{fixtures_path}/Flow-Wing/bench.fg" => ["Qasida"],
     }
     Samples.each do |sample|
       blob = sample_blob_memory(sample[:path])

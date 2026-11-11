@@ -337,6 +337,18 @@ disambiguations:
     pattern: 'flowop'
   - language: Fortran
     named_pattern: fortran
+- extensions: ['.fg']
+  rules:
+  # Qasida (.fg) vs Flow-Wing (.fg): Flow-Wing uses `fun`, `bring`, `var`
+  # and `/;` comments; Qasida uses `fn`, `let mut`, `import "...fg"` and
+  # `trait`. Flow-Wing also has `println` and `struct`, so those are
+  # deliberately NOT used as markers here.
+  - language: Qasida
+    pattern:
+    - '^\s*fn\s+[A-Za-z_]\w*\s*(?:<[^<>]*>)?\s*\('
+    - '^\s*let\s+mut\s'
+    - '^\s*import\s+"[^"]+\.fg"'
+    - '^\s*trait\s+\w+\s*\{'
 - extensions: ['.for']
   rules:
   - language: Forth

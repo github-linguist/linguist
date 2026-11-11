@@ -1,0 +1,20 @@
+// Forge Result stdlib: a value or an error, without exceptions.
+// Import with: import "result.fg";
+//   let r: Result<int, str> = Result { ok: true, value: 5, error: "" };
+//   if r.ok { println(r.value); } else { println(r.error); }
+// The error (or value, on failure) field must still hold a dummy
+// of the right type, because Forge has no null and struct fields
+// must be initialised.
+
+struct Result<T, E> {
+    ok: bool;
+    value: T;
+    error: E;
+}
+
+fn result_value_or<T, E>(r: Result<T, E>, fallback: T) -> T {
+    if r.ok {
+        return r.value;
+    }
+    return fallback;
+}

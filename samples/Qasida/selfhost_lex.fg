@@ -1,0 +1,455 @@
+// Full hosted lexer for Qasida, written IN Qasida.
+// Slice 1 of the self-hosting plan (docs/SELFHOST_PLAN.md).
+// Token set matches forge_lang/lexer.py exactly: keywords (27),
+// two-char + one-char operators, INT (decimal/hex/binary/octal,
+// underscores), FLOAT, STR (escapes), // and /* */ comments,
+// EOF, line/col tracking, lexer errors via fail_compile().
+// Output: kinds + texts + lines + cols + has_nul, one entry per token.
+// Kind codes: 0 INT, 1 FLOAT, 2 STR, 3 IDENT, 4 KEYWORD, 5 OP, 6 EOF.
+
+struct LexOut {
+    kinds: [int];
+    texts: [str];
+    lines: [int];
+    cols: [int];
+    // Bootstrap \0: one flag per token, true iff a STR token's
+    // text holds the NUL sentinel (see the \0 escape branch
+    // below). The parser copies it onto the StrLit node so the
+    // codegen string emitter can tell an escape-origin NUL from
+    // a genuine byte.
+    has_nul: [bool];
+}
+
+// Integer to decimal string (int_to_str lives in nn.fg).
+// Defined here, the lowest hosted file, so the lexer,
+// parser, checker, infer and codegen all share one copy.
+fn itoa(n: int) -> str {
+    if n == 0 {
+        return "0";
+    }
+    let mut neg: bool = false;
+    let mut v: int = n;
+    if v < 0 {
+        neg = true;
+        v = 0 - v;
+    }
+    let mut out: str = "";
+    while v > 0 {
+        let d: int = v % 10;
+        let digit: str = "0123456789";
+        out = substr(digit, d, 1) + out;
+        v = v / 10;
+    }
+    if neg {
+        return "-" + out;
+    }
+    return out;
+}
+
+// fail_at: like fail_compile, but prefixes the message with the
+// source position "L:C: " when a position is known (line != 0),
+// mirroring forge_lang/errors.py (ForgeError prints "L:C: msg"
+// iff line is nonzero). Call sites pass 0, 0 for errors Python
+// raises without a position. Defined once here (lowest file:
+// parse imports lex, check imports parse).
+fn fail_at(line: int, col: int, msg: str) {
+    if line == 0 {
+        fail_compile(msg);
+    }
+    fail_compile(itoa(line) + ":" + itoa(col) + ": " + msg);
+}
+
+fn is_digit(ch: str) -> bool {
+    let parts: [str] = split("0123456789", ch);
+    return len(parts) > 1;
+}
+
+fn is_alpha(ch: str) -> bool {
+    let parts: [str] = split("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_", ch);
+    return len(parts) > 1;
+}
+
+fn is_alnum(ch: str) -> bool {
+    return is_digit(ch) || is_alpha(ch);
+}
+
+fn is_space(ch: str) -> bool {
+    return ch == " " || ch == "\n" || ch == "\t" || ch == "\r";
+}
+
+fn is_hex(ch: str) -> bool {
+    let parts: [str] = split("0123456789abcdefABCDEF", ch);
+    return len(parts) > 1;
+}
+
+fn is_bin(ch: str) -> bool {
+    return ch == "0" || ch == "1";
+}
+
+fn is_oct(ch: str) -> bool {
+    let parts: [str] = split("01234567", ch);
+    return len(parts) > 1;
+}
+
+fn has_prefix(src: str, i: int, pat: str) -> bool {
+    if i + len(pat) > len(src) {
+        return false;
+    }
+    return substr(src, i, len(pat)) == pat;
+}
+
+fn is_keyword(text: str) -> bool {
+    return text == "fn" || text == "let" || text == "mut" || text == "if" || text == "else" || text == "while" || text == "for" || text == "in" || text == "return" || text == "true" || text == "false" || text == "import" || text == "as" || text == "struct" || text == "enum" || text == "match" || text == "spawn" || text == "extern" || text == "break" || text == "continue" || text == "trait" || text == "impl" || text == "type" || text == "newtype" || text == "opaque" || text == "readonly" || text == "defer";
+}
+
+fn is_two_op(text: str) -> bool {
+    return text == "==" || text == "!=" || text == "<=" || text == ">=" || text == "&&" || text == "||" || text == "->" || text == "=>" || text == "<<" || text == ">>" || text == "..";
+}
+
+fn is_one_op(ch: str) -> bool {
+    let parts: [str] = split("+-*/%<>=!;,:(){}[].?&|^~", ch);
+    return len(parts) > 1;
+}
+
+fn has_bad_underscore(text: str) -> bool {
+    if len(text) == 0 {
+        return true;
+    }
+    if substr(text, 0, 1) == "_" || substr(text, len(text) - 1, 1) == "_" {
+        return true;
+    }
+    let mut i: int = 0;
+    while i + 1 < len(text) {
+        if substr(text, i, 1) == "_" && substr(text, i + 1, 1) == "_" {
+            return true;
+        }
+        i = i + 1;
+    }
+    return false;
+}
+
+fn kind_name(k: int) -> str {
+    if k == 0 {
+        return "INT";
+    }
+    if k == 1 {
+        return "FLOAT";
+    }
+    if k == 2 {
+        return "STR";
+    }
+    if k == 3 {
+        return "IDENT";
+    }
+    if k == 4 {
+        return "KEYWORD";
+    }
+    if k == 5 {
+        return "OP";
+    }
+    return "EOF";
+}
+
+fn lex(src: str) -> LexOut {
+    let mut kinds: [int] = [];
+    let mut texts: [str] = [];
+    let mut lines: [int] = [];
+    let mut cols: [int] = [];
+    let mut has_nul: [bool] = [];
+    let mut i: int = 0;
+    let mut line: int = 1;
+    let mut col: int = 1;
+    let mut prev_kind: int = 6;
+    let mut prev_text: str = "";
+    while i < len(src) {
+        let ch: str = substr(src, i, 1);
+        let sl: int = line;
+        let sc: int = col;
+        if is_space(ch) {
+            if ch == "\n" {
+                line = line + 1;
+                col = 1;
+            } else {
+                col = col + 1;
+            }
+            i = i + 1;
+            continue;
+        }
+        if has_prefix(src, i, "//") {
+            while i < len(src) && substr(src, i, 1) != "\n" {
+                i = i + 1;
+                col = col + 1;
+            }
+            continue;
+        }
+        if has_prefix(src, i, "/*") {
+            i = i + 2;
+            col = col + 2;
+            let mut closed: bool = false;
+            while i < len(src) {
+                if has_prefix(src, i, "*/") {
+                    i = i + 2;
+                    col = col + 2;
+                    closed = true;
+                    break;
+                }
+                if substr(src, i, 1) == "\n" {
+                    line = line + 1;
+                    col = 1;
+                } else {
+                    col = col + 1;
+                }
+                i = i + 1;
+            }
+            if !closed {
+                fail_at(sl, sc, "unterminated block comment");
+            }
+            continue;
+        }
+        if is_digit(ch) {
+            let mut is_float: bool = false;
+            let mut tok: str = "";
+            if has_prefix(src, i, "0x") || has_prefix(src, i, "0X") || has_prefix(src, i, "0b") || has_prefix(src, i, "0B") || has_prefix(src, i, "0o") || has_prefix(src, i, "0O") {
+                let pre: str = substr(src, i, 2);
+                tok = pre;
+                i = i + 2;
+                col = col + 2;
+                let mut digits: str = "";
+                while i < len(src) {
+                    let c: str = substr(src, i, 1);
+                    let mut ok: bool = false;
+                    if pre == "0x" || pre == "0X" {
+                        ok = is_hex(c) || c == "_";
+                    } else if pre == "0b" || pre == "0B" {
+                        ok = is_bin(c) || c == "_";
+                    } else {
+                        ok = is_oct(c) || c == "_";
+                    }
+                    if !ok {
+                        break;
+                    }
+                    digits = digits + c;
+                    tok = tok + c;
+                    i = i + 1;
+                    col = col + 1;
+                }
+                if len(digits) == 0 || has_bad_underscore(digits) {
+                    // Message wording mirrors the Python lexer
+                    // exactly: the kind word (hex/binary/octal)
+                    // comes from the prefix. Accept/reject
+                    // behaviour is unchanged.
+                    let mut kind: str = "octal";
+                    if pre == "0x" || pre == "0X" {
+                        kind = "hex";
+                    } else if pre == "0b" || pre == "0B" {
+                        kind = "binary";
+                    }
+                    fail_at(sl, sc, kind + " literal needs at least one " + kind + " digit and no leading, trailing, or doubled underscore");
+                }
+                push(kinds, 0);
+                push(texts, tok);
+                push(lines, sl);
+                push(cols, sc);
+                push(has_nul, false);
+                prev_kind = 0;
+                prev_text = tok;
+                continue;
+            }
+            while i < len(src) {
+                let c: str = substr(src, i, 1);
+                if !is_digit(c) && c != "_" {
+                    break;
+                }
+                tok = tok + c;
+                i = i + 1;
+                col = col + 1;
+            }
+            if has_bad_underscore(tok) {
+                fail_at(sl, sc, "integer literal has a leading, trailing, or doubled underscore");
+            }
+            let after_dot: bool = prev_kind == 5 && prev_text == ".";
+            if !after_dot && i < len(src) && substr(src, i, 1) == "." && i + 1 < len(src) && is_digit(substr(src, i + 1, 1)) {
+                is_float = true;
+                tok = tok + ".";
+                i = i + 1;
+                col = col + 1;
+                while i < len(src) && is_digit(substr(src, i, 1)) {
+                    tok = tok + substr(src, i, 1);
+                    i = i + 1;
+                    col = col + 1;
+                }
+            }
+            if i < len(src) && (substr(src, i, 1) == "e" || substr(src, i, 1) == "E") {
+                let mut k: int = i + 1;
+                if k < len(src) && (substr(src, k, 1) == "+" || substr(src, k, 1) == "-") {
+                    k = k + 1;
+                }
+                if k < len(src) && is_digit(substr(src, k, 1)) {
+                    is_float = true;
+                    while i < k {
+                        tok = tok + substr(src, i, 1);
+                        i = i + 1;
+                        col = col + 1;
+                    }
+                    while i < len(src) && is_digit(substr(src, i, 1)) {
+                        tok = tok + substr(src, i, 1);
+                        i = i + 1;
+                        col = col + 1;
+                    }
+                }
+            }
+            if is_float {
+                push(kinds, 1);
+            } else {
+                push(kinds, 0);
+            }
+            push(texts, tok);
+            push(lines, sl);
+            push(cols, sc);
+            push(has_nul, false);
+            if is_float {
+                prev_kind = 1;
+            } else {
+                prev_kind = 0;
+            }
+            prev_text = tok;
+            continue;
+        }
+        if is_alpha(ch) {
+            let mut tok: str = "";
+            while i < len(src) && is_alnum(substr(src, i, 1)) {
+                tok = tok + substr(src, i, 1);
+                i = i + 1;
+                col = col + 1;
+            }
+            if is_keyword(tok) {
+                push(kinds, 4);
+                prev_kind = 4;
+            } else {
+                push(kinds, 3);
+                prev_kind = 3;
+            }
+            push(texts, tok);
+            push(lines, sl);
+            push(cols, sc);
+            push(has_nul, false);
+            prev_text = tok;
+            continue;
+        }
+        if ch == "\"" {
+            i = i + 1;
+            col = col + 1;
+            let mut out: str = "";
+            let mut closed: bool = false;
+            // Bootstrap \0: true once a \0 escape has been folded
+            // into out (see below); carried on the token so the
+            // codegen emitter can map the sentinel back to \0.
+            let mut out_has_nul: bool = false;
+            while i < len(src) {
+                let c: str = substr(src, i, 1);
+                if c == "\"" {
+                    i = i + 1;
+                    col = col + 1;
+                    closed = true;
+                    break;
+                }
+                if c == "\n" {
+                    break;
+                }
+                if c == "\\" {
+                    let el: int = line;
+                    let ec: int = col;
+                    i = i + 1;
+                    col = col + 1;
+                    if i >= len(src) {
+                        break;
+                    }
+                    let e: str = substr(src, i, 1);
+                    if e == "n" {
+                        out = out + "\n";
+                    } else if e == "t" {
+                        out = out + "\t";
+                    } else if e == "r" {
+                        out = out + "\r";
+                    } else if e == "\\" {
+                        out = out + "\\";
+                    } else if e == "\"" {
+                        out = out + "\"";
+                    } else if e == "0" {
+                        // \0: hosted strings are NUL-terminated C
+                        // strings, so a real embedded NUL cannot
+                        // survive in a hosted value (every runtime
+                        // helper truncates at it via strlen). The
+                        // lexer folds it to the sentinel byte 0x01
+                        // (SOH) instead and marks the token; the
+                        // codegen string emitter maps the sentinel
+                        // back to \0 in emitted C. 0x01 never occurs
+                        // in a Qasida string value except through
+                        // this escape (the six escapes are the only
+                        // way to spell a control byte), so the
+                        // mapping is unambiguous; a genuine raw
+                        // 0x01 byte in source still passes through
+                        // and emits verbatim. The literal below is
+                        // a single raw 0x01 byte.
+                        out = out + "";
+                        out_has_nul = true;
+                    } else {
+                        fail_at(el, ec, "unknown escape \\" + e);
+                    }
+                    i = i + 1;
+                    col = col + 1;
+                    continue;
+                }
+                out = out + c;
+                i = i + 1;
+                col = col + 1;
+            }
+            if !closed {
+                fail_at(sl, sc, "unterminated string literal");
+            }
+            push(kinds, 2);
+            push(texts, out);
+            push(lines, sl);
+            push(cols, sc);
+            push(has_nul, out_has_nul);
+            prev_kind = 2;
+            prev_text = out;
+            continue;
+        }
+        if i + 1 < len(src) && is_two_op(substr(src, i, 2)) {
+            let tok: str = substr(src, i, 2);
+            push(kinds, 5);
+            push(texts, tok);
+            push(lines, sl);
+            push(cols, sc);
+            push(has_nul, false);
+            prev_kind = 5;
+            prev_text = tok;
+            i = i + 2;
+            col = col + 2;
+            continue;
+        }
+        if is_one_op(ch) {
+            push(kinds, 5);
+            push(texts, ch);
+            push(lines, sl);
+            push(cols, sc);
+            push(has_nul, false);
+            prev_kind = 5;
+            prev_text = ch;
+            i = i + 1;
+            col = col + 1;
+            continue;
+        }
+        fail_at(sl, sc, "unexpected character '" + ch + "'");
+    }
+    push(kinds, 6);
+    push(texts, "");
+    push(lines, line);
+    push(cols, col);
+    push(has_nul, false);
+    return LexOut { kinds: kinds, texts: texts, lines: lines, cols: cols, has_nul: has_nul };
+}
+
+// (No main() here: this file is a library. Run the demo via
+// examples/selfhost_lex_check.fg -- <path>.)

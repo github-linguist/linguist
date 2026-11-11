@@ -1,0 +1,93 @@
+// Qasida — small collections (0.6.0).
+// Import with: import "collections.fg";
+// Arrays already cover most cases; these wrappers
+// exist so code reads as intent, not index juggling.
+// Every mutating function returns the new collection
+// (pushing to a parameter does not reach the caller,
+// but index assignment does — these return values
+// instead, so the rule never matters here).
+
+struct IntStack {
+    items: [int];
+}
+
+fn stack_new() -> IntStack {
+    return IntStack { items: [] };
+}
+
+fn stack_push(st: IntStack, v: int) -> IntStack {
+    let mut items: [int] = st.items;
+    push(items, v);
+    return IntStack { items: items };
+}
+
+fn stack_pop(st: IntStack) -> IntStack {
+    let mut items: [int] = st.items;
+    let mut out: [int] = [];
+    let mut i: int = 0;
+    while i < len(items) - 1 {
+        push(out, items[i]);
+        i = i + 1;
+    }
+    return IntStack { items: out };
+}
+
+fn stack_top(st: IntStack) -> int {
+    return st.items[len(st.items) - 1];
+}
+
+fn stack_len(st: IntStack) -> int {
+    return len(st.items);
+}
+
+struct IntSet {
+    items: [int];
+}
+
+fn set_new() -> IntSet {
+    return IntSet { items: [] };
+}
+
+fn set_has(s: IntSet, v: int) -> bool {
+    let mut i: int = 0;
+    while i < len(s.items) {
+        if s.items[i] == v { return true; }
+        i = i + 1;
+    }
+    return false;
+}
+
+fn set_add(s: IntSet, v: int) -> IntSet {
+    if set_has(s, v) { return s; }
+    let mut items: [int] = s.items;
+    push(items, v);
+    return IntSet { items: items };
+}
+
+fn set_len(s: IntSet) -> int {
+    return len(s.items);
+}
+
+struct StrSet {
+    items: [str];
+}
+
+fn strset_new() -> StrSet {
+    return StrSet { items: [] };
+}
+
+fn strset_has(s: StrSet, v: str) -> bool {
+    let mut i: int = 0;
+    while i < len(s.items) {
+        if s.items[i] == v { return true; }
+        i = i + 1;
+    }
+    return false;
+}
+
+fn strset_add(s: StrSet, v: str) -> StrSet {
+    if strset_has(s, v) { return s; }
+    let mut items: [str] = s.items;
+    push(items, v);
+    return StrSet { items: items };
+}
