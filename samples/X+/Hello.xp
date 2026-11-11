@@ -1,0 +1,17 @@
+const GREETING = "hello from X+"
+
+func add(a: int, b: int) -> int {
+  return a + b
+}
+
+func main() {
+  let n = 10
+  let total = 0
+  let i = 0
+  while i < n {
+    total = add(total, i)
+    i += 1
+  }
+  show(GREETING)
+  show("sum " + str(total))
+}

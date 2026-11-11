@@ -1,0 +1,21 @@
+func lcg_fill(buf, n, seed) {
+  let i = 0
+  while i < n {
+    buf[i] = (i * 2654435761 + seed) % 2147483648
+    i += 1
+  }
+}
+func main() {
+  let buf = []
+  let i = 0
+  while i < 16 {
+    array_push(buf, 0)
+    i += 1
+  }
+  lcg_fill(buf, 16, 17)
+  let j = 0
+  while j < 16 {
+    show("b" + str(j) + " " + str(buf[j]))
+    j += 1
+  }
+}
