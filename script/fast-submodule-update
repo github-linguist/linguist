@@ -55,13 +55,21 @@ end
   Thread.new { run_thread(submodules, results) }
 end
 
-success = true
+failures = []
 SUBMODULES.each do
   result = results.pop
-  unless result.status.success?
-    success = false
-    puts "Error updating #{result.submodule}"
+  if result.status.success?
+    puts result.output if result.output =~ /\S/
+  else
+    failures << result
   end
-  puts result.output if result.output =~ /\S/
 end
-exit success ? 0 : 1
+
+unless failures.empty?
+  puts "Submodule update failures:"
+  failures.sort_by(&:submodule).each do |result|
+    puts "Error updating #{result.submodule}"
+    puts result.output if result.output =~ /\S/
+  end
+end
+exit failures.empty? ? 0 : 1
