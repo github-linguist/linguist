@@ -47,7 +47,7 @@ begin
    Circle unit; radius of unit := 1.0;
    puts ("max: " + whole (3 MAX 7, 0) + ", area: "
          + fixed (area (unit), 0, 4) + "'n");
-   puts ("\"quoted\" and '(u00e4) with a tab:'t|'n");
+   puts ("""quoted"" and '(u00e4) with a tab:'t|'n");
    puts (whole (ABS mask, 0) + " " + fixed (r, 0, 4) + " "
          + whole (big MOD LENG 1000, 0) + "'n");
    if count > 100 then goto done fi;
