@@ -245,7 +245,8 @@ class TestHeuristics < Minitest::Test
 
   def test_alg_by_heuristics
     assert_heuristics({
-      "ALGOL" => all_fixtures("ALGOL", "*.alg"),
+      "ALGOL 60" => all_fixtures("ALGOL 60", "*.alg"),
+      "ALGOL 68" => all_fixtures("ALGOL 68", "*.alg"),
     })
   end
 

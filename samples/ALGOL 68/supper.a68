@@ -1,0 +1,57 @@
+{ supper.a68 - shows the highlighting of GNU Algol 68 in SUPPER stropping.
+  Comments are in curly braces { and can be nested };
+  a "}" in quotes does not end the comment.
+  Compile: ga68 -fstropping=supper supper.a68 -o supper }
+begin
+   mode Node = struct (int value, ref Node next);
+   mode Shape = union (Circle, Square);
+   mode Circle = struct (real radius);
+   mode Square = struct (real side);
+
+   prio MAX = 9;
+   op MAX = (int a, b) int: (a > b | a | b);
+   op +:= = (ref ref Node list, int v) ref Node:
+      list := heap Node := (v, list);
+
+   proc area = (Shape s) real:
+      case s
+      in (Circle c): pi * radius of c ** 2,
+         (Square q): side of q * side of q
+      esac;
+
+   proc (int) bool is_prime = (int n) bool:
+      if n < 2 then false
+      elif n = 2 then true
+      else
+         bool prime := ODD n;
+         for d from 3 by 2 while prime andth d * d <= n
+         do prime := n MOD d /= 0 od;
+         prime
+      fi;
+
+   ref Node list := nil;
+   for i to 20 do if is_prime (i) then list +:= i fi od;
+
+   int count := 0;
+   ref Node p := list;
+   while ref Node (p) isnt nil
+   do count +:= 1;
+      puts (whole (value of p, 0) + " ");
+      p := next of p
+   od;
+   puts ("'n");
+
+   long int big = long_max_int;
+   bits mask = 16rff00 AND 2r1111 0000 0000;
+   real r = 1.5e-3 + .25 + 1 000;
+   Circle unit; radius of unit := 1.0;
+   puts ("max: " + whole (3 MAX 7, 0) + ", area: "
+         + fixed (area (unit), 0, 4) + "'n");
+   puts ("""quoted"" and '(u00e4) with a tab:'t|'n");
+   puts (whole (ABS mask, 0) + " " + fixed (r, 0, 4) + " "
+         + whole (big MOD LENG 1000, 0) + "'n");
+   if count > 100 then goto done fi;
+   puts ("finished'n");
+done:
+   skip
+end
