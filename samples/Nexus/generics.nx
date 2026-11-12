@@ -1,0 +1,26 @@
+// Funciones genéricas (monomorfizadas en tiempo de compilación)
+fn identity<T>(x: T) -> T {
+    return x
+}
+
+fn max_of<T>(a: T, b: T) -> T {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+fn fact<T>(n: T) -> T {
+    if n <= 1 {
+        return 1
+    }
+    return n * fact<T>(n - 1)
+}
+
+fn main() {
+    print(identity<Int>(42))
+    print(identity<Str>("Nexus"))
+    print(identity<Float>(3.5))
+    print(max_of<Int>(10, 7))
+    print(fact<Int>(5))
+}

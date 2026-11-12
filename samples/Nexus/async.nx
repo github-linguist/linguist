@@ -1,0 +1,16 @@
+async fn task_a() {
+    print("task A start")
+    print("task A end")
+}
+
+async fn task_b() {
+    print("task B")
+}
+
+fn main() {
+    spawn(task_a())
+    spawn(task_b())
+    print("main: spawned")
+    run()
+    print("main: done")
+}

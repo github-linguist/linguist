@@ -1,0 +1,20 @@
+// Structs, arrays, match, enums
+struct Point { x: Int  y: Int }
+
+enum Color { Red  Green  Blue }
+
+fn main() {
+    let p = Point { x: 3, y: 4 }
+    print(p.x + p.y)
+
+    let a = [10, 20, 30]
+    print(a[0] + a[2])
+
+    let col = Green
+    let code = match col {
+        Red => 1
+        Green => 2
+        _ => 0
+    }
+    print(code)
+}

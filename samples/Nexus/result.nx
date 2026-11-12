@@ -1,0 +1,19 @@
+// Errores como valores con Result<T> (stdlib/result.nx)
+import "../stdlib/result.nx"
+
+fn parse_port(s: Str) -> Result<Int> {
+    let n = str_to_int(s)
+    if n <= 0 { return Result<Int>.failure("puerto invalido", 0) }
+    return Result<Int>.success(n)
+}
+
+fn main() {
+    let a = parse_port("8080")
+    print(a.is_ok())             // 1
+    print(a.unwrap_or(0))        // 8080
+
+    let b = parse_port("abc")
+    print(b.is_err())            // 1
+    print(b.message())           // puerto invalido
+    print(b.unwrap_or(80))       // 80
+}
