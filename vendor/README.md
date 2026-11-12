@@ -575,7 +575,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Riot:** [riot/syntax-highlight](https://github.com/riot/syntax-highlight)
 - **RobotFramework:** [shellderp/sublime-robot-plugin](https://github.com/shellderp/sublime-robot-plugin)
 - **Robots Exclusion Rules:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
-- **Roc:** [ivan-demchenko/roc-vscode-unofficial](https://github.com/ivan-demchenko/roc-vscode-unofficial)
+- **Roc:** [roc-lang/roc-vscode](https://github.com/roc-lang/roc-vscode)
 - **Rocq Prover:** [mkolosick/Sublime-Coq](https://github.com/mkolosick/Sublime-Coq)
 - **Roff:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
 - **Roff Manpage:** [Alhadis/language-roff](https://github.com/Alhadis/language-roff)
