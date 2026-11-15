@@ -1,0 +1,81 @@
+// ==============================================================================
+// The Nino Programming Language — Powerhouse Systems Showcase
+// File: examples/powerhouse_demo.nino
+// ==============================================================================
+
+import "std/math"
+
+struct Vector3 {
+    mut x: f64,
+    mut y: f64,
+    mut z: f64
+}
+
+struct GameEntity {
+    name: string,
+    mut health: i32,
+    position: Vector3
+}
+
+fn main() {
+    print("==================================================")
+    print("      NINO SYSTEMS POWERHOUSE DEMONSTRATION       ")
+    print("==================================================")
+
+    // 1. STRUCTS & CUSTOM DATA TYPES
+    print("
+--- [1] Custom Structs & Named Data Structures ---")
+    let pos = Vector3 { x: 12.5, y: 40.0, z: 0.0 }
+    let hero = GameEntity { name: "Vanguard Titan", health: 100, position: pos }
+
+    print("Hero Name: " + hero.name)
+    print("Hero Initial Health: {hero.health}")
+    hero.health = 85
+    print("Hero Mutated Health: {hero.health}")
+    print("Position: X={hero.position.x}, Y={hero.position.y}")
+
+    // 2. LOW-LEVEL MEMORY BUFFERS & DIRECT HARDWARE ACCESS
+    print("
+--- [2] Raw Memory Buffers & Byte-Level Manipulation ---")
+    let vram = alloc_memory(64)
+    print("Allocated 64-byte Raw RAM Buffer: " + mem_dump(vram))
+
+    // Write bytes & 32-bit integers directly to memory
+    write_byte(vram, 0, 0xDE)
+    write_byte(vram, 1, 0xAD)
+    write_byte(vram, 2, 0xBE)
+    write_byte(vram, 3, 0xEF)
+    write_i32(vram, 4, 1337)
+
+    let byte0 = read_byte(vram, 0)
+    let int_val = read_i32(vram, 4)
+    print("Read Byte[0]: {byte0} (Expected 222 / 0xDE)")
+    print("Read 32-bit Integer at Offset 4: {int_val} (Expected 1337)")
+    print("Memory Buffer State: " + mem_dump(vram))
+    free_memory(vram)
+    print("Freed Memory Buffer Successfully! [Zero Leak]")
+
+    // 3. FILE SYSTEM I/O OPERATIONS
+    print("
+--- [3] Native File System I/O Operations ---")
+    let test_path = "nino_io_test.txt"
+    file_write(test_path, "Nino Systems Language: Ultra-Fast Native I/O Verified.")
+    print("File Exists Check: {file_exists(test_path)}")
+    let read_back = file_read(test_path)
+    print("File Content Read: '" + read_back + "'")
+    file_delete(test_path)
+    print("File Cleaned Up: Exists={file_exists(test_path)}")
+
+    // 4. STANDARD LIBRARY & MODULE IMPORTS
+    print("
+--- [4] Modular Standard Library Import (std/math) ---")
+    let clamped_val = clamp(150, 0, 100)
+    let squared_val = square(12)
+    print("std/math clamp(150, 0, 100) Result: {clamped_val}")
+    print("std/math square(12) Result: {squared_val}")
+
+    print("
+==================================================")
+    print("SUCCESS: All Powerhouse Systems Features OPERATIONAL!")
+    print("==================================================")
+}

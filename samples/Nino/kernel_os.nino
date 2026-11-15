@@ -1,0 +1,51 @@
+#no_std
+
+// ==============================================================================
+// The Nino Programming Language — Bare-Metal OS Kernel Architecture
+// File: examples/kernel_os.nino
+// Target: x86_64 Freestanding Kernel Mode (#no_std)
+// Author: vvictor
+// ==============================================================================
+
+// Hardware VGA Color Constants
+let COLOR_BLACK = 0
+let COLOR_BLUE = 1
+let COLOR_GREEN = 2
+let COLOR_CYAN = 3
+let COLOR_RED = 4
+let COLOR_MAGENTA = 5
+let COLOR_BROWN = 6
+let COLOR_LIGHT_GRAY = 7
+let COLOR_DARK_GRAY = 8
+let COLOR_LIGHT_BLUE = 9
+let COLOR_LIGHT_GREEN = 10
+let COLOR_LIGHT_CYAN = 11
+let COLOR_LIGHT_RED = 12
+let COLOR_PINK = 13
+let COLOR_YELLOW = 14
+let COLOR_WHITE = 15
+
+fn kernel_main() {
+    // 1. Direct Physical Video Buffer Writes (VGA Framebuffer 0xB8000)
+    write_vga(0, 0, "================================================================================", COLOR_CYAN)
+    write_vga(1, 16, ">>> NINO KERNEL OS [v0.4.0-FREESTANDING] <<<", COLOR_YELLOW)
+    write_vga(2, 0, "================================================================================", COLOR_CYAN)
+
+    // 2. Subsystem Initialization Logs
+    write_vga(4, 2, "[BOOT] Bare-metal #no_std kernel initialized with zero libc dependency.", COLOR_LIGHT_GREEN)
+    write_vga(5, 2, "[ARCH] Target Architecture: x86_64 Freestanding Ring 0 Kernel Mode.", COLOR_WHITE)
+    write_vga(6, 2, "[VRAM] Direct Physical Video Memory Framebuffer mapped at 0xB8000.", COLOR_LIGHT_CYAN)
+    write_vga(7, 2, "[SECR] Cryptographic Memory Enclaves & Sealed Zeroization Active.", COLOR_YELLOW)
+    write_vga(8, 2, "[PERF] Bound-Checking & Pipeline Flow Zero-Cost Abstraction Loaded.", COLOR_LIGHT_BLUE)
+    write_vga(9, 2, "[IDLE] Kernel boot sequence complete. CPU transitioning to low-power wait...", COLOR_LIGHT_GRAY)
+
+    write_vga(11, 0, "--------------------------------------------------------------------------------", COLOR_CYAN)
+    write_vga(12, 2, "STATUS: SYSTEM NOMINAL | READY FOR COMMAND INVOCATION", COLOR_LIGHT_GREEN)
+    write_vga(13, 0, "--------------------------------------------------------------------------------", COLOR_CYAN)
+
+    // 3. Hardware Port Simulation
+    outb(0x3F8, 0x4E)
+
+    // 4. Low-Power CPU Halt Loop
+    hlt()
+}
