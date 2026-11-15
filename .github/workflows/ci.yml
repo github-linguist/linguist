@@ -35,12 +35,16 @@ jobs:
 
   run:
     name: Ruby ${{ matrix.ruby }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     strategy:
       matrix:
         ruby: [ '4.0', '3.4', '3.3' ]
     steps:
     - uses: actions/checkout@v1
+    - name: Install Rugged build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends libjitterentropy3-dev libzstd-dev
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
@@ -70,9 +74,13 @@ jobs:
       run: grep Ruby output
   classifier:
     name: Classifier cross-validation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
     - uses: actions/checkout@v2
+    - name: Install Rugged build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends libjitterentropy3-dev libzstd-dev
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:

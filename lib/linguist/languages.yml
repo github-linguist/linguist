@@ -524,6 +524,20 @@ AutoIt:
   tm_scope: source.autoit
   ace_mode: autohotkey
   language_id: 27
+AviSynth:
+  type: programming
+  color: "#6C5D95"
+  aliases:
+  - avisynth+
+  - avisynthplus
+  - avs
+  - avsplus
+  extensions:
+  - ".avs"
+  - ".avsi"
+  tm_scope: source.avisynth
+  ace_mode: text
+  language_id: 781893374
 Avro IDL:
   type: data
   color: "#0040FF"
@@ -1976,6 +1990,14 @@ Earthly:
   filenames:
   - Earthfile
   language_id: 963512632
+EasyCrypt:
+  type: programming
+  color: "#2a5db0"
+  extensions:
+  - ".ec"
+  tm_scope: source.easycrypt
+  ace_mode: text
+  language_id: 1032978328
 Easybuild:
   type: data
   color: "#069406"
@@ -2113,6 +2135,7 @@ Emacs Lisp:
   - eask
   - elisp
   - emacs
+  - lisp data
   filenames:
   - ".abbrev_defs"
   - ".emacs"
@@ -2127,6 +2150,7 @@ Emacs Lisp:
   - abbrev_defs
   extensions:
   - ".el"
+  - ".eld"
   - ".emacs"
   - ".emacs.desktop"
   ace_mode: lisp
@@ -3357,6 +3381,14 @@ IDL:
   codemirror_mode: idl
   codemirror_mime_type: text/x-idl
   language_id: 161
+IFC:
+  type: data
+  group: STEP
+  extensions:
+  - ".ifc"
+  tm_scope: source.ifc
+  ace_mode: text
+  language_id: 423304113
 IGOR Pro:
   type: programming
   color: "#0000cc"
@@ -3402,6 +3434,7 @@ INI:
   - ".url"
   filenames:
   - ".buckconfig"
+  - ".codespellrc"
   - ".coveragerc"
   - ".flake8"
   - ".gitreview"
@@ -3462,15 +3495,20 @@ Ignore List:
   - ".gitignore"
   filenames:
   - ".agignore"
+  - ".aiexclude"
+  - ".aiignore"
   - ".atomignore"
   - ".babelignore"
   - ".bzrignore"
   - ".ckignore"
+  - ".clang-format-ignore"
   - ".coffeelintignore"
+  - ".cursorignore"
   - ".cvsignore"
   - ".dockerignore"
   - ".easignore"
   - ".eleventyignore"
+  - ".elpaignore"
   - ".eslint-ignore"
   - ".eslintignore"
   - ".gitignore"
@@ -3478,8 +3516,10 @@ Ignore List:
   - ".markdownlintignore"
   - ".nodemonignore"
   - ".npmignore"
+  - ".nxignore"
   - ".prettierignore"
   - ".rgignore"
+  - ".stow-local-ignore"
   - ".stylelintignore"
   - ".vercelignore"
   - ".vscodeignore"
@@ -3673,6 +3713,7 @@ JSON:
   - ".all-contributorsrc"
   - ".arcconfig"
   - ".auto-changelog"
+  - ".autorc"
   - ".c8rc"
   - ".htmlhintrc"
   - ".imgbotconfig"
@@ -4657,6 +4698,14 @@ MDX:
   - ".mdx"
   tm_scope: source.mdx
   language_id: 512838272
+METAFONT:
+  type: programming
+  color: "#8a4a2b"
+  extensions:
+  - ".mf"
+  tm_scope: source.metafont
+  ace_mode: text
+  language_id: 1058854440
 MLIR:
   type: programming
   color: "#5EC8DB"
@@ -4881,6 +4930,14 @@ Meson:
   tm_scope: source.meson
   ace_mode: text
   language_id: 799141244
+MetaPost:
+  type: programming
+  color: "#2b6cb0"
+  extensions:
+  - ".mp"
+  tm_scope: source.metapost
+  ace_mode: text
+  language_id: 330845793
 Metal:
   type: programming
   color: "#8f14e9"
@@ -5695,6 +5752,7 @@ Option List:
   - ackrc
   filenames:
   - ".ackrc"
+  - ".ert-runner"
   - ".rspec"
   - ".yardopts"
   - ackrc
@@ -6155,6 +6213,8 @@ Power Query:
   type: programming
   aliases:
   - powerquery
+  - m language
+  - m formula language
   extensions:
   - ".pq"
   tm_scope: source.powerquery
@@ -6386,6 +6446,7 @@ Python:
   - ".rpy"
   - ".spec"
   - ".tac"
+  - ".vpy"
   - ".wsgi"
   - ".xpy"
   filenames:
@@ -7302,6 +7363,17 @@ STAR:
   tm_scope: source.star
   ace_mode: text
   language_id: 424510560
+STEP:
+  type: data
+  aliases:
+  - iso-10303-21
+  - p21
+  extensions:
+  - ".step"
+  - ".stp"
+  tm_scope: source.ifc
+  ace_mode: text
+  language_id: 32760317
 STL:
   type: data
   color: "#373b5e"
@@ -8019,6 +8091,14 @@ TSQL:
   ace_mode: sql
   tm_scope: source.tsql
   language_id: 918334941
+TSRX:
+  type: programming
+  color: "#6f00ff"
+  extensions:
+  - ".tsrx"
+  tm_scope: source.tsrx
+  ace_mode: text
+  language_id: 647519071
 TSV:
   type: data
   color: "#237346"
@@ -8199,7 +8279,10 @@ Text:
   wrap: true
   aliases:
   - fundamental
+  - indented text
   - plain text
+  - paragraph indent text
+  - parindent
   extensions:
   - ".txt"
   - ".fr"
@@ -8235,6 +8318,7 @@ Text:
   - use.stable.mask
   tm_scope: none
   ace_mode: text
+  codemirror_mime_type: text/plain
   language_id: 372
 TextGrid:
   type: data
@@ -8392,6 +8476,14 @@ Typst:
   tm_scope: source.typst
   ace_mode: text
   language_id: 704730682
+Uiua:
+  type: programming
+  color: "#c87dff"
+  extensions:
+  - ".ua"
+  tm_scope: source.uiua
+  ace_mode: text
+  language_id: 52486065
 Unified Parallel C:
   type: programming
   color: "#4e3617"
@@ -8730,6 +8822,14 @@ WDL:
   tm_scope: source.wdl
   ace_mode: text
   language_id: 374521672
+WESL:
+  type: programming
+  color: "#0391e3"
+  extensions:
+  - ".wesl"
+  tm_scope: source.wesl
+  ace_mode: text
+  language_id: 858810660
 WGSL:
   type: programming
   color: "#1a5e9a"

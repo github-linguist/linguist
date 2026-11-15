@@ -1,0 +1,66 @@
+ISO-10303-21;
+HEADER;
+
+/* use the correct model view definition for the IFC4 reference view                              */
+/* ---------------------------------------------------------------------------------------------- */
+FILE_DESCRIPTION(('ViewDefinition [ReferenceView_V1.2]'),'2;1');
+FILE_NAME('column_rectangle_straight_tessellated_reference-view.ifc','2014-07-08T19:20:14',('Tim Chipman'),(''),'Constructivity 0.9.8.1','Constructivity - Constructivity - 0.9.8.1','');
+FILE_SCHEMA(('IFC4'));
+ENDSEC;
+
+DATA;
+
+/* set the default units - and the units used for geometric representations                       */
+/* here imperial units (inch) are used                                                            */
+/* ---------------------------------------------------------------------------------------------- */
+#12= IFCSIUNIT(*,.LENGTHUNIT.,$,.METRE.);
+#13= IFCMEASUREWITHUNIT(IFCLENGTHMEASURE(0.0254),#12);
+#14= IFCDIMENSIONALEXPONENTS(1,0,0,0,0,0,0);
+#15= IFCCONVERSIONBASEDUNIT(#14,.LENGTHUNIT.,'inch',#13);
+#36= IFCUNITASSIGNMENT((#15));
+
+/* set the context of the IFC4 exchange file                                                      */
+/* name, units and geometric representation context                                               */
+/* note: IfcOwnerHistory is not in scope of the IFC4 reference view                               */
+/* ---------------------------------------------------------------------------------------------- */
+#37= IFCPROJECT('0CxDbxzA1B4eLeOw9eIjQx',$,'Project',$,$,$,$,(#40),#36);
+
+/* set the representation context for 3D body, and 2D axis representation                         */
+/* no north direction and no geo-spatial coordinates are provided                                 */
+/* ---------------------------------------------------------------------------------------------- */
+#38= IFCCARTESIANPOINT((0.,0.,0.));
+#39= IFCAXIS2PLACEMENT3D(#38,$,$);
+#40= IFCGEOMETRICREPRESENTATIONCONTEXT('3D','Model',3,1.0E-05,#39,$);
+#41= IFCGEOMETRICREPRESENTATIONSUBCONTEXT('Body','Model',*,*,*,*,#40,$,.MODEL_VIEW.,$);
+
+/* defines the default site (as required as the minimum spatial element)                          */
+/* ---------------------------------------------------------------------------------------------- */
+#44= IFCSITE('0M0akNk9f3hOH9u2awmtre',$,'Site #1',$,$,#67,$,$,.ELEMENT.,$,$,$,$,$);
+#45= IFCRELAGGREGATES('2y_abP04108BvIhy2WfsHm',$,$,$,#37,(#44));
+#67= IFCLOCALPLACEMENT($,#69);
+#68= IFCCARTESIANPOINT((0.,0.,0.));
+#69= IFCAXIS2PLACEMENT3D(#68,$,$);
+
+/* defines the column with rectangular cross section as a model element                           */
+/* using tessellated geometry                                                                     */
+/* ---------------------------------------------------------------------------------------------- */
+#71= IFCCOLUMN('2WUGYBphrFv8aLIFJCmiIk',$,'Column #1',$,$,#121,#111,$,.COLUMN.);
+#111= IFCPRODUCTDEFINITIONSHAPE($,$,(#154));
+#116= IFCRELCONTAINEDINSPATIALSTRUCTURE('0F1oUoJsr5ZwxKAxiD1Vep',$,$,$,(#71),#44);
+#119= IFCDIRECTION((0.,0.,1.));
+#120= IFCDIRECTION((1.,0.,0.));
+#121= IFCLOCALPLACEMENT(#67,#126);
+#125= IFCCARTESIANPOINT((432.,288.,48.));
+#126= IFCAXIS2PLACEMENT3D(#125,#119,#120);
+#154= IFCSHAPEREPRESENTATION(#41,'Body','Tessellation',(#288));
+
+/* the triangulated tessellation also includes the normals per face and vertex                    */
+/* in this case, the vertex list and the normal list are corresponding lists,                     */
+/* hence no separate normal index has to be provided at IfcTriangulatedFaceSet                    */
+/* it generated longer lists, but is in line with many graphic APIs using a single buffer list    */
+/* ---------------------------------------------------------------------------------------------- */
+#287= IFCCARTESIANPOINTLIST3D(((-4.,4.,0.),(-4.,-4.,0.),(4.,-4.,0.),(4.,4.,0.),(-4.,4.,120.),(-4.,-4.,120.),(4.,-4.,120.),(4.,4.,120.),(-4.,4.,0.),(-4.,-4.,0.),(-4.,-4.,120.),(-4.,4.,120.),(-4.,-4.,0.),(4.,-4.,0.),(4.,-4.,120.),(-4.,-4.,120.),(4.,-4.,0.),(4.,4.,0.),(4.,4.,120.),(4.,-4.,120.),(4.,4.,0.),(-4.,4.,0.),(-4.,4.,120.),(4.,4.,120.)));
+#288= IFCTRIANGULATEDFACESET(#287,((0.,0.,-1.),(0.,0.,-1.),(0.,0.,-1.),(0.,0.,-1.),(0.,0.,1.),(0.,0.,1.),(0.,0.,1.),(0.,0.,1.),(-1.,0.,0.),(-1.,0.,0.),(-1.,0.,0.),(-1.,0.,0.),(0.,-1.,0.),(0.,-1.,0.),(0.,-1.,0.),(0.,-1.,0.),(1.,0.,0.),(1.,0.,0.),(1.,0.,0.),(1.,0.,0.),(0.,1.,0.),(0.,1.,0.),(0.,1.,0.),(0.,1.,0.)),.T.,((1,3,2),(1,4,3),(5,6,7),(5,7,8),(9,10,11),(9,11,12),(13,14,15),(13,15,16),(17,18,19),(17,19,20),(21,22,23),(21,23,24)),$);
+ENDSEC;
+
+END-ISO-10303-21;
