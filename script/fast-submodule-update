@@ -70,7 +70,7 @@ unless failures.empty?
   failures.sort_by(&:submodule).each do |result|
     puts "Error updating #{result.submodule}"
     if result.output =~ /could not read Username for ['"]https:\/\/github\.com['"]/
-      puts "GitHub could not access this repository without credentials; it may have been deleted, made private, or otherwise become inaccessible."
+      puts "Repository deleted or made private."
     end
     puts result.output if result.output =~ /\S/
   end
