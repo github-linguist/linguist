@@ -159,6 +159,7 @@ APL:
   - apl
   - aplx
   - dyalog
+  - dyalogscript
   tm_scope: source.apl
   ace_mode: text
   codemirror_mode: apl
@@ -687,6 +688,7 @@ Bend:
   - ".bend"
   tm_scope: source.bend
   ace_mode: text
+  color: "#8b83b5"
   language_id: 571794812
 Berry:
   type: programming
@@ -1209,6 +1211,14 @@ CartoCSS:
   ace_mode: text
   tm_scope: source.css.mss
   language_id: 53
+Cedar:
+  type: programming
+  color: "#51732F"
+  extensions:
+  - ".cedar"
+  tm_scope: source.cedar
+  ace_mode: text
+  language_id: 658370221
 Ceylon:
   type: programming
   color: "#dfa535"
@@ -2939,6 +2949,14 @@ Golo:
   tm_scope: source.golo
   ace_mode: text
   language_id: 133
+Goose:
+  type: programming
+  color: "#40E0D0"
+  extensions:
+  - ".goose"
+  tm_scope: source.goose
+  ace_mode: text
+  language_id: 897293049
 Gosu:
   type: programming
   color: "#82937f"
@@ -4146,6 +4164,14 @@ KakouneScript:
   - kakrc
   ace_mode: text
   language_id: 603336474
+KerML:
+  type: programming
+  color: "#5C6BC0"
+  extensions:
+  - ".kerml"
+  tm_scope: source.kerml
+  ace_mode: text
+  language_id: 435722551
 KerboScript:
   type: programming
   ace_mode: text
@@ -4363,6 +4389,7 @@ Latte:
   language_id: 196
 Lean:
   type: programming
+  color: "#3d6ac9"
   extensions:
   - ".lean"
   - ".hlean"
@@ -8005,6 +8032,17 @@ Swift:
   codemirror_mode: swift
   codemirror_mime_type: text/x-swift
   language_id: 362
+SysML:
+  type: programming
+  color: "#3F51B5"
+  aliases:
+  - sysmlv2
+  - sysml2
+  extensions:
+  - ".sysml"
+  tm_scope: source.sysml
+  ace_mode: text
+  language_id: 627066216
 SystemVerilog:
   type: programming
   color: "#DAE1C2"
