@@ -23,6 +23,7 @@ def print_usage(out)
   out.puts 'Extensions in the list must include the starting dot.'
   out.puts ''
   out.puts 'The --test flag can be used to verify that the number of errors is acceptable.'
+  out.puts 'With --test, only failed samples and the error count summary are shown.'
 end
 
 if ARGV.include? '--help' or ARGV.include? '-h'
@@ -131,8 +132,9 @@ results.sort!
 
 total_errors = 0
 results.each do |res|
-  STDOUT.puts res
-  total_errors += 1 if res.include? ' BAD '
+  failed = res.include? ' BAD '
+  STDOUT.puts res if failed || !$test
+  total_errors += 1 if failed
 end
 
 if $test

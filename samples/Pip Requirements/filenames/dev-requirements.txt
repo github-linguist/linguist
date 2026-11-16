@@ -1,0 +1,28 @@
+# Sample based on https://github.com/gevent/gevent/blob/master/dev-requirements.txt
+# Licensed under MIT License
+
+# For viewing README.rst (restview --long-description),
+# CONTRIBUTING.rst, etc.
+# https://github.com/mgedmin/restview
+restview
+
+pylint>=1.8.0 ; python_version < "3.4"
+# pylint 2 needs astroid 2; unfortunately, it uses `typed_ast`
+# which has a C extension that doesn't build on PyPy
+pylint >= 2.5.0 ; python_version >= "3.4"  and platform_python_implementation == "CPython"
+astroid >= 2.4.0 ; python_version >= "3.4" and platform_python_implementation == "CPython"
+
+# backport of faulthandler
+faulthandler ; python_version == "2.7"  and platform_python_implementation == "CPython"
+
+# For generating CHANGES.rst
+towncrier
+# For making releases
+zest.releaser[recommended]
+
+# benchmarks use this
+pyperf >= 1.6.1
+
+greenlet >= 1.0
+
+-e .[test,docs]
