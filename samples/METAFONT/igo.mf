@@ -1,0 +1,341 @@
+mode_setup;
+
+define_pixels(size);
+define_pixels(line_thickness,border_line_thickness);
+
+picture black_circle;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+def set_black_circle =
+  currentpicture := nullpicture;
+  pickup pencircle scaled line_thickness;
+  lft x1=1/22size; y1=1/2size;
+  rt x2=23/22size; y2=1/2size;
+  filldraw z1..z2..cycle;
+  black_circle := currentpicture;
+  clearxy; clearit; clearpen;
+enddef;
+
+set_black_circle;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+beginchar(0,24/22size#,23/22size#,1/22size#); "punkt hoshi";
+  pickup pencircle scaled line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  draw z2..z4;
+  z5=(.5w-.1size,11/24w);
+  z6=(.5w+.1size,11/24w);
+  filldraw z5..z6..cycle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(1,24/22size#,23/22size#,1/22size#); "pelny krzyz";
+  pickup pencircle scaled line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  draw z2..z4;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(2,24/22size#,23/22size#,1/22size#); "lewy brzeg";
+  pickup pencircle scaled line_thickness;
+  lft x1=.5w; y1=11/24w;
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  pickup pencircle scaled border_line_thickness;
+  draw z2..z4;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(3,24/22size#,23/22size#,1/22size#); "prawy brzeg";
+  pickup pencircle scaled line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  rt x3=.5w; y3=11/24w;
+  z4=(.5w,-d);
+  draw z1..z3;
+  pickup pencircle scaled border_line_thickness;
+  draw z2..z4;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(4,24/22size#,23/22size#,1/22size#); "gorny brzeg";
+  pickup pencircle scaled border_line_thickness;
+  z1=(0,11/24w);
+  x2=.5w; top y2=11/24w;
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  pickup pencircle scaled line_thickness;
+  draw z2..z4;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(5,24/22size#,23/22size#,1/22size#); "dolny brzeg";
+  pickup pencircle scaled border_line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  x4=.5w; bot y4=11/24w;
+  draw z1..z3;
+  pickup pencircle scaled line_thickness;
+  draw z2..z4;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(6,24/22size#,23/22size#,1/22size#); "lewy gorny rog";
+  pickup pencircle scaled border_line_thickness;
+  lft x1=.5w; y1=11/24w;
+  x2=.5w; top y2=11/24w;
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  draw z2..z4;
+  pickup penrazor scaled border_line_thickness;
+  z5=(.5w,11/24w+.5border_line_thickness); 
+  z6=(.5w,11/24w-.5border_line_thickness); 
+  draw z5..z6;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(7,24/22size#,23/22size#,1/22size#); "prawy gorny rog";
+  pickup pencircle scaled border_line_thickness;
+  z1=(0,11/24w);
+  x2=.5w; top y2=11/24w;
+  rt x3=.5w; y3=11/24w;
+  z4=(.5w,-d);
+  draw z1..z3;
+  draw z2..z4;
+  pickup penrazor scaled border_line_thickness;
+  z5=(.5w,11/24w+.5border_line_thickness); 
+  z6=(.5w,11/24w-.5border_line_thickness); 
+  draw z5..z6;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(8,24/22size#,23/22size#,1/22size#); "lewy dolny rog";
+  pickup pencircle scaled border_line_thickness;
+  lft x1=.5w; y1=11/24w;
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  x4=.5w; bot y4=11/24w;
+  draw z1..z3;
+  draw z2..z4;
+  pickup penrazor scaled border_line_thickness;
+  z5=(.5w,11/24w+.5border_line_thickness); 
+  z6=(.5w,11/24w-.5border_line_thickness); 
+  draw z5..z6;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(9,24/22size#,23/22size#,1/22size#); "prawy dolny rog";
+  pickup pencircle scaled border_line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  rt x3=.5w; y3=11/24w;
+  x4=.5w; bot y4=11/24w;
+  draw z1..z3;
+  draw z2..z4;
+  pickup penrazor scaled border_line_thickness;
+  z5=(.5w,11/24w+.5border_line_thickness);
+  z6=(.5w,11/24w-.5border_line_thickness);
+  draw z5..z6;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(10,24/22size#,23/22size#,1/22size#); "pelny krzyz - pion";
+  pickup pencircle scaled line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  draw z2..z4;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(11,24/22size#,23/22size#,1/22size#); "lewy brzeg - pion";
+  pickup pencircle scaled line_thickness;
+  lft x1=.5w; y1=11/24w;
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  pickup pencircle scaled border_line_thickness;
+  draw z2..z4;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(12,24/22size#,23/22size#,1/22size#); "prawy brzeg - pion";
+  pickup pencircle scaled line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  rt x3=.5w; y3=11/24w;
+  z4=(.5w,-d);
+  draw z1..z3;
+  pickup pencircle scaled border_line_thickness;
+  draw z2..z4;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(13,24/22size#,23/22size#,1/22size#); "gorny brzeg - pion";
+  pickup pencircle scaled border_line_thickness;
+  z1=(0,11/24w);
+  x2=.5w; top y2=11/24w;
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  pickup pencircle scaled line_thickness;
+  draw z2..z4;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(14,24/22size#,23/22size#,1/22size#); "dolny brzeg - pion";
+  pickup pencircle scaled border_line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  x4=.5w; bot y4=11/24w;
+  draw z1..z3;
+  pickup pencircle scaled line_thickness;
+  draw z2..z4;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(15,24/22size#,23/22size#,1/22size#); "lewy gorny rog - pion";
+  pickup pencircle scaled border_line_thickness;
+  lft x1=.5w; y1=11/24w;
+  x2=.5w; top y2=11/24w;
+  z3=(w,11/24w);
+  z4=(.5w,-d);
+  draw z1..z3;
+  draw z2..z4;
+  pickup penrazor scaled border_line_thickness;
+  z5=(.5w,11/24w+.5border_line_thickness); 
+  z6=(.5w,11/24w-.5border_line_thickness); 
+  draw z5..z6;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(16,24/22size#,23/22size#,1/22size#); "prawy gorny rog - pion";
+  pickup pencircle scaled border_line_thickness;
+  z1=(0,11/24w);
+  x2=.5w; top y2=11/24w;
+  rt x3=.5w; y3=11/24w;
+  z4=(.5w,-d);
+  draw z1..z3;
+  draw z2..z4;
+  pickup penrazor scaled border_line_thickness;
+  z5=(.5w,11/24w+.5border_line_thickness); 
+  z6=(.5w,11/24w-.5border_line_thickness); 
+  draw z5..z6;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(17,24/22size#,23/22size#,1/22size#); "lewy dolny rog - pion";
+  pickup pencircle scaled border_line_thickness;
+  lft x1=.5w; y1=11/24w;
+  z2=(.5w,h);
+  z3=(w,11/24w);
+  x4=.5w; bot y4=11/24w;
+  draw z1..z3;
+  draw z2..z4;
+  pickup penrazor scaled border_line_thickness;
+  z5=(.5w,11/24w+.5border_line_thickness); 
+  z6=(.5w,11/24w-.5border_line_thickness); 
+  draw z5..z6;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(18,24/22size#,23/22size#,1/22size#); "prawy dolny rog - pion";
+  pickup pencircle scaled border_line_thickness;
+  z1=(0,11/24w);
+  z2=(.5w,h);
+  rt x3=.5w; y3=11/24w;
+  x4=.5w; bot y4=11/24w;
+  draw z1..z3;
+  draw z2..z4;
+  pickup penrazor scaled border_line_thickness;
+  z5=(.5w,11/24w+.5border_line_thickness);
+  z6=(.5w,11/24w-.5border_line_thickness);
+  draw z5..z6;
+  cullit;
+  addto currentpicture also -black_circle;
+showit;
+endchar;
+
+% stop"";
+
+beginchar(32,24/22size#,23/22size#,1/22size#); "space";
+  pickup pencircle scaled line_thickness;
+showit;
+endchar;
+
+% stop"";
+
+input igoroman
+end;
+

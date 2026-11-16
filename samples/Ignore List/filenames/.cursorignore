@@ -1,0 +1,84 @@
+# Dependencies
+**/node_modules
+**/.pnpm-store
+**/.turbo
+
+# Build & Cache
+**/dist
+**/lib
+**/es
+**/umd
+**/.cache
+**/.temp
+**/.vite
+**/.rollup.cache
+.eslintcache
+.stylelintcache
+
+# Test
+**/coverage
+**/*.test.js
+**/*.spec.js
+**/*.test.ts
+**/*.spec.ts
+**/test
+**/tests
+**/e2e
+**/cypress
+
+# Docs
+**/.vitepress/cache
+**/.vitepress/dist
+**/_drafts
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.sublime-*
+.DS_Store
+
+# Logs
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# Generated files
+**/*.tsbuildinfo
+**/.eslintrc-auto-import.json
+**/auto-imports.d.ts
+**/components.d.ts
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Env files
+.env*
+!.env.example
+
+# Large media files
+**/*.mp4
+**/*.tiff
+**/*.avi
+**/*.flv
+**/*.mov
+**/*.wmv
+**/*.zip
+**/*.tar.gz
+
+# Keep important configs
+!.github/**
+!.husky/**
+!.vscode/extensions.json
+!.editorconfig
+!.eslintrc
+!.prettierrc
+!.stylelintrc
+!.cursorrules
+!turbo.json
+!pnpm-workspace.yaml
