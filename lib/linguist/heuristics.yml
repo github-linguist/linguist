@@ -193,6 +193,14 @@ disambiguations:
   - language: BibTeX Style
     pattern: 'ENTRY\s*\{'
   - language: BuildStream
+- extensions: ['.bt']
+  rules:
+  - language: 010 Editor Binary Template
+    pattern: '^[ \t]*(?://|/\*|\*)[- \t]*010 Editor(?:[ \t]+v[0-9.]+)?[ \t]+Binary Template\b'
+  - language: 010 Editor Binary Template
+    and:
+    - pattern: '^[ \t]*(?:LittleEndian|BigEndian)\s*\(\s*\)\s*;'
+    - pattern: '\b\w+[ \t]*<\s*(?:name|read|write|format|optimize|fgcolor|bgcolor)\s*='
 - extensions: ['.builds']
   rules:
   - language: XML
