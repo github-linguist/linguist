@@ -703,6 +703,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Vala:** [technosophos/Vala-TMBundle](https://github.com/technosophos/Vala-TMBundle)
 - **Valve Data Format:** [Nixinova/NovaGrammars](https://github.com/Nixinova/NovaGrammars)
 - **Velocity Template Language:** [animecyc/AtomLanguageVelocity](https://github.com/animecyc/AtomLanguageVelocity)
+- **Velt:** [velt-lang/velt](https://github.com/velt-lang/velt)
 - **Vento:** [ventojs/vscode-vento](https://github.com/ventojs/vscode-vento)
 - **Verilog:** [textmate/verilog.tmbundle](https://github.com/textmate/verilog.tmbundle)
 - **Verse:** [simnJS/verse-grammar](https://github.com/simnJS/verse-grammar)

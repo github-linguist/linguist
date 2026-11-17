@@ -1,0 +1,42 @@
+// Word frequency: string methods, Map, arrays, sorting with a comparator, closures.
+
+function countWords(text: string): Map<string, i64> {
+  const counts = new Map<string, i64>();
+  for (const raw of text.split(" ")) {
+    const word = raw.trim().toLowerCase();
+    if (word.length == 0) {
+      continue;
+    }
+    const n = (counts.get(word) ?? 0) + 1;
+    counts.set(word, n);
+  }
+  return counts;
+}
+
+struct Entry {
+  word: string;
+  count: i64;
+}
+
+function top(counts: Map<string, i64>, n: usize): Entry[] {
+  let entries: Entry[] = [];
+  for (const [word, count] of counts) {
+    entries.push({ word: word, count: count });
+  }
+  entries.sort((a, b) => {
+    if (a.count != b.count) {
+      return b.count - a.count;
+    }
+    return a.word < b.word ? -1 : 1;
+  });
+  return entries.slice(0, n as i64);
+}
+
+function main() {
+  const text = "the quick brown fox jumps over the lazy dog The DOG barks and the fox runs";
+  const counts = countWords(text);
+  console.log(`distinct words: ${counts.size}`);
+  for (const e of top(counts, 3)) {
+    console.log(`${e.word}: ${e.count}`);
+  }
+}

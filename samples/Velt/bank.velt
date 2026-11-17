@@ -1,0 +1,110 @@
+// Bank accounts: classes, inheritance + override, interfaces with defaults, throw/try/catch,
+// discriminated unions + switch, generics.
+
+class InsufficientFunds extends Error {
+  constructor(need: i64, have: i64) {
+    super(`need ${need}, have ${have}`);
+  }
+}
+
+interface Describable {
+  name(): string;
+  describe(): string {
+    return `<${this.name()}>`;
+  }
+}
+
+class Account implements Describable {
+  owner: string;
+  balance: i64 = 0;
+
+  constructor(owner: string) {
+    this.owner = owner;
+  }
+
+  name(): string {
+    return this.owner;
+  }
+
+  deposit(amount: i64) {
+    this.balance += amount;
+  }
+
+  withdraw(amount: i64) {
+    if (amount > this.limit()) {
+      throw new InsufficientFunds(amount, this.limit());
+    }
+    this.balance -= amount;
+  }
+
+  limit(): i64 {
+    return this.balance;
+  }
+}
+
+class CreditAccount extends Account {
+  credit: i64;
+
+  constructor(owner: string, credit: i64) {
+    super(owner);
+    this.credit = credit;
+  }
+
+  override limit(): i64 {
+    return this.balance + this.credit;
+  }
+}
+
+type Tx = { kind: "deposit"; amount: i64 } | { kind: "withdraw"; amount: i64 };
+
+function apply(acct: Account, txs: Tx[]): i64 {
+  let failed = 0;
+  for (const tx of txs) {
+    try {
+      switch (tx.kind) {
+        case "deposit":
+          acct.deposit(tx.amount);
+          break;
+        case "withdraw":
+          acct.withdraw(tx.amount);
+          break;
+      }
+    } catch (e) {
+      console.log(`  rejected: ${e.message}`);
+      failed += 1;
+    }
+  }
+  return failed;
+}
+
+function largest<T extends Describable>(items: T[], score: (x: T) => i64): string {
+  let best = "";
+  let bestScore = -1;
+  for (const it of items) {
+    const s = score(it);
+    if (s > bestScore) {
+      bestScore = s;
+      best = it.describe();
+    }
+  }
+  return best;
+}
+
+function main() {
+  let plain = new Account("ann");
+  let credit: Account = new CreditAccount("bob", 100);
+  const txs: Tx[] = [
+    { kind: "deposit", amount: 50 },
+    { kind: "withdraw", amount: 80 },
+    { kind: "withdraw", amount: 30 },
+  ];
+
+  console.log("ann:");
+  const f1 = apply(plain, txs.clone());
+  console.log("bob:");
+  const f2 = apply(credit, txs);
+  console.log(`balances: ann=${plain.balance} bob=${credit.balance}, failures ${f1 + f2}`);
+
+  const accounts = [plain, credit];
+  console.log("richest:", largest(accounts, (a) => a.balance));
+}
