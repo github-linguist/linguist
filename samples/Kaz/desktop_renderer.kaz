@@ -1,0 +1,49 @@
+// ============================================================================
+//   Kaz GUI & Window System Engine - Renderizador Gráfico de Desktop
+// ============================================================================
+import "kaz_window.kaz";
+
+function repetirCaractere(string ch, int vezes): string {
+    string out = "";
+    int i = 0;
+    while (i < vezes) {
+        out = out + ch;
+        i++;
+    }
+    return out;
+}
+
+function renderizarJanela(JanelaKaz w) {
+    int larg = w.largura;
+    string tituloTratado = " " + w.titulo + " ";
+    int resto = larg - 2 - tituloTratado.len - 9;
+    if (resto < 0) { resto = 0; }
+    string espacosTitulo = repetirCaractere("═", resto);
+
+    // Topo da janela com botões de minimizar, maximizar e fechar
+    runoff("╔═" + tituloTratado + espacosTitulo + " [ _ □ X ]═╗");
+
+    // Conteúdo interno
+    for (comp in w.componentes) {
+        if (comp.tipo == "LABEL") {
+            int padding = larg - 4 - comp.texto.len;
+            if (padding < 0) { padding = 0; }
+            string padStr = repetirCaractere(" ", padding);
+            runoff("║  " + comp.texto + padStr + "║");
+        } else if (comp.tipo == "BUTTON") {
+            string btnStr = "[ " + comp.texto + " ]";
+            int padding = larg - 4 - btnStr.len;
+            if (padding < 0) { padding = 0; }
+            string padStr = repetirCaractere(" ", padding);
+            runoff("║  " + btnStr + padStr + "║");
+        }
+    }
+
+    // Linha de espaçamento visual
+    string espacoVazio = repetirCaractere(" ", larg - 2);
+    runoff("║" + espacoVazio + "║");
+
+    // Base da janela
+    string bordaBase = repetirCaractere("═", larg - 2);
+    runoff("╚" + bordaBase + "╝");
+}

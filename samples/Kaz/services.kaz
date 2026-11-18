@@ -1,0 +1,56 @@
+// ============================================================================
+//   Kaz Backend Engine - Camada de Serviços & Regras de Negócio
+// ============================================================================
+import "models/metrica.kaz";
+import "database.kaz";
+
+// Processa uma requisição recebida no backend, atualizando telemetria
+function processarRequisicao(int conn, string servicoId, string nomeServico, float tempoExecucaoMs, bool sucesso): MetricaSistema {
+    string nivelLog = sucesso ? "INFO" : "ERROR";
+    string msgLog = "Execucao do servico '" + nomeServico + "' concluida em " + tempoExecucaoMs + "ms";
+    gravarLog(conn, nivelLog, servicoId, msgLog);
+
+    // Consulta estado atual
+    array busca = db_query(conn, "SELECT id, nome_servico, requisicoes_total, erros_total, tempo_medio_ms, status_saude FROM metricas_servicos WHERE id = ?;", [servicoId]);
+    
+    int reqs = 1;
+    int erros = sucesso ? 0 : 1;
+    float tempoMedio = tempoExecucaoMs;
+
+    if (busca.len > 0) {
+        any atual = busca[0];
+        reqs = atual.requisicoes_total + 1;
+        erros = sucesso ? atual.erros_total : (atual.erros_total + 1);
+        tempoMedio = ((atual.tempo_medio_ms * atual.requisicoes_total) + tempoExecucaoMs) / (reqs * 1.0);
+    }
+
+    // Calcula status de saúde baseado na taxa de erro e tempo de resposta
+    float taxaErro = (erros * 100.0) / (reqs * 1.0);
+    string saude = "HEALTHY (Otimo)";
+    if (taxaErro > 15.0 || tempoMedio > 200.0) {
+        saude = "DEGRADED (Atencao)";
+    }
+    if (taxaErro > 50.0 || tempoMedio > 500.0) {
+        saude = "CRITICAL (Falha)";
+    }
+
+    MetricaSistema atualizada = criarMetrica(servicoId, nomeServico, reqs, erros, tempoMedio, saude);
+    salvarMetrica(conn, atualizada);
+    return atualizada;
+}
+
+// Gera payload de resposta do backend formatado em JSON
+function gerarPayloadSaude(int conn): string {
+    array metricas = listarTodasMetricas(conn);
+    array logs = listarLogsRecentes(conn, 5);
+
+    any pacote = {
+        "engine": "Kaz Backend Core 1.6.0",
+        "timestamp": time_now_ms(),
+        "total_servicos_monitorados": metricas.len,
+        "metricas": metricas,
+        "ultimos_logs": logs
+    };
+
+    return json_stringify(pacote, true);
+}

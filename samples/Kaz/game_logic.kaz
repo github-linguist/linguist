@@ -1,0 +1,64 @@
+// ============================================================================
+//   Kaz GUI Game Engine - Lógica de Jogo & Movimento
+// ============================================================================
+import "game_models.kaz";
+
+function mudarDirecao(EstadoJogo jogo, string novaDir): EstadoJogo {
+    string atual = jogo.cobra.direcao;
+    // Evita inverter 180 graus diretamente
+    if (novaDir == "UP" && atual != "DOWN") { jogo.cobra.direcao = "UP"; }
+    if (novaDir == "DOWN" && atual != "UP") { jogo.cobra.direcao = "DOWN"; }
+    if (novaDir == "LEFT" && atual != "RIGHT") { jogo.cobra.direcao = "LEFT"; }
+    if (novaDir == "RIGHT" && atual != "LEFT") { jogo.cobra.direcao = "RIGHT"; }
+    return jogo;
+}
+
+function avancarFrame(EstadoJogo jogo): EstadoJogo {
+    if (!jogo.cobra.viva) {
+        return jogo;
+    }
+
+    Posicao cabeca = jogo.cobra.corpo[0];
+    int novoX = cabeca.x;
+    int novoY = cabeca.y;
+
+    if (jogo.cobra.direcao == "RIGHT") { novoX = novoX + 1; }
+    if (jogo.cobra.direcao == "LEFT")  { novoX = novoX - 1; }
+    if (jogo.cobra.direcao == "UP")    { novoY = novoY - 1; }
+    if (jogo.cobra.direcao == "DOWN")  { novoY = novoY + 1; }
+
+    // Colisão com bordas da tela
+    if (novoX <= 0 || novoX >= jogo.largura - 1 || novoY <= 0 || novoY >= jogo.altura - 1) {
+        jogo.cobra.viva = false;
+        return jogo;
+    }
+
+    // Colisão com a maçã / comida
+    bool comeu = (novoX == jogo.comida.x && novoY == jogo.comida.y);
+
+    // Constrói novo corpo
+    array novoCorpo = [];
+    novoCorpo.push(criarPosicao(novoX, novoY));
+
+    int limite = comeu ? jogo.cobra.corpo.len : (jogo.cobra.corpo.len - 1);
+    int idx = 0;
+    while (idx < limite) {
+        novoCorpo.push(jogo.cobra.corpo[idx]);
+        idx++;
+    }
+
+    jogo.cobra.corpo = novoCorpo;
+    if (comeu) {
+        jogo.pontuacao = jogo.pontuacao + 10;
+        // Posiciona nova comida
+        jogo.comida = criarPosicao(jogo.comida.x + 3, jogo.comida.y + 1);
+        if (jogo.comida.x >= jogo.largura - 2) {
+            jogo.comida.x = 4;
+        }
+        if (jogo.comida.y >= jogo.altura - 2) {
+            jogo.comida.y = 3;
+        }
+    }
+
+    return jogo;
+}
