@@ -1,0 +1,35 @@
+breed [nodes node]
+
+nodes-own[
+  n-id
+]
+
+directed-link-breed [roads road]
+
+roads-own [
+  traffic
+  r-id
+]
+
+
+to new_node [ _id x-pos y-pos ]
+  set n-id _id
+  set color blue
+  set size 2
+  set shape "circle"
+  setxy x-pos y-pos
+end
+
+to print_node
+  write xcor
+  write ycor
+  print out-road-neighbors  
+  print " "
+end
+
+
+to print_road
+  write traffic
+  print r-id
+end
+  

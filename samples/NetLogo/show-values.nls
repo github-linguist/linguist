@@ -1,0 +1,26 @@
+to show-values
+  ifelse mouse-inside? [
+    ask patch mouse-xcor mouse-ycor [
+      let radius-mean round mean [pcolor] of patches in-radius 3
+      let color-shade radius-mean - (precision radius-mean -1)
+
+      ifelse (color-shade < 0) [
+        set plabel-color black
+      ] [
+        set plabel-color white
+      ]
+
+      carefully [
+        set plabel precision value 2
+      ] [
+        set plabel value
+      ]
+    ]
+
+    ask other patches who-are-not patch mouse-xcor mouse-ycor [
+      set plabel ""
+    ]
+  ] [
+    ask patches [set plabel ""]
+  ]
+end
