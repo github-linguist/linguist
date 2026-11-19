@@ -622,7 +622,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Singularity:** [onnovalkering/vscode-singularity](https://github.com/onnovalkering/vscode-singularity)
 - **Slang:** [shader-slang/slang-vscode-extension](https://github.com/shader-slang/slang-vscode-extension)
 - **Slash:** [slash-lang/Slash.tmbundle](https://github.com/slash-lang/Slash.tmbundle)
-- **Slice:** [zeroc-ice/vscode-slice](https://github.com/zeroc-ice/vscode-slice)
+- **Slice:** [zeroc-ice/slice-tools](https://github.com/zeroc-ice/slice-tools)
 - **Slim:** [borama/vscode-ruby-slim](https://github.com/borama/vscode-ruby-slim)
 - **Slint:** [slint-ui/slint-tmLanguage](https://github.com/slint-ui/slint-tmLanguage)
 - **SmPL:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
