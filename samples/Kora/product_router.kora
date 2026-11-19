@@ -1,0 +1,64 @@
+// ============================================================================
+// CRUD Products Router
+// ============================================================================
+
+import { Product, CreateProductRequest, UpdateProductRequest, SeoMetadata, GeoLocation, ProductCatalogResponse, ProductDetailsResponse } from "../models/product.models"
+import { ProductService } from "../services/product.service"
+
+class ProductRouter {
+    svc: ProductService
+
+    init(svc: ProductService) {
+        this.svc = svc
+    }
+
+    fn listProducts() -> ProductCatalogResponse {
+        let items = this.svc.listAll()
+        let seo = this.svc.getCatalogSeo()
+        let geo = this.svc.getGeoLocation()
+        return ProductCatalogResponse {
+            products: items,
+            total: 2,
+            seo: seo,
+            geo: geo,
+        }
+    }
+
+    fn getProduct(id: Int) -> Result<ProductDetailsResponse, String> {
+        let opt = this.svc.findById(id)
+        let seo = this.svc.getProductSeo(id)
+        let geo = this.svc.getGeoLocation()
+        return match opt {
+            Some(p) => {
+                Ok(ProductDetailsResponse {
+                    product: p,
+                    seo: seo,
+                    geo: geo,
+                })
+            },
+            null => Err("Product not found"),
+        }
+    }
+
+    fn createProduct(body: String) -> Result<Product, String> {
+        let req = CreateProductRequest {
+            sku: "PRD-NEW",
+            title: body,
+            priceCents: 4999,
+        }
+        return this.svc.create(req)
+    }
+
+    fn updateProduct(id: Int, body: String) -> Result<Product, String> {
+        let req = UpdateProductRequest {
+            title: body,
+            priceCents: 5999,
+            inStock: true,
+        }
+        return this.svc.update(id, req)
+    }
+
+    fn deleteProduct(id: Int) -> Result<Bool, String> {
+        return this.svc.delete(id)
+    }
+}

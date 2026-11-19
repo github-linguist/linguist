@@ -1,0 +1,16 @@
+import { OrderStatus } from "../enums/order_status.enum"
+
+class OrderProcessor {
+    fn describeOrder(status: OrderStatus) -> String {
+        return match status {
+            OrderStatus.Pending => "Order is awaiting payment",
+            OrderStatus.Paid(cents) => "Order payment confirmed",
+            OrderStatus.Cancelled(reason) => reason,
+        }
+    }
+
+    fn calculateTotal(subtotal: Int, taxRatePercent: Int) -> Int {
+        let tax = (subtotal * taxRatePercent) / 100
+        return subtotal + tax
+    }
+}

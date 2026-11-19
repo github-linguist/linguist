@@ -1,0 +1,30 @@
+// ============================================================================
+// Service: UserService
+// ============================================================================
+
+import { User } from "../entities/user.entity"
+import { UserRepository } from "../interfaces/user.repository.interface"
+
+class UserService implements UserRepository {
+    repo: UserRepository
+
+    init(repo: UserRepository) {
+        this.repo = repo
+    }
+
+    fn findById(id: Int) -> Option<User> {
+        return this.repo.findById(id)
+    }
+
+    fn save(user: User) -> Result<User, String> {
+        return this.repo.save(user)
+    }
+
+    fn validateNewUser(user: User) -> Result<User, String> {
+        if user.name == "" {
+            return Err("User name cannot be blank")
+        }
+        return Ok(user)
+    }
+}
+
