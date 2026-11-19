@@ -1,0 +1,33 @@
+/* Literal forms: date/time literals, doubled-quote escapes in strings,
+   table and column names, numbers, booleans, and non-ASCII identifiers. */
+DEFINE
+    VAR _start = dt"2025-07-01"
+    VAR _end = dt"2026-06-30T23:59:59"
+    VAR _cutoff = DT"2026-01-01 08:30:00"
+    VAR _label = "Said ""hello"" to the ""world"""
+    VAR _path = "C:\Reports\Monthly"
+    VAR _empty = ""
+    VAR _scale = 1.5e3 + .25 - 2E-2 * 10.
+    VAR _flag = TRUE && NOT FALSE || BLANK () = BLANK
+
+    MEASURE 'Ventas'[Importe año] = SUMX ( 'Ventas', 'Ventas'[Cantidad] * 'Ventas'[Precio €] )
+    MEASURE 'It''s a table'[Col]]umn] = COUNTROWS ( 'It''s a table' )
+    MEASURE 'Sales'[Orders in range] =
+        CALCULATE (
+            COUNTROWS ( 'Sales' ),
+            'Date'[Date] >= _start && 'Date'[Date] <= _end,
+            'Sales'[Status] IN { "Open", "Closed" },
+            'Sales'[Channel] <> "Internal"
+        )
+    MEASURE 'Sales'[Rate] = CONVERT ( [Orders in range], DOUBLE ) ^ 2 / 100
+    MEASURE 'Sales'[Label] = _label & " | " & FORMAT ( _cutoff, "yyyy-MM-dd" ) & " | " & 'Sales'[Rate]
+    MEASURE 'Sales'[Days] = DATEDIFF ( _start, 'Date'[Date].[Date], DAY )
+    MEASURE 'Sales'[Year level] = 'Date'[Date].[Date].[Year]
+
+EVALUATE
+    { ( [Importe año], [Col]]umn], [Orders in range], [Rate], [Label] ) }
+
+-- Model-style definitions as exported by Tabular Editor
+Total Sales := SUM ( 'Sales'[Amount] )
+[Total Cost] := SUMX ( 'Sales', 'Sales'[Quantity] * 'Sales'[Unit Cost] )
+'Sales'[Margin] = [Total Sales] - [Total Cost]
