@@ -340,6 +340,26 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_bt_by_heuristics
+    assert_heuristics({
+      "010 Editor Binary Template" => Dir.glob("#{fixtures_path}/Generic/bt/010 Editor Binary Template/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/bt/nil/*")
+    })
+  end
+
+  def test_bt_header_by_heuristics
+    blob = Blob.new("template.bt", "//--- 010 Editor v14.0 Binary Template\n")
+    assert_equal [Language["010 Editor Binary Template"]], Heuristics.call(blob, [])
+  end
+
+  def test_bt_without_header_by_heuristics
+    Dir.glob("#{fixtures_path}/Generic/bt/010 Editor Binary Template/*").each do |path|
+      content = File.read(path).gsub(%r{^//[^\n]*}, "")
+      blob = Blob.new("template.bt", content)
+      assert_equal [Language["010 Editor Binary Template"]], Heuristics.call(blob, []), path
+    end
+  end
+
   def test_builds_by_heuristics
     assert_heuristics({
       nil => all_fixtures("Text"),
