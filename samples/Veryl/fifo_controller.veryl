@@ -1,0 +1,326 @@
+pub module fifo_controller #(
+    param TYPE             : type = logic                                    ,
+    param DEPTH            : u32  = 8                                        ,
+    param THRESHOLD        : u32  = DEPTH                                    ,
+    param FLAG_FF_OUT      : bool = true                                     ,
+    param DATA_FF_OUT      : bool = true                                     ,
+    param PUSH_ON_CLEAR    : bool = false                                    ,
+    param RAM_WORDS        : u32  = if DATA_FF_OUT ? DEPTH - 1 : DEPTH       ,
+    param RAM_POINTER_WIDTH: u32  = if RAM_WORDS >= 2 ? $clog2(RAM_WORDS) : 1,
+    param MATCH_COUNT_WIDTH: u32  = 0                                        ,
+    param POINTER_WIDTH    : u32  = if DEPTH >= 2 ? $clog2(DEPTH) : 1        ,
+    const RAM_POINTER      : type = logic<RAM_POINTER_WIDTH>                 ,
+    const POINTER          : type = logic<POINTER_WIDTH>                     ,
+    const COUNTER          : type = logic<$clog2(DEPTH + 1)>                 ,
+) (
+    i_clk          : input  clock      ,
+    i_rst          : input  reset      ,
+    i_clear        : input  logic      ,
+    o_empty        : output logic      ,
+    o_almost_full  : output logic      ,
+    o_full         : output logic      ,
+    o_word_count   : output COUNTER    ,
+    i_push         : input  logic      ,
+    i_data         : input  TYPE       ,
+    i_pop          : input  logic      ,
+    o_write_pointer: output RAM_POINTER,
+    o_write_to_ff  : output logic      ,
+    o_write_to_ram : output logic      ,
+    o_read_pointer : output RAM_POINTER,
+    o_read_from_ram: output logic      ,
+) {
+    struct s_status_flag {
+        empty      : logic,
+        almost_full: logic,
+        full       : logic,
+    }
+
+    var push             : logic           ;
+    var pop              : logic           ;
+    var clear            : logic        <2>;
+    var update_state     : logic           ;
+    var word_counter     : COUNTER         ;
+    var word_counter_next: COUNTER         ;
+    var word_counter_eq_1: logic           ;
+    var word_counter_eq_2: logic           ;
+    var word_counter_ge_2: logic           ;
+    var status_flag      : s_status_flag   ;
+    var write_to_ff      : logic           ;
+    var write_to_ram     : logic           ;
+    var ram_write_pointer: RAM_POINTER     ;
+    var read_from_ram    : logic           ;
+    var ram_read_pointer : RAM_POINTER     ;
+    var ram_empty_next   : logic           ;
+    var match_data       : logic           ;
+    var last_pop_data    : logic           ;
+
+    always_comb {
+        push = i_push && ((PUSH_ON_CLEAR && i_clear) || ((!status_flag.full) && (!match_data)));
+        pop  = i_pop && (!status_flag.empty) && last_pop_data;
+    }
+
+    always_comb {
+        clear[0] = i_clear && ((!PUSH_ON_CLEAR) || (!push));
+        clear[1] = i_clear && PUSH_ON_CLEAR && push;
+    }
+
+    always_comb {
+        update_state = push || pop || i_clear;
+    }
+
+    //--------------------------------------------------------------
+    //  word counter
+    //--------------------------------------------------------------
+    always_comb {
+        o_word_count = word_counter;
+    }
+
+    always_comb {
+        word_counter_eq_1 = (DEPTH >= 1) && (word_counter == 1 as COUNTER);
+        word_counter_eq_2 = (DEPTH >= 2) && (word_counter == 2 as COUNTER);
+        word_counter_ge_2 = (DEPTH >= 2) && (word_counter >= 2 as COUNTER);
+    }
+
+    always_comb {
+        word_counter_next = get_word_counter_next(push, pop, clear, word_counter);
+    }
+
+    always_ff {
+        if_reset {
+            word_counter = '0;
+        } else if update_state {
+            word_counter = word_counter_next;
+        }
+    }
+
+    function get_word_counter_next (
+        push        : input logic     ,
+        pop         : input logic     ,
+        clear       : input logic  <2>,
+        word_counter: input COUNTER   ,
+    ) -> COUNTER {
+        var up  : logic;
+        var down: logic;
+        up   = push && (!pop);
+        down = (!push) && pop;
+        switch {
+            clear[0]: return 0 as COUNTER;
+            clear[1]: return 1 as COUNTER;
+            up      : return word_counter + 1 as COUNTER;
+            down    : return word_counter - 1 as COUNTER;
+            default : return word_counter;
+        }
+    }
+
+    //--------------------------------------------------------------
+    //  status flag
+    //--------------------------------------------------------------
+    always_comb {
+        o_empty       = status_flag.empty;
+        o_almost_full = status_flag.almost_full;
+        o_full        = status_flag.full && (!match_data);
+    }
+
+    if FLAG_FF_OUT :g_flag_ff_out {
+        always_ff {
+            if_reset {
+                status_flag.empty       = '1;
+                status_flag.almost_full = '0;
+                status_flag.full        = '0;
+            } else if update_state {
+                status_flag = get_status_flag(word_counter_next);
+            }
+        }
+    } else :g_flag_logic_out {
+        always_comb {
+            status_flag = get_status_flag(word_counter);
+        }
+    }
+
+    function get_status_flag (
+        word_count: input COUNTER,
+    ) -> s_status_flag {
+        var flag            : s_status_flag;
+        flag.empty       = word_count == 0;
+        flag.almost_full = word_count >= THRESHOLD;
+        flag.full        = word_count >= DEPTH;
+        return flag;
+    }
+
+    //--------------------------------------------------------------
+    //  write/read pointer
+    //--------------------------------------------------------------
+    always_comb {
+        o_write_pointer = ram_write_pointer;
+        o_write_to_ff   = write_to_ff;
+        o_write_to_ram  = write_to_ram;
+        o_read_pointer  = ram_read_pointer;
+        o_read_from_ram = read_from_ram;
+    }
+
+    if DATA_FF_OUT :g_data_ff_out {
+        always_comb {
+            if (word_counter_eq_1 && pop) || status_flag.empty || clear[1] {
+                write_to_ff  = push;
+                write_to_ram = '0;
+            } else {
+                write_to_ff  = '0;
+                write_to_ram = push;
+            }
+            read_from_ram  = pop && word_counter_ge_2;
+            ram_empty_next = read_from_ram && (!write_to_ram) && word_counter_eq_2;
+        }
+    } else :g_data_ram_out {
+        always_comb {
+            write_to_ff    = '0;
+            write_to_ram   = push;
+            read_from_ram  = pop;
+            ram_empty_next = read_from_ram && (!write_to_ram) && word_counter_eq_1;
+        }
+    }
+
+    if RAM_WORDS >= 2 :g_multi_word_ram {
+        always_ff {
+            if_reset {
+                ram_write_pointer = 0 as RAM_POINTER;
+            } else if (clear[0]) {
+                ram_write_pointer = 0 as RAM_POINTER;
+            } else if (clear[1]) {
+                ram_write_pointer = if DATA_FF_OUT ? 0 as RAM_POINTER : 1 as RAM_POINTER;
+            } else if (ram_empty_next) {
+                ram_write_pointer = ram_read_pointer;
+            } else if (write_to_ram) {
+                if (ram_write_pointer == (RAM_WORDS - 1) as RAM_POINTER) {
+                    ram_write_pointer = 0 as RAM_POINTER;
+                } else {
+                    ram_write_pointer += 1 as RAM_POINTER;
+                }
+            }
+        }
+
+        always_ff {
+            if_reset {
+                ram_read_pointer = 0 as RAM_POINTER;
+            } else if (i_clear) {
+                ram_read_pointer = 0 as RAM_POINTER;
+            } else if (ram_empty_next) {
+                ram_read_pointer = ram_read_pointer;
+            } else if (read_from_ram) {
+                if (ram_read_pointer == (RAM_WORDS - 1) as RAM_POINTER) {
+                    ram_read_pointer = 0 as RAM_POINTER;
+                } else {
+                    ram_read_pointer += 1 as RAM_POINTER;
+                }
+            }
+        }
+    } else :g_single_word_ram {
+        always_comb {
+            ram_write_pointer = 0 as RAM_POINTER;
+            ram_read_pointer  = 0 as RAM_POINTER;
+        }
+    }
+
+    //--------------------------------------------------------------
+    //  data match
+    //--------------------------------------------------------------
+    if MATCH_COUNT_WIDTH >: 0 :g_data_match {
+        var match_count     : logic  <DEPTH, MATCH_COUNT_WIDTH>;
+        var match_count_full: logic  <DEPTH>                   ;
+        var match_count_eq_1: logic  <DEPTH>                   ;
+        var last_match_data : logic  <DEPTH>                   ;
+        var write_pointer   : POINTER<2>                       ;
+        var read_pointer    : POINTER                          ;
+        var data            : TYPE                             ;
+
+        if DEPTH == RAM_WORDS :g_pointer {
+            always_comb {
+                write_pointer[0] = ram_write_pointer;
+                read_pointer     = ram_read_pointer;
+            }
+        } else {
+            always_ff {
+                if_reset {
+                    write_pointer[0] = 0 as POINTER;
+                } else if clear[0] {
+                    write_pointer[0] = 0 as POINTER;
+                } else if clear[1] {
+                    write_pointer[0] = 1 as POINTER;
+                } else if push {
+                    if write_pointer[0] == (DEPTH - 1) as POINTER {
+                        write_pointer[0] = 0 as POINTER;
+                    } else {
+                        write_pointer[0] += 1 as POINTER;
+                    }
+                }
+            }
+
+            always_ff {
+                if_reset {
+                    read_pointer = 0 as POINTER;
+                } else if i_clear {
+                    read_pointer = 0 as POINTER;
+                } else if pop {
+                    if read_pointer == (DEPTH - 1) as POINTER {
+                        read_pointer = 0 as POINTER;
+                    } else {
+                        read_pointer += 1 as POINTER;
+                    }
+                }
+            }
+        }
+
+        always_comb {
+            if write_pointer[0] == 0 as POINTER {
+                write_pointer[1] = (DEPTH - 1) as POINTER;
+            } else {
+                write_pointer[1] = write_pointer[0] - 1 as POINTER;
+            }
+        }
+
+        always_ff {
+            if push {
+                data = i_data;
+            }
+        }
+
+        always_comb {
+            match_data    = (!status_flag.empty) && (i_data == data) && (!match_count_full[write_pointer[1]]);
+            last_pop_data = last_match_data[read_pointer];
+        }
+
+        for i in 0..DEPTH :g_match_count {
+            var up_down: logic<3>;
+
+            always_comb {
+                match_count_full[i] = match_count[i] == '1;
+                match_count_eq_1[i] = match_count[i] == 1 as MATCH_COUNT_WIDTH;
+                last_match_data[i]  = match_count_eq_1[i] && (up_down[2:1] == '0);
+            }
+
+            always_comb {
+                up_down[2] = (match_data == '0) && (write_pointer[0] == i as POINTER) && push;
+                up_down[1] = (match_data == '1) && (write_pointer[1] == i as POINTER) && i_push;
+                up_down[0] = (!status_flag.empty) && (read_pointer == i as POINTER) && i_pop;
+            }
+
+            always_ff {
+                if_reset {
+                    match_count[i] = 0 as MATCH_COUNT_WIDTH;
+                } else if clear[0] || (i_clear && (i >= 1)) {
+                    match_count[i] = 0 as MATCH_COUNT_WIDTH;
+                } else if clear[1] && (i == 0) {
+                    match_count[i] = 1 as MATCH_COUNT_WIDTH;
+                } else if inside up_down {3'b1x0, 3'bx10} {
+                    match_count[i] += 1 as MATCH_COUNT_WIDTH;
+                } else if up_down == 3'b001 {
+                    match_count[i] -= 1 as MATCH_COUNT_WIDTH;
+                }
+            }
+        }
+    } else :g {
+        always_comb {
+            match_data    = '0;
+            last_pop_data = '1;
+        }
+    }
+}
