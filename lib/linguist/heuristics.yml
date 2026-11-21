@@ -134,6 +134,8 @@ disambiguations:
   rules:
   - language: B4X
     pattern: '\A\W{0,3}(?:.*(?:\r?\n|\r)){0,9}B4(?:J|A|R|i)=true'
+  - language: BBC BASIC
+    named_pattern: bbcbasic
   - language: FreeBASIC
     named_pattern: freebasic
   - language: FreeBASIC
@@ -903,6 +905,8 @@ disambiguations:
     pattern: '^[ \t]*:(?:local|global)[ \t]+[A-Za-z0-9]+(?:[ \t;]|\r?$)'
 - extensions: ['.s']
   rules:
+  - language: ARM Assembly
+    named_pattern: armasm
   - language: Unix Assembly
     pattern: '(?i:mov[lq]?)\s+[%\$]'
   - language: Assembly
@@ -1172,6 +1176,19 @@ disambiguations:
     named_pattern: json
   - language: Yacc
 named_patterns:
+  armasm:
+  # Directives specific to the ObjAsm / armasm (SDT, ADS, RVCT, Keil MDK) syntax
+  - '^(?:[^\s;#][^\s;]*)?[ \t]+(?:AREA|ROUT|GET)[ \t]'
+  bbcbasic:
+  # Keywords and constructs specific to BBC BASIC: procedure definitions,
+  # the ADVAL, GCOL, OSCLI and VDU keywords, byte-wise file access, and the
+  # inline assembler. HIMEM and LOMEM are deliberately excluded because
+  # Applesoft BASIC also has them.
+  - 'DEF *PROC[\w`]'
+  - 'ENDPROC\b'
+  - '(?:^|[^A-Za-z])(?:ADVAL|GCOL|OSCLI|VDU)(?:[^A-Za-z_]|$)'
+  - '(?:BGET|BPUT) *#'
+  - '\[ *OPT\b'
   cpp:
   - '^\s*#\s*include <(cstdint|string|vector|map|list|array|bitset|queue|stack|forward_list|unordered_map|unordered_set|(i|o|io)stream)>'
   - '^\s*template\s*<'

@@ -1,0 +1,52 @@
+REM > DefaultFilename
+PRINT:REM Ordinary comment: This is still a comment
+ONERRORPRINTERR:END
+ERROR1,"error"
+IF2*2=4ELSE*Cat:4.$
+FOR n=1 TO 10
+PRINTTAB(n)"Hello there ";FNnumber(n)DIV3+1'INKEY$(500)INKEY(500)
+NEXT
+DIM code% 100
+FOR opt=0 TO 3 STEP 3
+P%=code%
+[OPT opt
+.label1%
+.label2% LDR r0,[P%MOD2,#0]
+ MOV pc,r14:REM comments in assembly terminate at colon:EQUD -1
+.label3;comment
+ ALIGN
+.label4
+]
+NEXT
+CALL code%:PRINT USR(code%)
+DIM`(100,100):PRINTDIM(`())
+X=&FEDCBA98:PRINT X,~X,X>>>1,X>>1,X>1
+PRINT %1010%1111:REM Prints "10" then "15"
+A%=@%:@%="F10.2":PRINT~@%:@%=A%
+ELLIPSE FILL 100,100,100,50,45
+MOUSEOFF
+DIM block% 100
+block%!2*4=0
+CASE thing OF
+WHEN 1:PRINT"one"
+OTHERWISE *echo not one
+ENDCASE
+*Help
+ON
+ONA%PROCa,PROCb ELSEPROCc
+ONERRORONERROROFF:OFF:REPORT:END
+IF A% PRINT"Problem"
+IF A$ THEN PRINT"Not a problem"
+WHILENOTEOF#f PRINTBGET#f:ENDWHILE
+REPEATUNTILFALSE
+END
+DEFPROCa PRINT"Hello world":ENDPROC
+DEFFNnumber(x%)=ABS(x%-4)
+
+MODE1:VDU5
+FORN=8TO247:FORM=0TO319
+X=0:Y=-.1:Z=3:U=(M-159.5)/160:V=(N-127.5)/160:W=1/SQR(U*U+V*V+1):U=U*W:V=V*W:I=SGNU:G=1
+E=X-I:F=Y-I:P=U*E+V*F-W*Z:D=P*P-E*E-F*F-Z*Z+1:IFD>0T=-P-SQRD:IFT>0X=X+T*U:Y=Y+T*V:Z=Z-T*W:E=X-I:F=Y-I:G=Z:P=2*(U*E+V*F-W*G):U=U-P*E:V=V-P*F:W=W+P*G:I=-I:GOTO40
+IFV<0P=(Y+2)/V:V=-V*((INT(X-U*P)+INT(Z-W*P)AND1)/2+.3)+.2
+GCOL0,3-(48*SQRV+16*(PI*(M+17*N)-INT(PI*(M+17*N))))DIV16
+PLOT69,4*M,4*N:NEXT,
