@@ -1,0 +1,10 @@
+[codespell]
+# Ref: https://github.com/codespell-project/codespell#using-a-config-file
+skip = .git*,.codespellrc,*.pdf,generated
+check-hidden = true
+
+# Ignore mixedCase variables, lines with latin, lines with codespell-ignore pragma, etc
+ignore-regex = \b([A-Z]*[a-z]+[A-Z][a-zA-Z]*)\b|.*(Lorem ipsum|eleifend|feugait|codespell-ignore).*|https?://\S+
+
+# alph - is used frequently in tests, just ignore altogether
+ignore-words-list = ser,alph,inbetween,interm

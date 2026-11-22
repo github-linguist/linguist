@@ -220,8 +220,9 @@ vendor/grammars/aidl-language:
 - source.aidl
 vendor/grammars/aleo-linguist:
 - source.aleo
-vendor/grammars/ampl:
+vendor/grammars/ampl-plugin-official:
 - source.ampl
+- source.ampl.dat
 vendor/grammars/android-system-tools:
 - source.bp
 vendor/grammars/ant.tmbundle:
@@ -254,7 +255,6 @@ vendor/grammars/astro:
 - text.html.markdown.astro
 vendor/grammars/atom-editorconfig:
 - source.editorconfig
-- text.plain
 vendor/grammars/atom-firestore-grammar:
 - source.firestore
 vendor/grammars/atom-fstar:
@@ -290,6 +290,8 @@ vendor/grammars/atom-salt:
 - source.yaml.salt
 vendor/grammars/ats:
 - source.ats
+vendor/grammars/avisynth-textmate:
+- source.avisynth
 vendor/grammars/avro.tmLanguage:
 - source.avro
 vendor/grammars/awk-sublime:
@@ -335,6 +337,8 @@ vendor/grammars/carto-atom:
 - source.css.mss
 vendor/grammars/cds-textmate-grammar:
 - source.cds
+vendor/grammars/cedar-tm-grammar:
+- source.cedar
 vendor/grammars/ceylon-sublimetext:
 - source.ceylon
 vendor/grammars/chapel-tmbundle:
@@ -395,6 +399,8 @@ vendor/grammars/dylan.tmbundle:
 - source.makegen
 vendor/grammars/earthfile-grammar:
 - source.earthfile
+vendor/grammars/easycrypt-vscode:
+- source.easycrypt
 vendor/grammars/ec.tmbundle:
 - source.c.ec
 vendor/grammars/ecl-tmLanguage:
@@ -451,6 +457,9 @@ vendor/grammars/godot-vscode-plugin:
 - source.gdresource
 - source.gdscript
 - source.gdshader
+vendor/grammars/goose:
+- markdown.goose.codeblock
+- source.goose
 vendor/grammars/grace:
 - source.grace
 vendor/grammars/gradle.tmbundle:
@@ -944,6 +953,9 @@ vendor/grammars/mediawiki.tmbundle:
 - text.html.mediawiki
 vendor/grammars/mercury-tmlanguage:
 - source.mercury
+vendor/grammars/metapost-plugin:
+- source.metafont
+- source.metapost
 vendor/grammars/metta-textmate-linguist:
 - source.metta
 vendor/grammars/miniscript-textmate-linguist:
@@ -1062,7 +1074,8 @@ vendor/grammars/rez.tmbundle:
 - source.rez
 vendor/grammars/riot-syntax-highlight:
 - text.html.riot
-vendor/grammars/roc-vscode-unofficial:
+vendor/grammars/roc-vscode:
+- markdown.roc.codeblock
 - source.roc
 vendor/grammars/ros-tmlanguage:
 - source.rosmsg
@@ -1090,6 +1103,9 @@ vendor/grammars/skript-grammar:
 - source.skript
 vendor/grammars/slang-vscode-extension:
 - source.slang
+vendor/grammars/slice-tools:
+- source.ice
+- source.slice
 vendor/grammars/slint-tmLanguage:
 - source.slint
 vendor/grammars/smali-sublime:
@@ -1213,6 +1229,9 @@ vendor/grammars/syntax:
 - source.sentinel
 vendor/grammars/syntax-mcfunction:
 - source.mcfunction
+vendor/grammars/sysml-v2-textmate:
+- source.kerml
+- source.sysml
 vendor/grammars/tact-sublime:
 - source.tact
 vendor/grammars/tcl.tmbundle:
@@ -1243,6 +1262,8 @@ vendor/grammars/ton-language-server:
 - source.tasm
 - source.tlb
 - source.tolk
+vendor/grammars/tsrx:
+- source.tsrx
 vendor/grammars/turtle.tmbundle:
 - source.sparql
 - source.turtle
@@ -1253,6 +1274,8 @@ vendor/grammars/typst-grammar:
 vendor/grammars/ucode-lsp:
 - source.ucode
 - source.ucode-template
+vendor/grammars/uiua-vscode:
+- source.uiua
 vendor/grammars/verilog.tmbundle:
 - source.verilog
 vendor/grammars/verse-grammar:
@@ -1353,6 +1376,8 @@ vendor/grammars/vscode-ibmi-languages:
 - source.pnlgrp
 - source.rpg
 - source.rpgle
+vendor/grammars/vscode-ifc:
+- source.ifc
 vendor/grammars/vscode-janet:
 - source.janet
 vendor/grammars/vscode-jest:
@@ -1456,9 +1481,6 @@ vendor/grammars/vscode-scala-syntax:
 - source.scala
 vendor/grammars/vscode-singularity:
 - source.singularity
-vendor/grammars/vscode-slice:
-- source.ice
-- source.slice
 vendor/grammars/vscode-teal:
 - source.teal
 vendor/grammars/vscode-tmdl:
