@@ -1,0 +1,23 @@
+# Kaze example — greenhouse climate control.
+#
+#   This syntax example needs real sensor and alert backends that are not yet
+#   available in the standalone built-in host; it must not simulate them.
+#
+# `fan` and `mister` are instances of the `device` family, so one grant
+# covers both relays.
+
+needs: sensor, fan, mister, alert
+
+# Typed parameters carry their dimension, so the comparison below is checked
+# against real units rather than trusted. A sensor read is fallible (the probe
+# can be silent), so each read states what to use when it is.
+check climate(target_temp: Celsius, target_humidity: percent):
+    let temperature = sensor.temperature() otherwise 0 Celsius
+    let humidity = sensor.humidity() otherwise 0%
+    if temperature > target_temp + 2 Kelvin:
+        turn on fan
+        send alert "Cooling fan activated"
+    otherwise:
+        turn off fan
+    if humidity < target_humidity:
+        pulse mister for 5 seconds

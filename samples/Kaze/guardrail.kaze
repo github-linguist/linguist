@@ -1,0 +1,18 @@
+# Kaze example — a prompt guardrail.
+#
+#   This example requires a real memory backend, not available in the
+#
+# standalone built-in host. A filter is intended to return an `allow` or
+# `reject` verdict, but the current checker also accepts a plain `return`.
+# Capability calls require explicit grants and a valid policy.
+# Nothing in the syntax itself establishes an external memory backend.
+
+needs: memory, policy
+
+filter user_prompt(prompt):
+    if length of prompt > 2000:
+        reject with "Prompt exceeds maximum allowed length"
+    if policy detects secrets in prompt:
+        reject with "Prompt contains private API keys"
+    remember prompt as "last_valid_query"
+    allow prompt
