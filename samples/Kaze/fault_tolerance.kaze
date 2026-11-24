@@ -1,0 +1,30 @@
+# examples/fault_tolerance.kaze — v0.4: recover, then watch the link.
+#
+#   kaze run examples/fault_tolerance.kaze --cap drone=sim --cap log \
+#     --ticks 35 --tick-ms 100 --sim link_lost_after=0 --plain
+#
+# The first takeoff fails because the vehicle is not armed. `try` catches that
+# operational failure (E_ARMING_DENIED), the recovery block reports it and arms the
+# vehicle, and the second takeoff succeeds. After three seconds of simulated
+# link silence the `when` hook returns the vehicle to launch.
+
+needs: drone, log
+
+action main():
+    try:
+        takeoff to 15 meters
+    otherwise with err:
+        log warning err.code
+        log warning err.message
+        log warning err.line
+        arm drone
+        takeoff to 15 meters
+
+when link lost for 3 seconds:
+    log warning "link lost; returning to launch"
+    # The link is gone, so the RTL command may itself fail. A failsafe that
+    # stops on that failure is not a failsafe; recover and keep supervising.
+    try:
+        return to launch
+    otherwise with err:
+        log warning err.code
