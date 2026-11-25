@@ -1,0 +1,8 @@
+#!/bin/bash
+#BSUB -J align
+#BSUB -n 8
+#BSUB -W 2:00
+#BSUB -o align.%J.out
+
+module load samtools/1.17
+samtools sort -@ 8 -o sorted.bam input.bam

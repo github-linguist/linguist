@@ -574,6 +574,11 @@ disambiguations:
   - language: LoomScript
     pattern: '^\s*package\s*[\w\.\/\*\s]*\s*\{'
   - language: LiveScript
+- extensions: ['.lsf']
+  rules:
+  - language: lsFusion
+    # Every lsFusion file starts with a module header: "MODULE Name;"
+    pattern: '^[ \t]*MODULE[ \t]+[A-Za-z]\w*[ \t]*;'
 - extensions: ['.lsp', '.lisp']
   rules:
   - language: Common Lisp

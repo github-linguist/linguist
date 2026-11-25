@@ -1,0 +1,10 @@
+# Sweep the waveguide width and record the transmission
+switchtolayout;
+select("waveguide");
+for (i = 1:5) {
+    set("y span", 0.4e-6 + i * 0.05e-6);
+    run;
+    T = transmission("output");
+    ?num2str(i) + ": " + num2str(mean(T));
+    switchtolayout;
+}

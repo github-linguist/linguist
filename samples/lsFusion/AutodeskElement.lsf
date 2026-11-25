@@ -1,0 +1,91 @@
+MODULE AutodeskElement;
+
+REQUIRE AutodeskModel, AutodeskViewable, Hierarchy;
+
+NAMESPACE Autodesk;
+
+CLASS Element 'Element';
+model = DATA Model (Element) NONULL DELETE;
+
+in = DATA BOOLEAN (Viewable, Element);
+
+id = DATA INTEGER (Element) CHARWIDTH 6;
+name '{Name}' = DATA ISTRING (Element) CHARWIDTH 30 INDEXED MATCH;
+
+INDEX model(Element m), id(m);
+
+element (Model m, INTEGER id) = GROUP AGGR Element e BY model(e), id(e);
+
+@defineHierarchy(element);
+
+element1 (Element child) = elementRoot(child, 1);
+nameElement1 'Element 1' (Element child) = name(element1(child));
+
+element2 (Element child) = elementRoot(child, 2);
+nameElement2 'Element 2' (Element child) = name(element2(child));
+
+element3 (Element child) = elementRoot(child, 3);
+nameElement3 'Element 3' (Element child) = name(element3(child));
+
+element4 (Element child) = elementRoot(child, 4);
+nameElement4 'Element 4' (Element child) = name(element4(child));
+
+element5 (Element child) = elementRoot(child, 5);
+nameElement5 'Element 5' (Element child) = name(element5(child));
+
+element6 (Element child) = elementRoot(child, 6);
+nameElement6 'Element 6' (Element child) = name(element6(child));
+
+FORM element 'Element'
+    OBJECTS e = Element PANEL
+    PROPERTIES(e) name, nameParent
+    
+    EDIT Element OBJECT e
+;
+
+objectName = DATA LOCAL STRING (INTEGER);
+objectId = DATA LOCAL INTEGER (INTEGER);
+parentId = DATA LOCAL INTEGER (INTEGER);
+
+// Java internal action to parse the Autodesk objects JSON
+importAutodeskObjects INTERNAL 'region.us.integration.autodesk.AutodeskObjectTreeImportAction' (STRING);
+
+getElements 'Get' (Viewable v) {
+    NEWSESSION {
+        getToken();
+        EXTERNAL HTTP GET apiUrl() + '/modelderivative/v2/designdata/' + base64Urn(model(v)) + r'/metadata/' + guid(v) HEADERS accessHeaders
+            TO resultFile;
+        
+        fileToString(resultFile());
+        
+        importAutodeskObjects(resultString());
+        
+        FOR objectId(INTEGER i) AND NOT element(model(v), objectId(i)) ORDER objectId(i), i DO NEW e = Element {
+            model(e) <- model(v);
+            id(e) <- objectId(i);
+        }
+        
+        FOR Element e = element(model(v), objectId(INTEGER i)) DO {
+            name(e) <- objectName(i);
+            parent(e) <- element(model(v), parentId(i));
+        }
+        
+        in(v, Element e) <- TRUE IF GROUP SUM 1 IF id(e) = objectId(INTEGER i) AND model(e) = model(v); 
+        
+        APPLY;
+    }
+}
+
+EXTEND FORM autodesk
+    TREE elements e = Element PARENT parent(e)
+    PROPERTIES(e) READONLY id, name
+    PROPERTIES(v) getElements DRAW e TOOLBAR
+    PROPERTIES(e) EDIT
+    FILTERS model(e) = m, in(v, e)
+;
+
+DESIGN autodesk {
+    details {
+        MOVE BOX(TREE elements) { caption = ''; }
+    }
+}
