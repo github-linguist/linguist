@@ -43,6 +43,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **Apollo Guidance Computer:** [Alhadis/language-agc](https://github.com/Alhadis/language-agc)
 - **AppleScript:** [textmate/applescript.tmbundle](https://github.com/textmate/applescript.tmbundle)
 - **ArkTS:** [ohosvscode/arkTS](https://github.com/ohosvscode/arkTS)
+- **Artistic Style Configuration:** [Alhadis/language-etc](https://github.com/Alhadis/language-etc)
 - **AsciiDoc:** [zuckschwerdt/asciidoc.tmbundle](https://github.com/zuckschwerdt/asciidoc.tmbundle)
 - **AspectJ:** [pchaigno/sublime-aspectj](https://github.com/pchaigno/sublime-aspectj)
 - **Assembly:** [Nessphoro/sublimeassembly](https://github.com/Nessphoro/sublimeassembly)
