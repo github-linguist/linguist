@@ -776,6 +776,7 @@ This is a list of grammars that Linguist selects to provide syntax highlighting 
 - **iCalendar:** [kimsey0/iCalendar-sublime](https://github.com/kimsey0/iCalendar-sublime)
 - **jq:** [wader/language-jq](https://github.com/wader/language-jq)
 - **kvlang:** [p0lygun/kivy-language-grammer](https://github.com/p0lygun/kivy-language-grammer)
+- **lsFusion:** [lsfusion/lsfusion-grammar](https://github.com/lsfusion/lsfusion-grammar)
 - **mIRC Script:** [gen-angry/language-msl](https://github.com/gen-angry/language-msl)
 - **mcfunction:** [MinecraftCommands/syntax-mcfunction](https://github.com/MinecraftCommands/syntax-mcfunction)
 - **mupad:** [ccreutzig/sublime-MuPAD](https://github.com/ccreutzig/sublime-MuPAD)
