@@ -1,0 +1,102 @@
+--no-blank-before-sizeof
+--no-blank-lines-after-commas
+--no-blank-lines-after-declarations
+--blank-lines-after-procedures
+--braces-after-func-def-line
+--braces-on-if-line
+--braces-on-struct-decl-line
+--break-after-boolean-operator
+--case-brace-indentation0
+--case-indentation0
+--no-comment-delimiters-on-blank-lines
+--comment-indentation33
+--continuation-indentation8
+--continue-at-parentheses
+--cuddle-do-while
+--cuddle-else
+--declaration-comment-column33
+--declaration-indentation1
+--dont-format-comments
+--dont-format-first-column-comments
+--dont-star-comments
+--else-endif-column1
+--ignore-newlines
+--indent-label2
+--indent-level8
+--leave-preprocessor-space
+--line-comments-indentation0
+--line-length80
+--parameter-indentation0
+--pointer-align-right
+--procnames-start-lines
+--space-after-cast
+--space-after-for
+--no-space-after-function-call-names
+--space-after-if
+--no-space-after-parentheses
+--space-after-while
+--space-special-semicolon
+--tab-size8
+--use-tabs
+-T allocator
+-T ATOMIC_BASE_TYPE
+-T ATOMIC_TYPE
+-T bat
+-T BAT
+-T BATiter
+-T bit
+-T bte
+-T BUN
+-T BUN2type
+-T BUN4type
+-T BUN8type
+-T date
+-T daytime
+-T dbl
+-T FILE
+-T flt
+-T gdk_callback_func
+-T gdk_return
+-T Hash
+-T Heap
+-T hge
+-T __int128_t
+-T int16_t
+-T int32_t
+-T int64_t
+-T int8_t
+-T lng
+-T log_bid
+-T logger
+-T log_id
+-T Mapi
+-T MapiHdl
+-T MapiMsg
+-T msk
+-T MT_Cond
+-T MT_Id
+-T MT_Lock
+-T MT_Sema
+-T off_t
+-T oid
+-T old_logger
+-T PROPrec
+-T ptr
+-T QryCtx
+-T RTree
+-T sht
+-T str
+-T stream
+-T stridx_t
+-T Strimps
+-T timestamp
+-T time_t
+-T trans
+-T uint16_t
+-T uint32_t
+-T uint64_t
+-T uint8_t
+-T ulng
+-T url
+-T ValRecord
+-T var_t
