@@ -1,0 +1,75 @@
+;**************************************************************************
+;*                                                                        *
+;*                                 OCaml                                  *
+;*                                                                        *
+;*                     Thomas Refis, Jane Street Europe                   *
+;*                                                                        *
+;*   Copyright 2018 Jane Street Group LLC                                 *
+;*                                                                        *
+;*   All rights reserved.  This file is distributed under the terms of    *
+;*   the GNU Lesser General Public License version 2.1, with the          *
+;*   special exception on linking described in the file LICENSE.          *
+;*                                                                        *
+;**************************************************************************
+
+(rule
+ (targets primitives prims.c)
+ (mode    fallback)
+ (deps
+   ; matches the line structure of files in gen_primitives.sh
+   alloc.c array.c compare.c extern.c floats.c gc_ctrl.c hash.c intern.c
+     interp.c ints.c io.c
+   lexing.c md5.c meta.c memprof.c obj.c parsing.c signals.c str.c sys.c
+     callback.c weak.c
+   finalise.c domain.c platform.c fiber.c memory.c startup_aux.c
+     runtime_events.c sync.c
+   dynlink.c backtrace_byt.c backtrace.c afl.c bigarray.c prng.c)
+ (action
+   (progn
+     (run %{dep:gen_primitives.sh} primitives %{deps})
+     (with-stdout-to prims.c (run %{dep:gen_primsc.sh} primitives %{deps})))))
+
+(rule
+ (targets libcamlrun.a)
+ (mode    fallback)
+ (deps
+   ../Makefile.config
+   ../Makefile.build_config
+   ../Makefile.config_if_required
+   ../Makefile.common Makefile
+   (glob_files caml/*.h)
+   misc_internals.h
+   ; matches the line structure of files in Makefile/BYTECODE_C_SOURCES
+   interp.c misc.c fix_code.c startup_aux.c startup_byt.c freelist.c
+     major_gc.c
+   minor_gc.c memory.c alloc.c roots_byt.c globroots.c fail_byt.c signals.c
+   signals_byt.c printexc.c backtrace_byt.c backtrace.c compare.c ints.c
+   floats.c str.c array.c io.c extern.c intern.c hash.c sys.c meta.c parsing.c
+     gc_ctrl.c  md5.c obj.c
+   lexing.c callback.c debugger.c weak.c compact.c finalise.c custom.c dynlink.c
+   afl.c unix.c win32.c bigarray.c main.c memprof.c domain.c
+   skiplist.c codefrag.c
+ )
+ (action
+   (progn
+     (bash "touch .depend") ; hack.
+     (run make %{targets} COMPUTE_DEPS=false)
+     (bash "rm .depend"))))
+
+;; HACK
+(library
+  (name runtime)
+  (modes byte)
+  (wrapped false)
+  (modules runtime)
+  (foreign_archives camlrun)
+  (flags (-nostdlib -nopervasives))
+  (library_flags -cclib "-I runtime"))
+
+(rule
+  (targets libruntime_stubs.a)
+  (action (copy libcamlrun.a %{targets})))
+
+(rule
+  (targets runtime.ml)
+  (action (write-file %{targets} "let linkme = ()")))
