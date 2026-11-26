@@ -114,7 +114,7 @@ To add support for a new extension:
 
   > [!IMPORTANT]
   > - "Hello world" and other examples found in tutorials will not be accepted.
-  > - Samples must not be too big; if a file isn't fully displayed in the diff view, it must be shortened.
+  > - Samples must not be too big; if a file isn't fully displayed in the diff view. Use a smaller file.
 
 3. Open a pull request, linking to a [GitHub search result][search-example] showing in-the-wild usage.
    If you are adding a sample, please state clearly the license covering the code.
@@ -160,7 +160,7 @@ To add support for a new language:
 
   > [!IMPORTANT]
   > - "Hello world" and other examples found in tutorials will not be accepted.  
-  > - Samples must not be too big; if a file isn't fully displayed in the diff view, it must be shortened.
+  > - Samples must not be too big; if a file isn't fully displayed in the diff view. Use a smaller file.
 
 4. Generate a unique ID for your language by running `script/update-ids`.
 5. Open a pull request, linking to [GitHub search results][search-example] showing in-the-wild usage.
