@@ -296,6 +296,7 @@ class TestHeuristics < Minitest::Test
   def test_bas_by_heuristics
     assert_heuristics({
       "B4X" => all_fixtures("B4X", "*.bas"),
+      "BBC BASIC" => all_fixtures("BBC BASIC", "*.bas"),
       "FreeBASIC" => all_fixtures("FreeBASIC", "*.bas"),
       "BASIC" => all_fixtures("BASIC", "*.bas"),
       "VBA" => all_fixtures("VBA", "*.bas"),
@@ -1089,6 +1090,7 @@ class TestHeuristics < Minitest::Test
 
   def test_s_by_heuristics
     assert_heuristics({
+      "ARM Assembly" => all_fixtures("ARM Assembly", "*.s"),
       "Motorola 68K Assembly" => all_fixtures("Motorola 68K Assembly", "*.s"),
       "Assembly" => all_fixtures("Assembly", "*.s"),
       "Unix Assembly" => all_fixtures("Unix Assembly", "*.s")
