@@ -1,0 +1,22 @@
+style=kr
+lineend=linux
+indent=force-tab=8
+
+keep-one-line-blocks
+attach-closing-while
+indent-preproc-define
+min-conditional-indent=3
+pad-comma
+pad-header
+unpad-brackets
+squeeze-lines=1
+align-pointer=name
+attach-return-type
+attach-return-type-decl
+max-code-length=80
+
+# don't use these for automatic formatting
+# since they remove the space in "(int) 4"
+# and change "(BYTE) *s" to "(BYTE) * s"
+pad-oper
+unpad-paren
