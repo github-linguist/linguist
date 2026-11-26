@@ -1,0 +1,95 @@
+/* START QUERY BUILDER */
+define
+	var cur_index = SELECTEDVALUE( Metric[Index] )
+	
+	measure Metric[CountRows1] = countrows( Metric )
+	measure Metric[CountRows2] = calculate(
+		COUNTROWS( Metric ),
+		All( Metric )
+	)
+	measure Metric[CountRows3] = calculate(
+		COUNTROWS( Metric ),
+		KEEPFILTERS( Metric[Index] )
+	)
+	
+	measure Metric[CountRows4] = calculate(
+		// every row returns 1
+		COUNTROWS( Metric ),
+		KEEPFILTERS( Metric[Index] )		
+		//Metric[Index] < cur_index
+	)
+	measure Metric[CountRows5] = calculate(
+		// every row returns 21
+		COUNTROWS( Metric ),
+		all( Metric )
+		//KEEPFILTERS( Metric[Index] )		
+		//Metric[Index] < cur_index
+	)
+	
+	measure Metric[CountRows6] = calculate(
+		// every row returns 21
+		COUNTROWS( Metric ),
+		all( Metric )
+		//KEEPFILTERS( Metric[Index] )		
+		//Metric[Index] < cur_index
+	)
+
+	
+	measure Metric[maxFilter1] = calculate(
+		// this returns blanks when [Value] was blank
+		max( 
+			Metric[Value]
+			//Metric[Value] = 5
+		),
+	
+		KEEPFILTERS( Metric[Index] )
+	)
+	measure Metric[maxFilter2] = calculate(
+		max( 
+			Metric[Value]
+			//Metric[Value] = 5
+		),
+		//all( Metric[Value] )
+		KEEPFILTERS( Metric[Index] ),
+		filter(
+			Metric,
+			Metric[Index] <> cur_index
+		)
+	)
+	measure Metric[maxFilter3] = calculate(
+		max( 
+			Metric[Value]
+			//Metric[Value] = 5
+		),
+		//all( Metric[Value] )
+		KEEPFILTERS( Metric[Index] ),
+		filter(
+			Metric,
+			Metric[Index] <> cur_index
+		)
+	)
+		
+		
+	
+
+EVALUATE
+SUMMARIZECOLUMNS(    
+    Metric[Index],    
+    Metric[Value],
+	"count 6", [CountRows6],
+    "count 5", [CountRows5],    
+    "maxFilter3",  Metric[maxFilter3],
+    "maxFilter2",  Metric[maxFilter2],
+    "maxFilter1",  Metric[maxFilter1],
+    //"FNonblank",  Metric[firstBlank1],
+    
+    "count 4", [CountRows4],
+    "All( Metric ) 2", [CountRows2],
+    "KEEPFILTERS( Metric[Index] )", [CountRows3]
+    
+    //"Row1", [CountRows1]
+)
+ORDER BY     
+    Metric[Index] ASC,
+    Metric[Value] ASC
+/* END QUERY BUILDER */

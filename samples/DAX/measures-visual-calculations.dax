@@ -1,0 +1,42 @@
+// Visual calculations as typed in the Power BI formula bar: window and
+// visual-calc functions with axis, blanks, ties and reset arguments.
+Running total = RUNNINGSUM ( [Sales Amount] )
+
+Running total by column = RUNNINGSUM ( [Sales Amount], COLUMNS )
+
+Three month moving average = MOVINGAVERAGE ( [Sales Amount], 3, ROWS, HIGHESTPARENT )
+
+Previous value = PREVIOUS ( [Sales Amount], 1, ROWS )
+
+Change vs previous =
+    VAR _prev = PREVIOUS ( [Sales Amount] )
+    RETURN
+        IF ( NOT ISBLANK ( _prev ), [Sales Amount] - _prev )
+
+Rank in parent = RANK ( DENSE, ROWS, ORDERBY ( [Sales Amount], DESC BLANKS LAST ), LOWESTPARENT )
+
+Rank across pages = RANK ( SKIP, ROWS COLUMNS ROWPAGES, ORDERBY ( [Sales Amount], DESC ) )
+
+Row number = ROWNUMBER ( ROWS, ORDERBY ( [Sales Amount], ASC, [Product], ASC ), DEFAULT )
+
+First in window = FIRST ( [Sales Amount], ROWS, ORDERBY ( [Year] ), FIRST, NONE )
+
+Last in window = LAST ( [Sales Amount] )
+
+Parent share = DIVIDE ( [Sales Amount], COLLAPSE ( [Sales Amount], ROWS ) )
+
+Grand total share = DIVIDE ( [Sales Amount], COLLAPSEALL ( [Sales Amount], ROWS ) )
+
+Leaf count = EXPANDALL ( COUNTROWS ( ROWS ), ROWS )
+
+Is category level = ISATLEVEL ( [Category] )
+
+Window sum =
+    CALCULATE (
+        [Sales Amount],
+        WINDOW ( -2, REL, 0, REL, ROWS, ORDERBY ( [Year], ASC ), BLANKS DEFAULT )
+    )
+
+Range sum = SUMX ( RANGE ( 1, ABS, 3, ABS, ROWS ), [Sales Amount] )
+
+Lookup total = LOOKUPWITHTOTALS ( [Sales Amount], [Year], 2025, [Category], "Bikes", INFERRED )
