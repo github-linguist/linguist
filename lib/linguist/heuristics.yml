@@ -579,6 +579,15 @@ disambiguations:
   - language: lsFusion
     # Every lsFusion file starts with a module header: "MODULE Name;"
     pattern: '^[ \t]*MODULE[ \t]+[A-Za-z]\w*[ \t]*;'
+  - language: Lumerical Script
+    pattern:
+    # Commands that build or query a simulation: "switchtolayout;", "addrect;", "set('x', 0);"
+    - '^[ \t]*(?:switchtolayout|selectall|deleteall|closeall|newproject|redrawoff|add[a-z0-9]+)[ \t]*;'
+    - '^[ \t]*(?:select|set|setnamed|getnamed|getdata|getresult)[ \t]*\([ \t]*["'']'
+    # Output of a value: "?expression;"
+    - '^[ \t]*\?[ \t]*[\w"''(][^;\n]*;'
+    # Loop over a range: "for(i=1:10) {"
+    - '^[ \t]*for[ \t]*\([ \t]*\w+[ \t]*=[^;)\n]*:[^;\n]*\)[ \t]*\{'
 - extensions: ['.lsp', '.lisp']
   rules:
   - language: Common Lisp

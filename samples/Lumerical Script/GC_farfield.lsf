@@ -1,0 +1,142 @@
+# Copyright (C) 2024 - 2026 ANSYS, Inc. and/or its affiliates.
+# SPDX-License-Identifier: MIT
+#
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
+# Description
+# -------------------
+
+# This script is called by the main script and calculates the E and H component of the grating coupler
+# and calculates the properties of the focused beam.
+
+
+
+clear;
+# Define far field position vector
+
+num=500; # number of points
+x = linspace(-80e-6,50e-6,num);
+y = linspace(1e-6,400e-6,2*num);
+
+# Do far field projection
+
+E_H_far=farfieldexact2d("near_field",x,y,{"field":"E and H"});
+E_far = E_H_far.E;
+H_far = E_H_far.H;
+
+# Extract electric & magnetic components from the E_H_far dataset
+
+Ex=E_far(:,:,:,:,1);
+Ey=E_far(:,:,:,:,2);
+Ez=E_far(:,:,:,:,3);
+
+Hx=H_far(:,:,:,:,1);
+Hy=H_far(:,:,:,:,2);
+Hz=H_far(:,:,:,:,3);
+
+E2_far=(pinch(abs(Ex)))^2+(pinch(abs(Ey)))^2+(pinch(abs(Ez)))^2;
+H2_far=(pinch(abs(Hx)))^2+(pinch(abs(Hy)))^2+(pinch(abs(Hz)))^2;
+image(x*1e6,y*1e6, E2_far,"x-coordinate (um)","y-coordinate (um)","|E|^2");
+
+
+cd(filedirectory(currentscriptname));
+
+# Read Data from ASCII file
+
+    M=readdata("legend.txt");
+    Mselect=M(5,1)*1e-6;
+
+# Farfield along x axis
+
+E3_z = farfieldexact2d('near_field',x,Mselect);
+E3_z = pinch(sum(abs(E3_z)^2,3));
+plot(x*1e6,E3_z,'x (um)','|E|^2 (V^2/m^2)','Line projection at y='+num2str(floor(Mselect*1e6),"%2d")+'um','linewidth=2');
+legend("");
+
+# Find FWHM along x axis
+
+ind1 = find(E3_z,max(E3_z));
+xmax = x(ind1);
+indR1 = find(E3_z,E3_z(ind1)/2);
+if ( ind1<indR1  ) {
+ indR1 = find(E3_z,E3_z(ind1)/2);
+}
+indL1 = abs(ind1-(abs(indR1-ind1)));
+FWHM_X=abs(x(indR1)-x(indL1));
+
+# Farfield along y axis
+
+E2_z = farfieldexact2d('near_field',xmax,y);
+E2_z = pinch(sum(abs(E2_z)^2,3));
+plot(y*1e6,E2_z,'y (um)','|E|^2 (V^2/m^2)','Line projection at x='+num2str(floor(xmax*1e6),"%2d")+'um','linewidth=2');
+legend("");
+
+# Find FWHM along y axis
+ind2 = find(E2_z,max(E2_z));
+Ymax = y(ind2);
+indR2 = find(E2_z,E2_z(ind2)/2);
+if ( ind2>indR2  ) {
+    indR2= ind2 + (ind2-indR2);
+    }
+indL2 = abs(ind2-(abs(indR2-ind2)));
+FWHM_Y=abs(y(indR2)-y(indL2));
+
+# Calculate deviation between actual and target coordinates of the trap
+# Get the length of the properties
+
+nx = length(x);
+ny = length(y);
+
+# Get the intensity values
+
+e2 = E2_far;
+
+# Get the maximum intensity value
+indexE2_far = find(e2, max(e2));
+
+# Create the grids to use to extract the actual position values
+X = meshgridx(x,y);
+Y = meshgridy(x,y);
+?Mselect;
+Mactual=Y(indexE2_far);
+RelVal=(abs(Mselect-Mactual)/Mactual);
+
+# Print geometric properties in the code editor
+select("Substrate");
+Material = get("material");
+select("BOx");
+BOX = get("material");
+select("GC_2D");
+GC_period = get("pitch_uniform");
+GC_etch = get("etch depth");
+GC_DCmin = get("dc_min");
+
+
+
+
+
+
+
+
+
+
+
+

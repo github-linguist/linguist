@@ -716,7 +716,8 @@ class TestHeuristics < Minitest::Test
 
   def test_lsf_by_heuristics
     assert_heuristics({
-      "lsFusion" => all_fixtures("lsFusion", "*.lsf"),
+      "Lumerical Script" => all_fixtures("Lumerical Script", "*.lsf") + Dir.glob("#{fixtures_path}/Generic/lsf/Lumerical Script/*"),
+      "lsFusion" => all_fixtures("lsFusion", "*.lsf") + Dir.glob("#{fixtures_path}/Generic/lsf/lsFusion/*"),
       nil => Dir.glob("#{fixtures_path}/Generic/lsf/nil/*")
     })
   end

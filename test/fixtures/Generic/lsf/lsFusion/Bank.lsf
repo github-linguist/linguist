@@ -1,0 +1,48 @@
+MODULE Bank;
+
+REQUIRE InvoicingSettings, CountryP;
+
+NAMESPACE Invoicing;
+
+CLASS Bank 'Bank';
+
+id '{ID}' = DATA STRING[11] (Bank);
+bank (STRING[11] s) = GROUP AGGR Bank b BY id(b);
+
+name '{Name}' = DATA ISTRING[100] (Bank) IN id CHARWIDTH 20 NONULL;
+country 'Country' = DATA Country (Bank);
+nameCountry  'Country' (Bank b) = name(country(b)); 
+city 'City' = DATA ISTRING[30] (Bank);
+address 'Address' = DATA ISTRING[100] (Bank) CHARWIDTH 20;
+phone 'Phone' = DATA ISTRING[100] (Bank) CHARWIDTH 12;
+
+bic 'BIC/SWIFT' = DATA STRING[12] (Bank);
+
+FORM bank 'Bank'
+    OBJECTS b = Bank PANEL 
+    PROPERTIES(b) name, id, nameCountry, city, address, phone, bic
+    
+    EDIT Bank OBJECT b
+;
+
+DESIGN bank {
+    OBJECTS {
+        NEW otherInformation;
+    }
+}
+
+FORM banks 'Banks'
+    OBJECTS b = Bank
+    PROPERTIES(b) READONLY name, id, nameCountry, city, address, phone, bic
+    PROPERTIES(b) NEWSESSION NEW, EDIT, DELETE
+    
+    LIST Bank OBJECT b
+;
+
+NAVIGATOR {
+    invoicing {
+        Invoicing.settings{
+            NEW banks;        
+        }
+    }
+}
