@@ -1,16 +1,18 @@
 // Part of linguist/samples
 
 import Shapes;
-import "some/graphics/library"; // This does not exist (read below)
+import Cpp library "<gtkmm.h>";
 
-fn main() -> i32 {
-  // This sample does not show the usage of a real graphics library since there is no major usable graphics library for Carbon.
-  // As the language grows, some UI library will emerge for it and this sample can be updated.
+alias Optional = Core.Optional;
 
-  var newGraphicRectangle: Shapes.Rectangle = {Width = 500, Height = 1250 };
+fn Run(argc: i32, argv: Optional(char*)*) -> i32 {
+  var app: auto = Cpp.Gtk.Application.create();
 
-  var graphicsWindow: auto = Graphics.Window(newGraphicRectangle, "Window Name");
-  graphicsWindow.Show(true);
+  var rect: Shapes.Rectangle = { .Width = 500, .Height = 1250 };
 
-  return 0;
+  var window: Cpp.Gtk.Window;
+  window.set_title("Window Name");
+  window.set_default_size(rect.Width unsafe as i32, rect.Height unsafe as i32);
+
+  return app.make_window_and_run(Cpp.Gtk.Window, window, argc, argv);
 }

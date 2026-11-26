@@ -1,6 +1,6 @@
 ---
 name: textMate-baml
-version: 70ba6d82ba190c0a1ad71fefb85a78a2f7df99f1
+version: 14f8cfefb0eb328ee48c6541459446baa1e7c2f0
 type: git_submodule
 homepage: https://github.com/boundaryml/textMate-baml.git
 license: apache-2.0
@@ -208,4 +208,11 @@ licenses:
        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
        See the License for the specific language governing permissions and
        limitations under the License.
+- sources: README.md
+  text: |-
+    Apache-2.0
+
+    ---
+
+    This repository is a **read-only mirror**, generated from [`typescript2/pkg-grammar`](https://github.com/BoundaryML/baml/tree/canary/typescript2/pkg-grammar) in the BAML monorepo by its `sync-grammar-mirror` workflow. Do not edit files or open pull requests here — changes land automatically when the grammar changes upstream. Report issues in [BoundaryML/baml](https://github.com/BoundaryML/baml/issues).
 notices: []

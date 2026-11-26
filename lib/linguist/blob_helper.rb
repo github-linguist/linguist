@@ -119,6 +119,24 @@ module Linguist
       @detect_encoding ||= CharlockHolmes::EncodingDetector.new.detect(data) if data
     end
 
+    # Public: Is the blob content a Git LFS pointer file?
+    #
+    # Return true or false
+    def lfs_pointer?
+      return false unless data
+
+      data.start_with?("version https://git-lfs.github.com/spec/v1\n") &&
+        data.include?("\noid sha256:") &&
+        data.match?(/\nsize \d+\n?\z/)
+    end
+
+    # Public: Is the blob path tracked by Git LFS?
+    #
+    # Return true or false
+    def lfs_tracked?
+      false
+    end
+
     # Public: Is the blob binary?
     #
     # Return true or false
@@ -380,6 +398,7 @@ module Linguist
       !vendored? &&
       !documentation? &&
       !generated? &&
+      !(lfs_tracked? && lfs_pointer?) &&
       language && ( defined?(detectable?) && !detectable?.nil? ?
         detectable? :
         DETECTABLE_TYPES.include?(language.type)

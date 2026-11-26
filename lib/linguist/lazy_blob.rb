@@ -9,7 +9,8 @@ module Linguist
                 'linguist-language',
                 'linguist-vendored',
                 'linguist-generated',
-                'linguist-detectable']
+                'linguist-detectable',
+                'filter']
 
     # DEPRECATED: use Linguist::Source::RuggedRepository::GIT_ATTR_OPTS instead
     GIT_ATTR_OPTS = Linguist::Source::RuggedRepository::GIT_ATTR_OPTS
@@ -103,6 +104,10 @@ module Linguist
       else
         nil
       end
+    end
+
+    def lfs_tracked?
+      git_attributes['filter'] == 'lfs'
     end
 
     def data

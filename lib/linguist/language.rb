@@ -1,10 +1,5 @@
 require 'cgi'
 require 'yaml'
-begin
-  require 'yajl'
-rescue LoadError
-  require 'json'
-end
 
 require 'linguist/classifier'
 require 'linguist/heuristics'
@@ -501,11 +496,12 @@ module Linguist
   popular      = YAML.load_file(File.expand_path("../popular.yml", __FILE__))
 
   languages_yml  = File.expand_path("../languages.yml",  __FILE__)
-  languages_json = File.expand_path("../languages.json", __FILE__)
+  languages_rb = File.expand_path("../languages_data.rb", __FILE__)
 
-  if File.exist?(languages_json)
-    serializer = defined?(Yajl) ? Yajl : JSON
-    languages = serializer.load(File.read(languages_json))
+  if File.exist?(languages_rb)
+    mod = Module.new
+    load(languages_rb, mod)
+    languages = mod::DATA
   else
     languages = YAML.load_file(languages_yml)
   end

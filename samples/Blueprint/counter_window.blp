@@ -1,0 +1,57 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $CounterWindow : Adw.ApplicationWindow {
+  default-width: 400;
+  default-height: 400;
+  width-request: 300;
+  title: _("Counter Example");
+
+  Adw.ToolbarView {
+
+    [top]
+    Adw.HeaderBar {
+      // Empty HeaderBar, just for window dragging
+    }
+
+    Gtk.Box {
+      orientation: vertical;
+      halign: center;
+      valign: center;
+      spacing: 48;
+
+      Gtk.Frame {
+        width-request: 220;
+        height-request: 180;
+
+        Gtk.Label counter_label {
+          use-markup: true;
+          label: "<span font=\"80\" weight=\"bold\">0 ×</span>";
+          
+          halign: center;
+          valign: center;
+        }
+      }
+
+      Gtk.Box {
+        orientation: horizontal;
+        halign: center;
+        spacing: 16;
+
+        Gtk.Button decrement_button {
+          icon-name: "list-remove-symbolic";
+          tooltip-text: _("Decrease");
+          styles ["circular"]
+          clicked => $on_decrement_clicked();
+        }
+
+        Gtk.Button increment_button {
+          icon-name: "list-add-symbolic";
+          tooltip-text: _("Increase");
+          styles ["circular", "suggested-action"]
+          clicked => $on_increment_clicked();
+        }
+      }
+    }
+  }
+}

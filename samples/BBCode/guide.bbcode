@@ -1,0 +1,23 @@
+[B][SIZE=4]Changelog (May not be complete)[/SIZE][/B]
+[LIST]
+[*][B]Removed entries older than date below.[/B]
+[*]Updated guide for 10.11.4 [B]DATE:[/B] 28/03/16
+[*]Updated Nvidia driver link (Thanks [B]PhilipNorth[/B]) [B]DATE:[/B] 10/04/16
+[*]Updated CloverEFI (Required for my config.plist) [B]DATE:[/B] 10/04/16
+[*]Added <key>UseARTFrequency</key> <false/> (Fixes audio distortion in Clover rev. 3354 <) [B]DATE:[/B] 10/04/16
+[*]Fixed error in creation of SSDT for OC CPU [B]DATE:[/B] 10/04/16
+[*]Automatic RAM detection! (Require newest Clover version) [B]DATE:[/B] 27/04/16
+[*]Updated CodecCommander.kext link (Now also support back/front switching after sleep)
+[*][B]IMPORTANT:[/B] Switched to MacPro6,1 instead of iMac17,1 (Fixes some problems with Nvidia GPUs). Requires new serial, MLB, and SmUUID (Or reverting the changes of SMBIOS section) for iMessage. [B]DATE:[/B] 23/07/16
+[*]New native USB method. [B]DATE:[/B] 23/07/16
+[*]New audio method, survive reinstall/update, working audio after sleep, working front/back switching (Require unmodified AppleHDA.kext). [B]DATE:[/B] 23/07/16
+[*]Other small changes [B]DATE:[/B] 23/07/16
+[*]Updated Clover to rev. 3662 [B]DATE:[/B] 07/08/16
+[*]Edited CsrActiveConfig (0x67) [B]DATE:[/B] 07/08/16
+[*]Edited the following SMBIOS entries to contain allowed values: MLB, BoardSerialNumber, SerialNumber, SmUUID. [B]DATE:[/B] 07/08/16
+[*][URL=http://www.tonymacx86.com/threads/guide-el-capitan-on-the-ga-z170x-ud3.180618/page-21#post-1300848]Added FixShutdown_0004 DSDT patch, to avoid auto bootup after sleep.[/URL] (Credit: @edoardoconti97) [B]DATE:[/B] 07/08/16
+[*]Moved the USB section up, and changed some wording, as people were having problems with that section.[B]DATE:[/B] 24/08/16
+[*]Renamed USB-SSDT.py -> USB-SSDT.command (Double click to run) [B]DATE:[/B] 28/08/16
+[*]USB-SSDT.command now saves files on Desktop. [B]DATE:[/B] 28/08/16
+[*]New guide for macOS 10.12 [B]DATE:[/B] 20/09/16
+[/LIST]
