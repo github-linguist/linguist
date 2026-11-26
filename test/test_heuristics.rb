@@ -1156,8 +1156,9 @@ class TestHeuristics < Minitest::Test
 
   def test_sk_by_heuristics
     assert_heuristics({
-      "Skip" => all_fixtures("Skip", "*.sk"),
-      "Skript" => all_fixtures("Skript", "*.sk")
+      "Skip" => Dir.glob("#{fixtures_path}/Generic/sk/Skip/*"),
+      "Skript" => Dir.glob("#{fixtures_path}/Generic/sk/Skript/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/sk/nil/*")
     })
   end
 
