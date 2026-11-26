@@ -173,11 +173,11 @@ module Linguist
       !binary?
     end
 
-    # Public: Is the blob a supported image format?
+    # Public: Does the blob have a supported image extension?
     #
     # Return true or false
     def image?
-      ['.png', '.jpg', '.jpeg', '.gif'].include?(extname.downcase)
+      %w[.bmp .gif .ico .jpeg .jpg .png .tif .tiff .webp].include?(extname.downcase)
     end
 
     # Public: Is the blob a supported 3D model format?

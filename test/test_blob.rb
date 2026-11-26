@@ -112,6 +112,24 @@ class TestBlob < Minitest::Test
     assert !fixture_blob_memory("Binary/octocat.psd").image?
   end
 
+  def test_additional_image_formats
+    data = fixture_blob_memory("Binary/octocat.png").data
+
+    %w[bmp ico tif tiff webp].each do |extension|
+      [extension, extension.upcase].each do |ext|
+        blob = Blob.new("image.#{ext}", data)
+        assert blob.binary?
+        assert blob.image?, "#{ext} should be treated as an image"
+        assert_equal "inline", blob.disposition
+        assert_match %r{\Aimage/}, blob.content_type
+      end
+    end
+
+    %w[apng avif cur heic webp.exe].each do |extension|
+      refute Blob.new("image.#{extension}", data).image?
+    end
+  end
+
   def test_solid
     assert fixture_blob_memory("Binary/cube.stl").solid?
     assert fixture_blob_memory("Generic/stl/STL/cube2.stl").solid?
