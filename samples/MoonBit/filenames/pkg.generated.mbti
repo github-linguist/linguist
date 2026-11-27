@@ -1,0 +1,31 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbitlang/parser"
+
+import {
+  "moonbitlang/core/list",
+  "moonbitlang/lexer/basic",
+  "moonbitlang/moon_config",
+  "moonbitlang/parser/syntax",
+}
+
+// Values
+pub fn parse_mbtx_string(String, name? : String, parser? : Parser) -> (Mbtx, Array[@basic.Report])
+
+pub fn parse_string(String, name? : String, parser? : Parser) -> (@list.List[@syntax.Impl], Array[@basic.Report])
+
+// Errors
+
+// Types and methods
+pub struct Mbtx {
+  header : @moon_config.ParseResult?
+  body : @list.List[@syntax.Impl]
+}
+
+pub(all) enum Parser {
+  MoonYacc
+  Handrolled
+}
+
+// Type aliases
+
+// Traits
