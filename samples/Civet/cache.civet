@@ -1,0 +1,133 @@
+/**
+ * Internal cache primitives shared between the build-time loaders
+ * (build/register.js, build/esm-hook.mjs, build/esbuild.civet) and the
+ * type-check pipeline (ts-service plugins, unplugin --typecheck).
+ *
+ * Only primitives live here — orchestration (which compiler runs, what
+ * options) stays with the caller.  Not exposed as a public subpath; the
+ * build/ shim and ts-service consume the dist/ build directly.
+ */
+
+* as crypto from node:crypto
+* as fs from node:fs
+* as path from node:path
+
+export interface Cache
+  get(key: string): string | undefined
+  set(key: string, value: string): void
+
+/**
+ * Inputs that determine cache identity for a single compile.  Identical
+ * `source` + `compilerName` + `compilerVersion` + `options` always hash
+ * the same; `sourcePath` is included so a moved or renamed file produces
+ * a fresh sourcemap rather than reusing the previous filename.
+ */
+export interface CacheKeyInput
+  /** Source text fed to the compiler. */
+  source: string
+  /** Source file path; resolved to an absolute, forward-slash form before hashing. */
+  sourcePath: string
+  /** Compiler family name, e.g. 'civet' or 'hera'. */
+  compilerName: string
+  /** Compiler package version. */
+  compilerVersion: string
+  /** Secondary compiler version, e.g. civet for the hera→civet pipeline. */
+  civetVersion?: string
+  /** mtime of the resolved compiler source — invalidates dev-mode caches when the local compiler changes. */
+  civetMtime?: string
+  /** Compile options forwarded to the compiler.  Canonicalized (sorted keys, no functions) before hashing. */
+  options?: unknown
+
+/** SHA1 hex over an array of strings, NUL-separated to disambiguate. */
+export function hashParts(parts: string[]): string
+  hash := crypto.createHash 'sha1'
+  for part of parts
+    hash.update(part).update '\0'
+  hash.digest 'hex'
+
+/**
+ * Stable JSON serialization: sorts object keys recursively and drops
+ * function-valued fields.  Used to canonicalize compile options for
+ * hashing so logically equivalent option sets produce identical keys.
+ */
+export function stableStringify(value: unknown): string
+  JSON.stringify value, (_key, val) =>
+    return undefined if typeof val is 'function'
+    if val and typeof val is 'object' and not Array.isArray val
+      sorted: Record<string, unknown> := {}
+      for key of Object.keys(val as object).sort()
+        sorted[key] = (val as Record<string, unknown>)[key]
+      return sorted
+    val
+
+/**
+ * Compute a SHA1 cache key from a CacheKeyInput.  Two inputs hash the
+ * same iff their source, compiler identity, options, and resolved
+ * source path all match.
+ */
+export function makeCacheKey(input: CacheKeyInput): string
+  resolved := path.resolve(input.sourcePath).replace(/\\/g, '/')
+  hashParts [
+    input.source
+    input.compilerName
+    input.compilerVersion
+    input.civetVersion ?? ''
+    input.civetMtime ?? ''
+    resolved
+    stableStringify input.options ?? {}
+  ]
+
+/** In-memory cache backed by a Map.  No eviction. */
+export function createMemoryCache(): Cache
+  store: Map<string, string> := new Map
+  {
+    get(key)
+      store.get key
+    set(key, value)
+      store.set key, value
+      return
+  }
+
+/**
+ * On-disk cache rooted at `dir`.  All errors are swallowed: the cache is
+ * a performance optimization, never a correctness dependency.  Writes go
+ * via tmp+rename so concurrent builds can't observe a torn read.  Keys
+ * are flat (no nested subdirectories), so `dir` is created once here
+ * rather than from each `set()`.
+ *
+ * On every successful `get()`, the entry's mtime is bumped to "now" so
+ * external culling (e.g. `find .cache/build -mtime +30 -delete`) can
+ * reliably distinguish hot from cold entries.
+ */
+export function createDiskCache(dir: string): Cache
+  try
+    fs.mkdirSync dir, recursive: true
+  /* c8 ignore next 2 -- best-effort: recursive mkdir is idempotent for existing dirs; only fires on permission errors / read-only fs */
+  catch
+    // dir already exists or is unwritable — set() will silently noop on write failures
+  {
+    get(key)
+      target := path.join dir, key
+      try
+        content := fs.readFileSync target, 'utf8'
+        // Best-effort mtime touch for LRU-style culling; ignore errors
+        // (file vanished, read-only fs, etc.) — the value is still valid.
+        try
+          now := new Date
+          fs.utimesSync target, now, now
+        /* c8 ignore next 2 -- best-effort touch: fires only on read-only fs / file vanished mid-read */
+        catch
+          // ignore
+        return content
+      catch
+        return undefined
+    set(key, value)
+      target := path.join dir, key
+      try
+        tmp := `${target}.tmp.${process.pid}`
+        fs.writeFileSync tmp, value
+        fs.renameSync tmp, target
+      /* c8 ignore next 2 -- best-effort write: fires only on disk-full / read-only fs */
+      catch
+        return
+  }
