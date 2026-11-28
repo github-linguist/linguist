@@ -1,0 +1,41 @@
+MODULE DiscountCard;
+
+REQUIRE Partner, RetailSettings;
+
+NAMESPACE Retail;
+
+CLASS DiscountCard 'Discount card';
+
+customer 'Owner' = DATA Partner (DiscountCard) NONULL;
+nameCustomer 'Owner' (DiscountCard d) = name(customer(d)) IN id;
+
+countDiscountCard (Partner p) = GROUP SUM 1 IF customer(DiscountCard d) = p;  
+
+@defineID(discountCard, 'Discount cards', '', 6);
+
+issueDate 'Issue date' = DATA DATE (DiscountCard) NONULL;
+blockDate 'Block date' = DATA DATE (DiscountCard);
+
+issueDate(DiscountCard d) <- currentDate() WHEN SET(d IS DiscountCard);
+
+CONSTRAINT issueDate(DiscountCard d) > blockDate(d) 
+    MESSAGE 'The blocking date of the discount card cannot be earlier than the issue date';
+
+FORM discountCard 'Discount card'
+    OBJECTS d = DiscountCard PANEL
+    PROPERTIES(d) id, nameCustomer, issueDate, blockDate
+    
+    EDIT DiscountCard OBJECT d
+;
+
+FORM discountCards 'Discount cards'
+    OBJECTS d = DiscountCard
+    PROPERTIES(d) READONLY id, nameCustomer, issueDate, blockDate
+    PROPERTIES(d) NEWSESSION NEW, EDIT, DELETE;
+;
+
+NAVIGATOR {
+    settings {
+        NEW discountCards;
+    }
+}

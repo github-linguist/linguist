@@ -1,0 +1,59 @@
+MODULE ManufacturingOrderCost;
+
+REQUIRE ManufacturingOrderCanceled, CostLedger, CostLocation;
+
+NAMESPACE Manufacturing;
+
+// out
+CLASS ConsumedOutCostLedger : OutCostLedger;
+outCostLedger = AGGR ConsumedOutCostLedger WHERE consumed(ConsumedLine line) AND active(manufacturingOrder(line)) AND item(line) IS Product;
+
+type(ConsumedOutCostLedger l) += nameType(manufacturingOrder(line(l)));
+
+dateTime(ConsumedOutCostLedger l) += executionDateTime(manufacturingOrder(line(l)));
+number(ConsumedOutCostLedger l) += number(manufacturingOrder(line(l)));
+note(ConsumedOutCostLedger l) += note(manufacturingOrder(line(l)));
+
+location(ConsumedOutCostLedger l) += costLocation(materialsLocation(manufacturingOrder(line(l))));
+
+product(ConsumedOutCostLedger l) += item(line(l)) AS Product;
+quantity(ConsumedOutCostLedger l) += consumed(line(l));
+
+edit(ConsumedOutCostLedger l) + { edit(line(l)); }
+
+cost 'Cost' (ConsumedLine l) = amount(outCostLedger(l));
+
+// in
+CLASS ConsumedInCostLedger 'Manufacturing' : InCostLedger;
+inCostLedger = AGGR ConsumedInCostLedger WHERE produced(FinishedLine line) AND active(manufacturingOrder(line)) AND item(line) IS Product;
+
+type(ConsumedInCostLedger l) += nameType(manufacturingOrder(line(l)));
+
+dateTime(ConsumedInCostLedger l) += executionDateTime(manufacturingOrder(line(l)));
+number(ConsumedInCostLedger l) += number(manufacturingOrder(line(l)));
+note(ConsumedInCostLedger l) += note(manufacturingOrder(line(l)));
+
+location(ConsumedInCostLedger l) += costLocation(productsLocation(manufacturingOrder(line(l))));
+
+product(ConsumedInCostLedger l) += item(line(l)) AS Product;
+quantity(ConsumedInCostLedger l) += produced(line(l));
+
+cost 'Cost' (ManufacturingOrder o) = GROUP SUM amount(ConsumedOutCostLedger l) IF manufacturingOrder(line(l)) = o MATERIALIZED;
+CLASS ManufacturingCostType 'Cost type' {
+    extra 'Extra cost'
+}
+
+cost 'Cost' = ABSTRACT CASE NUMERIC[14,2] (ManufacturingOrder, ManufacturingCostType) MATERIALIZED;
+
+// backward compatibility
+extraCost 'Extra cost' (ManufacturingOrder o) = cost(o, ManufacturingCostType.extra);
+
+totalCost 'Total cost' (ManufacturingOrder o) = cost(o) (+) (GROUP SUM cost(o, ManufacturingCostType t));
+
+calcAmount (ConsumedInCostLedger l) += NUMERIC[14,2](totalCost(manufacturingOrder(line(l))) * normalizedCostRatio(line(l)));
+
+edit(ConsumedInCostLedger l) + { edit(line(l)); }
+
+EXTEND FORM manufacturingOrders
+    PROPERTIES(o) READONLY cost, extraCost, totalCost
+;

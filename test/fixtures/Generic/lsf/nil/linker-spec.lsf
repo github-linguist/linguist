@@ -1,0 +1,13 @@
+Static main
+{
+	Address 0x02000000
+	Object crt0.o
+	Object main.o
+	StackSize 0 1024
+}
+
+Autoload ITCM
+{
+	Address 0x01ff8000
+	Object * (.itcm)
+}

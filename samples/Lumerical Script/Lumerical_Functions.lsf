@@ -1,0 +1,137 @@
+function collect_uservar(SG_name)
+{
+	#SG_name is the structure group name from which you want to collect user variables
+	select(SG_name);
+	SG_props    = queryuserprop();
+	
+	#var_out.string has the format: "SG_name,name,type,value";
+	var_out         = struct;
+	var_out.SG_name = cell(length(SG_props.name));
+	var_out.name    = cell(length(SG_props.name));
+	var_out.type    = cell(length(SG_props.name));
+	var_out.value   = cell(length(SG_props.name));
+	
+	for(n = 1:length(SG_props.name))
+	{
+		var_out.SG_name{n} = SG_name;
+		var_out.name{n}    = SG_props.name{n};
+		var_out.type{n}    = str2num(SG_props.type{n});
+		var_out.value{n}   = getnamed(SG_name,SG_props.name{n});
+		
+		#Check if type = 7, since matrix is mistakenly given as that type instead of 6.
+		if(var_out.type{n} == 7)
+		{
+			var_out.type{n} = 6;
+		}
+	}
+	return var_out;
+}
+
+function set_uservar(var_struct,SG_name)
+{
+	for(n = 1:length(var_struct.name))
+	{	
+		VarSet = 0;
+		if(var_struct.SG_name{n} == SG_name)
+		{
+			for(j = 1:length(var_struct.name))
+			{
+				try
+				{
+					setnamed("::model::"+SG_name,var_struct.name{n},var_struct.value{n});
+					VarSet = 1;
+				}
+			}
+			
+			if(VarSet ==0)
+			{
+				select("::model::"+SG_name);
+				adduserprop(var_struct.name{n},var_struct.type{n},var_struct.value{n});
+			}
+			
+		}		
+	}
+}
+
+function transfer_uservar(var_struct,target_struct)
+{	
+	Target            = target_struct.SG_name{1};
+	var_struct.target = Target;
+	
+	for(n = 1:length(var_struct.name))
+	{		
+		VarFind  = -1;
+		for(j = 1:length(target_struct.name))
+		{
+			if(var_struct.name{n} == target_struct.name{j})
+			{
+				VarFind = 1;    
+			}
+		}
+		
+		if(VarFind !=-1)
+		{
+			setnamed("::model::"+Target,var_struct.name{n},var_struct.value{n});
+		}
+		if(VarFind ==-1)
+		{
+			select("::model::"+Target);
+			adduserprop(var_struct.name{n},var_struct.type{n},var_struct.value{n});
+		}  
+	}
+}
+
+function multi_collect_uservar(SG_names)
+{
+	SG_var_cell = cell(length(SG_names));
+	var_len     = 0;
+	for(i = 1:length(SG_names))
+	{
+		SG_var_cell{i} = collect_uservar(SG_names{i});
+		var_len = var_len+length(SG_var_cell{i}.name);
+	}
+	
+	var_out         = struct;
+	var_out.SG_name = cell(var_len);
+	var_out.name    = cell(var_len);
+	var_out.type    = cell(var_len);
+	var_out.value   = cell(var_len);
+	
+	last_series = 0;
+	for(i = 1:length(SG_names))
+	{
+		for(j = last_series+1:last_series+length(SG_var_cell{i}.name))
+			{
+				var_out.SG_name{j} = SG_var_cell{i}.SG_name{j-last_series};
+				var_out.name{j}    = SG_var_cell{i}.name{j-last_series};
+				var_out.type{j}    = SG_var_cell{i}.type{j-last_series};
+				var_out.value{j}   = SG_var_cell{i}.value{j-last_series};
+			}
+			last_series = last_series+length(SG_var_cell{i}.name);
+	}
+	return var_out;
+}
+
+function replace_named_uservar(SG_struct,name,value)
+{
+	VarFind  = -1;
+	for(n = 1:length(SG_struct.name))
+	{
+		
+	
+		if(name == SG_struct.name{n})
+		{
+			VarFind = 1;
+			SG_struct.value{n} = value;
+		}
+	
+		
+		
+	}
+	
+	if(VarFind ==-1)
+		{
+			print('Target variable not found, did you give the right name?');
+		}
+	return SG_struct;
+}

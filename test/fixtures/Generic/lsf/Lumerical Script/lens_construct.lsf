@@ -1,0 +1,74 @@
+switchtolayout;
+selectall;
+delete;
+nm=1e-9;
+# get initial settings from preprocess/FDTD_Simulation
+param=readdata("../preprocess/FDTD_Simulation/param_for_FDTD.txt");
+count=param(1, 1);
+lambda_start= param(1, 2)*nm;
+lambda_stop = param(1, 3)*nm;
+points = param(1, 4);
+height = param(1, 5)*nm;
+
+
+para = readdata("final_para.txt");  
+period = readdata("final_pitch.txt");
+periodX = period(1)*nm;
+periodY = period(2)*nm;
+
+count = sqrt(length(para)/ 6);
+
+# since periodX is twice as periodY, to make a circle, radius should depend on shorter direction.
+len_radius = periodY * count / 2;
+
+x_mask = periodX*(-count/2:1:count/2 - 1);
+y_mask = periodY*(-count/2:1:count/2 - 1);
+
+
+addrect; # substrate
+set("name","substrate");
+set("material","SiO2 (Glass) - Palik");
+set("x",0);set("y",0);
+set("x span",3*max(x_mask));
+set("y span",3*max(x_mask));
+set("z max",0);
+set("z min",-2*lambda_stop);
+
+##################
+#Loop over pillars
+for(i=length(x_mask) / 2 - 10:length(x_mask)) {
+    for (j=length(y_mask) / 2 - 10:length(y_mask)) {
+        r = sqrt(x_mask(i)^2+y_mask(j)^2);
+        if (r <= len_radius) {              
+            index = (i - 1) * count + j; 
+            ?index;           
+            addrect;
+            set("name","left");
+            set("first axis", 4);
+            set("x",x_mask(i) - periodX / 4);
+            set("y",y_mask(j));
+            set("z max",height); 
+            set("z min",0);
+            set("material","Si (Silicon) - Palik");    
+            set("x span",para(index,1)*nm);
+            set("y span",para(index,2)*nm);       
+            set("rotation 1",para(index,3));
+            
+            addrect;
+            set("name","right");
+            set("first axis", 4);
+            set("x",x_mask(i) + periodX / 4);
+            set("y",y_mask(j));
+            set("z max",height); 
+            set("z min",0);
+            set("material","Si (Silicon) - Palik");    
+            set("x span",para(index,4)*nm);
+            set("y span",para(index,5)*nm);
+            set("rotation 1",para(index,6));
+        }
+    }
+}
+
+save("construct.fsp");
+
+
