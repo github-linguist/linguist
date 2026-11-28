@@ -1,0 +1,82 @@
+ /*       SIST ENDRET 13/01-92 11.27.29 AV   DYBVIK                   */00000000
+ /*       SIST ENDRET 30/08-84 09.03.46 AV   FARVIK                   */00000010
+ /*       SIST ENDRET 09/09-83 14.03.10 AV   KARIN                    */00000020
+ /*       SIST ENDRET 06/10-82 13.29.10 AV   JANKR                    */00000030
+ /*       SIST ENDRET 04/10-82 09.45.51 AV   OLSEN                    */00000040
+ /*       SIST ENDRET 01/10-82 07.38.46 AV   LUNDEBY                  */00000050
+ /*       SIST ENDRET 24/05-82 11.37.57 AV   KRISTENSEN               */00000060
+ R00101:                                                                00000070
+   PROC OPTIONS(MAIN);                                                  00000080
+ %SKIP;                                /*  */                           00000090
+ /******************************************************************* */00000100
+ /*IDENTIFIKASJON:                                                    */00000110
+ /************************                                            */00000120
+ /*  PROGRAM-IDENT : R0010101-UTSKRIFT AV BRUKER-ID BILDE-HOVEDPROGRAM*/00000130
+ /*  PROGRAM-SPRÅK : PLI/CICS                                         */00000140
+ /*  PROGRAMMERER  : ?                                                */00000150
+ /*  PROGRAMMET BLE LAGET  ?                                          */00000160
+ /*  ENDRINGERSDATO :                                                 */00000170
+ /*  ENDRINGEN GJELDER:                                               */00000180
+ /*  ENDRINGEN BLE UTFØRT AV :                                        */00000190
+ /*                                                                   */00000200
+ /******************************************************************* */00000210
+ /*HENSIKT:                                                           */00000220
+ /************                                                        */00000230
+ /*  HOVEDRUTINEN TIL FOLKETRYGDSYSTEMET.                             */00000240
+ /*  PROGRAMMET ER START-PROGRAMMET I MENYEN TIL OPPSTARTING AV       */00000250
+ /*  FOLKETRYGDSYSTEMET,TRANSAKSJONKODE R010. DET BLIR AKTIVISERT     */00000260
+ /*  NÅR OPERATØREN TASTER INN R010.                                  */00000270
+ /*  PROGRAMMET SENDER UT DET FØRSTE BILDE FOR INNHENTING AV          */00000280
+ /*  BRUKER-IDENT, MAP S001011, MAPSET S001013                        */00000290
+ /*  RETURNERER TIL CICS MED TRANSID = R020 SOM ER TRANSKODEN TIL     */00000300
+ /*  PROGRAM R0010201, DET NESTE PROGRAM I DIALOGEN                   */00000310
+ /*                                                                   */00000320
+ /******************************************************************* */00000330
+ /*PROGRAMTILKNYTTING:                                                */00000340
+ /**********************                                              */00000350
+ /*  PROGRAMMET BLIR AKTIVISERT FRA CICS MED TRANSKODE R010.          */00000360
+ /*  KONTROLLEN GÅR VIA CICS TIL R0010201 - KONTROLL BRUKER-ID        */00000370
+ /*  TRANSAKSJONSKODEN ER R020                                        */00000380
+ /*                                                                   */00000390
+ /******************************************************************* */00000400
+ /*DATASETTOPPLYSNINGER:                                              */00000410
+ /*************************                                           */00000420
+ /*  DET BLIR IKKE BRUKT NOEN DATASETT I DETTE PROGRAMMET             */00000430
+ /*                                                                   */00000440
+ /******************************************************************* */00000450
+ /*FEILMELDINGER:                                                     */00000460
+ /*********************                                               */00000470
+ /*  DET BLIR IKKE SKREVET UT FEILMELDINGER I DETTE PROGRAMMET        */00000480
+ /*                                                                   */00000490
+ /* ***************************************************************** */00000500
+                                                                        00000510
+ %PAGE;                                                                 00000520
+      %INCLUDE S00101;                 /* MENY MAPSETTET  */            00000530
+ %PAGE;                                                                 00000540
+      %INCLUDE P0019908;               /* KOM_OMR (BASED) */            00000550
+ %PAGE;                                                                 00000560
+      %INCLUDE P0019906;               /* TRANS_OPPL_OMRÅDE (BASED) */  00000570
+ %PAGE;                                                                 00000580
+      %INCLUDE P0019910;               /* STYRINGS_OMRÅDE (BASED) */    00000590
+   DCL                                                                  00000600
+      (BMSMAPBR, COMMAREA_PEKER)  POINTER;                              00000610
+   DCL                                                                  00000620
+      (STG,LOW,CSTG,ADDR) BUILTIN;                                      00000630
+                                                                        00000640
+ %PAGE;                                /*   */                          00000650
+    EXEC CICS HANDLE CONDITION ERROR(FORTSETT);                         00000660
+                                                                        00000670
+    ALLOCATE KOM_OMR;                                                   00000680
+    KOM_OMR.PEKER_LISTE.STYRINGS_PEKER = ADDR(KOM_OMR.STYRINGS_OMR);    00000690
+    KOM_OMR.PEKER_LISTE.TRANS_OPPL_PEKER = ADDR(KOM_OMR.TRANS_OPPL_OMR);00000700
+    ANT_FORSØK = 0;                                                     00000710
+    TRANSKODE = 'R020';                                                 00000720
+ FORTSETT:                                                              00000730
+    /* SKRIVER SKJERMBILDE MED SPØRSMÅL OM BRUKER-ID */                 00000740
+                                                                        00000750
+    EXEC CICS SEND MAP('S001011') MAPSET ('S001013') MAPONLY ERASE;     00000760
+ %SKIP(1);                                                              00000770
+                                                                        00000780
+      EXEC CICS RETURN TRANSID(TRANSKODE) COMMAREA(KOM_OMR);            00000790
+                                                                        00000800
+   END R00101;                                                          00000810
