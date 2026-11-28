@@ -1,0 +1,83 @@
+; LICENSE: CC0-1.0 <https://creativecommons.org/publicdomain/zero/1.0/deed.ja>
+; v0.1.0 <https://github.com/vain0x/hsp3-modules/tree/main/mod_config>
+
+#ifndef included_mod_config_hsp
+#define included_mod_config_hsp
+
+; 設定ファイル操作モジュール
+;
+; - 文字コードは UTF-8 (BOM なし)
+; - 改行コードは LF または CRLF
+; - '#' で始まる行や、'=' を含まない行は無視する。
+; - 雑実装
+#module m_config
+
+#define true 1
+#define false 0
+
+; 設定ファイルをロードする
+;
+; %prm
+; file_name, keys, values
+;
+; str file_name: ロードするファイル名
+; array keys: キーが格納される配列変数
+; array values: 値が格納される配列変数
+;
+; stat: キーと値の個数 または -1
+;
+; %inst
+; 設定ファイルをロードして、キーと値のペアを配列 keys, values に格納し、
+; その件数を stat に設定する。
+;
+; ファイルが存在しなければ stat < 0 になる。
+#deffunc config_load str file_name, array keys, array values, \
+	local text, local text_len, local lf
+
+	exist file_name
+	text_len = strsize
+	if text_len < 0 {
+		return -1
+	}
+
+	sdim text, text_len + 1
+	bload file_name, text, text_len
+
+	; 改行コードを CRLF に統一する。
+	; FIXME: 根本原因は LF をサポートしていない noteget なので、そっちを直す。
+	sdim lf
+	poke lf, 0, 0x0a
+	strrep text, "\n", lf
+	strrep text, lf, "\n"
+
+	config_to_assoc text, text_len, keys, values
+	return stat
+
+#deffunc config_to_assoc var text, int text_len, array keys, array values, \
+	local count, local row, local sep
+
+	notesel text
+	repeat notemax
+		noteget row, cnt
+
+		if peek(row) == '#' {
+			continue
+		}
+
+		sep = instr(row, 0, "=")
+		if sep < 0 {
+			continue
+		}
+
+		keys(count) = strmid(row, 0, sep)
+		keys(count) = strtrim(keys(count))
+		values(count) = strmid(row, sep + 1, 0x7fffffff)
+		values(count) = strtrim(values(count))
+		count++
+	loop
+	noteunsel
+	return count
+
+#global
+
+#endif

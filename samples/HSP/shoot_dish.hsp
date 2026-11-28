@@ -1,0 +1,295 @@
+#include "hsp3dish.as"
+
+title "Dish Shooting"
+
+*init
+	;	画面の準備
+	;
+	celload "title.png",2
+	celload "chr.png",3
+	celdiv 3,48,48
+	celload "bg.png",4
+
+	mmload "explos.wav",0
+	mmload "inject.wav",1
+	mmload "sel.wav",2
+	;mmload "cappi08.ogg",3
+	mmload "smart_and_active.mp3",4,1
+
+*gtitle_start
+	mmstop
+	mmplay 2
+*gtitle
+	;	スタートボタンチェック
+	;
+	stick a,$130
+	if a&128 : end
+	if a&$130 : goto *gamestart
+
+	redraw 0
+
+	;	タイトルの表示
+	;
+	gmode 0,640,480
+	pos 0,0:gcopy 2,0,0
+
+	color 255,255,255
+	pos 140,160
+	mes "SHOOTING GAME"
+	pos 130,300
+	mes "Push Enter Key"
+
+	;	スコアの表示
+	;
+	color 255,255,255
+	pos 480,0:gmode 0,160,480
+	gcopy 4,480,0
+	pos 500,400:mes "SCORE ":mes ""+score
+
+	redraw 1
+	await 1000/30
+
+	goto *gtitle
+
+*gamestart
+	;	ゲーム開始時の変数リセット
+	;
+	mmstop
+	mmplay 4		; 音楽を鳴らす
+	mmplay 2
+
+	score = 0	; スコア
+	mx=240:my=400	; 自機のX,Y座標
+	mapx=0:mapy=0	; 背景表示用の座標
+	mflag=0
+	font msgothic,20
+	color 255,255,255
+
+	;	自機レーザー用変数リセット
+	;
+	lmax=4
+	dim lflag,lmax
+	dim lx,lmax
+	dim ly,lmax
+	sht=0
+	shtmax=6
+
+	;	敵用変数リセット
+	;
+	emax=16
+	etime=0
+	einter=18
+	dim eflag,emax : dim etype,emax
+	dim ex,emax : dim ey,emax
+	dim epx,emax : dim epy,emax
+
+	;	敵ミサイル用変数リセット
+	;
+	amax=16
+	msrint=14
+	dim aflag,amax
+	dim ax,amax : dim ay,amax
+	dim apx,amax : dim apy,amax
+
+*main
+	redraw 0
+
+	;	背景の表示
+	;
+	pos 0,0:gmode 0,480,480
+	gcopy 4,mapx,mapy
+	mapy=mapy-2:if mapy<0 : mapy=mapy+480
+
+ 	;	それぞれの処理を呼び出す
+	;
+	stick a,$10f
+	if a&128 : end
+	gosub *my_move
+	gosub *laser_move
+	gosub *enemy_move
+	gosub *missile_move
+
+	;	スコアの表示
+	;
+	color 255,255,255
+	pos 480,0:gmode 0,160,480
+	gcopy 4,480,0
+	pos 500,400:mes "SCORE ":mes ""+score
+
+	redraw 1
+	await 1000/30
+
+	if mflag>150 : goto *gtitle_start
+	frame++
+	goto *main
+
+*my_move
+	;	自機の移動と表示
+	;
+	if mflag>0 : goto *my_end
+	if a&2 : my=my-6
+	if a&8 : my=my+6
+	if a&1 : mx=mx-6
+	if a&4 : mx=mx+6
+	if mx<0 : mx=0
+	if mx>430 : mx=430
+	if my<240 : my=240
+	if my>430 : my=430
+	pos mx,my:gmode 2:celput 3,0
+	return
+*my_end
+	;	自機の爆発
+	;
+	mflag=mflag+1:a=0:i=(mflag/4)\3+5
+	pos mx,my:gmode 2:celput 3,i
+	return
+
+*my_hit
+	;	座標(x,y)が自機の領域内かを調べる
+	;
+	if mflag>0 : vx=999 : vy=999 : return
+	vx=mx-x:if vx<0 : vx=-vx
+	vy=my-y:if vy<0 : vy=-vy
+	return
+
+*laser_move
+	;	自機レーザーの処理
+	;	
+	if mflag>0 : goto *noshoot
+	sht++
+	if sht<shtmax : goto *noshoot
+	sht=0
+	repeat lmax
+	if lflag.cnt=0 {
+		lflag.cnt=1
+		lx.cnt=mx : ly.cnt=my
+		break
+	}
+	loop
+	mmplay 1
+*noshoot
+	gmode 5,48,48,255
+	repeat lmax
+	if lflag.cnt>0 {
+		ly.cnt=ly.cnt-12
+		if ly.cnt<-48 : lflag.cnt=0
+		x=lx.cnt:y=ly.cnt
+		pos x,y : celput 3,1
+		gosub *enemy_hit
+		if hit>0 : mmplay 0 : lflag.cnt=0 : score=score+50
+	}
+	loop
+	return
+
+*enemy_move
+	;	敵の処理
+	;	
+	etime=etime+1
+	if etime<einter : goto *enemy_put
+	etime=0
+
+	;	敵を発生させる
+	;
+	y=-48
+	x=rnd(480)-24
+	type=rnd(2)+3
+	px=rnd(5)-2
+	py=1
+	speed=rnd(4)+2
+	px=px*speed/2:py=py*speed+1
+	repeat emax
+	if eflag.cnt=0 {
+		eflag.cnt=1
+		ex.cnt=x : ey.cnt=y
+		epx.cnt=px : epy.cnt=py
+		etype.cnt=type
+		break
+	}
+	loop
+*enemy_put
+	;	敵を表示する
+	;
+	gmode 2,48,48
+	repeat emax
+	if eflag.cnt=0 : goto *noenemy
+	x=ex.cnt:y=ey.cnt
+	if eflag.cnt>1 : goto *edead
+	x=x+epx.cnt:y=y+epy.cnt
+	pos x,y : celput 3,etype.cnt
+	if x<-48 : eflag.cnt=0
+	if x>480 : eflag.cnt=0
+	if y<-48 : eflag.cnt=0
+	if y>480 : eflag.cnt=0
+	ex.cnt=x:ey.cnt=y
+	gosub *my_hit
+	if vx<48 : if vy<48 : mflag=1 : mmplay 0
+
+	;	敵からミサイル発射
+	;
+	msrate=rnd(1000)
+	if msrate<msrint : gosub *missile_add
+*noenemy
+	loop
+	return
+*edead
+	;	敵の爆発
+	;
+	i=eflag.cnt+1:if i>16 : i=0 : goto *edead2
+	j=(i/4)\3+5
+	pos x,y : celput 3,j
+*edead2
+	eflag.cnt=i:goto *noenemy
+
+*missile_add
+	;	敵ミサイルを発生させる
+	;	(x,y)の位置に発生させる
+	repeat amax
+	if aflag.cnt>0 : goto *mslnext
+	aflag.cnt=1
+	ax.cnt=x*100 : ay.cnt=y*100
+	px=mx-x : py=my-y
+	if py>=0 : apy.cnt=600
+	if py<0 : py=-py : apy.cnt=-600
+	if py=0 : py=1
+	px=px*600/py
+	if px>800 : px=800
+	if px<-800 : px=-800
+	apx.cnt=px
+	break
+*mslnext
+	loop
+	return
+
+*missile_move
+	;	敵ミサイルの処理
+	;	
+	gmode 2,32,32
+	repeat amax
+	if aflag.cnt=0 : goto *nomsl
+	x=ax.cnt:y=ay.cnt
+	x+=apx.cnt
+	y+=apy.cnt
+	if x<-3200 : aflag.cnt=0
+	if x>48000 : aflag.cnt=0
+	if y<-3200 : aflag.cnt=0
+	if y>48000 : aflag.cnt=0
+	ax.cnt=x:ay.cnt=y
+	x=x/100:y=y/100
+	pos x,y : gcopy 3,96,0
+	gosub *my_hit
+	if vx<32 : if vy<32 : mflag=1
+*nomsl
+	loop
+	return
+
+*enemy_hit
+	;	座標(x,y)が敵の領域内かを調べる
+	;
+	hit=0
+	repeat emax
+	if eflag.cnt!=1 : continue
+	vx=ex.cnt-x:if vx<0 : vx=-vx
+	vy=ey.cnt-y:if vy<0 : vy=-vy
+	if vx<48 : if vy<48 : eflag.cnt=2 : hit=1
+	loop
+	return
