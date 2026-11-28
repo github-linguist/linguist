@@ -1,0 +1,29 @@
+// Resolve site-wide navigation with conditional projections
+*[_type == "siteConfig"][0] {
+  title,
+  description,
+  "logoUrl": logo.asset->url,
+  mainNavigation[] {
+    _type == "navLink" => {
+      "type": "link",
+      title,
+      url
+    },
+    _type == "navGroup" => {
+      "type": "group",
+      title,
+      children[] {
+        title,
+        url,
+        "icon": icon.asset->url
+      }
+    }
+  },
+  footer {
+    copyright,
+    socialLinks[] {
+      platform,
+      url
+    }
+  }
+}
