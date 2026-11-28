@@ -1,0 +1,107 @@
+//------------------------------------------------
+//--- 010 Editor v9.1.0 Binary Template
+//
+//      File: KSLT.bt
+//   Authors: HealingBrew
+//   Version: 1.0
+//   Purpose: Parsing KSLT Screen Layout Texture Packs
+//  Category: Archives
+// File Mask: *.kslt
+//  ID Bytes: 54 4C 53 4B
+//   History:
+//   1.0    2020-01-05 - Initial file
+//------------------------------------------------
+
+LittleEndian();
+
+#include "../Model related formats/G1SharedStructures.bt"
+
+typedef struct KSLTHEADER {
+    char magic[4]<name="Magic", comment="reversed">;
+    char version[4]<name="Version", comment="reversed">;
+    int file_count<name="File Count">;
+    int file_size<name="File Size">;
+    int pointer_table_pointer<name="Pointer Table Pointer">;
+    int name_table_size<name="File Table Size">;
+    int name_count<name="Name Count", comment="If this doesn't match File Count-- panic.">;
+    int unknown7<name="Unknown 7">;
+    int unknown8<name="Unknown 8">;
+    int unknown9<name="Unknown 9">;
+    int unknown10<name="Unknown 10">;
+    int unknown11<name="Unknown 11">;
+    int unknown12<name="Unknown 12">;
+    int unknown13<name="Unknown 13">;
+    int unknown14<name="Unknown 14">;
+    int unknown15<name="Unknown 15">;
+} KTGLScreenLayoutTextureHeader;
+
+typedef struct KTSLTEXTUREPOINTER {
+    int pointer<name="Pointer">;
+    int unknown1<name="Unknown 1">;
+    int unknown2<name="Unknown 2">;
+    int unknown3<name="Unknown 3">;
+    int unknown4<name="Unknown 4">;
+} KTGLScreenLayoutTexturePointer;
+
+typedef struct KSLTMATRIX {
+    int unknown1<name="Unknown 1">;
+    int unknown2<name="Unknown 2">;
+    Matrix34 matrix<name="Matrix">;
+} KTGLScreenLayoutTextureMatrix;
+
+
+typedef struct KSLTNAME {
+    string name<name="Name">;
+} KTGLScreenLayoutTextureName;
+
+string GetKTSLName(KSLTNAME &name) {
+    return name.name;
+}
+
+enum KTSLImageType {
+    BC3 = 3
+};
+
+typedef struct KSLTIMAGEHEADER {
+    KTSLImageType type<name="Type">;
+    short width<name="Width">;
+    short height<name="Height">;
+    int unknown2<name="Unknown 2">;
+    int unknown3<name="Unknown 3">;
+    int unknown4<name="Unknown 4">;
+    int unknown5<name="Unknown 5">;
+    int unknown6<name="Unknown 6">;
+    int size<name="Size">;
+    int unknown7<name="Unknown 7">;
+    int unknown8<name="Unknown 8">;
+    int unknown9<name="Unknown 9">;
+    int unknown10<name="Unknown 10">;
+    int unknown11<name="Unknown 11">;
+    int unknown12<name="Unknown 12">;
+    int unknown13<name="Unknown 13">;
+    int unknown14<name="Unknown 14">;
+    int unknown15<name="Unknown 15">;
+    int unknown16<name="Unknown 16">;
+} KTGLScreenLayoutTextureImageHeader;
+
+typedef struct KTSLIMAGE {
+    KTGLScreenLayoutTextureImageHeader header<name="Header">;
+    byte blob[header.size]<name="Blob">;
+    local string name = names[i].name;
+} KTGLScreenLayoutTextureImage;
+
+typedef struct KSLT {
+    KTGLScreenLayoutTextureHeader header<name="Header">;
+    local int refptr = FTell();
+    KTGLScreenLayoutTextureMatrix matrix[header.file_count]<name="Matrix">;
+    FSeek(refptr + header.pointer_table_pointer);
+    KTGLScreenLayoutTexturePointer pointers[header.file_count]<name="Pointers">;
+    KTGLScreenLayoutTextureName names[header.name_count]<name="Names", read=GetKTSLName, optimize=false>;
+    local int i = 0;
+    for(i = 0; i < header.file_count; ++i) {
+        FSeek(pointers[i].pointer);
+        KTGLScreenLayoutTextureImage image<name="Image">;
+    }
+} KTGLScreenLayoutTexturePack;
+
+KTGLScreenLayoutTexturePack File<name="KSLT", open=true>;
