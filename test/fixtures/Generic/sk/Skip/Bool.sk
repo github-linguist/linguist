@@ -1,0 +1,39 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+native value class Bool uses Hashable, Orderable, Show {
+  @intrinsic
+  native fun !(): Bool;
+  @intrinsic
+  native fun ==(other: Bool): Bool;
+  @intrinsic
+  native fun !=(other: Bool): Bool;
+  @intrinsic
+  native fun <(other: Bool): Bool;
+  @intrinsic
+  native fun >(other: Bool): Bool;
+  @intrinsic
+  native fun <=(other: Bool): Bool;
+  @intrinsic
+  native fun >=(other: Bool): Bool;
+
+  fun inspect(): Inspect {
+    InspectLiteral(this.toString());
+  }
+
+  fun toString(): String {
+    if (this) "true" else "false"
+  }
+
+  fun hash(): Int {
+    if (this) 1 else 0
+  }
+
+  fun compare(other: Bool): Order {
+    if (this < other) LT() else if (this == other) EQ() else GT()
+  }
+}

@@ -1,0 +1,42 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+module Math;
+
+const PI: Float = 3.141592653589793238462643383279502884197169399;
+
+@cpp_runtime("llvm.sin.f64")
+native fun sin(val: Float): Float;
+
+@cpp_runtime("llvm.cos.f64")
+native fun cos(val: Float): Float;
+
+@cpp_runtime
+native fun asin(val: Float): Float;
+@cpp_runtime
+native fun acos(val: Float): Float;
+
+@cpp_runtime("llvm.floor.f64")
+native fun floor(val: Float): Float;
+
+@cpp_runtime("llvm.ceil.f64")
+native fun ceil(val: Float): Float;
+
+@cpp_runtime("llvm.round.f64")
+native fun round(val: Float): Float;
+
+@cpp_runtime("llvm.sqrt.f64")
+native fun sqrt(val: Float): Float;
+
+@cpp_runtime("llvm.pow.f64")
+native fun pow(val: Float, power: Float): Float;
+
+fun abs<T: Number>(val: T): T {
+  if (val < val.fromInt(0)) -val else val
+}
+
+module end;

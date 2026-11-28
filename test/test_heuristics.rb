@@ -1156,6 +1156,14 @@ class TestHeuristics < Minitest::Test
     })
   end
 
+  def test_sk_by_heuristics
+    assert_heuristics({
+      "Skip" => Dir.glob("#{fixtures_path}/Generic/sk/Skip/*"),
+      "Skript" => Dir.glob("#{fixtures_path}/Generic/sk/Skript/*"),
+      nil => Dir.glob("#{fixtures_path}/Generic/sk/nil/*")
+    })
+  end
+
   def test_socket_by_heuristics
     assert_heuristics({
       "INI" => all_fixtures("INI", "*.socket"),

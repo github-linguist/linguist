@@ -1,0 +1,7 @@
+# Chat prefix example.
+# Written for the Linguist PR; licensed under the MIT license.
+
+on chat:
+    cancel event
+    set {_prefix} to "&7[&bPlayer&7] "
+    broadcast "%{_prefix}%&r%message%"
